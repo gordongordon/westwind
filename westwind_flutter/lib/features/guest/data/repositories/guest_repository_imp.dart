@@ -1,8 +1,5 @@
-
-
-
-import 'package:fpdart/src/either.dart';
-import 'package:westwind_client/src/protocol/guest.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/error/exception.dart';
 import 'package:westwind_flutter/core/error/failure.dart';
 import 'package:westwind_flutter/features/guest/data/datasources/guest_datasource.dart';

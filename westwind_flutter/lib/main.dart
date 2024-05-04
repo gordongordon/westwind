@@ -4,7 +4,6 @@ import 'package:westwind_flutter/core/router/app_router.dart';
 import 'package:westwind_flutter/dependencies.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_retreive/guest_retrieve_bloc.dart';
-import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

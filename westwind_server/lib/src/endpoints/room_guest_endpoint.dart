@@ -1,6 +1,4 @@
 import 'package:westwind_server/src/generated/protocol.dart';
-import 'package:westwind_server/src/generated/rateReason.dart';
-import 'package:westwind_server/src/generated/roomGuest.dart';
 import 'package:serverpod/serverpod.dart';
 
 // This is an example endpoint of your server. It's best practice to use the
