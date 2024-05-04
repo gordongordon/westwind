@@ -16,6 +16,8 @@ class GuestListBloc extends Bloc<GuestListEvent, GuestListState> {
       GuestListEvent event, Emitter<GuestListState> emit) async {
     final result = await listGuests(NoParams());
 
+    print(result);
+
     result.fold(
       (failure) => emit(GuestListStateFailure(failure.message)),
       (guests) => emit( GuestListStateLoaded(guests)),

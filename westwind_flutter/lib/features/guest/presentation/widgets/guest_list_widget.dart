@@ -1,4 +1,10 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:westwind_flutter/core/widgets/loader.dart';
+import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
+import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_events.dart';
+import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_state.dart';
 
 class GuestListWidgets extends StatefulWidget {
   const GuestListWidgets({super.key});
@@ -11,6 +17,8 @@ class _GuestListWidgetsState extends State<GuestListWidgets> {
   @override
   void initState() {
     super.initState();
+
+    context.read<GuestListBloc>().add(FetchGuestEvent());
   }
 
   @override
@@ -20,12 +28,31 @@ class _GuestListWidgetsState extends State<GuestListWidgets> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 3,
-      itemBuilder: (context, index) {
-        return const Card(
-          child: ListTile(title: Text("Text")),
-        );
+    return BlocBuilder<GuestListBloc, GuestListState>(
+      builder: (context, state) {
+        switch (state) {
+          case GuestListStateInitial():
+           
+            return const SizedBox.shrink();
+          case GuestListStateLoading():
+            return const Loader();
+      
+          case GuestListStateLoaded():
+            final guests = state.guests;
+            return ListView.builder(
+              itemCount: guests.length,
+              itemBuilder: (context, index) {
+                final guest = guests[index];
+                return Card(
+                  child: ListTile(title: Text(guest.email)),
+                );
+              },
+            );
+          case GuestListStateFailure():
+            return Center(
+              child: Text(state.message),
+            );
+        }
       },
     );
   }

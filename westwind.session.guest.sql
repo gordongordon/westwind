@@ -10,5 +10,5 @@ VALUES
 (6,'tyler', 'woo', '6@gmail.com',  1888930047,false, current_timestamp, current_timestamp,'horizon',1,44,1),
 (7,'Cody', 'Lee', '7@gmail.com',  1888930047,false, current_timestamp, current_timestamp,'horizon',1,44,1),
 (8,'Sam', 'Ten', '8@gmail.com',  1888930047,false, current_timestamp, current_timestamp,'horizon',1,44,1),
-(9,'Davie', 'Tree', '4@gmail.com',  1888930047,false, current_timestamp, current_timestamp,'horizon',1,44,1),
-(10,'Davie', 'Tree', '4@gmail.com',  1888930047,false, current_timestamp, current_timestamp,'horizon',1,44,1);
+(9,'Davie', 'Tree', '9@gmail.com',  1888930047,false, current_timestamp, current_timestamp,'horizon',1,44,1),
+(10,'Davie', 'Tree', '10@gmail.com',  1888930047,false, current_timestamp, current_timestamp,'horizon',1,44,1);

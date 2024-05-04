@@ -11,7 +11,7 @@ final serverLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
   serverLocator.registerLazySingleton<Client>(
-    () => Client("http://localhost:8080")
+    () => Client("http://localhost:8080/")
       ..connectivityMonitor = FlutterConnectivityMonitor(),
   );
 
