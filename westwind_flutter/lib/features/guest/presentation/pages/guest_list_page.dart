@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:westwind_flutter/features/guest/presentation/widgets/guest_list_widget.dart';
 
 class GuestListPage extends StatelessWidget {
+  static String route() => "/guests";
+
   const GuestListPage({super.key});
 
   @override

@@ -1,10 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_events.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_state.dart';
+import 'package:westwind_flutter/features/guest/presentation/pages/guest_detail_page.dart';
 
 class GuestListWidgets extends StatefulWidget {
   const GuestListWidgets({super.key});
@@ -18,7 +20,7 @@ class _GuestListWidgetsState extends State<GuestListWidgets> {
   void initState() {
     super.initState();
 
-    context.read<GuestListBloc>().add(FetchGuestEvent());
+    context.read<GuestListBloc>().add(FetchGuestsEvent());
   }
 
   @override
@@ -44,7 +46,16 @@ class _GuestListWidgetsState extends State<GuestListWidgets> {
               itemBuilder: (context, index) {
                 final guest = guests[index];
                 return Card(
-                  child: ListTile(title: Text(guest.email)),
+                  child: ListTile(title: Text(guest.email),  
+                  subtitle: Text("Name ${guest.id}"),
+                   onTap: () {
+                    context.push(GuestDetailPage.route(guest.id));
+                  },
+                  
+                  
+                  ),
+                  
+  
                 );
               },
             );

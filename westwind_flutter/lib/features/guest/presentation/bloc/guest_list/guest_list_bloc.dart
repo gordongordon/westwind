@@ -9,7 +9,7 @@ class GuestListBloc extends Bloc<GuestListEvent, GuestListState> {
 
   GuestListBloc({required this.listGuests}) : super(GuestListStateInitial()) {
     on<GuestListEvent>((_, emit) => emit(GuestListStateLoading()));
-    on<FetchGuestEvent>((_onFetchGuests));
+    on<FetchGuestsEvent>((_onFetchGuests));
   }
 
   Future<void> _onFetchGuests(

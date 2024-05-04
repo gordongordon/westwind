@@ -29,7 +29,7 @@ class GuestDatasourceImpl implements GuestDatasource {
       final result = await client.guest.retrieve(id);
 
       if ( result == null)  {
-        throw const ServerException("Guest not found");
+        throw  ServerException("Guest with ID : $id not found ");
       }
       return result;
         
