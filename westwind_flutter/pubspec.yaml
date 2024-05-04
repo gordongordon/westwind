@@ -41,6 +41,7 @@ dependencies:
   form_builder_validators: ^9.1.0
   riverpod_lint: ^2.3.10
   custom_lint: ^0.6.2
+  fpdart: ^1.1.0
 
 dev_dependencies:
   build_runner: ^2.4.4

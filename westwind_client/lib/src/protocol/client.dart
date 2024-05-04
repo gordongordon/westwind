@@ -40,6 +40,20 @@ class EndpointGuest extends _i1.EndpointRef {
   @override
   String get name => 'guest';
 
+  _i2.Future<List<_i3.Guest>> list() =>
+      caller.callServerEndpoint<List<_i3.Guest>>(
+        'guest',
+        'list',
+        {},
+      );
+
+  _i2.Future<_i3.Guest?> retrieve(int id) =>
+      caller.callServerEndpoint<_i3.Guest?>(
+        'guest',
+        'retrieve',
+        {'id': id},
+      );
+
   _i2.Future<bool> createGuest({required _i3.Guest guest}) =>
       caller.callServerEndpoint<bool>(
         'guest',

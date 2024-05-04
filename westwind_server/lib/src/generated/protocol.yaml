@@ -1,6 +1,8 @@
 example:
   - hello:
 guest:
+  - list:
+  - retrieve:
   - createGuest:
   - updateGuest:
   - findGuest:

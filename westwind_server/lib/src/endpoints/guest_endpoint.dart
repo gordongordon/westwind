@@ -16,6 +16,16 @@ class GuestEndpoint extends Endpoint {
   // The methods should return a typed future; the same types as for the parameters are
   // supported. The `session` object provides access to the database, logging,
   // passwords, and information about the request being made to the server.
+  Future<List<Guest>> list( Session session) async {
+    return Guest.db.find(session);
+  }
+ 
+
+  Future<Guest?> retrieve( Session session, int id) async {
+    return Guest.db.findById(session, id);
+  }
+
+
   Future<bool> createGuest(Session session, {required Guest guest}) async {
     guest.dateCreate = DateTime.now();
 

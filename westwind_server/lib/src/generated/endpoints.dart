@@ -85,6 +85,33 @@ class Endpoints extends _i1.EndpointDispatch {
       name: 'guest',
       endpoint: endpoints['guest']!,
       methodConnectors: {
+        'list': _i1.MethodConnector(
+          name: 'list',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['guest'] as _i3.GuestEndpoint).list(session),
+        ),
+        'retrieve': _i1.MethodConnector(
+          name: 'retrieve',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['guest'] as _i3.GuestEndpoint).retrieve(
+            session,
+            params['id'],
+          ),
+        ),
         'createGuest': _i1.MethodConnector(
           name: 'createGuest',
           params: {
