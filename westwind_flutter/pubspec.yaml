@@ -30,8 +30,6 @@ dependencies:
   westwind_client:
     path: ../westwind_client
   get_it: ^7.6.7
-  flutter_riverpod: ^2.4.10
-  freezed: ^2.4.7
 # image_picker: ^0.8.7+5
 
   # The following adds the Cupertino Icons font to your application.
@@ -39,9 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.5
   flutter_form_builder: ^9.2.1
   form_builder_validators: ^9.1.0
-  riverpod_lint: ^2.3.10
   custom_lint: ^0.6.2
   fpdart: ^1.1.0
+  flutter_bloc: ^8.1.5
 
 dev_dependencies:
   build_runner: ^2.4.4

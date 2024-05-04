@@ -1,10 +1,20 @@
-import 'package:westwind_client/westwind_client.dart';
 import 'package:flutter/material.dart';
-import 'package:serverpod_flutter/serverpod_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:westwind_flutter/dependencies.dart';
+import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
+import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
 
-
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => serverLocator<GuestListBloc>()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -16,11 +26,7 @@ class MyApp extends StatelessWidget {
       title: "Westwind ServerPod",
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: Center(
-          child : Text("hello")
-        )
-      ),
-    );
+      home: const GuestListPage(),
+      );
   }
 }

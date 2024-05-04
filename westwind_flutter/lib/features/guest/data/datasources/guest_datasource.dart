@@ -8,7 +8,9 @@ abstract interface class GuestDatasource {
 }
 
 class GuestDatasourceImpl implements GuestDatasource {
-  late final Client client;
+  final Client client;
+
+  const GuestDatasourceImpl( this.client );
 
   // final SessionManager sessionManager;
 
