@@ -1258,8 +1258,8 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i5.ErrorType) {
       return _i5.ErrorType.fromJson(data) as T;
     }
-    if (t == _i6.Example) {
-      return _i6.Example.fromJson(data, this) as T;
+    if (t == _i6.Examplekk) {
+      return _i6.Examplekk.fromJson(data, this) as T;
     }
     if (t == _i7.Guest) {
       return _i7.Guest.fromJson(data, this) as T;
@@ -1327,8 +1327,8 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i5.ErrorType?>()) {
       return (data != null ? _i5.ErrorType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i6.Example?>()) {
-      return (data != null ? _i6.Example.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i6.Examplekk?>()) {
+      return (data != null ? _i6.Examplekk.fromJson(data, this) : null) as T;
     }
     if (t == _i1.getType<_i7.Guest?>()) {
       return (data != null ? _i7.Guest.fromJson(data, this) : null) as T;
@@ -1446,8 +1446,8 @@ class Protocol extends _i1.SerializationManagerServer {
     if (data is _i5.ErrorType) {
       return 'ErrorType';
     }
-    if (data is _i6.Example) {
-      return 'Example';
+    if (data is _i6.Examplekk) {
+      return 'Examplekk';
     }
     if (data is _i7.Guest) {
       return 'Guest';
@@ -1524,8 +1524,8 @@ class Protocol extends _i1.SerializationManagerServer {
     if (data['className'] == 'ErrorType') {
       return deserialize<_i5.ErrorType>(data['data']);
     }
-    if (data['className'] == 'Example') {
-      return deserialize<_i6.Example>(data['data']);
+    if (data['className'] == 'Examplekk') {
+      return deserialize<_i6.Examplekk>(data['data']);
     }
     if (data['className'] == 'Guest') {
       return deserialize<_i7.Guest>(data['data']);

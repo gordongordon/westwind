@@ -10,22 +10,22 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-abstract class Example extends _i1.SerializableEntity {
-  Example._({
+abstract class Examplekk extends _i1.SerializableEntity {
+  Examplekk._({
     required this.name,
     required this.data,
   });
 
-  factory Example({
+  factory Examplekk({
     required String name,
     required int data,
-  }) = _ExampleImpl;
+  }) = _ExamplekkImpl;
 
-  factory Example.fromJson(
+  factory Examplekk.fromJson(
     Map<String, dynamic> jsonSerialization,
     _i1.SerializationManager serializationManager,
   ) {
-    return Example(
+    return Examplekk(
       name: serializationManager.deserialize<String>(jsonSerialization['name']),
       data: serializationManager.deserialize<int>(jsonSerialization['data']),
     );
@@ -35,7 +35,7 @@ abstract class Example extends _i1.SerializableEntity {
 
   int data;
 
-  Example copyWith({
+  Examplekk copyWith({
     String? name,
     int? data,
   });
@@ -56,8 +56,8 @@ abstract class Example extends _i1.SerializableEntity {
   }
 }
 
-class _ExampleImpl extends Example {
-  _ExampleImpl({
+class _ExamplekkImpl extends Examplekk {
+  _ExamplekkImpl({
     required String name,
     required int data,
   }) : super._(
@@ -66,11 +66,11 @@ class _ExampleImpl extends Example {
         );
 
   @override
-  Example copyWith({
+  Examplekk copyWith({
     String? name,
     int? data,
   }) {
-    return Example(
+    return Examplekk(
       name: name ?? this.name,
       data: data ?? this.data,
     );
