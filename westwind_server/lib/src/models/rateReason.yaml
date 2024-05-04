@@ -1,0 +1,10 @@
+enum: RateReason
+serialized: byName
+values:
+  - single
+  - share
+  - triple 
+  - stuff
+  - double
+  - gohome
+  - other

@@ -1,0 +1,9 @@
+enum: RoomChargeType
+serialized: byName
+values:
+ - room
+ - laundry
+ - pet
+ - food
+ - drink
+ - other

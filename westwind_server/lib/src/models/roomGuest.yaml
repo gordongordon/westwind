@@ -1,0 +1,26 @@
+#  Room
+#  ##, Date, ListOfGuests, Total Charge of the day, chargeBy Guest or Company or Someone
+#  Guest
+#  Room##, Charge, Date, RateType
+#
+
+class : RoomGuest
+table : room_guest
+fields: 
+  room : Room?, relation
+  stateDate     : DateTime
+  guest        : Guest? , relation
+  rateType     : RateType
+  rateReason   : RateReason
+  rate         : double
+  reservation   : Reservation?, relation
+  roomStatus    : RoomStatus
+  checkOutDate : DateTime
+  updateDate   : DateTime?
+  
+  
+indexes: 
+   room_guest_index_idx: 
+       fields: roomId, guestId
+       unique: true
+  

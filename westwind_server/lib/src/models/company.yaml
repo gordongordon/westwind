@@ -1,0 +1,15 @@
+## Guest
+class : Company
+table : company
+fields : 
+      name : String
+      contactName : String
+      phone : String
+      email : String
+      dateCreate : DateTime
+      dateUpdate : DateTime?
+      byStaffId :  int 
+indexes:
+   company_index_idx: 
+       fields: phone
+       unique: true

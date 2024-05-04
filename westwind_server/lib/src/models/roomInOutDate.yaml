@@ -1,0 +1,8 @@
+class : RoomInOutDate
+table : room_in_out_date
+fields : 
+    checkInDate : DateTime?
+    checkOutDate :  DateTime?
+    guest : Guest?, relation
+    roomNumber : RoomNumber
+    dateCreate : DateTime

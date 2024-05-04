@@ -1,0 +1,11 @@
+enum: RoomStatus
+serialized: byName
+values:
+ - empty
+ - checkout
+ - clean
+ - dirty
+ - make
+ - makemake
+ - change
+ - ddd

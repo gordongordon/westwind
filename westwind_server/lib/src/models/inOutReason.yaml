@@ -1,0 +1,7 @@
+enum: InOutReason
+serialized: byName
+values:
+  - checkIn
+  - checkOut
+  - move
+  - other

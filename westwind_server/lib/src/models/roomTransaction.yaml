@@ -1,0 +1,10 @@
+class : RoomTransaction
+table : room_transaction
+fields :
+   roomNumber : RoomNumber
+   dateState : DateTime
+   rateType : RateType
+   rate     : double
+   dateCreate : DateTime
+   dateUpdate : DateTime?
+   guests : List<Guest>?, relation

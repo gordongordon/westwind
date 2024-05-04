@@ -1,0 +1,17 @@
+enum: RoomNumber
+serialized: byName
+values:
+ - Rm101
+ - Rm102
+ - Rm103
+ - Rm104
+ - Rm105
+ - Rm106
+ - Rm107
+ - Rm108
+ - Rm110
+ - Rm111
+ - Rm201
+ - Rm202
+ - Rm203
+ - Rm330

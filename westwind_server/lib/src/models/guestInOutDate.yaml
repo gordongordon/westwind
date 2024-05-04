@@ -1,0 +1,10 @@
+class : GuestInOutDate
+table : guest_in_out_date
+fields : 
+    roomNumber : RoomNumber
+    dateCreate : DateTime
+    dateUpdate : DateTime?
+    # guest : int, relation(parent=guest)
+    guest : Guest?, relation 
+    inOutReason : InOutReason
+

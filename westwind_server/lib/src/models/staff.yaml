@@ -1,0 +1,17 @@
+class : Staff
+table : staff
+fields: 
+       firstName : String
+       lastName  : String
+       phone : String
+       email : String
+       password : String
+       timelogout : DateTime?
+       timelogin : DateTime
+       permissionType : PermissionType
+       dateCreate : DateTime
+       dateUpdate : DateTime?
+indexes:
+   staff_index_idx:
+     fields: email
+     unique: true

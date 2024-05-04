@@ -1,0 +1,12 @@
+class : Payment
+table : payment
+fields : 
+#  guest : int, relation(parent=guest)
+   guest : Guest?, relation
+   dateCreate : DateTime
+   dateVoid : DateTime
+   paymentAmount : double
+   paymentType : PaymentType
+   roomChargeType : RoomChargeType
+   userId : int
+

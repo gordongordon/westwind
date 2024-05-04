@@ -1,0 +1,6 @@
+class : RateTable
+table : rate_table
+fields : 
+   rateType : RateType
+   rateReason : RateReason
+   rate : double

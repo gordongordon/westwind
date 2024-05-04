@@ -1,0 +1,1208 @@
+{
+  "moduleName": "westwind",
+  "tables": [
+    {
+      "name": "company",
+      "dartName": "Company",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('company_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "name",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "contactName",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "phone",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "email",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "dateCreate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "dateUpdate",
+          "columnType": 4,
+          "isNullable": true,
+          "dartType": "DateTime?"
+        },
+        {
+          "name": "byStaffId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        }
+      ],
+      "foreignKeys": [],
+      "indexes": [
+        {
+          "indexName": "company_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        },
+        {
+          "indexName": "company_index_idx",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "phone"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": false
+        }
+      ],
+      "managed": true
+    },
+    {
+      "name": "guest",
+      "dartName": "Guest",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('guest_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "firstName",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "lastName",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "phone",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "email",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "isInHouse",
+          "columnType": 1,
+          "isNullable": false,
+          "dartType": "bool"
+        },
+        {
+          "name": "dateCreate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "dateUpdate",
+          "columnType": 4,
+          "isNullable": true,
+          "dartType": "DateTime?"
+        },
+        {
+          "name": "rateType",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RateType"
+        },
+        {
+          "name": "staffId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "companyId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "rigNumber",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "_roomTransactionGuestsRoomTransactionId",
+          "columnType": 2,
+          "isNullable": true,
+          "dartType": "int?"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "constraintName": "guest_fk_0",
+          "columns": [
+            "companyId"
+          ],
+          "referenceTable": "company",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        },
+        {
+          "constraintName": "guest_fk_1",
+          "columns": [
+            "_roomTransactionGuestsRoomTransactionId"
+          ],
+          "referenceTable": "room_transaction",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        }
+      ],
+      "indexes": [
+        {
+          "indexName": "guest_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        },
+        {
+          "indexName": "guest_index_idx",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "email"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": false
+        }
+      ],
+      "managed": true
+    },
+    {
+      "name": "guest_in_out_date",
+      "dartName": "GuestInOutDate",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('guest_in_out_date_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "roomNumber",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RoomNumber"
+        },
+        {
+          "name": "dateCreate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "dateUpdate",
+          "columnType": 4,
+          "isNullable": true,
+          "dartType": "DateTime?"
+        },
+        {
+          "name": "guestId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "inOutReason",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:InOutReason"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "constraintName": "guest_in_out_date_fk_0",
+          "columns": [
+            "guestId"
+          ],
+          "referenceTable": "guest",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        }
+      ],
+      "indexes": [
+        {
+          "indexName": "guest_in_out_date_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        }
+      ],
+      "managed": true
+    },
+    {
+      "name": "guest_transaction",
+      "dartName": "GuestTransaction",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('guest_transaction_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "roomId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "stateDate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "rateType",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RateType"
+        },
+        {
+          "name": "rateReason",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RateReason"
+        },
+        {
+          "name": "rate",
+          "columnType": 3,
+          "isNullable": false,
+          "dartType": "double"
+        },
+        {
+          "name": "roomStatus",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RoomStatus"
+        },
+        {
+          "name": "updateDate",
+          "columnType": 4,
+          "isNullable": true,
+          "dartType": "DateTime?"
+        },
+        {
+          "name": "roomGuestId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "constraintName": "guest_transaction_fk_0",
+          "columns": [
+            "roomId"
+          ],
+          "referenceTable": "room",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        },
+        {
+          "constraintName": "guest_transaction_fk_1",
+          "columns": [
+            "roomGuestId"
+          ],
+          "referenceTable": "room_guest",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        }
+      ],
+      "indexes": [
+        {
+          "indexName": "guest_transaction_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        }
+      ],
+      "managed": true
+    },
+    {
+      "name": "payment",
+      "dartName": "Payment",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('payment_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "guestId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "dateCreate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "dateVoid",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "paymentAmount",
+          "columnType": 3,
+          "isNullable": false,
+          "dartType": "double"
+        },
+        {
+          "name": "paymentType",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:PaymentType"
+        },
+        {
+          "name": "roomChargeType",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RoomChargeType"
+        },
+        {
+          "name": "userId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "constraintName": "payment_fk_0",
+          "columns": [
+            "guestId"
+          ],
+          "referenceTable": "guest",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        }
+      ],
+      "indexes": [
+        {
+          "indexName": "payment_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        }
+      ],
+      "managed": true
+    },
+    {
+      "name": "rate_table",
+      "dartName": "RateTable",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('rate_table_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "rateType",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RateType"
+        },
+        {
+          "name": "rateReason",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RateReason"
+        },
+        {
+          "name": "rate",
+          "columnType": 3,
+          "isNullable": false,
+          "dartType": "double"
+        }
+      ],
+      "foreignKeys": [],
+      "indexes": [
+        {
+          "indexName": "rate_table_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        }
+      ],
+      "managed": true
+    },
+    {
+      "name": "reservation",
+      "dartName": "Reservation",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('reservation_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "checkInDate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "checkOutDate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "note",
+          "columnType": 0,
+          "isNullable": true,
+          "dartType": "String?"
+        },
+        {
+          "name": "dateCreate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "dateUpdate",
+          "columnType": 4,
+          "isNullable": true,
+          "dartType": "DateTime?"
+        },
+        {
+          "name": "guestId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "rateType",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RateType"
+        },
+        {
+          "name": "rateReason",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RateReason"
+        },
+        {
+          "name": "rate",
+          "columnType": 3,
+          "isNullable": false,
+          "dartType": "double"
+        },
+        {
+          "name": "isCheckedIn",
+          "columnType": 1,
+          "isNullable": false,
+          "dartType": "bool"
+        },
+        {
+          "name": "isCanceled",
+          "columnType": 1,
+          "isNullable": false,
+          "dartType": "bool"
+        },
+        {
+          "name": "isNightShift",
+          "columnType": 1,
+          "isNullable": false,
+          "dartType": "bool"
+        },
+        {
+          "name": "roomId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "_roomReservationsRoomId",
+          "columnType": 2,
+          "isNullable": true,
+          "dartType": "int?"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "constraintName": "reservation_fk_0",
+          "columns": [
+            "guestId"
+          ],
+          "referenceTable": "guest",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        },
+        {
+          "constraintName": "reservation_fk_1",
+          "columns": [
+            "roomId"
+          ],
+          "referenceTable": "room",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        },
+        {
+          "constraintName": "reservation_fk_2",
+          "columns": [
+            "_roomReservationsRoomId"
+          ],
+          "referenceTable": "room",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        }
+      ],
+      "indexes": [
+        {
+          "indexName": "reservation_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        }
+      ],
+      "managed": true
+    },
+    {
+      "name": "room",
+      "dartName": "Room",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('room_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "roomNumber",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RoomNumber"
+        },
+        {
+          "name": "roomType",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "roomStatus",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RoomStatus"
+        },
+        {
+          "name": "isAvailable",
+          "columnType": 1,
+          "isNullable": false,
+          "dartType": "bool"
+        },
+        {
+          "name": "isSmoke",
+          "columnType": 1,
+          "isNullable": false,
+          "dartType": "bool"
+        },
+        {
+          "name": "bedType",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "isBigTV",
+          "columnType": 1,
+          "isNullable": false,
+          "dartType": "bool"
+        },
+        {
+          "name": "isNewAC",
+          "columnType": 1,
+          "isNullable": false,
+          "dartType": "bool"
+        },
+        {
+          "name": "isNewBed",
+          "columnType": 1,
+          "isNullable": false,
+          "dartType": "bool"
+        },
+        {
+          "name": "isBigRefergrator",
+          "columnType": 1,
+          "isNullable": false,
+          "dartType": "bool"
+        },
+        {
+          "name": "note",
+          "columnType": 0,
+          "isNullable": true,
+          "dartType": "String?"
+        }
+      ],
+      "foreignKeys": [],
+      "indexes": [
+        {
+          "indexName": "room_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        }
+      ],
+      "managed": true
+    },
+    {
+      "name": "room_guest",
+      "dartName": "RoomGuest",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('room_guest_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "roomId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "stateDate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "guestId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "rateType",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RateType"
+        },
+        {
+          "name": "rateReason",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RateReason"
+        },
+        {
+          "name": "rate",
+          "columnType": 3,
+          "isNullable": false,
+          "dartType": "double"
+        },
+        {
+          "name": "reservationId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "roomStatus",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RoomStatus"
+        },
+        {
+          "name": "checkOutDate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "updateDate",
+          "columnType": 4,
+          "isNullable": true,
+          "dartType": "DateTime?"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "constraintName": "room_guest_fk_0",
+          "columns": [
+            "roomId"
+          ],
+          "referenceTable": "room",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        },
+        {
+          "constraintName": "room_guest_fk_1",
+          "columns": [
+            "guestId"
+          ],
+          "referenceTable": "guest",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        },
+        {
+          "constraintName": "room_guest_fk_2",
+          "columns": [
+            "reservationId"
+          ],
+          "referenceTable": "reservation",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        }
+      ],
+      "indexes": [
+        {
+          "indexName": "room_guest_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        },
+        {
+          "indexName": "room_guest_index_idx",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "roomId"
+            },
+            {
+              "type": 0,
+              "definition": "guestId"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": false
+        }
+      ],
+      "managed": true
+    },
+    {
+      "name": "room_in_out_date",
+      "dartName": "RoomInOutDate",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('room_in_out_date_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "checkInDate",
+          "columnType": 4,
+          "isNullable": true,
+          "dartType": "DateTime?"
+        },
+        {
+          "name": "checkOutDate",
+          "columnType": 4,
+          "isNullable": true,
+          "dartType": "DateTime?"
+        },
+        {
+          "name": "guestId",
+          "columnType": 2,
+          "isNullable": false,
+          "dartType": "int"
+        },
+        {
+          "name": "roomNumber",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RoomNumber"
+        },
+        {
+          "name": "dateCreate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "constraintName": "room_in_out_date_fk_0",
+          "columns": [
+            "guestId"
+          ],
+          "referenceTable": "guest",
+          "referenceTableSchema": "public",
+          "referenceColumns": [
+            "id"
+          ],
+          "onUpdate": 3,
+          "onDelete": 3
+        }
+      ],
+      "indexes": [
+        {
+          "indexName": "room_in_out_date_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        }
+      ],
+      "managed": true
+    },
+    {
+      "name": "room_transaction",
+      "dartName": "RoomTransaction",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('room_transaction_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "roomNumber",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RoomNumber"
+        },
+        {
+          "name": "dateState",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "rateType",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:RateType"
+        },
+        {
+          "name": "rate",
+          "columnType": 3,
+          "isNullable": false,
+          "dartType": "double"
+        },
+        {
+          "name": "dateCreate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "dateUpdate",
+          "columnType": 4,
+          "isNullable": true,
+          "dartType": "DateTime?"
+        }
+      ],
+      "foreignKeys": [],
+      "indexes": [
+        {
+          "indexName": "room_transaction_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        }
+      ],
+      "managed": true
+    },
+    {
+      "name": "staff",
+      "dartName": "Staff",
+      "module": "westwind",
+      "schema": "public",
+      "columns": [
+        {
+          "name": "id",
+          "columnType": 2,
+          "isNullable": false,
+          "columnDefault": "nextval('staff_id_seq'::regclass)",
+          "dartType": "int?"
+        },
+        {
+          "name": "firstName",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "lastName",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "phone",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "email",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "password",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "String"
+        },
+        {
+          "name": "timelogout",
+          "columnType": 4,
+          "isNullable": true,
+          "dartType": "DateTime?"
+        },
+        {
+          "name": "timelogin",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "permissionType",
+          "columnType": 0,
+          "isNullable": false,
+          "dartType": "protocol:PermissionType"
+        },
+        {
+          "name": "dateCreate",
+          "columnType": 4,
+          "isNullable": false,
+          "dartType": "DateTime"
+        },
+        {
+          "name": "dateUpdate",
+          "columnType": 4,
+          "isNullable": true,
+          "dartType": "DateTime?"
+        }
+      ],
+      "foreignKeys": [],
+      "indexes": [
+        {
+          "indexName": "staff_pkey",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "id"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": true
+        },
+        {
+          "indexName": "staff_index_idx",
+          "elements": [
+            {
+              "type": 0,
+              "definition": "email"
+            }
+          ],
+          "type": "btree",
+          "isUnique": true,
+          "isPrimary": false
+        }
+      ],
+      "managed": true
+    }
+  ],
+  "installedModules": [
+    {
+      "module": "serverpod",
+      "version": "20240115074235544"
+    },
+    {
+      "module": "serverpod_auth",
+      "version": "20240115074239642"
+    },
+    {
+      "module": "westwind",
+      "version": "20240429082716203"
+    }
+  ],
+  "migrationApiVersion": 1
+}

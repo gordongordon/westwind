@@ -1,0 +1,45 @@
+example:
+  - hello:
+guest:
+  - createGuest:
+  - updateGuest:
+  - findGuest:
+  - findGuestById:
+  - getAllGuests:
+rateTable:
+  - createRateTable:
+  - findRate:
+  - updateRateTable:
+  - findRateTable:
+  - findRateTableById:
+  - getAllRateTables:
+reservation:
+  - createReservation:
+  - findReservation:
+  - cancelReservation:
+  - updateReservation:
+  - findReservationById:
+  - getAllReservations:
+  - getNullCheckInReservations:
+  - getAllReservationsByDay:
+  - getTodayReservations:
+  - checkInReservation:
+roomGuest:
+  - createRoomGuest:
+  - findRoomGuest:
+  - updateRoomGuest:
+  - findRoomGuestByRoomId:
+  - getAllRoomGuest:
+  - getAllRoomGuestByDay:
+  - getTodayRoomGuest:
+  - updateRateReasonSingle:
+  - updateRateReasonShare:
+  - updateRateReasonDoulbe:
+  - updateRateReasonGoHome:
+  - updateRateReasonOther:
+  - findRoommates:
+  - getRate:
+  - findById:
+  - delete:
+  - checkOut:
+  - updateGuestRate:

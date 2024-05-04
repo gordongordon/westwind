@@ -1,0 +1,5 @@
+enum: ErrorType
+serialized: byName
+values:
+  - NotFound
+  - TooManyRoommates

@@ -1,0 +1,20 @@
+class : Reservation
+table : reservation
+fields : 
+   checkInDate : DateTime
+   checkOutDate : DateTime
+   note : String?
+   dateCreate : DateTime
+   dateUpdate : DateTime?
+   guest :  Guest? , relation 
+   rateType  : RateType
+   rateReason : RateReason
+   rate : double 
+   isCheckedIn : bool
+   isCanceled  : bool
+   isNightShift : bool
+   room : Room?, relation
+#indexes:
+#   reservation_unique_idx:
+#      fields: guestId, roomId
+#      unique: true 

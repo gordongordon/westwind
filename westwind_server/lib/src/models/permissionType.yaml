@@ -1,0 +1,7 @@
+enum: PermissionType
+serialized: byName
+values:
+ - staff
+ - supervisor
+ - manager
+ - admin

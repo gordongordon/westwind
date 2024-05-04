@@ -1,0 +1,11 @@
+enum: RateType
+serialized: byName
+values:
+ - standard
+ - ironhand
+ - horizon
+ - clear
+ - global
+ - darkstar
+ - online
+ - staff

@@ -1,0 +1,15 @@
+class : Room
+table : room
+fields : 
+    roomNumber   : RoomNumber
+    reservations : List<Reservation>?, relation
+    roomType     : String
+    roomStatus   : RoomStatus
+    isAvailable  : bool 
+    isSmoke      : bool
+    bedType      : String
+    isBigTV      : bool
+    isNewAC      : bool
+    isNewBed     : bool
+    isBigRefergrator : bool
+    note : String?

@@ -1,0 +1,9 @@
+enum: PaymentType
+serialized: byName
+values:
+ - visa
+ - master
+ - debit
+ - cash
+ - bill
+ - other

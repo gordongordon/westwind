@@ -1,0 +1,18 @@
+class : Guest 
+table : guest
+fields: 
+      firstName : String
+      lastName  : String
+      phone : String
+      email : String
+      isInHouse : bool
+      dateCreate : DateTime
+      dateUpdate : DateTime?
+      rateType : RateType
+      staffId  :  int
+      company : Company?, relation 
+      rigNumber : int
+indexes:
+   guest_index_idx: 
+       fields: email
+       unique: true
