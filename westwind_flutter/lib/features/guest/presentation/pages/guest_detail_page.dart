@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_retreive/guest_retrieve_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_retreive/guest_retrieve_events.dart';
@@ -30,9 +31,7 @@ class _GuestDetailPageState extends State<GuestDetailPage> {
     return BlocConsumer<GuestRetrieveBloc, GuestRetrieveState>(
       listener: (context, state) {
         if (state is GuestRetrieveStateFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(state.message),
-          ));
+            showSnackbar(context, state.message); 
           context.pop();
         }
       },
