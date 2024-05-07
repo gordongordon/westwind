@@ -36,6 +36,7 @@ void _initGuest() {
   );
 
   // Use Cases
+  //! register as Singleton base on Reso coder, for cacheing . 
   serverLocator.registerFactory<ListGuestsUseCase>(
     () => ListGuestsUseCase(
       serverLocator<GuestRepository>(),
@@ -48,6 +49,7 @@ void _initGuest() {
   );
 
   // Blocs
+  //! May be register as Factory base on Reso Coder for all bloc, because of Close stream issum after user come back to the page.
   serverLocator.registerLazySingleton(
     () => GuestListBloc(
       listGuests: serverLocator<ListGuestsUseCase>(),

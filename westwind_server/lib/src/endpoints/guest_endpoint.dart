@@ -26,11 +26,11 @@ class GuestEndpoint extends Endpoint {
   }
 
 
-  Future<bool> createGuest(Session session, {required Guest guest}) async {
+  Future<Guest> createGuest(Session session, {required Guest guest}) async {
     guest.dateCreate = DateTime.now();
 
-    await Guest.db.insertRow(session, guest);
-    return true;
+    return await Guest.db.insertRow(session, guest);
+    // return true;
   }
 
   Future<bool> updateGuest(Session session, {required Guest guest}) async {
@@ -67,5 +67,17 @@ class GuestEndpoint extends Endpoint {
       orderBy: (t) => t.id,
                 orderDescending: true,
     );
+  }
+
+  Future<bool> delete(Session session, int id ) async {
+    final guest = await Guest.db.findById( session, id );
+
+    if ( guest == null )  {
+      return false;
+    }
+
+     await Guest.db.deleteRow(session, guest);
+
+     return true;
   }
 }

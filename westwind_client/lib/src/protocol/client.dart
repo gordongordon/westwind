@@ -54,8 +54,8 @@ class EndpointGuest extends _i1.EndpointRef {
         {'id': id},
       );
 
-  _i2.Future<bool> createGuest({required _i3.Guest guest}) =>
-      caller.callServerEndpoint<bool>(
+  _i2.Future<_i3.Guest> createGuest({required _i3.Guest guest}) =>
+      caller.callServerEndpoint<_i3.Guest>(
         'guest',
         'createGuest',
         {'guest': guest},
@@ -87,6 +87,12 @@ class EndpointGuest extends _i1.EndpointRef {
         'guest',
         'getAllGuests',
         {},
+      );
+
+  _i2.Future<bool> delete(int id) => caller.callServerEndpoint<bool>(
+        'guest',
+        'delete',
+        {'id': id},
       );
 }
 
