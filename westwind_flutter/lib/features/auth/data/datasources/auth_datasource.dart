@@ -7,11 +7,12 @@ abstract interface class AuthDataSource {
   
   UserModel? currentUser();
 
-
   Future<UserModel> loginWithEmailPassword({
     required String email,
     required String password,
   });
+
+  Future<void> logout();
 }
 
 class AuthDataSourceImpl implements AuthDataSource {
@@ -68,6 +69,14 @@ class AuthDataSourceImpl implements AuthDataSource {
       throw ServerException(e.toString());
     }
   }
-  
+
+  @override
+  Future<void> logout() async {
+    try {
+      await sessionManager.signOut();
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
 
 }

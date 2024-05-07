@@ -1,10 +1,13 @@
 import 'package:get_it/get_it.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/core/cubits/cubit/app_user_cubit.dart';
 import 'package:westwind_flutter/features/auth/data/datasources/auth_datasource.dart';
 import 'package:westwind_flutter/features/auth/data/repositories/auth_repository_imp.dart';
 import 'package:westwind_flutter/features/auth/domain/repositories/auth_repository.dart';
+import 'package:westwind_flutter/features/auth/domain/usecases/current_user.dart';
 import 'package:westwind_flutter/features/auth/domain/usecases/user_login.dart';
+import 'package:westwind_flutter/features/auth/domain/usecases/user_logout.dart';
 import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:westwind_flutter/features/guest/data/datasources/guest_datasource.dart';
 import 'package:westwind_flutter/features/guest/data/repositories/guest_repository_imp.dart';
@@ -19,6 +22,11 @@ import 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart
 final serverLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
+
+  serverLocator.registerLazySingleton<AppUserCubit>(
+    () => AppUserCubit(),
+  );
+
   serverLocator.registerLazySingleton<Client>(
     () => Client(
       "http://localhost:8080/",
@@ -56,8 +64,18 @@ void _initAuth() {
   );
 
   // Use Case
+  serverLocator.registerFactory<CurrentUserUseCase>(
+    () => CurrentUserUseCase(
+      serverLocator<AuthRepository>(),
+    ),
+  );
   serverLocator.registerFactory<UserLoginUseCase>(
     () => UserLoginUseCase(
+      serverLocator<AuthRepository>(),
+    ),
+  );
+  serverLocator.registerFactory<UserLogoutUseCase>(
+    () => UserLogoutUseCase(
       serverLocator<AuthRepository>(),
     ),
   );
@@ -65,7 +83,10 @@ void _initAuth() {
   // Bloc
   serverLocator.registerLazySingleton<AuthBloc>(
     () => AuthBloc(
+      appUserCubit: serverLocator<AppUserCubit>(),
+      currentUser: serverLocator<CurrentUserUseCase>(),
       userLogin: serverLocator<UserLoginUseCase>(),
+      userLogout:  serverLocator<UserLogoutUseCase>(),
     ),
   );
 }

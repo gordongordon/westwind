@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:westwind_flutter/core/cubits/cubit/app_user_cubit.dart';
 import 'package:westwind_flutter/core/router/app_router.dart';
 import 'package:westwind_flutter/dependencies.dart';
 import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart';
@@ -12,9 +13,10 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => serverLocator<AppUserCubit>()),
         BlocProvider(create: (_) => serverLocator<GuestListBloc>()),
         BlocProvider(create: (_) => serverLocator<GuestRetrieveBloc>()),
-        BlocProvider(create: (_) => serverLocator<AuthBloc>()),
+        BlocProvider(create: (_) => serverLocator<AuthBloc>()..add(AuthIsUserLoggedInEvent())),
       ],
       child: const MyApp(),
     ),

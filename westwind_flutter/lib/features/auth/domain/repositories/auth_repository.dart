@@ -9,4 +9,6 @@ abstract interface class AuthRepository {
   });
 
   Either<Failure,User> currentUser();
+
+  Future<Either<Failure, void>> logout();
 }

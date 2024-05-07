@@ -34,4 +34,14 @@ class AuthRepositoryImp implements AuthRepository {
 
      return right( user );
   }
+
+  @override
+  Future<Either<Failure, void>> logout() async {
+    try {
+      await dataSource.logout();
+      return right(null);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 }
