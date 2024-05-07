@@ -70,14 +70,19 @@ class GuestEndpoint extends Endpoint {
   }
 
   Future<bool> delete(Session session, int id ) async {
+    
     final guest = await Guest.db.findById( session, id );
 
     if ( guest == null )  {
       return false;
     }
 
-     await Guest.db.deleteRow(session, guest);
-
-     return true;
+    final result = await Guest.db.deleteRow(session, guest);
+     
+    if ( result == id ) {
+      return true;
+    }
+     
+     return false;
   }
 }

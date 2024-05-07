@@ -55,6 +55,8 @@ class GuestDatasourceImpl implements GuestDatasource {
     }
   }
   
+
+  // If return true, a record deleted.
   @override
   Future<bool> delete(int id) async {
     try { 

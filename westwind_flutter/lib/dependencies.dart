@@ -4,6 +4,7 @@ import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/features/guest/data/datasources/guest_datasource.dart';
 import 'package:westwind_flutter/features/guest/data/repositories/guest_repository_imp.dart';
 import 'package:westwind_flutter/features/guest/domain/repositories/guest_repository.dart';
+import 'package:westwind_flutter/features/guest/domain/usecases/delete_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/list_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/retrieve_guest.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
@@ -42,6 +43,12 @@ void _initGuest() {
       serverLocator<GuestRepository>(),
     ),
   );
+
+    serverLocator.registerFactory<DeleteGuestUseCase>(
+    () => DeleteGuestUseCase(
+      serverLocator<GuestRepository>(),
+    ),
+  );
     serverLocator.registerFactory<RetrieveGuestUseCase>(
     () => RetrieveGuestUseCase(
       serverLocator<GuestRepository>(),
@@ -53,6 +60,7 @@ void _initGuest() {
   serverLocator.registerLazySingleton(
     () => GuestListBloc(
       listGuests: serverLocator<ListGuestsUseCase>(),
+      deleteGuest: serverLocator<DeleteGuestUseCase>(),
     ),
   );
 

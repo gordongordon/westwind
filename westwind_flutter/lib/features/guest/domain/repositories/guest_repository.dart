@@ -10,5 +10,4 @@ abstract interface class GuestRepository {
    Future<Either<Failure, Guest>> retrieve(int id);
    Future<Either<Failure, Guest>> create(Guest guest);
    Future<Either<Failure, bool>> delete(int id);
-
 }
