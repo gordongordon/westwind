@@ -6,7 +6,6 @@ import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/gue
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_events.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_state.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_detail_page.dart';
-import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
 
 class GuestListWidgets extends StatefulWidget {
   const GuestListWidgets({super.key});
@@ -32,12 +31,12 @@ class _GuestListWidgetsState extends State<GuestListWidgets> {
   Widget build(BuildContext context) {
     return BlocBuilder<GuestListBloc, GuestListState>(
       builder: (context, state) {
+        debugPrint("building SB");
         switch (state) {
           case GuestListStateInitial():
             return const SizedBox.shrink();
           case GuestListStateLoading():
             return const Loader();
-
           case GuestListStateLoaded():
             final guests = state.guests;
             return ListView.builder(

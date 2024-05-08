@@ -1,5 +1,7 @@
 docker_run: 
 	cd westwind_server && docker compose up --build --detach
+docker_destory:
+	cd westwind_server && docker compose down -v
 server_run: 
 	cd westwind_server && dart bin/main.dart
 server_run_apply:

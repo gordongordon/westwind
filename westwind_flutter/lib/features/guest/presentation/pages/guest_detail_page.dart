@@ -40,7 +40,8 @@ class _GuestDetailPageState extends State<GuestDetailPage> {
           case GuestRetrieveStateInitial():
             return const SizedBox();
           case GuestRetrieveStateLoading():
-            return Scaffold(body: Loader());
+           //  return Scaffold(body: Loader());
+            return const Loader(); 
           case GuestRetrieveStateLoaded():
             final guest = state.guest;
             return Scaffold(

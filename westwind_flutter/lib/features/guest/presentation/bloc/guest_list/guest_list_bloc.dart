@@ -24,23 +24,29 @@ class GuestListBloc extends Bloc<GuestListEvent, GuestListState> {
 
     result.fold(
       (failure) => emit(GuestListStateFailure(failure.message)),
-      (guests) => emit(GuestListStateLoaded(guests)),
+      (guests) {
+   //     emit(GuestListStateLoading());
+        emit(GuestListStateLoaded(guests));
+      },
     );
   }
 
   Future<void> _onDeleteGuest(
       DeleteGuestEvent event, Emitter<GuestListState> emit) async {
-    final isDelete = await deleteGuest(DeleteGuestParams(id: event.id ));
-    final result = await listGuests(NoParams());
+      final isDelete = await deleteGuest(DeleteGuestParams(id: event.id));
+        final result = await listGuests(NoParams());
 
     print(isDelete);
 
     isDelete.fold(
       (failure) => emit(GuestListStateFailure(failure.message)),
-      (r) {
+      (r)  {
+    
         result.fold(
           (failure) => emit(GuestListStateFailure(failure.message)),
-          (guests) => emit(GuestListStateLoaded(guests)),
+          (guests) {
+            emit(GuestListStateLoaded(guests));
+          },
         );
       },
     );

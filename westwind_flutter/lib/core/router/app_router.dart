@@ -1,4 +1,6 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:westwind_flutter/core/cubits/cubit/app_user_cubit.dart';
 import 'package:westwind_flutter/features/auth/presentation/pages/login_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_detail_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
@@ -22,5 +24,21 @@ class AppRouter {
         ),
       ),
     ],
+    redirect: (context, state ) { 
+      final userState = context.read<AppUserCubit>().state;
+
+      final publicRoutes = [
+        LoginPage.route(),
+      ];
+
+      if ( !publicRoutes.contains(state.matchedLocation)) {
+        if ( userState is AppUserInitial) {
+          return LoginPage.route();
+        }
+      }
+
+      return null;
+    }
   );
+
 }

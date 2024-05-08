@@ -16,7 +16,9 @@ void main() async {
         BlocProvider(create: (_) => serverLocator<AppUserCubit>()),
         BlocProvider(create: (_) => serverLocator<GuestListBloc>()),
         BlocProvider(create: (_) => serverLocator<GuestRetrieveBloc>()),
-        BlocProvider(create: (_) => serverLocator<AuthBloc>()..add(AuthIsUserLoggedInEvent())),
+        BlocProvider(
+            create: (_) =>
+                serverLocator<AuthBloc>()..add(AuthIsUserLoggedInEvent())),
       ],
       child: const MyApp(),
     ),
@@ -28,11 +30,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: "Westwind ServerPod",
-      theme: ThemeData.dark(),
-      debugShowCheckedModeBanner: false,
-      routerConfig: AppRouter.router,
+    return BlocListener<AppUserCubit, AppUserState>(
+      listener: (context, state) {
+         AppRouter.router.refresh();
+      },
+      child: MaterialApp.router(
+        title: "Westwind ServerPod",
+        theme: ThemeData.dark(),
+        debugShowCheckedModeBanner: false,
+        routerConfig: AppRouter.router,
+      ),
     );
   }
 }

@@ -43,12 +43,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     result.fold(
       (failure) => emit(AuthStateFailure(failure.message)),
-      (user) => emit(AuthStateSuccess(user)),
+      (user) =>   _emitAuthSuccess(user, emit),
     );
   }
 
- // FutureOr<void> _onAuthIsUserLoggedIn(
-   //   AuthIsUserLoggedInEvent event, Emitter<AuthState> emit) async {}
+
+  FutureOr<void> _onAuthIsUserLoggedIn(
+    AuthIsUserLoggedInEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    final result = await currentUser(NoParams());
+    result.fold(
+      (failure) => emit(AuthStateFailure(failure.message)),
+      (user) {
+         _emitAuthSuccess(user, emit);
+      },
+    );
+  }
 
   FutureOr<void> _onAuthLogout(
       AuthLogoutEvent event, Emitter<AuthState> emit) async {
@@ -63,16 +74,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  FutureOr<void> _onAuthIsUserLoggedIn(
-    AuthIsUserLoggedInEvent event,
-    Emitter<AuthState> emit,
-  ) async {
-    final result = await currentUser(NoParams());
-    result.fold(
-      (failure) => emit(AuthStateFailure(failure.message)),
-      (user) { 
-        appUserCubit.updateUser(user);
-        emit( AuthStateSuccess(user) );  },
-    );
+  void _emitAuthSuccess( User user, Emitter<AuthState> emit) {
+            appUserCubit.updateUser(user);
+        emit(AuthStateSuccess(user));
   }
 }
