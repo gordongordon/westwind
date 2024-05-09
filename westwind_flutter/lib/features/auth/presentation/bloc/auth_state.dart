@@ -20,3 +20,15 @@ final class AuthStateFailure extends AuthState {
 
   const AuthStateFailure(  this.message );
 }
+
+final class AuthStateConfirmationRequired extends AuthState {
+
+    final String email;
+    final String password;
+
+    const AuthStateConfirmationRequired( {
+      required this.email,
+      required this.password,
+    });
+
+}

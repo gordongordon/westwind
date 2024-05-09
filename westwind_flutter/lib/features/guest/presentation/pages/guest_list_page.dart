@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:westwind_flutter/core/cubits/cubit/app_user_cubit.dart';
+import 'package:westwind_flutter/features/app_user/presentation/cubits/cubit/app_user_cubit.dart';
 import 'package:westwind_flutter/features/app_user/presentation/widgets/app_user_dropdown.dart';
 
 import 'package:westwind_flutter/features/guest/presentation/widgets/guest_list_widget.dart';

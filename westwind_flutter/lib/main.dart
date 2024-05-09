@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:westwind_flutter/core/cubits/cubit/app_user_cubit.dart';
+import 'package:westwind_flutter/features/app_user/presentation/cubits/cubit/app_user_cubit.dart';
 import 'package:westwind_flutter/core/router/app_router.dart';
 import 'package:westwind_flutter/dependencies.dart';
 import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
-import 'package:westwind_flutter/features/guest/presentation/bloc/guest_retreive/guest_retrieve_bloc.dart';
+import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +15,7 @@ void main() async {
       providers: [
         BlocProvider(create: (_) => serverLocator<AppUserCubit>()),
         BlocProvider(create: (_) => serverLocator<GuestListBloc>()),
-        BlocProvider(create: (_) => serverLocator<GuestRetrieveBloc>()),
+        BlocProvider(create: (_) => serverLocator<GuestDetailBloc>()),
         BlocProvider(
             create: (_) =>
                 serverLocator<AuthBloc>()..add(AuthIsUserLoggedInEvent())),

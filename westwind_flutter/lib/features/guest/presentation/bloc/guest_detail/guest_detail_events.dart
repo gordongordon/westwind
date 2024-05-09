@@ -2,9 +2,9 @@
 import 'package:flutter/foundation.dart';
 
 @immutable
-sealed class GuestRetrieveEvent {}
+sealed class GuestDetailEvent {}
 
-final class FetchGuestEvent extends GuestRetrieveEvent {
+final class FetchGuestEvent extends GuestDetailEvent {
   final int id;
 
   FetchGuestEvent( {required  this.id } );

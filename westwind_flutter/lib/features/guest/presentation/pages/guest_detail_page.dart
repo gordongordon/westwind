@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
-import 'package:westwind_flutter/features/guest/presentation/bloc/guest_retreive/guest_retrieve_bloc.dart';
-import 'package:westwind_flutter/features/guest/presentation/bloc/guest_retreive/guest_retrieve_events.dart';
-import 'package:westwind_flutter/features/guest/presentation/bloc/guest_retreive/guest_retrieve_state.dart';
+import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_bloc.dart';
+import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_events.dart';
+import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_state.dart';
 
 class GuestDetailPage extends StatefulWidget {
   static String route([int? guestId]) => "/guests/${guestId ?? ':id'}";
@@ -23,12 +23,12 @@ class _GuestDetailPageState extends State<GuestDetailPage> {
   void initState() {
     super.initState();
 
-    context.read<GuestRetrieveBloc>().add(FetchGuestEvent(id: widget.guestId));
+    context.read<GuestDetailBloc>().add(FetchGuestEvent(id: widget.guestId));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<GuestRetrieveBloc, GuestRetrieveState>(
+    return BlocConsumer<GuestDetailBloc, GuestDetailState>(
       listener: (context, state) {
         if (state is GuestRetrieveStateFailure) {
             showSnackbar(context, state.message); 

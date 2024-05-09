@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:westwind_flutter/features/auth/presentation/pages/register_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final emailController = TextEditingController(text: '3225297@gmail.com');
+  final emailController = TextEditingController(text: 'Jeff@gmail.com');
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
@@ -113,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Todo
+                       context.go(RegisterPage.route());
                     },
                     child: RichText(
                       text: TextSpan(

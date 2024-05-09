@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:westwind_flutter/core/cubits/cubit/app_user_cubit.dart';
+import 'package:westwind_flutter/features/app_user/presentation/cubits/cubit/app_user_cubit.dart';
 import 'package:westwind_flutter/core/entities/user.dart';
 import 'package:westwind_flutter/core/usecases/usecase.dart';
 import 'package:westwind_flutter/features/auth/domain/usecases/current_user.dart';
+import 'package:westwind_flutter/features/auth/domain/usecases/user_confirm_registration.dart';
 import 'package:westwind_flutter/features/auth/domain/usecases/user_login.dart';
 import 'package:westwind_flutter/features/auth/domain/usecases/user_logout.dart';
+import 'package:westwind_flutter/features/auth/domain/usecases/user_register.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -17,12 +19,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final CurrentUserUseCase currentUser;
   final UserLoginUseCase userLogin;
   final UserLogoutUseCase userLogout;
+  final UserRegisterUseCase userRegister;
+  final UserConfirmRegistrationUseCase userConfirmRegistration;
 
   AuthBloc({
     required this.appUserCubit,
     required this.currentUser,
     required this.userLogin,
     required this.userLogout,
+    required this.userRegister,
+    required this.userConfirmRegistration,
   }) : super(AuthStateInitial()) {
     on<AuthEvent>((event, emit) {
       emit(AuthStateLoading());
@@ -30,6 +36,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoginEvent>(_onAuthLogin);
     on<AuthIsUserLoggedInEvent>(_onAuthIsUserLoggedIn);
     on<AuthLogoutEvent>(_onAuthLogout);
+    on<AuthRegisterEvent>(_onAuthRegister);
+    on<AuthConfirmRegistrationEvent>(_onAuthConfirmRegistration);
   }
 
   FutureOr<void> _onAuthLogin(
@@ -43,10 +51,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     result.fold(
       (failure) => emit(AuthStateFailure(failure.message)),
-      (user) =>   _emitAuthSuccess(user, emit),
+      (user) => _emitAuthSuccess(user, emit),
     );
   }
-
 
   FutureOr<void> _onAuthIsUserLoggedIn(
     AuthIsUserLoggedInEvent event,
@@ -56,6 +63,47 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) => emit(AuthStateFailure(failure.message)),
       (user) {
+        _emitAuthSuccess(user, emit);
+      },
+    );
+  }
+
+  FutureOr<void> _onAuthRegister(
+    AuthRegisterEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    final result = await userRegister(UserRegisterParams(
+      email: event.email,
+      password: event.password,
+      username: event.username,
+    ));
+    result.fold(
+      (failure) => emit(AuthStateFailure(failure.message)),
+      (success) {
+        if ( success ) {
+         emit( AuthStateConfirmationRequired( email: event.email, password: event.password ));
+       //  _emitAuthSuccess(user, emit);
+        } else {
+          emit( const AuthStateFailure("Could not register"));
+        }
+      },
+    );
+  }
+
+    FutureOr<void> _onAuthConfirmRegistration(
+    AuthConfirmRegistrationEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    final result = await userConfirmRegistration(UserConfirmRegistrationParams(
+      email: event.email,
+      verificationCode: event.verificationCode,
+      password: event.password,
+    ));
+    result.fold(
+      (failure) => emit(AuthStateFailure(failure.message)),
+      (user) {
+          
+         // emit( Auth)
          _emitAuthSuccess(user, emit);
       },
     );
@@ -74,8 +122,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  void _emitAuthSuccess( User user, Emitter<AuthState> emit) {
-            appUserCubit.updateUser(user);
-        emit(AuthStateSuccess(user));
+  void _emitAuthSuccess(User user, Emitter<AuthState> emit) {
+    appUserCubit.updateUser(user);
+    emit(AuthStateSuccess(user));
   }
 }
