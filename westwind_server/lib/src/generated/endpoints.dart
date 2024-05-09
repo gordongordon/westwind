@@ -112,6 +112,24 @@ class Endpoints extends _i1.EndpointDispatch {
             params['id'],
           ),
         ),
+        'save': _i1.MethodConnector(
+          name: 'save',
+          params: {
+            'guest': _i1.ParameterDescription(
+              name: 'guest',
+              type: _i1.getType<_i7.Guest>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['guest'] as _i3.GuestEndpoint).save(
+            session,
+            params['guest'],
+          ),
+        ),
         'createGuest': _i1.MethodConnector(
           name: 'createGuest',
           params: {

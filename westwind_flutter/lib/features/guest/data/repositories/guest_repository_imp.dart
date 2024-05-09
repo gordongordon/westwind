@@ -47,5 +47,14 @@ class GuestRepositoryImp implements GuestRepository {
     }
   }
   
+  @override
+  Future<Either<Failure, Guest>> save(Guest guest) async {
+     try {
+        return right( await datasource.save(guest) );
+     } on ServerException catch (e) {
+       return left(Failure( e.message ));
+     }
+  }
+  
    
 }

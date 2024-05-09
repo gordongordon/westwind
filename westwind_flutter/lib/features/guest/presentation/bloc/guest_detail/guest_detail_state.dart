@@ -8,19 +8,19 @@ sealed class GuestDetailState {
   const GuestDetailState();
 }
 
-final class GuestRetrieveStateInitial extends GuestDetailState {}
+final class GuestDetailtateInitial extends GuestDetailState {}
 
-final class GuestRetrieveStateLoading extends GuestDetailState {}
+final class GuestDetailStateLoading extends GuestDetailState {}
 
-final class GuestRetrieveStateLoaded extends GuestDetailState {
+final class GuestDetailStateLoaded extends GuestDetailState {
   final Guest guest;
 
-  const GuestRetrieveStateLoaded(this.guest);
+  const GuestDetailStateLoaded(this.guest);
 }
 
-final class GuestRetrieveStateFailure extends GuestDetailState {
+final class GuestDetailStateFailure extends GuestDetailState {
   final String message;
 
-  const GuestRetrieveStateFailure( this.message );
+  const GuestDetailStateFailure( this.message );
 
 }

@@ -54,6 +54,13 @@ class EndpointGuest extends _i1.EndpointRef {
         {'id': id},
       );
 
+  _i2.Future<_i3.Guest> save(_i3.Guest guest) =>
+      caller.callServerEndpoint<_i3.Guest>(
+        'guest',
+        'save',
+        {'guest': guest},
+      );
+
   _i2.Future<_i3.Guest> createGuest({required _i3.Guest guest}) =>
       caller.callServerEndpoint<_i3.Guest>(
         'guest',

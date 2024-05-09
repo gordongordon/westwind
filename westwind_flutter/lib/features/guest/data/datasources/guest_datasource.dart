@@ -7,6 +7,7 @@ abstract interface class GuestDatasource {
   Future<Guest> retrieve( int id);
   Future<Guest> create(Guest guest);
   Future<bool> delete( int id);
+  Future<Guest> save(Guest guest);
 }
 
 class GuestDatasourceImpl implements GuestDatasource {
@@ -40,6 +41,7 @@ class GuestDatasourceImpl implements GuestDatasource {
     }
   }
 
+
     @override
   Future<Guest> create(Guest guest) async {
     try { 
@@ -69,6 +71,15 @@ class GuestDatasourceImpl implements GuestDatasource {
         
     } catch (e) {
       throw ServerException( e.toString() );
+    }
+  }
+  
+  @override
+  Future<Guest> save(Guest guest) async{
+    try {
+        return await client.guest.save(guest);
+    } catch (e) {
+      throw ServerException(e.toString());
     }
   }
   

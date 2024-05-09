@@ -3,6 +3,7 @@ example:
 guest:
   - list:
   - retrieve:
+  - save:
   - createGuest:
   - updateGuest:
   - findGuest:

@@ -25,6 +25,10 @@ class GuestEndpoint extends Endpoint {
     return Guest.db.findById(session, id);
   }
 
+  Future<Guest> save( Session session, Guest guest) async {
+    return await (guest.id != null? Guest.db.updateRow(session, guest) : Guest.db.insertRow(session, guest));
+  }
+
 
   Future<Guest> createGuest(Session session, {required Guest guest}) async {
     guest.dateCreate = DateTime.now();

@@ -14,17 +14,19 @@ import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart'
 import 'package:westwind_flutter/features/guest/data/datasources/guest_datasource.dart';
 import 'package:westwind_flutter/features/guest/data/repositories/guest_repository_imp.dart';
 import 'package:westwind_flutter/features/guest/domain/repositories/guest_repository.dart';
+import 'package:westwind_flutter/features/guest/domain/usecases/create_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/delete_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/list_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/retrieve_guest.dart';
+import 'package:westwind_flutter/features/guest/domain/usecases/save_guest.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_bloc.dart';
 import 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart';
+import 'package:westwind_flutter/features/guest/presentation/bloc/guest_manage/guest_manage_bloc.dart';
 
 final serverLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
-
   serverLocator.registerLazySingleton<AppUserCubit>(
     () => AppUserCubit(),
   );
@@ -47,6 +49,7 @@ Future<void> initDependencies() async {
   _initAuth();
 
   _initGuest();
+
 }
 
 void _initAuth() {
@@ -81,12 +84,12 @@ void _initAuth() {
       serverLocator<AuthRepository>(),
     ),
   );
-    serverLocator.registerFactory<UserRegisterUseCase>(
+  serverLocator.registerFactory<UserRegisterUseCase>(
     () => UserRegisterUseCase(
       serverLocator<AuthRepository>(),
     ),
   );
-    serverLocator.registerFactory<UserConfirmRegistrationUseCase>(
+  serverLocator.registerFactory<UserConfirmRegistrationUseCase>(
     () => UserConfirmRegistrationUseCase(
       serverLocator<AuthRepository>(),
     ),
@@ -98,7 +101,7 @@ void _initAuth() {
       appUserCubit: serverLocator<AppUserCubit>(),
       currentUser: serverLocator<CurrentUserUseCase>(),
       userLogin: serverLocator<UserLoginUseCase>(),
-      userLogout:  serverLocator<UserLogoutUseCase>(),
+      userLogout: serverLocator<UserLogoutUseCase>(),
       userRegister: serverLocator<UserRegisterUseCase>(),
       userConfirmRegistration: serverLocator<UserConfirmRegistrationUseCase>(),
     ),
@@ -127,7 +130,6 @@ void _initGuest() {
       serverLocator<GuestRepository>(),
     ),
   );
-
   serverLocator.registerFactory<DeleteGuestUseCase>(
     () => DeleteGuestUseCase(
       serverLocator<GuestRepository>(),
@@ -138,13 +140,32 @@ void _initGuest() {
       serverLocator<GuestRepository>(),
     ),
   );
+  serverLocator.registerFactory<CreateGuestUseCase>(
+    () => CreateGuestUseCase(
+      serverLocator<GuestRepository>(),
+    ),
+  );
+  serverLocator.registerFactory<SaveGuestUseCase>(
+    () => SaveGuestUseCase(
+      serverLocator<GuestRepository>(),
+    ),
+  );
 
   // Blocs
   //! May be register as Factory base on Reso Coder for all bloc, because of Close stream issum after user come back to the page.
   serverLocator.registerLazySingleton(
     () => GuestListBloc(
       listGuests: serverLocator<ListGuestsUseCase>(),
+      deleteGuest: serverLocator<DeleteGuestUseCase>(),  
+    ),
+  );
+
+  serverLocator.registerLazySingleton(
+    () => GuestManageBloc(
       deleteGuest: serverLocator<DeleteGuestUseCase>(),
+      retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
+      saveGuest: serverLocator<SaveGuestUseCase>(),
+  
     ),
   );
 

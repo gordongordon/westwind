@@ -6,6 +6,7 @@ import 'package:westwind_flutter/dependencies.dart';
 import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_bloc.dart';
+import 'package:westwind_flutter/features/guest/presentation/bloc/guest_manage/guest_manage_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,7 @@ void main() async {
         BlocProvider(
             create: (_) =>
                 serverLocator<AuthBloc>()..add(AuthIsUserLoggedInEvent())),
+        BlocProvider(create: (_) => serverLocator<GuestManageBloc>()),
       ],
       child: const MyApp(),
     ),
