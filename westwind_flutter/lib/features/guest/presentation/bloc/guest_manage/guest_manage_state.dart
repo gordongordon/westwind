@@ -16,13 +16,13 @@ final class GuestManageStateRetrieveSuccess extends GuestManageState {
 final class GuestManageStateFailure extends GuestManageState {
   final String message;
 
-  GuestManageStateFailure({required this.message});
+  GuestManageStateFailure( this.message );
 }
 
-final class GuestManageStateRetrieveSaveSuccess extends GuestManageState {
+final class GuestManageStateSaveSuccess extends GuestManageState {
   final Guest guest;
 
-  GuestManageStateRetrieveSaveSuccess({required this.guest});
+  GuestManageStateSaveSuccess({required this.guest});
 }
 
 final class GuestManageStateDeleteSuccess extends GuestManageState {}

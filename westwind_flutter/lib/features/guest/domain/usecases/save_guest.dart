@@ -15,7 +15,7 @@ class SaveGuestUseCase implements UseCase<Guest,  SaveGuestParams> {
 
   @override
   Future<Either<Failure, Guest>> call( SaveGuestParams params) async {
-    return await guestRepository.create(params.guest);
+    return await guestRepository.save(params.guest);
   }
 }
 

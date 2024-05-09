@@ -80,17 +80,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) => emit(AuthStateFailure(failure.message)),
       (success) {
-        if ( success ) {
-         emit( AuthStateConfirmationRequired( email: event.email, password: event.password ));
-       //  _emitAuthSuccess(user, emit);
+        if (success) {
+          emit(AuthStateConfirmationRequired(
+              email: event.email, password: event.password));
+          //  _emitAuthSuccess(user, emit);
         } else {
-          emit( const AuthStateFailure("Could not register"));
+          emit(const AuthStateFailure("Could not register"));
         }
       },
     );
   }
 
-    FutureOr<void> _onAuthConfirmRegistration(
+  FutureOr<void> _onAuthConfirmRegistration(
     AuthConfirmRegistrationEvent event,
     Emitter<AuthState> emit,
   ) async {
@@ -102,9 +103,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) => emit(AuthStateFailure(failure.message)),
       (user) {
-          
-         // emit( Auth)
-         _emitAuthSuccess(user, emit);
+        // emit( Auth)
+        _emitAuthSuccess(user, emit);
       },
     );
   }

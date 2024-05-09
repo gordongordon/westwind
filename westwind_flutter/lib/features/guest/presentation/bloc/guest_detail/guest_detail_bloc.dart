@@ -9,15 +9,17 @@ class GuestDetailBloc extends Bloc<GuestDetailEvent, GuestDetailState> {
 
   GuestDetailBloc({required this.retrieveGuest}) : super(GuestDetailtateInitial()) {
     on<GuestDetailEvent>((_, emit) => emit(GuestDetailStateLoading()));
-    on<FetchGuestRetrieveEvent>((_onFetchGuest));
+    on<GuestDetailRetrieveEvent>((_onFetchGuest));
   }
 
   // Note Selected FetchGuestEvent in order to get the id.
   Future<void> _onFetchGuest(
-      FetchGuestRetrieveEvent event, Emitter<GuestDetailState> emit) async {
+      GuestDetailRetrieveEvent event, Emitter<GuestDetailState> emit) async {
     final result = await retrieveGuest(RetrieveGuestParams(id: event.id ));
 
-    print(result);
+  //  print(result);
+      print(result);
+      print( "onFetchEvent");
 
     result.fold(
       (failure) => emit(GuestDetailStateFailure(failure.message)),

@@ -26,7 +26,7 @@ class _GuestDetailPageState extends State<GuestDetailPage> {
 
     context
         .read<GuestDetailBloc>()
-        .add(FetchGuestRetrieveEvent(id: widget.guestId));
+        .add(GuestDetailRetrieveEvent(id: widget.guestId));
   }
 
   @override
@@ -49,9 +49,10 @@ class _GuestDetailPageState extends State<GuestDetailPage> {
             final guest = state.guest;
             return Scaffold(
                 appBar: AppBar(
-                  title: Text("Guest Title"),
+                  title: Text("Guest Detail Page "),
                   actions: [
                     IconButton(onPressed: () {
+                      debugPrint(state.guest.id.toString());
                        context.push(GuestEditPage.route(state.guest.id));   
                     }, icon: const Icon( Icons.edit)),
                   ],
@@ -59,7 +60,7 @@ class _GuestDetailPageState extends State<GuestDetailPage> {
                 body: Column(
                   children: [
                     Text("Last Name ${guest.lastName}"),
-                    Text("First Name ${guest.firstName}")
+                    Text("ID ${guest.id!}")
                   ],
                 ));
           case GuestDetailStateFailure():

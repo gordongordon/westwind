@@ -7,6 +7,7 @@ final class GuestManageRetrieveEvent extends GuestManageEvent {
   final int id;
 
   GuestManageRetrieveEvent( {required this.id });
+
 }
 
 final class GuestManageSaveEvent extends GuestManageEvent {
