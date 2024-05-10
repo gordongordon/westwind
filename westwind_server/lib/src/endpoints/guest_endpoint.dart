@@ -16,20 +16,24 @@ class GuestEndpoint extends Endpoint {
   // The methods should return a typed future; the same types as for the parameters are
   // supported. The `session` object provides access to the database, logging,
   // passwords, and information about the request being made to the server.
-  Future<List<Guest>> list( Session session) async {
+  Future<List<Guest>> list(Session session) async {
     return Guest.db.find(session);
   }
- 
 
-  Future<Guest?> retrieve( Session session, int id) async {
+  Future<Guest?> retrieve(Session session, int id) async {
     return Guest.db.findById(session, id);
   }
 
-  Future<Guest> save( Session session, Guest guest) async {
-  
-    return await (guest.id != null? Guest.db.updateRow(session, guest) : Guest.db.insertRow(session, guest));
-  }
+  Future<Guest> save(Session session, Guest guest) async {
 
+    if (guest.id != null) {
+      guest.dateUpdate = DateTime.now();
+      return await Guest.db.updateRow(session, guest);
+    } else {
+       guest.dateCreate = DateTime.now();
+       return Guest.db.insertRow(session, guest);
+    }
+  }
 
   Future<Guest> createGuest(Session session, {required Guest guest}) async {
     guest.dateCreate = DateTime.now();
@@ -57,12 +61,13 @@ class GuestEndpoint extends Endpoint {
       return await Guest.db
           .find(session, include: Guest.include(company: Company.include()));
     } else {
-      return await Guest.db.find(session,
-          where: (guest) => guest.id.equals(guestId),
-          include: Guest.include(company: Company.include()),
-          orderBy: (t) => t.id,
-          orderDescending: true,
-          );
+      return await Guest.db.find(
+        session,
+        where: (guest) => guest.id.equals(guestId),
+        include: Guest.include(company: Company.include()),
+        orderBy: (t) => t.id,
+        orderDescending: true,
+      );
     }
   }
 
@@ -70,24 +75,23 @@ class GuestEndpoint extends Endpoint {
     return await Guest.db.find(
       session,
       orderBy: (t) => t.id,
-                orderDescending: true,
+      orderDescending: true,
     );
   }
 
-  Future<bool> delete(Session session, int id ) async {
-    
-    final guest = await Guest.db.findById( session, id );
+  Future<bool> delete(Session session, int id) async {
+    final guest = await Guest.db.findById(session, id);
 
-    if ( guest == null )  {
+    if (guest == null) {
       return false;
     }
 
     final result = await Guest.db.deleteRow(session, guest);
-     
-    if ( result == id ) {
+
+    if (result == id) {
       return true;
     }
-     
-     return false;
+
+    return false;
   }
 }

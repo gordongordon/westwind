@@ -17,7 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final emailController = TextEditingController(text: 'Jeff@gmail.com');
+  final emailController = TextEditingController(text: '3225297@gmail.com');
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
             }
 
             if (state is AuthStateSuccess) {
-                context.go(GuestListPage.route());
+              context.go(GuestListPage.route());
             }
           },
           builder: (context, state) {
@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                       context.go(RegisterPage.route());
+                      context.go(RegisterPage.route());
                     },
                     child: RichText(
                       text: TextSpan(

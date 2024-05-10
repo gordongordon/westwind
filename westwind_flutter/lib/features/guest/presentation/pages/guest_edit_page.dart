@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -25,13 +24,18 @@ class GuestEditPage extends StatefulWidget {
 }
 
 class _GuetEditPageState extends State<GuestEditPage> {
+  final formkey = GlobalKey<FormBuilderState>();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
-  final formkey = GlobalKey<FormBuilderState>();
-
-  final dateCreate = DateTime.now();
+  final rateTypeController = TextEditingController();
+  final dateCreateController = TextEditingController();
+  final idController = TextEditingController(text: "0");
+  final rigNumberController = TextEditingController();
+  var dateCreate = DateTime.now();
+  var dateUpdate = DateTime.now();
+  bool isInHouse = false;
 
   bool _genderHasError = false;
 
@@ -46,12 +50,11 @@ class _GuetEditPageState extends State<GuestEditPage> {
 
   @override
   void initState() {
-  
     super.initState();
 
-    if (isEditing ) {
-      print( "isEditing ");
-      print( widget.guestId);
+    if (isEditing) {
+      print("isEditing ");
+      print(widget.guestId);
       context
           .read<GuestManageBloc>()
           .add(GuestManageRetrieveEvent(id: widget.guestId!));
@@ -66,21 +69,17 @@ class _GuetEditPageState extends State<GuestEditPage> {
           actions: [
             IconButton(
               onPressed: () {
-                debugPrint( formkey.currentState!.validate().toString());
+                formkey.currentState?.saveAndValidate();
+                debugPrint(formkey.currentState!.validate().toString());
                 if (formkey.currentState!.validate()) {
-                  // Get RateType and assign back to database
-
-                  if ( formkey.currentState!.fields['rateType'] == null) {
-                    debugPrint("rateType == null");
-                  }
                   RateType rateType = RateType.values
                       .byName(formkey.currentState!.fields['rateType']!.value);
-            //      if ( formkey.currentState!.fields['rigNumber'] == null) {
-            //        debugPrint("rateType == null");
-             //     }
-             //     final rigNumber = formkey
-              //        .currentState!.fields['rigNumber']!.value
-               //       .toString();
+                  //      if ( formkey.currentState!.fields['rigNumber'] == null) {
+                  //        debugPrint("rateType == null");
+                  //     }
+                  //     final rigNumber = formkey
+                  //        .currentState!.fields['rigNumber']!.value
+                  //       .toString();
 
                   final guest = Guest(
                     id: widget.guestId,
@@ -89,18 +88,21 @@ class _GuetEditPageState extends State<GuestEditPage> {
                     phone: phoneController.text,
                     email: emailController.text,
                     isInHouse: formkey.currentState!.fields['isInHouse']!.value,
-                    dateCreate: new DateTime.now(),
+                    dateCreate:
+                        formkey.currentState!.fields['dateCreate']!.value,
+                    dateUpdate:
+                        formkey.currentState!.fields['dateUpdate']!.value,
                     rateType: rateType,
                     staffId: 1,
                     companyId: 1,
-                    rigNumber: 99,
+                    rigNumber: int.parse(rigNumberController.text),
                   );
 
-                  debugPrint( guest.toString() );
+                  debugPrint(guest.toString());
                   context
                       .read<GuestManageBloc>()
                       .add(GuestManageSaveEvent(guest: guest));
-                 // context.pop();
+                  // context.pop();
                 }
               },
               icon: Icon(Icons.done),
@@ -113,7 +115,7 @@ class _GuetEditPageState extends State<GuestEditPage> {
               showSnackbar(context, state.message);
             } else if (state is GuestManageStateSaveSuccess) {
               context.read<GuestListBloc>().add(FetchGuestsEvent());
-             //  context.pop();
+              //  context.pop();
               if (isEditing) {
                 context
                     .read<GuestDetailBloc>()
@@ -125,18 +127,23 @@ class _GuetEditPageState extends State<GuestEditPage> {
               context.read<GuestListBloc>().add(FetchGuestsEvent());
               context.pop();
               context.pop();
-            } else if (state is GuestManageStateRetrieveSuccess ) {
+            } else if (state is GuestManageStateRetrieveSuccess) {
               debugPrint("GuestManageState RetrieveSuccess ");
+              idController.text = state.guest.id!.toString();
               firstNameController.text = state.guest.firstName;
               lastNameController.text = state.guest.lastName;
               emailController.text = state.guest.email;
               phoneController.text = state.guest.phone;
-              ;
+              rateTypeController.text = state.guest.rateType.toString();
+              isInHouse = state.guest.isInHouse;
+              dateCreate = state.guest.dateCreate;
+              dateUpdate = state.guest.dateUpdate!;
+              rigNumberController.text = state.guest.rigNumber.toString();
             }
           },
           builder: (context, state) {
             if (state is GuestManageStateLoading) {
-               return const Loader();
+              return const Loader();
             }
 
             return SingleChildScrollView(
@@ -146,7 +153,39 @@ class _GuetEditPageState extends State<GuestEditPage> {
                   key: formkey,
                   child: Column(
                     children: [
-                      TextFormField(
+                      FormBuilderTextField(
+                        name: 'id',
+                        enabled: false,
+                        //  readOnly: true,
+                        controller: idController,
+                        keyboardType: TextInputType.phone,
+                        decoration: const InputDecoration(labelText: 'ID'),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.numeric(),
+                        ]),
+                      ),
+                      //     const SizedBox(height: 10),
+                      FormBuilderTextField(
+                        name: 'lastName',
+                        // enabled: false,
+                        controller: lastNameController,
+                        decoration:
+                            const InputDecoration(labelText: 'Last Name'),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                        ]),
+                      ),
+                      FormBuilderTextField(
+                        name: 'firstName',
+                        controller: firstNameController,
+                        decoration:
+                            const InputDecoration(labelText: 'First Name'),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                        ]),
+                      ),
+                      /*         TextFormField(
                         controller: firstNameController,
                         decoration:
                             const InputDecoration(label: Text('FirstName')),
@@ -172,6 +211,7 @@ class _GuetEditPageState extends State<GuestEditPage> {
                           return null;
                         },
                       ),
+              
                       TextFormField(
                         controller: emailController,
                         decoration: const InputDecoration(label: Text('Email')),
@@ -203,9 +243,50 @@ class _GuetEditPageState extends State<GuestEditPage> {
                           return null;
                         },
                       ),
+
+
+                      */
+
+                      FormBuilderTextField(
+                        name: 'phone',
+                        maxLength: 11,
+                        controller: phoneController,
+                        keyboardType: TextInputType.phone,
+                        decoration: const InputDecoration(labelText: 'Phone'),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.maxLength(11),
+                          FormBuilderValidators.numeric(),
+                          FormBuilderValidators.equalLength(11),
+                          //     FormBuilderValidators.minWordsCount(10,
+                          //        allowEmpty: false, errorText: 'e.g. 17805425375'),
+                        ]),
+                      ),
+                      const SizedBox(height: 10),
+                      FormBuilderTextField(
+                        name: 'email',
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(labelText: 'Email'),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.email(),
+                        ]),
+                      ),
+                      FormBuilderTextField(
+                        name: 'rigNumber',
+                        controller: rigNumberController,
+                        keyboardType: TextInputType.phone,
+                        decoration:
+                            const InputDecoration(labelText: 'rigNumber'),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                        ]),
+                      ),
                       const SizedBox(height: 10),
                       FormBuilderDropdown<String>(
                         name: 'rateType',
+                        initialValue: rateTypeController.text,
                         decoration: InputDecoration(
                           labelText: 'RateType',
                           suffix: _genderHasError
@@ -229,17 +310,22 @@ class _GuetEditPageState extends State<GuestEditPage> {
                       ),
                       const SizedBox(height: 10),
                       FormBuilderSwitch(
-                        title: const Text('Is in house?'),
+                        title: Text((isInHouse
+                            ? "Is in house?   Yes"
+                            : " Is in house?    No")),
+                        enabled: false,
+                        inactiveThumbColor: Colors.red,
+                        initialValue: isInHouse,
                         name: 'isInHouse',
                         onChanged: _onChanged,
                       ),
                       const SizedBox(height: 10),
                       FormBuilderDateTimePicker(
                         name: 'dateCreate',
+                        enabled: false,
                         decoration:
                             const InputDecoration(labelText: 'Date Created'),
                         initialValue: dateCreate,
-                        //                 initialDate: DateTime.now().add(const Duration(days: 10)),
                         initialDatePickerMode: DatePickerMode.day,
                         timePickerInitialEntryMode: TimePickerEntryMode.input,
                         initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -248,6 +334,32 @@ class _GuetEditPageState extends State<GuestEditPage> {
                           FormBuilderValidators.required(),
                         ]),
                       ),
+                      const SizedBox(height: 10),
+                      FormBuilderDateTimePicker(
+                        name: 'dateUpdate',
+                        enabled: false,
+                        decoration:
+                            const InputDecoration(labelText: 'Date Updated'),
+                        initialValue: dateUpdate,
+                        initialDatePickerMode: DatePickerMode.day,
+                        timePickerInitialEntryMode: TimePickerEntryMode.input,
+                        initialEntryMode: DatePickerEntryMode.calendarOnly,
+                        inputType: InputType.date,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                        ]),
+                      ),
+                      if (isEditing)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                context.read<GuestManageBloc>().add(
+                                    GuestManageDeleteEvent(
+                                        id: widget.guestId!));
+                              },
+                              child: const Text("Delete")),
+                        )
                     ],
                   ),
                 ),
