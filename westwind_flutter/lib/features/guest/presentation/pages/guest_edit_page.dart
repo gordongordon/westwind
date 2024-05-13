@@ -148,7 +148,7 @@ class _GuetEditPageState extends State<GuestEditPage> {
 
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 child: FormBuilder(
                   key: formkey,
                   child: Column(
@@ -185,68 +185,7 @@ class _GuetEditPageState extends State<GuestEditPage> {
                           FormBuilderValidators.required(),
                         ]),
                       ),
-                      /*         TextFormField(
-                        controller: firstNameController,
-                        decoration:
-                            const InputDecoration(label: Text('FirstName')),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'FirstName required';
-                          }
-
-                          // to do validate email
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: lastNameController,
-                        decoration:
-                            const InputDecoration(label: Text('last name')),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'last name required';
-                          }
-
-                          // to do validate email
-                          return null;
-                        },
-                      ),
-              
-                      TextFormField(
-                        controller: emailController,
-                        decoration: const InputDecoration(label: Text('Email')),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Email required';
-                          }
-
-                          // to do validate email
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        controller: phoneController,
-                        decoration: const InputDecoration(label: Text('phone')),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'phone required';
-                          }
-
-                          if (int.tryParse(value) == null) {
-                            return 'Invalid phone';
-                          }
-
-                          // to do validate email
-                          return null;
-                        },
-                      ),
-
-
-                      */
-
+                                      const SizedBox(height: 10),
                       FormBuilderTextField(
                         name: 'phone',
                         maxLength: 11,

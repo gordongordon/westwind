@@ -14,7 +14,6 @@ import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart'
 import 'package:westwind_flutter/features/guest/data/datasources/guest_datasource.dart';
 import 'package:westwind_flutter/features/guest/data/repositories/guest_repository_imp.dart';
 import 'package:westwind_flutter/features/guest/domain/repositories/guest_repository.dart';
-import 'package:westwind_flutter/features/guest/domain/usecases/create_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/delete_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/list_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/retrieve_guest.dart';
@@ -23,6 +22,16 @@ import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/gue
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_bloc.dart';
 import 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_manage/guest_manage_bloc.dart';
+import 'package:westwind_flutter/features/reservation/data/datasources/reservation_datasource.dart';
+import 'package:westwind_flutter/features/reservation/data/repositories/reservation_repository_imp.dart';
+import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
+import 'package:westwind_flutter/features/reservation/domain/usecases/delete_reservation.dart';
+import 'package:westwind_flutter/features/reservation/domain/usecases/list_reservation.dart';
+import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_guest_for_reservation.dart';
+import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_reservation.dart';
+import 'package:westwind_flutter/features/reservation/domain/usecases/save_reservation.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
 
 final serverLocator = GetIt.instance;
 
@@ -49,6 +58,8 @@ Future<void> initDependencies() async {
   _initAuth();
 
   _initGuest();
+
+  _initReservation();
 
 }
 
@@ -140,11 +151,6 @@ void _initGuest() {
       serverLocator<GuestRepository>(),
     ),
   );
-  serverLocator.registerFactory<CreateGuestUseCase>(
-    () => CreateGuestUseCase(
-      serverLocator<GuestRepository>(),
-    ),
-  );
   serverLocator.registerFactory<SaveGuestUseCase>(
     () => SaveGuestUseCase(
       serverLocator<GuestRepository>(),
@@ -174,4 +180,70 @@ void _initGuest() {
       retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
     ),
   );
+}
+
+void _initReservation()  {
+
+  // Data Source
+  serverLocator.registerFactory<ReservationDatasource>(
+    () => ReservationDatasourceImp(
+      serverLocator<Client>(),
+    ),
+  );
+
+  // Repository
+  serverLocator.registerFactory<ReservationRepository>(
+    () => ReservationRepositoryImp(
+      serverLocator<ReservationDatasource>(),
+    ),
+  );
+
+  // Use Cases
+  //! register as Singleton base on Reso coder, for cacheing .
+  serverLocator.registerFactory<ListReservationUseCase>(
+    () => ListReservationUseCase(
+      serverLocator<ReservationRepository>(),
+    ),
+  );
+
+  serverLocator.registerFactory<RetrieveReservationUseCase>(
+    () => RetrieveReservationUseCase(
+      serverLocator<ReservationRepository>(),
+    ),
+  );
+
+    serverLocator.registerFactory<SaveReservationUseCase>(
+    () => SaveReservationUseCase(
+      serverLocator<ReservationRepository>(),
+    ),
+  );
+
+    serverLocator.registerFactory<DeleteReservationUseCase>(
+    () => DeleteReservationUseCase(
+      serverLocator<ReservationRepository>(),
+    ),
+  );
+
+      serverLocator.registerFactory<RetrieveGuestForReservationUseCase>(
+    () => RetrieveGuestForReservationUseCase(
+      serverLocator<GuestRepository>(),
+    ),
+  );
+
+  // Bloc
+  serverLocator.registerLazySingleton<ReservationListBloc>(
+    () => ReservationListBloc(
+       listReservations : serverLocator<ListReservationUseCase>(),
+    )
+  );
+
+  serverLocator.registerLazySingleton<ReservationManageBloc>(
+    () => ReservationManageBloc(
+      retrieveReservation: serverLocator<RetrieveReservationUseCase>(), 
+      saveReservation: serverLocator<SaveReservationUseCase>(), 
+      deleteReservation: serverLocator<DeleteReservationUseCase>(), 
+      retrieveGuestForReservation: serverLocator<RetrieveGuestForReservationUseCase>(),
+     )
+  );
+
 }

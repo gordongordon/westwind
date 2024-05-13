@@ -1,0 +1,17 @@
+
+
+
+
+
+
+import 'package:fpdart/fpdart.dart';
+import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/core/error/failure.dart';
+
+abstract interface class ReservationRepository {
+     
+    Future<Either<Failure,List<Reservation>>> list();
+    Future<Either<Failure,Reservation>> retrieve(int id);
+    Future<Either<Failure,bool>> delete( int id );
+    Future<Either<Failure,Reservation>> save( Reservation reservation);
+}

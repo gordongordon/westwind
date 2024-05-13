@@ -7,6 +7,8 @@ import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart'
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_manage/guest_manage_bloc.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +23,8 @@ void main() async {
             create: (_) =>
                 serverLocator<AuthBloc>()..add(AuthIsUserLoggedInEvent())),
         BlocProvider(create: (_) => serverLocator<GuestManageBloc>()),
+        BlocProvider(create: (_) => serverLocator<ReservationListBloc>()),
+        BlocProvider(create: (_) => serverLocator<ReservationManageBloc>()),
       ],
       child: const MyApp(),
     ),
@@ -34,7 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AppUserCubit, AppUserState>(
       listener: (context, state) {
-         AppRouter.router.refresh();
+        AppRouter.router.refresh();
       },
       child: MaterialApp.router(
         title: "Westwind ServerPod",

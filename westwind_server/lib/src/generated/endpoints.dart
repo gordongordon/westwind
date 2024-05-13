@@ -348,6 +348,24 @@ class Endpoints extends _i1.EndpointDispatch {
       name: 'reservation',
       endpoint: endpoints['reservation']!,
       methodConnectors: {
+        'save': _i1.MethodConnector(
+          name: 'save',
+          params: {
+            'reservation': _i1.ParameterDescription(
+              name: 'reservation',
+              type: _i1.getType<_i11.Reservation>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['reservation'] as _i5.ReservationEndpoint).save(
+            session,
+            params['reservation'],
+          ),
+        ),
         'createReservation': _i1.MethodConnector(
           name: 'createReservation',
           params: {
@@ -367,8 +385,8 @@ class Endpoints extends _i1.EndpointDispatch {
             params['res'],
           ),
         ),
-        'findReservation': _i1.MethodConnector(
-          name: 'findReservation',
+        'retrieve': _i1.MethodConnector(
+          name: 'retrieve',
           params: {
             'id': _i1.ParameterDescription(
               name: 'id',
@@ -380,8 +398,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['reservation'] as _i5.ReservationEndpoint)
-                  .findReservation(
+              (endpoints['reservation'] as _i5.ReservationEndpoint).retrieve(
             session,
             id: params['id'],
           ),
@@ -443,15 +460,15 @@ class Endpoints extends _i1.EndpointDispatch {
             id: params['id'],
           ),
         ),
-        'getAllReservations': _i1.MethodConnector(
-          name: 'getAllReservations',
+        'list': _i1.MethodConnector(
+          name: 'list',
           params: {},
           call: (
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
               (endpoints['reservation'] as _i5.ReservationEndpoint)
-                  .getAllReservations(session),
+                  .list(session),
         ),
         'getNullCheckInReservations': _i1.MethodConnector(
           name: 'getNullCheckInReservations',
@@ -509,6 +526,24 @@ class Endpoints extends _i1.EndpointDispatch {
                   .checkInReservation(
             session,
             reservationId: params['reservationId'],
+          ),
+        ),
+        'delete': _i1.MethodConnector(
+          name: 'delete',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['reservation'] as _i5.ReservationEndpoint).delete(
+            session,
+            params['id'],
           ),
         ),
       },

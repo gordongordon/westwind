@@ -7,6 +7,8 @@ import 'package:westwind_flutter/features/auth/presentation/pages/register_page.
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_detail_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_edit_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_edit_page.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_list_page.dart';
 
 class AppRouter {
   static GoRouter router = GoRouter(
@@ -42,6 +44,20 @@ class AppRouter {
           path: GuestDetailPage.route(),
           builder: (context, state) => GuestDetailPage(
             guestId: int.parse(state.pathParameters['id'] ?? '0'),
+          ),
+        ),
+        GoRoute(
+          path: ReservationListPage.route(),
+          builder: (context, _) => const ReservationListPage(),
+        ),
+        GoRoute(
+          path: ReservationEditPage.routeNew(),
+          builder: (context, _) => ReservationEditPage(),
+        ),
+        GoRoute(
+          path: ReservationEditPage.route(),
+          builder: (context, state) => ReservationEditPage(
+            reservationId: int.parse(state.pathParameters['id'] ?? '0'),
           ),
         ),
       ],

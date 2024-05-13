@@ -29,14 +29,6 @@ class GuestRepositoryImp implements GuestRepository {
     }
   }
   
-  @override
-  Future<Either<Failure, Guest>> create(Guest guest) async {
-    try {
-      return right(await datasource.create(guest));
-    } on ServerException catch (e)  {
-      return left( Failure( e.message ) );
-    }
-  }
   
   @override
   Future<Either<Failure, bool>> delete(int id) async { 

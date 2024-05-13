@@ -5,7 +5,6 @@ import 'package:westwind_flutter/core/error/exception.dart';
 abstract interface class GuestDatasource {
   Future<List<Guest>> list();
   Future<Guest> retrieve( int id);
-  Future<Guest> create(Guest guest);
   Future<bool> delete( int id);
   Future<Guest> save(Guest guest);
 }
@@ -41,7 +40,7 @@ class GuestDatasourceImpl implements GuestDatasource {
     }
   }
 
-
+/*
     @override
   Future<Guest> create(Guest guest) async {
     try { 
@@ -56,6 +55,7 @@ class GuestDatasourceImpl implements GuestDatasource {
       throw ServerException( e.toString() );
     }
   }
+  */
   
 
   // If return true, a record deleted.
@@ -77,7 +77,14 @@ class GuestDatasourceImpl implements GuestDatasource {
   @override
   Future<Guest> save(Guest guest) async{
     try {
-        return await client.guest.save(guest);
+        final result = await client.guest.save(guest);
+        
+        //! Missing checkcing if update success ? 
+        if ( result.id == null ) {
+          throw ServerException( "Guest can't be saved! ");
+        }
+        return result;
+
     } catch (e) {
       throw ServerException(e.toString());
     }

@@ -17,6 +17,20 @@ class ReservationEndpoint extends Endpoint {
   // supported. The `session` object provides access to the database, logging,
   // passwords, and information about the request being made to the server.
 
+  //Future<Reservation?> retrieve(Session session, int id) async {
+  //  return Reservation.db.findById(session, id);
+  // }
+
+  Future<Reservation> save(Session session, Reservation reservation) async {
+    if (reservation.id != null) {
+      reservation.dateUpdate = DateTime.now();
+      return await Reservation.db.updateRow(session, reservation);
+    } else {
+      reservation.dateCreate = DateTime.now();
+      return Reservation.db.insertRow(session, reservation);
+    }
+  }
+
   Future<Reservation> createReservation(
       Session session, Reservation res) async {
     final rateTable = await RateTable.db.findFirstRow(
@@ -34,8 +48,7 @@ class ReservationEndpoint extends Endpoint {
     return await Reservation.db.insertRow(session, res);
   }
 
-  Future<Reservation?> findReservation(Session session,
-      {required int id}) async {
+  Future<Reservation?> retrieve(Session session, {required int id}) async {
     Reservation? res = await Reservation.db.findById(session, id,
         include: Reservation.include(
           guest: Guest.include(),
@@ -85,7 +98,7 @@ class ReservationEndpoint extends Endpoint {
     );
   }
 
-  Future<List<Reservation>> getAllReservations(Session session) async {
+  Future<List<Reservation>> list(Session session) async {
     return await Reservation.db.find(
       session,
       limit: 20,
@@ -98,9 +111,6 @@ class ReservationEndpoint extends Endpoint {
         Order(column: t.id, orderDescending: true),
         Order(column: t.checkInDate),
       ],
-      // orderBy: (t) => t.id,
-      //orderDescending: true,
-      //  where: (item) => item.isCheckedIn.notEquals(true),
     );
   }
 
@@ -267,5 +277,21 @@ class ReservationEndpoint extends Endpoint {
     }
 
     return result;
+  }
+
+  Future<bool> delete(Session session, int id) async {
+    final reservation = await Reservation.db.findById(session, id);
+
+    if (reservation == null) {
+      return false;
+    }
+
+    final result = await Reservation.db.deleteRow(session, reservation);
+
+    if (result == id) {
+      return true;
+    }
+
+    return false;
   }
 }

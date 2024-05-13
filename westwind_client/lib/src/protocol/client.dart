@@ -166,6 +166,13 @@ class EndpointReservation extends _i1.EndpointRef {
   @override
   String get name => 'reservation';
 
+  _i2.Future<_i7.Reservation> save(_i7.Reservation reservation) =>
+      caller.callServerEndpoint<_i7.Reservation>(
+        'reservation',
+        'save',
+        {'reservation': reservation},
+      );
+
   _i2.Future<_i7.Reservation> createReservation(_i7.Reservation res) =>
       caller.callServerEndpoint<_i7.Reservation>(
         'reservation',
@@ -173,10 +180,10 @@ class EndpointReservation extends _i1.EndpointRef {
         {'res': res},
       );
 
-  _i2.Future<_i7.Reservation?> findReservation({required int id}) =>
+  _i2.Future<_i7.Reservation?> retrieve({required int id}) =>
       caller.callServerEndpoint<_i7.Reservation?>(
         'reservation',
-        'findReservation',
+        'retrieve',
         {'id': id},
       );
 
@@ -201,10 +208,10 @@ class EndpointReservation extends _i1.EndpointRef {
         {'id': id},
       );
 
-  _i2.Future<List<_i7.Reservation>> getAllReservations() =>
+  _i2.Future<List<_i7.Reservation>> list() =>
       caller.callServerEndpoint<List<_i7.Reservation>>(
         'reservation',
-        'getAllReservations',
+        'list',
         {},
       );
 
@@ -235,6 +242,12 @@ class EndpointReservation extends _i1.EndpointRef {
         'reservation',
         'checkInReservation',
         {'reservationId': reservationId},
+      );
+
+  _i2.Future<bool> delete(int id) => caller.callServerEndpoint<bool>(
+        'reservation',
+        'delete',
+        {'id': id},
       );
 }
 

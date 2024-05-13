@@ -18,16 +18,18 @@ rateTable:
   - findRateTableById:
   - getAllRateTables:
 reservation:
+  - save:
   - createReservation:
-  - findReservation:
+  - retrieve:
   - cancelReservation:
   - updateReservation:
   - findReservationById:
-  - getAllReservations:
+  - list:
   - getNullCheckInReservations:
   - getAllReservationsByDay:
   - getTodayReservations:
   - checkInReservation:
+  - delete:
 roomGuest:
   - createRoomGuest:
   - findRoomGuest:
