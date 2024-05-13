@@ -24,3 +24,4 @@ final class GuestListStateFailure extends GuestListState {
   const GuestListStateFailure( this.message );
 
 }
+

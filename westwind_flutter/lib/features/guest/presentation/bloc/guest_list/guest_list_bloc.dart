@@ -9,11 +9,13 @@ class GuestListBloc extends Bloc<GuestListEvent, GuestListState> {
   final ListGuestsUseCase listGuests;
   final DeleteGuestUseCase deleteGuest;
 
+
   GuestListBloc({required this.listGuests, required this.deleteGuest})
       : super(GuestListStateInitial()) {
     on<GuestListEvent>((_, emit) => emit(GuestListStateLoading()));
     on<FetchGuestsEvent>((_onFetchGuests));
     on<DeleteGuestEvent>((_onDeleteGuest));
+  
   }
 
   Future<void> _onFetchGuests(
@@ -50,4 +52,5 @@ class GuestListBloc extends Bloc<GuestListEvent, GuestListState> {
       },
     );
   }
+
 }
