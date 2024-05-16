@@ -26,3 +26,9 @@ final class RetrieveGuestForReservation extends ReservationManageEvent {
 
   RetrieveGuestForReservation( {required this.id });
 }
+
+final class CheckInReservation extends ReservationManageEvent {
+  final int id;
+
+  CheckInReservation( { required this.id} );
+}

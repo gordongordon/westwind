@@ -12,9 +12,11 @@ class GuestDetailBloc extends Bloc<GuestDetailEvent, GuestDetailState> {
     on<GuestDetailRetrieveEvent>((_onFetchGuest));
   }
 
+
   // Note Selected FetchGuestEvent in order to get the id.
   Future<void> _onFetchGuest(
       GuestDetailRetrieveEvent event, Emitter<GuestDetailState> emit) async {
+                emit( GuestDetailStateLoading());
     final result = await retrieveGuest(RetrieveGuestParams(id: event.id ));
 
   //  print(result);

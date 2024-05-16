@@ -17,18 +17,22 @@ class ReservationListBloc
       emit(ReservationListStateLoading());
     });
     on<FetchReservationsEvent>((_onFetchReservations));
- //   on<RetrieveGuestForReservationEvent>((_onRetrieveGuestForReservation));
+    //   on<RetrieveGuestForReservationEvent>((_onRetrieveGuestForReservation));
   }
+
+
 
   Future<void> _onFetchReservations(
       FetchReservationsEvent event, Emitter<ReservationListState> emit) async {
+    emit(ReservationListStateLoading());
     final result = await listReservations(NoParams());
 
     result.fold(
-      (failure ) => emit(ReservationListStateFailure(message : failure.message)),
-      (reservations) => emit( ReservationListStateLoaded(reservations: reservations)),
+      (failure) => emit(ReservationListStateFailure(message: failure.message)),
+      (reservations) =>
+          emit(ReservationListStateLoaded(reservations: reservations)),
     );
-      }
 
-
+    return;
+  }
 }

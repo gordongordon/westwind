@@ -40,6 +40,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthConfirmRegistrationEvent>(_onAuthConfirmRegistration);
   }
 
+
   FutureOr<void> _onAuthLogin(
       AuthLoginEvent event, Emitter<AuthState> emit) async {
     final result = await userLogin(

@@ -49,7 +49,7 @@ class ReservationEndpoint extends Endpoint {
   }
 
   Future<Reservation?> retrieve(Session session, {required int id}) async {
-    Reservation? res = await Reservation.db.findById(session, id,
+   final res = await Reservation.db.findById(session, id,
         include: Reservation.include(
           guest: Guest.include(),
           room: Room.include(),

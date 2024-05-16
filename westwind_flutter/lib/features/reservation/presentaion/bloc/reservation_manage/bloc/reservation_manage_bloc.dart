@@ -1,7 +1,7 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/features/reservation/domain/usecases/checkIn_reservation.dart';
 
 import 'package:westwind_flutter/features/reservation/domain/usecases/delete_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_guest_for_reservation.dart';
@@ -17,12 +17,14 @@ class ReservationManageBloc
   final SaveReservationUseCase saveReservation;
   final DeleteReservationUseCase deleteReservation;
   final RetrieveGuestForReservationUseCase retrieveGuestForReservation;
+  final CheckInReservationUseCase checkInReservation;
 
   ReservationManageBloc({
     required this.retrieveReservation,
     required this.saveReservation,
     required this.deleteReservation,
     required this.retrieveGuestForReservation,
+    required this.checkInReservation,
   }) : super(ReservationManageStateInitial()) {
     on<ReservationManageEvent>((event, emit) {
       emit(ReservationManageStateInitial());
@@ -31,10 +33,13 @@ class ReservationManageBloc
     on<SaveReservation>((_onSaveReservation));
     on<DeleteReservation>((_onDeleteReservation));
     on<RetrieveGuestForReservation>((_onRetrieveGuestForReservation));
+    on<CheckInReservation>((_onCheckInReservation));
   }
 
   Future<void> _onRetrieveReservation(
       RetrieveReservation event, Emitter<ReservationManageState> emit) async {
+    emit(ReservationManageStateLoading());
+    await Future.delayed(Duration(seconds: 1));
     final result =
         await retrieveReservation(RetrieveReservationParams(id: event.id));
 
@@ -46,6 +51,8 @@ class ReservationManageBloc
 
   Future<void> _onSaveReservation(
       SaveReservation event, Emitter<ReservationManageState> emit) async {
+    emit(ReservationManageStateLoading());
+    await Future.delayed(Duration(seconds: 1));
     final result = await saveReservation(
         SaveReservationParams(reservation: event.reservation));
 
@@ -57,6 +64,8 @@ class ReservationManageBloc
 
   Future<void> _onDeleteReservation(
       DeleteReservation event, Emitter<ReservationManageState> emit) async {
+    emit(ReservationManageStateLoading());
+    await Future.delayed(Duration(seconds: 1));
     final result =
         await deleteReservation(DeleteReservationParams(id: event.id));
 
@@ -66,14 +75,31 @@ class ReservationManageBloc
     );
   }
 
-    Future<void> _onRetrieveGuestForReservation(
-      RetrieveGuestForReservation event, Emitter<ReservationManageState> emit) async {
-    final result =
-        await retrieveGuestForReservation(RetrieveGuestForReservationParams(id: event.id));
+  Future<void> _onRetrieveGuestForReservation(RetrieveGuestForReservation event,
+      Emitter<ReservationManageState> emit) async {
+    emit(ReservationManageStateLoading());
+    await Future.delayed(Duration(seconds: 1));
+    final result = await retrieveGuestForReservation(
+        RetrieveGuestForReservationParams(id: event.id));
 
     result.fold(
       (failure) => emit(ReservationManageStateFailure(failure.message)),
       (guest) => emit(ReservationManageStateRetrieveGuestSuccess(guest)),
     );
+  }
+
+  Future<void> _onCheckInReservation(
+      CheckInReservation event, Emitter<ReservationManageState> emit) async {
+    emit(ReservationManageStateLoading());
+    await Future.delayed(Duration(seconds: 1));
+
+    final result =
+        await checkInReservation(CheckInReservationParams(id: event.id));
+
+    result.fold(
+      (failure) => emit( ReservationManageStateFailure(failure.message)),
+      (_) => emit( ReservationManageStateCheckInSuccess()),
+    );
+    return;
   }
 }

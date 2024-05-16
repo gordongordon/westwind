@@ -18,8 +18,13 @@ class GuestListBloc extends Bloc<GuestListEvent, GuestListState> {
   
   }
 
+
+
+
   Future<void> _onFetchGuests(
       GuestListEvent event, Emitter<GuestListState> emit) async {
+
+        emit( GuestListStateLoading());
     final result = await listGuests(NoParams());
 
     // print(result);
@@ -35,6 +40,7 @@ class GuestListBloc extends Bloc<GuestListEvent, GuestListState> {
 
   Future<void> _onDeleteGuest(
       DeleteGuestEvent event, Emitter<GuestListState> emit) async {
+                emit( GuestListStateLoading());
     final isDelete = await deleteGuest(DeleteGuestParams(id: event.id));
     final result = await listGuests(NoParams());
 

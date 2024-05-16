@@ -84,13 +84,14 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                 formkey.currentState?.saveAndValidate();
                 debugPrint(formkey.currentState!.validate().toString());
                 if (formkey.currentState!.validate()) {
-                  RateType rateType = RateType.values
+                  //    debugPrint( " here");
+                  final RateType rateType = RateType.values
                       .byName(formkey.currentState!.fields['rateType']!.value);
 
-                  RateReason rateReason = RateReason.values.byName(
+                  final RateReason rateReason = RateReason.values.byName(
                       formkey.currentState!.fields['rateReason']!.value);
 
-                  final reservatioin = Reservation(
+                  final reservation = Reservation(
                     id: widget.reservationId,
                     guestId: int.parse(guestIdController.text),
                     roomId: int.parse(roomIdController.text),
@@ -105,18 +106,20 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                     dateUpdate:
                         formkey.currentState!.fields['dateUpdate']!.value,
                     checkInDate:
-                        formkey.currentState!.fields['dateCreate']!.value,
+                        formkey.currentState!.fields['checkInDate']!.value,
                     checkOutDate:
-                        formkey.currentState!.fields['dateUpdate']!.value,
+                        formkey.currentState!.fields['checkOutDate']!.value,
                     rateType: rateType,
                     rate: double.parse(rateController.text),
                     rateReason: rateReason,
                   );
 
-                  debugPrint(reservatioin.toString());
-                  context.read<ReservationManageBloc>().add(
-                     SaveReservation(reservation: reservatioin));
-                  // context.pop();
+                  debugPrint(" after Reservation final ");
+                  debugPrint(reservation.toString());
+                  context
+                      .read<ReservationManageBloc>()
+                      .add(SaveReservation(reservation: reservation));
+                  context.pop();
                 }
               },
               icon: Icon(Icons.done),
@@ -132,8 +135,9 @@ class _GuetEditPageState extends State<ReservationEditPage> {
               //  context.pop();
               if (isEditing) {
                 //! May have problem
-                context.read<ReservationManageBloc>().add(
-                    RetrieveReservation(id: widget.reservationId!));
+                context
+                    .read<ReservationManageBloc>()
+                    .add(RetrieveReservation(id: widget.reservationId!));
               }
 
               context.pop();
@@ -144,6 +148,11 @@ class _GuetEditPageState extends State<ReservationEditPage> {
             } else if (state is ReservationManageStateRetrieveSuccess) {
               debugPrint("ReservationManageState RetrieveSuccess ");
               idController.text = state.reservation.id!.toString();
+              guestIdController.text = state.reservation.guestId.toString();
+              roomIdController.text = state.reservation.roomId.toString();
+              rateController.text = state.reservation.rate.toString();
+              rateReasonController.text =
+                  state.reservation.rateReason.toString();
               firstNameController.text = state.reservation.guest!.firstName;
               lastNameController.text = state.reservation.guest!.lastName;
               phoneController.text = state.reservation.guest!.phone;
@@ -155,13 +164,18 @@ class _GuetEditPageState extends State<ReservationEditPage> {
               dateUpdate = state.reservation.dateUpdate!;
               checkInDate = state.reservation.checkInDate;
               checkOutDate = state.reservation.checkOutDate;
-              rigNumberController.text = state.reservation.guest!.toString();
-            } else if ( state is ReservationManageStateRetrieveGuestSuccess ) {
-               firstNameController.text = state.guest.firstName;
-               lastNameController.text = state.guest.lastName;
-               phoneController.text = state.guest.phone;
-               rigNumberController.text = state.guest.rigNumber.toString();
-               rateController.text = state.guest.rateType.toString();
+              rigNumberController.text =
+                  state.reservation.guest!.rigNumber.toString();
+            } else if (state is ReservationManageStateRetrieveGuestSuccess) {
+              firstNameController.text = state.guest.firstName;
+              lastNameController.text = state.guest.lastName;
+              phoneController.text = state.guest.phone;
+              rigNumberController.text = state.guest.rigNumber.toString();
+              rateController.text = state.guest.rateType.toString();
+            } else if ( state is ReservationManageStateCheckInSuccess ) {
+                            context.read<ReservationListBloc>().add(FetchReservationsEvent());
+
+              context.pop();
             }
           },
           builder: (context, state) {
@@ -193,7 +207,7 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                         name: 'checkInDate',
                         decoration:
                             const InputDecoration(labelText: 'Check In Date'),
-                        initialValue: dateCreate,
+                        initialValue: checkInDate,
                         initialDate:
                             DateTime.now().add(const Duration(days: 10)),
                         initialDatePickerMode: DatePickerMode.day,
@@ -254,6 +268,7 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                       const SizedBox(height: 10),
                       FormBuilderDropdown<String>(
                         name: 'rateReason',
+                        initialValue: rateReasonController.text,
                         decoration: InputDecoration(
                           labelText: 'RateReason',
                           suffix: _genderHasError
@@ -280,6 +295,7 @@ class _GuetEditPageState extends State<ReservationEditPage> {
 
                       FormBuilderTextField(
                         name: 'rate',
+                        controller: rateController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(labelText: 'rate'),
                         validator: FormBuilderValidators.compose([
@@ -287,22 +303,28 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                         ]),
                       ),
                       FormBuilderTextField(
-                        name: 'guestId',
-                        decoration: const InputDecoration(labelText: 'guestId'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                        ]),
-                        onChanged: (value) {
-                            if ( value != null ) {
-                            context.read<ReservationManageBloc>().add(RetrieveGuestForReservation(id: int.parse(value)));
-                            } 
-                        }
-                      ),
+                          name: 'guestId',
+                          controller: guestIdController,
+                          decoration:
+                              const InputDecoration(labelText: 'guestId'),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                            FormBuilderValidators.numeric(),
+                          ]),
+                          onChanged: (value) {
+                            if (value != null) {
+                              context.read<ReservationManageBloc>().add(
+                                  RetrieveGuestForReservation(
+                                      id: int.parse(value)));
+                            }
+                          }),
                       FormBuilderTextField(
                         name: 'roomId',
+                        controller: roomIdController,
                         decoration: const InputDecoration(labelText: 'roomId'),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
+                          FormBuilderValidators.numeric(),
                         ]),
                       ),
                       FormBuilderTextField(
@@ -343,16 +365,19 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                       const SizedBox(height: 10),
                       FormBuilderSwitch(
                         title: const Text('Is it check In?'),
+                        initialValue: isCheckedIn,
                         name: 'isCheckedIn',
                         onChanged: _onChanged,
                       ),
                       FormBuilderSwitch(
                         title: const Text('Is it cancel?'),
+                        initialValue: isCanceled,
                         name: 'isCanceled',
                         onChanged: _onChanged,
                       ),
                       FormBuilderSwitch(
                         title: const Text('Is it night shift?'),
+                        initialValue: isNightShift,
                         name: 'isNightShift',
                         onChanged: _onChanged,
                       ),
@@ -396,7 +421,18 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                                         id: widget.reservationId!));
                               },
                               child: const Text("Delete")),
-                        )
+                        ),
+                      if (isEditing)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                context.read<ReservationManageBloc>().add(
+                                    CheckInReservation(
+                                        id: widget.reservationId!));
+                              },
+                              child: const Text("CheckIn")),
+                        ),
                     ],
                   ),
                 ),

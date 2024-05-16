@@ -6,6 +6,7 @@ abstract interface class ReservationDatasource {
   Future<Reservation> retrieve(int id);
   Future<bool> delete(int id);
   Future<Reservation> save(Reservation reservation);
+  Future<bool> checkIn(int id);
 }
 
 class ReservationDatasourceImp implements ReservationDatasource {
@@ -41,7 +42,7 @@ class ReservationDatasourceImp implements ReservationDatasource {
   Future<Reservation> retrieve(int id) async {
      try {
          final result = await client.reservation.retrieve( id: id );
-         if ( result != null) {
+         if ( result == null) {
             throw ServerException("Reservation with $id can't be retrieved! ");
          }
          
@@ -65,5 +66,18 @@ class ReservationDatasourceImp implements ReservationDatasource {
     } catch (e) {
       throw ServerException(e.toString());
     }
+  }
+  
+  @override
+  Future<bool> checkIn(int id)async {
+      try {
+          final result = await client.reservation.checkInReservation(reservationId: id);
+          if ( result == false ) {
+            throw ServerException("Reservation with $id can't be checked in! ");
+          }
+          return result;
+      } catch (e) {
+        throw ServerException(e.toString());
+      }
   }
 }

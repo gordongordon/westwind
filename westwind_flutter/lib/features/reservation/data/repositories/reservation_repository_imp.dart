@@ -46,4 +46,14 @@ class ReservationRepositoryImp implements ReservationRepository {
       return Left(Failure(e.message));
     }
   }
+  
+  @override
+  Future<Either<Failure, bool>> checkIn(int id) async{
+
+     try {
+        return Right( await datasource.checkIn(id));
+     } on ServerException catch (e) {
+        return Left( Failure(e.message ));
+     }
+  }
 }

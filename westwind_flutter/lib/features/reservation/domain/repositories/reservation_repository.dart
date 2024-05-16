@@ -14,4 +14,5 @@ abstract interface class ReservationRepository {
     Future<Either<Failure,Reservation>> retrieve(int id);
     Future<Either<Failure,bool>> delete( int id );
     Future<Either<Failure,Reservation>> save( Reservation reservation);
+    Future<Either<Failure,bool>> checkIn( int id);
 }

@@ -33,4 +33,8 @@ final class ReservationManageStateRetrieveGuestSuccess extends ReservationManage
     ReservationManageStateRetrieveGuestSuccess( this.guest  );
 }
 
+final class ReservationManageStateCheckInSuccess extends ReservationManageState {
+    
+}
+
 

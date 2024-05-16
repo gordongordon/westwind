@@ -75,7 +75,7 @@ class _ReservationListWidgetsState extends State<ReservationListWidgets> {
       'note',
       'Date Create',
       'Date Update',
-      'Reservation Id',
+      'Guest Id',
       'Rate Type',
       'Rate Reason',
       'Rate',

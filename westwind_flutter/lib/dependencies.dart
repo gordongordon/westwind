@@ -25,6 +25,7 @@ import 'package:westwind_flutter/features/guest/presentation/bloc/guest_manage/g
 import 'package:westwind_flutter/features/reservation/data/datasources/reservation_datasource.dart';
 import 'package:westwind_flutter/features/reservation/data/repositories/reservation_repository_imp.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
+import 'package:westwind_flutter/features/reservation/domain/usecases/checkIn_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/delete_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/list_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_guest_for_reservation.dart';
@@ -60,7 +61,6 @@ Future<void> initDependencies() async {
   _initGuest();
 
   _initReservation();
-
 }
 
 void _initAuth() {
@@ -162,7 +162,7 @@ void _initGuest() {
   serverLocator.registerLazySingleton(
     () => GuestListBloc(
       listGuests: serverLocator<ListGuestsUseCase>(),
-      deleteGuest: serverLocator<DeleteGuestUseCase>(),  
+      deleteGuest: serverLocator<DeleteGuestUseCase>(),
     ),
   );
 
@@ -171,7 +171,6 @@ void _initGuest() {
       deleteGuest: serverLocator<DeleteGuestUseCase>(),
       retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
       saveGuest: serverLocator<SaveGuestUseCase>(),
-  
     ),
   );
 
@@ -182,8 +181,7 @@ void _initGuest() {
   );
 }
 
-void _initReservation()  {
-
+void _initReservation() {
   // Data Source
   serverLocator.registerFactory<ReservationDatasource>(
     () => ReservationDatasourceImp(
@@ -212,38 +210,43 @@ void _initReservation()  {
     ),
   );
 
-    serverLocator.registerFactory<SaveReservationUseCase>(
+  serverLocator.registerFactory<SaveReservationUseCase>(
     () => SaveReservationUseCase(
       serverLocator<ReservationRepository>(),
     ),
   );
 
-    serverLocator.registerFactory<DeleteReservationUseCase>(
+  serverLocator.registerFactory<DeleteReservationUseCase>(
     () => DeleteReservationUseCase(
       serverLocator<ReservationRepository>(),
     ),
   );
 
-      serverLocator.registerFactory<RetrieveGuestForReservationUseCase>(
+  serverLocator.registerFactory<RetrieveGuestForReservationUseCase>(
     () => RetrieveGuestForReservationUseCase(
       serverLocator<GuestRepository>(),
     ),
   );
 
+  serverLocator.registerFactory<CheckInReservationUseCase>(
+    () => CheckInReservationUseCase(
+      serverLocator<ReservationRepository>(),
+    ),
+  );
+
   // Bloc
-  serverLocator.registerLazySingleton<ReservationListBloc>(
-    () => ReservationListBloc(
-       listReservations : serverLocator<ListReservationUseCase>(),
-    )
-  );
+  serverLocator
+      .registerLazySingleton<ReservationListBloc>(() => ReservationListBloc(
+            listReservations: serverLocator<ListReservationUseCase>(),
+          ));
 
-  serverLocator.registerLazySingleton<ReservationManageBloc>(
-    () => ReservationManageBloc(
-      retrieveReservation: serverLocator<RetrieveReservationUseCase>(), 
-      saveReservation: serverLocator<SaveReservationUseCase>(), 
-      deleteReservation: serverLocator<DeleteReservationUseCase>(), 
-      retrieveGuestForReservation: serverLocator<RetrieveGuestForReservationUseCase>(),
-     )
-  );
-
+  serverLocator
+      .registerLazySingleton<ReservationManageBloc>(() => ReservationManageBloc(
+            retrieveReservation: serverLocator<RetrieveReservationUseCase>(),
+            saveReservation: serverLocator<SaveReservationUseCase>(),
+            deleteReservation: serverLocator<DeleteReservationUseCase>(),
+            retrieveGuestForReservation:
+                serverLocator<RetrieveGuestForReservationUseCase>(),
+            checkInReservation: serverLocator<CheckInReservationUseCase>(),
+          ));
 }
