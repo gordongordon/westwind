@@ -35,6 +35,14 @@ class GuestEndpoint extends Endpoint {
     }
   }
 
+
+  Future<Guest?> retrieveGuestByPhone( Session session, {required String phone}) async {
+     return await Guest.db.findFirstRow(session,
+           where: (guest) => guest.phone.equals(phone)
+       ,);
+  }
+
+
   Future<Guest> createGuest(Session session, {required Guest guest}) async {
     guest.dateCreate = DateTime.now();
 

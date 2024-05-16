@@ -5,6 +5,7 @@ import 'package:westwind_flutter/core/error/exception.dart';
 abstract interface class GuestDatasource {
   Future<List<Guest>> list();
   Future<Guest> retrieve( int id);
+  Future<Guest> retrieveByPhone( String phone);
   Future<bool> delete( int id);
   Future<Guest> save(Guest guest);
 }
@@ -88,6 +89,22 @@ class GuestDatasourceImpl implements GuestDatasource {
     } catch (e) {
       throw ServerException(e.toString());
     }
+  }
+  
+  @override
+  Future<Guest> retrieveByPhone(String phone) async {
+     try {
+        final result = await client.guest.retrieveGuestByPhone(phone: phone);
+
+        if ( result == null ) {
+          throw ServerException("Guest n't find by this phone $phone");
+        }
+
+        return result;
+
+     } catch (e) {
+      throw ServerException(e.toString());
+     }
   }
   
 }

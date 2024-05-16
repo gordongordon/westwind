@@ -28,6 +28,7 @@ import 'package:westwind_flutter/features/reservation/domain/repositories/reserv
 import 'package:westwind_flutter/features/reservation/domain/usecases/checkIn_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/delete_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/list_reservation.dart';
+import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_guest_by_phone_for_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_guest_for_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/save_reservation.dart';
@@ -227,6 +228,11 @@ void _initReservation() {
       serverLocator<GuestRepository>(),
     ),
   );
+    serverLocator.registerFactory<RetrieveGuestByPhoneForReservationUseCase>(
+    () => RetrieveGuestByPhoneForReservationUseCase(
+      serverLocator<GuestRepository>(),
+    ),
+  );
 
   serverLocator.registerFactory<CheckInReservationUseCase>(
     () => CheckInReservationUseCase(
@@ -247,6 +253,8 @@ void _initReservation() {
             deleteReservation: serverLocator<DeleteReservationUseCase>(),
             retrieveGuestForReservation:
                 serverLocator<RetrieveGuestForReservationUseCase>(),
+            retrieveGuestByPhoneForReservation:
+                serverLocator<RetrieveGuestByPhoneForReservationUseCase>(),
             checkInReservation: serverLocator<CheckInReservationUseCase>(),
           ));
 }

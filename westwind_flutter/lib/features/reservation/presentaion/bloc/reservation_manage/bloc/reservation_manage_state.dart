@@ -33,6 +33,12 @@ final class ReservationManageStateRetrieveGuestSuccess extends ReservationManage
     ReservationManageStateRetrieveGuestSuccess( this.guest  );
 }
 
+final class ReservationManageStateRetrieveGuestByPhoneSuccess extends ReservationManageState {
+    final Guest guest;
+
+     ReservationManageStateRetrieveGuestByPhoneSuccess( this.guest );
+}
+
 final class ReservationManageStateCheckInSuccess extends ReservationManageState {
     
 }

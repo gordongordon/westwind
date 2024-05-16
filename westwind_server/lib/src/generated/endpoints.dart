@@ -130,6 +130,24 @@ class Endpoints extends _i1.EndpointDispatch {
             params['guest'],
           ),
         ),
+        'retrieveGuestByPhone': _i1.MethodConnector(
+          name: 'retrieveGuestByPhone',
+          params: {
+            'phone': _i1.ParameterDescription(
+              name: 'phone',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['guest'] as _i3.GuestEndpoint).retrieveGuestByPhone(
+            session,
+            phone: params['phone'],
+          ),
+        ),
         'createGuest': _i1.MethodConnector(
           name: 'createGuest',
           params: {

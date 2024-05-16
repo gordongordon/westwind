@@ -158,6 +158,13 @@ class ReservationEndpoint extends Endpoint {
     );
   }
 
+
+//! guest retrieveRoommateRoomGuest( roomid )
+//! rate getSingleRate( rateType )
+//! roomguest craeatRoomGuest( reservation )
+//! bool toggleReservationIsCheck( id );
+//! rate getShareRate( rateType )
+//!      changeRoomGuestShareRate
   //
   //   Check In Reservation
   //   update all rateReason and rate

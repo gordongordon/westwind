@@ -172,8 +172,15 @@ class _GuetEditPageState extends State<ReservationEditPage> {
               phoneController.text = state.guest.phone;
               rigNumberController.text = state.guest.rigNumber.toString();
               rateController.text = state.guest.rateType.toString();
-            } else if ( state is ReservationManageStateCheckInSuccess ) {
-                            context.read<ReservationListBloc>().add(FetchReservationsEvent());
+            } else if (state
+                is ReservationManageStateRetrieveGuestByPhoneSuccess) {
+              firstNameController.text = state.guest.firstName;
+              lastNameController.text = state.guest.lastName;
+              phoneController.text = state.guest.phone;
+              rigNumberController.text = state.guest.rigNumber.toString();
+              rateController.text = state.guest.rateType.toString();
+            } else if (state is ReservationManageStateCheckInSuccess) {
+              context.read<ReservationListBloc>().add(FetchReservationsEvent());
 
               context.pop();
             }
@@ -264,6 +271,16 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                           //     FormBuilderValidators.minWordsCount(10,
                           //        allowEmpty: false, errorText: 'e.g. 17805425375'),
                         ]),
+                        onChanged: (value) {
+                          if (  formkey.currentState!.fields['phone']!.valueIsValid ) {
+          
+                           if ( value != null)  {
+                            context.read<ReservationManageBloc>().add(
+                                RetrieveGuestByPhoneForReservation(
+                                    phone: value.trim()));
+                           }
+                        }
+                        },
                       ),
                       const SizedBox(height: 10),
                       FormBuilderDropdown<String>(

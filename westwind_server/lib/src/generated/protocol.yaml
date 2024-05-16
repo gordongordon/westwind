@@ -4,6 +4,7 @@ guest:
   - list:
   - retrieve:
   - save:
+  - retrieveGuestByPhone:
   - createGuest:
   - updateGuest:
   - findGuest:

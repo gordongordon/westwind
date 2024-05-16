@@ -27,6 +27,12 @@ final class RetrieveGuestForReservation extends ReservationManageEvent {
   RetrieveGuestForReservation( {required this.id });
 }
 
+final class RetrieveGuestByPhoneForReservation extends ReservationManageEvent {
+  final String phone;
+
+  RetrieveGuestByPhoneForReservation( {required this.phone });
+}
+
 final class CheckInReservation extends ReservationManageEvent {
   final int id;
 

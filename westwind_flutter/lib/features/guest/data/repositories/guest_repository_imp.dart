@@ -48,5 +48,15 @@ class GuestRepositoryImp implements GuestRepository {
      }
   }
   
+  @override
+  Future<Either<Failure, Guest>> retrieveByPhone(String phone) async {
+       try {
+
+           return right( await datasource.retrieveByPhone(phone));
+       } on ServerException catch (e) {
+        return left( Failure( e.message ) );
+       }
+  }
+  
    
 }

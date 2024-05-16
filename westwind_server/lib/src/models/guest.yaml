@@ -16,3 +16,4 @@ indexes:
    guest_index_idx: 
        fields: email
        unique: true
+# add fileds of Phone ## base on someone may search by phone

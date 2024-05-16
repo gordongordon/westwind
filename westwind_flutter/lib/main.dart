@@ -29,7 +29,7 @@ void main() async {
         BlocProvider(create: (_) => serverLocator<ReservationManageBloc>()),
       ],
       child: const MyApp(),
-    ),
+    )
   );
 }
 

@@ -61,6 +61,13 @@ class EndpointGuest extends _i1.EndpointRef {
         {'guest': guest},
       );
 
+  _i2.Future<_i3.Guest?> retrieveGuestByPhone({required String phone}) =>
+      caller.callServerEndpoint<_i3.Guest?>(
+        'guest',
+        'retrieveGuestByPhone',
+        {'phone': phone},
+      );
+
   _i2.Future<_i3.Guest> createGuest({required _i3.Guest guest}) =>
       caller.callServerEndpoint<_i3.Guest>(
         'guest',
