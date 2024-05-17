@@ -16,6 +16,7 @@ import 'package:westwind_flutter/features/guest/data/repositories/guest_reposito
 import 'package:westwind_flutter/features/guest/domain/repositories/guest_repository.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/delete_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/list_guest.dart';
+import 'package:westwind_flutter/features/guest/domain/usecases/retrieve_by_phone_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/retrieve_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/save_guest.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
@@ -28,8 +29,6 @@ import 'package:westwind_flutter/features/reservation/domain/repositories/reserv
 import 'package:westwind_flutter/features/reservation/domain/usecases/checkIn_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/delete_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/list_reservation.dart';
-import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_guest_by_phone_for_reservation.dart';
-import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_guest_for_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/save_reservation.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
@@ -107,6 +106,7 @@ void _initAuth() {
     ),
   );
 
+
   // Bloc
   serverLocator.registerLazySingleton<AuthBloc>(
     () => AuthBloc(
@@ -157,6 +157,11 @@ void _initGuest() {
       serverLocator<GuestRepository>(),
     ),
   );
+    serverLocator.registerFactory<RetrieveGuestByPhoneUseCase>(
+    () => RetrieveGuestByPhoneUseCase(
+      serverLocator<GuestRepository>(),
+    ),
+  );
 
   // Blocs
   //! May be register as Factory base on Reso Coder for all bloc, because of Close stream issum after user come back to the page.
@@ -172,6 +177,7 @@ void _initGuest() {
       deleteGuest: serverLocator<DeleteGuestUseCase>(),
       retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
       saveGuest: serverLocator<SaveGuestUseCase>(),
+      retrieveGuestByPhone: serverLocator<RetrieveGuestByPhoneUseCase>(),
     ),
   );
 
@@ -223,23 +229,19 @@ void _initReservation() {
     ),
   );
 
-  serverLocator.registerFactory<RetrieveGuestForReservationUseCase>(
-    () => RetrieveGuestForReservationUseCase(
-      serverLocator<GuestRepository>(),
-    ),
-  );
-    serverLocator.registerFactory<RetrieveGuestByPhoneForReservationUseCase>(
-    () => RetrieveGuestByPhoneForReservationUseCase(
-      serverLocator<GuestRepository>(),
-    ),
-  );
-
   serverLocator.registerFactory<CheckInReservationUseCase>(
     () => CheckInReservationUseCase(
       serverLocator<ReservationRepository>(),
     ),
   );
 
+/*
+  serverLocator.registerFactory<RetrieveGuestUseCase>(
+    () => RetrieveGuestUseCase(
+      serverLocator<GuestRepository>(),
+    ),
+  );
+*/
   // Bloc
   serverLocator
       .registerLazySingleton<ReservationListBloc>(() => ReservationListBloc(
@@ -251,10 +253,10 @@ void _initReservation() {
             retrieveReservation: serverLocator<RetrieveReservationUseCase>(),
             saveReservation: serverLocator<SaveReservationUseCase>(),
             deleteReservation: serverLocator<DeleteReservationUseCase>(),
-            retrieveGuestForReservation:
-                serverLocator<RetrieveGuestForReservationUseCase>(),
-            retrieveGuestByPhoneForReservation:
-                serverLocator<RetrieveGuestByPhoneForReservationUseCase>(),
+            retrieveGuest:
+                serverLocator<RetrieveGuestUseCase>(),
+            retrieveGuestByPhone:
+                serverLocator<RetrieveGuestByPhoneUseCase>(),
             checkInReservation: serverLocator<CheckInReservationUseCase>(),
           ));
 }

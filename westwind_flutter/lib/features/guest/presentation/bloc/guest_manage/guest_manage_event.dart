@@ -10,6 +10,13 @@ final class GuestManageRetrieveEvent extends GuestManageEvent {
 
 }
 
+final class GuestManageRetrieveByPhoneEvent extends GuestManageEvent {
+  final String phone;
+
+  GuestManageRetrieveByPhoneEvent( {required this.phone});
+
+}
+
 final class GuestManageSaveEvent extends GuestManageEvent {
   final Guest guest;
 

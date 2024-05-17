@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/delete_guest.dart';
+import 'package:westwind_flutter/features/guest/domain/usecases/retrieve_by_phone_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/retrieve_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/save_guest.dart';
 
@@ -14,16 +15,19 @@ class GuestManageBloc extends Bloc<GuestManageEvent, GuestManageState> {
   final RetrieveGuestUseCase retrieveGuest;
   final SaveGuestUseCase saveGuest;
   final DeleteGuestUseCase deleteGuest;
+  final RetrieveGuestByPhoneUseCase retrieveGuestByPhone;
 
   GuestManageBloc({
     required this.retrieveGuest,
     required this.saveGuest,
     required this.deleteGuest,
+    required this.retrieveGuestByPhone,
   }) : super(GuestManageStateInitial()) {
     on<GuestManageEvent>((event, emit) => emit(GuestManageStateLoading()));
     on<GuestManageRetrieveEvent>((_onRetrieveGuest));
     on<GuestManageSaveEvent>((_onSaveGuest));
     on<GuestManageDeleteEvent>((_onDeleteGuest));
+    on<GuestManageRetrieveByPhoneEvent>((_onRetrieveGuestByPhone));
   }
 
   FutureOr<void> _onRetrieveGuest(
@@ -57,4 +61,18 @@ class GuestManageBloc extends Bloc<GuestManageEvent, GuestManageState> {
       (_) => emit(GuestManageStateDeleteSuccess()),
     );
   }
+
+  FutureOr<void> _onRetrieveGuestByPhone(
+      GuestManageRetrieveByPhoneEvent event, Emitter<GuestManageState> emit) async {
+    final result = await retrieveGuestByPhone(RetrieveGuestByPhoneParams(phone: event.phone));
+
+       print(result);
+       print( "onRetrieveEvent");
+
+    result.fold((failure) => emit(GuestManageStateFailure(failure.message)),
+        (guest) => emit(GuestManageStateRetrieveByPhoneSuccess(guest: guest)));
+
+  }
+
+
 }

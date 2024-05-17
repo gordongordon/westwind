@@ -128,7 +128,19 @@ class _GuetEditPageState extends State<GuestEditPage> {
               context.pop();
               context.pop();
             } else if (state is GuestManageStateRetrieveSuccess) {
-              debugPrint("GuestManageState RetrieveSuccess ");
+              // debugPrint("GuestManageState RetrieveSuccess ");
+              idController.text = state.guest.id!.toString();
+              firstNameController.text = state.guest.firstName;
+              lastNameController.text = state.guest.lastName;
+              emailController.text = state.guest.email;
+              phoneController.text = state.guest.phone;
+              rateTypeController.text = state.guest.rateType.toString();
+              isInHouse = state.guest.isInHouse;
+              dateCreate = state.guest.dateCreate;
+              dateUpdate = state.guest.dateUpdate!;
+              rigNumberController.text = state.guest.rigNumber.toString();
+            } else if (state is GuestManageStateRetrieveByPhoneSuccess) {
+              //  debugPrint("GuestManageState RetrieveSuccess ");
               idController.text = state.guest.id!.toString();
               firstNameController.text = state.guest.firstName;
               lastNameController.text = state.guest.lastName;
@@ -185,7 +197,7 @@ class _GuetEditPageState extends State<GuestEditPage> {
                           FormBuilderValidators.required(),
                         ]),
                       ),
-                                      const SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       FormBuilderTextField(
                         name: 'phone',
                         maxLength: 11,
@@ -200,6 +212,15 @@ class _GuetEditPageState extends State<GuestEditPage> {
                           //     FormBuilderValidators.minWordsCount(10,
                           //        allowEmpty: false, errorText: 'e.g. 17805425375'),
                         ]),
+                        onChanged: (value) {
+                          if (formkey
+                              .currentState!.fields['phone']!.valueIsValid) {
+                            if (value != null) {
+                              context.read<GuestManageBloc>().add(
+                                  GuestManageRetrieveByPhoneEvent(phone: value.trim()));
+                            }
+                          }
+                        },
                       ),
                       const SizedBox(height: 10),
                       FormBuilderTextField(

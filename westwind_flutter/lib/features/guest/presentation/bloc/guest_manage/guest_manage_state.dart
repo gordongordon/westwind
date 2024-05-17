@@ -13,6 +13,12 @@ final class GuestManageStateRetrieveSuccess extends GuestManageState {
   GuestManageStateRetrieveSuccess({required this.guest});
 }
 
+final class GuestManageStateRetrieveByPhoneSuccess extends GuestManageState {
+  final Guest guest;
+
+  GuestManageStateRetrieveByPhoneSuccess({required this.guest});
+}
+
 final class GuestManageStateFailure extends GuestManageState {
   final String message;
 
