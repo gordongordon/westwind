@@ -14,12 +14,14 @@ class CheckInRoomGuestUseCase
 
   @override
   Future<Either<Failure, RoomGuest>> call(CheckInRoomGuestParams params) async {
+    
     final reservation = params.reservation;
+
     final rate = await computeRate(reservation);
 
     final roommates = await handleRetrieveByRoomId(reservation.roomId);
 
-    final reason;
+    final RateReason reason;
 
     if (roommates.isEmpty) {
       reason = RateReason.single;

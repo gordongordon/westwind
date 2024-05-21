@@ -9,6 +9,8 @@ import 'package:westwind_flutter/features/guest/presentation/pages/guest_edit_pa
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_edit_page.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_list_page.dart';
+import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
+import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list.dart';
 
 class AppRouter {
   static GoRouter router = GoRouter(
@@ -60,6 +62,23 @@ class AppRouter {
             reservationId: int.parse(state.pathParameters['id'] ?? '0'),
           ),
         ),
+
+        GoRoute(
+          path: RoomGuestListPage.route(),
+          builder: (context, _) => const RoomGuestListPage(),
+        ),
+        
+        GoRoute(
+          path: RoomGuestEditPage.routeNew(),
+          builder: (context, _) => RoomGuestEditPage(),
+        ),
+        GoRoute(
+          path: RoomGuestEditPage.route(),
+          builder: (context, state) => RoomGuestEditPage(
+            roomGuestId: int.parse(state.pathParameters['id'] ?? '0'),
+          ),
+        ),
+        
       ],
       redirect: (context, state) {
         final userState = context.read<AppUserCubit>().state;

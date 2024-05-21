@@ -37,6 +37,16 @@ import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_r
 import 'package:westwind_flutter/features/reservation/domain/usecases/save_reservation.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
+import 'package:westwind_flutter/features/room_guest/data/datasources/room_guest_datasource.dart';
+import 'package:westwind_flutter/features/room_guest/data/repositories/room_guest_repository.dart';
+import 'package:westwind_flutter/features/room_guest/domain/repositories/room_guest_repository.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/check_in_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/delete_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/save_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
+import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
 
 final serverLocator = GetIt.instance;
 
@@ -67,11 +77,11 @@ Future<void> initDependencies() async {
   _initReservation();
 
   _initRateTable();
+
+  _initRoomGuest();
 }
 
-
- void  _initRateTable() {
-
+void _initRateTable() {
   // DataSource
   serverLocator.registerFactory<RateTableDatasource>(
     () => RateTableDatasourceImpl(
@@ -89,11 +99,10 @@ Future<void> initDependencies() async {
   // Use Case
   serverLocator.registerFactory<RateTableGetRateUseCase>(
     () => RateTableGetRateUseCase(
-      serverLocator<RateTableRepository>(), 
+      serverLocator<RateTableRepository>(),
     ),
   );
-
- }
+}
 
 void _initAuth() {
   // DataSource
@@ -137,7 +146,6 @@ void _initAuth() {
       serverLocator<AuthRepository>(),
     ),
   );
-
 
   // Bloc
   serverLocator.registerLazySingleton<AuthBloc>(
@@ -189,7 +197,7 @@ void _initGuest() {
       serverLocator<GuestRepository>(),
     ),
   );
-    serverLocator.registerFactory<RetrieveGuestByPhoneUseCase>(
+  serverLocator.registerFactory<RetrieveGuestByPhoneUseCase>(
     () => RetrieveGuestByPhoneUseCase(
       serverLocator<GuestRepository>(),
     ),
@@ -285,11 +293,73 @@ void _initReservation() {
             retrieveReservation: serverLocator<RetrieveReservationUseCase>(),
             saveReservation: serverLocator<SaveReservationUseCase>(),
             deleteReservation: serverLocator<DeleteReservationUseCase>(),
-            retrieveGuest:
-                serverLocator<RetrieveGuestUseCase>(),
-            retrieveGuestByPhone:
-                serverLocator<RetrieveGuestByPhoneUseCase>(),
+            retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
+            retrieveGuestByPhone: serverLocator<RetrieveGuestByPhoneUseCase>(),
             checkInReservation: serverLocator<CheckInReservationUseCase>(),
-            getRate: serverLocator<RateTableGetRateUseCase>(), 
+            getRate: serverLocator<RateTableGetRateUseCase>(),
+          ));
+}
+
+void _initRoomGuest() {
+  // DataSource
+  serverLocator.registerFactory<RoomGuestDatasource>(
+    () => RoomGuestDatasourceImpl(
+      serverLocator<Client>(),
+    ),
+  );
+
+  // Repositories
+  serverLocator.registerFactory<RoomGuestRepository>(
+    () => RoomGuestRepositoryImpl(
+      serverLocator<RoomGuestDatasource>(),
+    ),
+  );
+
+  // Use Case
+  serverLocator.registerFactory<CheckInRoomGuestUseCase>(
+    () => CheckInRoomGuestUseCase(
+      serverLocator<RoomGuestRepository>(),
+      serverLocator<RateTableRepository>(),
+    ),
+  );
+
+  serverLocator.registerFactory<DeleteRoomGuestUseCase>(
+    () => DeleteRoomGuestUseCase(
+      serverLocator<RoomGuestRepository>(),
+    ),
+  );
+
+  serverLocator.registerFactory<ListRoomGuestUseCase>(
+    () => ListRoomGuestUseCase(
+      serverLocator<RoomGuestRepository>(),
+    ),
+  );
+
+  serverLocator.registerFactory<RetrieveRoomGuestUseCase>(
+    () => RetrieveRoomGuestUseCase(
+      serverLocator<RoomGuestRepository>(),
+    ),
+  );
+
+  serverLocator.registerFactory<SaveRoomGuestUseCase>(
+    () => SaveRoomGuestUseCase(
+      serverLocator<RoomGuestRepository>(),
+    ),
+  );
+
+  // Bloc
+  serverLocator
+      .registerLazySingleton<RoomGuestListBloc>(() => RoomGuestListBloc(
+            listRoomGuests: serverLocator<ListRoomGuestUseCase>(),
+          ));
+
+  serverLocator
+      .registerLazySingleton<RoomGuestManageBloc>(() => RoomGuestManageBloc(
+            deleteRoomGuest: serverLocator<DeleteRoomGuestUseCase>(),
+            retrieveRoomGuest: serverLocator<RetrieveRoomGuestUseCase>(),
+            //     saveRoomGuest: serverLocator<SaveRoomGuestUseCase>(),
+
+            //       retrieveGuest: serverLocator<RetrieveRoomGuestUseCase>(),
+            checkInRoomGuest: serverLocator<CheckInRoomGuestUseCase>(),
           ));
 }

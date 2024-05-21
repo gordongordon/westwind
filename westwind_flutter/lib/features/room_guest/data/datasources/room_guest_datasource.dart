@@ -13,10 +13,10 @@ abstract interface class RoomGuestDatasource {
 
 }
 
-class RoomGuestDatasourceImp implements RoomGuestDatasource {
+class RoomGuestDatasourceImpl implements RoomGuestDatasource {
   Client client;
 
-  RoomGuestDatasourceImp( {required this.client});
+  RoomGuestDatasourceImpl( this.client );
   
   @override
   Future<bool> delete(int id) async {

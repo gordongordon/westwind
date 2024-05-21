@@ -15,11 +15,11 @@ class RoomGuestManageBloc
   final RetrieveRoomGuestUseCase retrieveRoomGuest;
   final CheckInRoomGuestUseCase checkInRoomGuest;
 
-  RoomGuestManageBloc(
-    this.deleteRoomGuest,
-    this.checkInRoomGuest,
-    this.retrieveRoomGuest,
-  ) : super(RoomGuestManageStateInitial()) {
+  RoomGuestManageBloc({
+    required this.deleteRoomGuest,
+    required this.checkInRoomGuest,
+    required this.retrieveRoomGuest,
+  }) : super(RoomGuestManageStateInitial()) {
     on<RoomGuestManageEvent>((event, emit) {
       // TODO: implement event handler
     });
@@ -50,8 +50,8 @@ class RoomGuestManageBloc
         await retrieveRoomGuest(RetrieveRoomGuestParams(id: event.id));
 
     result.fold(
-      (failure) => emit( RoomGuestManageStateFailure(failure.message)),
-      (roomGuest) => emit( RoomGuestManageStateRetrieveSuccess(roomGuest)),
+      (failure) => emit(RoomGuestManageStateFailure(failure.message)),
+      (roomGuest) => emit(RoomGuestManageStateRetrieveSuccess(roomGuest)),
     );
 
     return;
@@ -61,7 +61,8 @@ class RoomGuestManageBloc
     CheckInRoomGuest event,
     Emitter<RoomGuestManageState> emit,
   ) async {
-    final result = await checkInRoomGuest( CheckInRoomGuestParams( reservation: event.reservation ) );
+    final result = await checkInRoomGuest(
+        CheckInRoomGuestParams(reservation: event.reservation));
 
     result.fold(
       (failure) => emit(RoomGuestManageStateFailure(failure.message)),
@@ -70,6 +71,4 @@ class RoomGuestManageBloc
 
     return;
   }
-
 }
-
