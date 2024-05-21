@@ -188,7 +188,11 @@ class RoomGuestEndpoint extends Endpoint {
   }
 
   Future<RoomGuest?> findById(Session session, {required int id}) async {
-    return await RoomGuest.db.findById(session, id);
+    return await RoomGuest.db.findById(session, id, 
+            include: RoomGuest.include(
+          guest: Guest.include(),
+          room: Room.include(),
+        ));
   }
 
   Future<List<int>> delete(Session session, {required int id}) async {

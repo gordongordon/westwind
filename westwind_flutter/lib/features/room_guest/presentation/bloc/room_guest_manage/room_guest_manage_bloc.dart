@@ -21,7 +21,7 @@ class RoomGuestManageBloc
     required this.retrieveRoomGuest,
   }) : super(RoomGuestManageStateInitial()) {
     on<RoomGuestManageEvent>((event, emit) {
-      // TODO: implement event handler
+      emit( RoomGuestManageStateLoading() );
     });
     on<DeleteRoomGuest>(_onDeleteRoomGuest);
     on<RetrieveRoomGuest>(_onRetrieveRoomGuest);
