@@ -14,6 +14,7 @@ guest:
 rateTable:
   - createRateTable:
   - findRate:
+  - getSingleRate:
   - updateRateTable:
   - findRateTable:
   - findRateTableById:
@@ -31,8 +32,12 @@ reservation:
   - getTodayReservations:
   - checkInReservation:
   - delete:
+  - checkInReservationSecondVersion:
 roomGuest:
   - createRoomGuest:
+  - createRoomGuestByReservation:
+  - changeAllRateByRoomId:
+  - changeAllRateReasonByRoomId:
   - findRoomGuest:
   - updateRoomGuest:
   - findRoomGuestByRoomId:
@@ -48,5 +53,6 @@ roomGuest:
   - getRate:
   - findById:
   - delete:
+  - deleteById:
   - checkOut:
   - updateGuestRate:

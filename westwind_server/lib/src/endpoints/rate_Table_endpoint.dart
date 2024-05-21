@@ -1,6 +1,7 @@
 
 import 'package:westwind_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
+import 'package:westwind_server/src/generated/rateReason.dart';
 
 // This is an example endpoint of your server. It's best practice to use the
 // `Endpoint` ending of the class name, but it will be removed when accessing
@@ -25,21 +26,34 @@ class RateTableEndpoint extends Endpoint {
     return true;
   }
 
-  Future<double> findRate(Session session,
+  Future<double?> findRate(Session session,
       {required RateType rateType, required RateReason rateReason}) async {
     final item = await RateTable.db.findFirstRow(session,
         where: (t) =>
             (t.rateType.equals(rateType) & t.rateReason.equals(rateReason)));
-
-    if ( item == null ) 
-    { 
-      return 8.88;
+    
+    if ( item == null ) {
+      return null;
     }
 
-    // handl null ?
     return item.rate;
+
   }
 
+  Future<double> getSingleRate( Session session, {required RateType type }) async {
+
+    final result = await RateTable.db.findFirstRow(session, 
+          where:  (r) => (r.rateType.equals(type) & r.rateReason.equals( RateReason.single ) ),);
+
+     if ( result == null ) {
+         throw MyException(message: "Rate can't be found base on single and $type", errorType: ErrorType.NotFound );
+      //  return null;
+     }
+    
+     return result.rate;
+
+     
+  }
   Future<bool> updateRateTable(Session session,
       {required RateTable rateTable}) async {
     // RateTable.dateUpdate = DateTime.now();

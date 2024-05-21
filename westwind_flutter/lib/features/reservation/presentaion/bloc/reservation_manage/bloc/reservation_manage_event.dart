@@ -38,3 +38,10 @@ final class CheckInReservation extends ReservationManageEvent {
 
   CheckInReservation( { required this.id} );
 }
+
+final class CalculateRate extends ReservationManageEvent {
+  final RateType type;
+  final RateReason reason;
+  
+  CalculateRate( { required this.type, required this.reason });
+}

@@ -114,12 +114,12 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                     rateReason: rateReason,
                   );
 
-                  debugPrint(" after Reservation final ");
-                  debugPrint(reservation.toString());
+                  // debugPrint(" after Reservation final ");
+                 // debugPrint(reservation.toString());
                   context
                       .read<ReservationManageBloc>()
                       .add(SaveReservation(reservation: reservation));
-                  context.pop();
+
                 }
               },
               icon: Icon(Icons.done),
@@ -128,11 +128,13 @@ class _GuetEditPageState extends State<ReservationEditPage> {
         ),
         body: BlocConsumer<ReservationManageBloc, ReservationManageState>(
           listener: (context, state) {
+
+
             if (state is ReservationManageStateFailure) {
               showSnackbar(context, state.message);
             } else if (state is ReservationManageStateSaveSuccess) {
               context.read<ReservationListBloc>().add(FetchReservationsEvent());
-              //  context.pop();
+         
               if (isEditing) {
                 //! May have problem
                 context
@@ -166,23 +168,38 @@ class _GuetEditPageState extends State<ReservationEditPage> {
               checkOutDate = state.reservation.checkOutDate;
               rigNumberController.text =
                   state.reservation.guest!.rigNumber.toString();
+              
+              final type = state.reservation.rateType;
+              final reason = state.reservation.rateReason;
+              context.read<ReservationManageBloc>().add(CalculateRate(type: type, reason: reason));
+
             } else if (state is ReservationManageStateRetrieveGuestSuccess) {
               firstNameController.text = state.guest.firstName;
               lastNameController.text = state.guest.lastName;
               phoneController.text = state.guest.phone;
               rigNumberController.text = state.guest.rigNumber.toString();
-              rateController.text = state.guest.rateType.toString();
+              rateTypeController.text = state.guest.rateType.toString();
+            
+
+              //! Update Rate 
+              // Reason default is Single
+              final type = state.guest.rateType;
+              const reason = RateReason.share;
+
+              context.read<ReservationManageBloc>().add(CalculateRate(type: type, reason: reason));
+              //  rateController.text = state.guest.rrate.toString();
             } else if (state
                 is ReservationManageStateRetrieveGuestByPhoneSuccess) {
               firstNameController.text = state.guest.firstName;
               lastNameController.text = state.guest.lastName;
               phoneController.text = state.guest.phone;
               rigNumberController.text = state.guest.rigNumber.toString();
-              rateController.text = state.guest.rateType.toString();
+              rateTypeController.text = state.guest.rateType.toString();
             } else if (state is ReservationManageStateCheckInSuccess) {
               context.read<ReservationListBloc>().add(FetchReservationsEvent());
-
               context.pop();
+            } else if ( state is ReservationManageStateCalculateRateSuccess ) {
+              rateController.text = state.rate.toString();
             }
           },
           builder: (context, state) {
@@ -272,14 +289,14 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                           //        allowEmpty: false, errorText: 'e.g. 17805425375'),
                         ]),
                         onChanged: (value) {
-                          if (  formkey.currentState!.fields['phone']!.valueIsValid ) {
-          
-                           if ( value != null)  {
-                            context.read<ReservationManageBloc>().add(
-                                RetrieveGuestByPhoneForReservation(
-                                    phone: value.trim()));
-                           }
-                        }
+                          if (formkey
+                              .currentState!.fields['phone']!.valueIsValid) {
+                            if (value != null) {
+                              context.read<ReservationManageBloc>().add(
+                                  RetrieveGuestByPhoneForReservation(
+                                      phone: value.trim()));
+                            }
+                          }
                         },
                       ),
                       const SizedBox(height: 10),

@@ -124,17 +124,24 @@ class EndpointRateTable extends _i1.EndpointRef {
         {'rateTable': rateTable},
       );
 
-  _i2.Future<double> findRate({
+  _i2.Future<double?> findRate({
     required _i5.RateType rateType,
     required _i6.RateReason rateReason,
   }) =>
-      caller.callServerEndpoint<double>(
+      caller.callServerEndpoint<double?>(
         'rateTable',
         'findRate',
         {
           'rateType': rateType,
           'rateReason': rateReason,
         },
+      );
+
+  _i2.Future<double> getSingleRate({required _i5.RateType type}) =>
+      caller.callServerEndpoint<double>(
+        'rateTable',
+        'getSingleRate',
+        {'type': type},
       );
 
   _i2.Future<bool> updateRateTable({required _i4.RateTable rateTable}) =>
@@ -256,6 +263,14 @@ class EndpointReservation extends _i1.EndpointRef {
         'delete',
         {'id': id},
       );
+
+  _i2.Future<bool> checkInReservationSecondVersion(
+          {required int reservationId}) =>
+      caller.callServerEndpoint<bool>(
+        'reservation',
+        'checkInReservationSecondVersion',
+        {'reservationId': reservationId},
+      );
 }
 
 /// {@category Endpoint}
@@ -270,6 +285,47 @@ class EndpointRoomGuest extends _i1.EndpointRef {
         'roomGuest',
         'createRoomGuest',
         {'res': res},
+      );
+
+  _i2.Future<_i8.RoomGuest> createRoomGuestByReservation(
+    _i8.RoomGuest checkInGuest,
+    List<_i8.RoomGuest> roommates,
+    _i7.Reservation reservation,
+  ) =>
+      caller.callServerEndpoint<_i8.RoomGuest>(
+        'roomGuest',
+        'createRoomGuestByReservation',
+        {
+          'checkInGuest': checkInGuest,
+          'roommates': roommates,
+          'reservation': reservation,
+        },
+      );
+
+  _i2.Future<List<_i8.RoomGuest>> changeAllRateByRoomId(
+    int id,
+    double rate,
+  ) =>
+      caller.callServerEndpoint<List<_i8.RoomGuest>>(
+        'roomGuest',
+        'changeAllRateByRoomId',
+        {
+          'id': id,
+          'rate': rate,
+        },
+      );
+
+  _i2.Future<List<_i8.RoomGuest>> changeAllRateReasonByRoomId(
+    int id,
+    _i6.RateReason reason,
+  ) =>
+      caller.callServerEndpoint<List<_i8.RoomGuest>>(
+        'roomGuest',
+        'changeAllRateReasonByRoomId',
+        {
+          'id': id,
+          'reason': reason,
+        },
       );
 
   _i2.Future<_i8.RoomGuest?> findRoomGuest({required int roomGuestId}) =>
@@ -378,6 +434,12 @@ class EndpointRoomGuest extends _i1.EndpointRef {
       caller.callServerEndpoint<List<int>>(
         'roomGuest',
         'delete',
+        {'id': id},
+      );
+
+  _i2.Future<bool> deleteById(int id) => caller.callServerEndpoint<bool>(
+        'roomGuest',
+        'deleteById',
         {'id': id},
       );
 

@@ -21,6 +21,57 @@ class RoomGuestEndpoint extends Endpoint {
     return await RoomGuest.db.insertRow(session, res);
   }
 
+  Future<RoomGuest> createRoomGuestByReservation(
+      Session session,
+      RoomGuest checkInGuest,
+      List<RoomGuest> roommates,
+      Reservation reservation) async {
+
+    final result =
+        await session.dbNext.transaction<RoomGuest>((transaction) async {
+      await RoomGuest.db.update(session, roommates);
+
+      reservation.isCheckedIn = true;
+      await Reservation.db.updateRow(session, reservation);
+      // Insert New Room Guest
+      return await RoomGuest.db.insertRow(session, checkInGuest);
+    });
+
+    if (result == false) {
+      final id = reservation.id!;
+      throw MyException(
+          message: "Guest can't be checked with reservation id $id",
+          errorType: ErrorType.ProblemOfInsert);
+    }
+    return result;
+  }
+
+  Future<List<RoomGuest>> changeAllRateByRoomId(
+      Session session, int id, double rate) async {
+    final List<RoomGuest> result = await RoomGuest.db
+        .find(session, where: (item) => item.roomId.equals(id));
+
+    result.map((e) {
+      e.rate = rate;
+      return e;
+    }).toList();
+
+    return RoomGuest.db.update(session, result);
+  }
+
+  Future<List<RoomGuest>> changeAllRateReasonByRoomId(
+      Session session, int id, RateReason reason) async {
+    final List<RoomGuest> result = await RoomGuest.db
+        .find(session, where: (item) => item.roomId.equals(id));
+
+    result.map((e) {
+      e.rateReason = reason;
+      return e;
+    }).toList();
+
+    return RoomGuest.db.update(session, result);
+  }
+
   Future<RoomGuest?> findRoomGuest(Session session,
       {required int roomGuestId}) async {
     RoomGuest? res = await RoomGuest.db.findById(session, roomGuestId);
@@ -147,6 +198,22 @@ class RoomGuestEndpoint extends Endpoint {
         .deleteWhere(session, where: (item) => item.id.equals(id));
 
     //  return await RoomGuest.db.deleteRow(session, roomGuest);
+  }
+
+  Future<bool> deleteById(Session session, int id) async {
+    final item = await RoomGuest.db.findById(session, id);
+
+    if (item == null) {
+      return false;
+    }
+
+    final result = await RoomGuest.db.deleteRow(session, item);
+
+    if (result == id) {
+      return true;
+    }
+
+    return false;
   }
 
   /*  Replace with CheckOut

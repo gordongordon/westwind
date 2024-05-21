@@ -295,6 +295,24 @@ class Endpoints extends _i1.EndpointDispatch {
             rateReason: params['rateReason'],
           ),
         ),
+        'getSingleRate': _i1.MethodConnector(
+          name: 'getSingleRate',
+          params: {
+            'type': _i1.ParameterDescription(
+              name: 'type',
+              type: _i1.getType<_i9.RateType>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['rateTable'] as _i4.RateTableEndpoint).getSingleRate(
+            session,
+            type: params['type'],
+          ),
+        ),
         'updateRateTable': _i1.MethodConnector(
           name: 'updateRateTable',
           params: {
@@ -564,6 +582,25 @@ class Endpoints extends _i1.EndpointDispatch {
             params['id'],
           ),
         ),
+        'checkInReservationSecondVersion': _i1.MethodConnector(
+          name: 'checkInReservationSecondVersion',
+          params: {
+            'reservationId': _i1.ParameterDescription(
+              name: 'reservationId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['reservation'] as _i5.ReservationEndpoint)
+                  .checkInReservationSecondVersion(
+            session,
+            reservationId: params['reservationId'],
+          ),
+        ),
       },
     );
     connectors['roomGuest'] = _i1.EndpointConnector(
@@ -586,6 +623,87 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['roomGuest'] as _i6.RoomGuestEndpoint).createRoomGuest(
             session,
             params['res'],
+          ),
+        ),
+        'createRoomGuestByReservation': _i1.MethodConnector(
+          name: 'createRoomGuestByReservation',
+          params: {
+            'checkInGuest': _i1.ParameterDescription(
+              name: 'checkInGuest',
+              type: _i1.getType<_i12.RoomGuest>(),
+              nullable: false,
+            ),
+            'roommates': _i1.ParameterDescription(
+              name: 'roommates',
+              type: _i1.getType<List<_i12.RoomGuest>>(),
+              nullable: false,
+            ),
+            'reservation': _i1.ParameterDescription(
+              name: 'reservation',
+              type: _i1.getType<_i11.Reservation>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i6.RoomGuestEndpoint)
+                  .createRoomGuestByReservation(
+            session,
+            params['checkInGuest'],
+            params['roommates'],
+            params['reservation'],
+          ),
+        ),
+        'changeAllRateByRoomId': _i1.MethodConnector(
+          name: 'changeAllRateByRoomId',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'rate': _i1.ParameterDescription(
+              name: 'rate',
+              type: _i1.getType<double>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i6.RoomGuestEndpoint)
+                  .changeAllRateByRoomId(
+            session,
+            params['id'],
+            params['rate'],
+          ),
+        ),
+        'changeAllRateReasonByRoomId': _i1.MethodConnector(
+          name: 'changeAllRateReasonByRoomId',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'reason': _i1.ParameterDescription(
+              name: 'reason',
+              type: _i1.getType<_i10.RateReason>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i6.RoomGuestEndpoint)
+                  .changeAllRateReasonByRoomId(
+            session,
+            params['id'],
+            params['reason'],
           ),
         ),
         'findRoomGuest': _i1.MethodConnector(
@@ -847,6 +965,24 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['roomGuest'] as _i6.RoomGuestEndpoint).delete(
             session,
             id: params['id'],
+          ),
+        ),
+        'deleteById': _i1.MethodConnector(
+          name: 'deleteById',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i6.RoomGuestEndpoint).deleteById(
+            session,
+            params['id'],
           ),
         ),
         'checkOut': _i1.MethodConnector(

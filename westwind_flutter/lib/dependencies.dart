@@ -23,6 +23,10 @@ import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/gue
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_bloc.dart';
 import 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_manage/guest_manage_bloc.dart';
+import 'package:westwind_flutter/features/rate_table/data/datasources/rate_table_datasource.dart';
+import 'package:westwind_flutter/features/rate_table/data/repositories/rate_table_repository_imp.dart';
+import 'package:westwind_flutter/features/rate_table/domain/repositories/rate_table_repository.dart';
+import 'package:westwind_flutter/features/rate_table/domain/usecases/get_rate_usecase.dart';
 import 'package:westwind_flutter/features/reservation/data/datasources/reservation_datasource.dart';
 import 'package:westwind_flutter/features/reservation/data/repositories/reservation_repository_imp.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
@@ -61,7 +65,35 @@ Future<void> initDependencies() async {
   _initGuest();
 
   _initReservation();
+
+  _initRateTable();
 }
+
+
+ void  _initRateTable() {
+
+  // DataSource
+  serverLocator.registerFactory<RateTableDatasource>(
+    () => RateTableDatasourceImpl(
+      serverLocator<Client>(),
+    ),
+  );
+
+  // Repositories
+  serverLocator.registerFactory<RateTableRepository>(
+    () => RateTableRepositoryImpl(
+      serverLocator<RateTableDatasource>(),
+    ),
+  );
+
+  // Use Case
+  serverLocator.registerFactory<RateTableGetRateUseCase>(
+    () => RateTableGetRateUseCase(
+      serverLocator<RateTableRepository>(), 
+    ),
+  );
+
+ }
 
 void _initAuth() {
   // DataSource
@@ -258,5 +290,6 @@ void _initReservation() {
             retrieveGuestByPhone:
                 serverLocator<RetrieveGuestByPhoneUseCase>(),
             checkInReservation: serverLocator<CheckInReservationUseCase>(),
+            getRate: serverLocator<RateTableGetRateUseCase>(), 
           ));
 }

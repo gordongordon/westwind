@@ -3,3 +3,5 @@ serialized: byName
 values:
   - NotFound
   - TooManyRoommates
+  - ProblemOfInsert
+  - ProblemOfUpdate

@@ -15,6 +15,7 @@ class CheckInReservationUseCase implements UseCase<bool, CheckInReservationParam
   }
 }
 
+
 class CheckInReservationParams {
   final int id;
 

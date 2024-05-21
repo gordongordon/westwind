@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/retrieve_by_phone_guest.dart';
 import 'package:westwind_flutter/features/guest/domain/usecases/retrieve_guest.dart';
+import 'package:westwind_flutter/features/rate_table/domain/usecases/get_rate_usecase.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/checkIn_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/delete_reservation.dart';
 import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_reservation.dart';
@@ -22,6 +23,9 @@ class ReservationManageBloc
   final RetrieveGuestByPhoneUseCase retrieveGuestByPhone;
   final RetrieveGuestUseCase retrieveGuest;
 
+  // Rate Table
+  final RateTableGetRateUseCase getRate;
+
   ReservationManageBloc({
     required this.retrieveReservation,
     required this.saveReservation,
@@ -29,6 +33,7 @@ class ReservationManageBloc
     required this.retrieveGuest,
     required this.checkInReservation,
     required this.retrieveGuestByPhone,
+    required this.getRate,
   }) : super(ReservationManageStateInitial()) {
     on<ReservationManageEvent>((event, emit) {
       emit(ReservationManageStateInitial());
@@ -37,8 +42,10 @@ class ReservationManageBloc
     on<SaveReservation>((_onSaveReservation));
     on<DeleteReservation>((_onDeleteReservation));
     on<RetrieveGuestForReservation>((_onRetrieveGuestForReservation));
-    on<RetrieveGuestByPhoneForReservation>((_onRetrieveGuestByPhoneForReservation));
+    on<RetrieveGuestByPhoneForReservation>(
+        (_onRetrieveGuestByPhoneForReservation));
     on<CheckInReservation>((_onCheckInReservation));
+    on<CalculateRate>((_onCalculateRate));
   }
 
   Future<void> _onRetrieveReservation(
@@ -92,7 +99,8 @@ class ReservationManageBloc
     );
   }
 
-  Future<void> _onRetrieveGuestByPhoneForReservation(RetrieveGuestByPhoneForReservation event,
+  Future<void> _onRetrieveGuestByPhoneForReservation(
+      RetrieveGuestByPhoneForReservation event,
       Emitter<ReservationManageState> emit) async {
     emit(ReservationManageStateLoading());
     await Future.delayed(Duration(seconds: 1));
@@ -118,5 +126,19 @@ class ReservationManageBloc
       (_) => emit(ReservationManageStateCheckInSuccess()),
     );
     return;
+  }
+
+  Future<void> _onCalculateRate(
+      CalculateRate event, Emitter<ReservationManageState> emit) async {
+    emit(ReservationManageStateLoading());
+    await Future.delayed(Duration(seconds: 1));
+
+    final result = await getRate(
+        RateTableGetRateParams(type: event.type, reason: event.reason));
+
+    result.fold(
+      (failure) => emit(ReservationManageStateFailure(failure.message)),
+      (rate) => emit(ReservationManageStateCalculateRateSuccess(rate)),
+    );
   }
 }

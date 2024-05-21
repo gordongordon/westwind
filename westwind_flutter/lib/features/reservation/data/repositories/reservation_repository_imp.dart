@@ -57,9 +57,5 @@ class ReservationRepositoryImp implements ReservationRepository {
      }
   }
   
-  @override
-  Future<Either<Failure, Reservation>> retrieveByString(String phone) {
-    // TODO: implement retrieveByString
-    throw UnimplementedError();
-  }
+
 }

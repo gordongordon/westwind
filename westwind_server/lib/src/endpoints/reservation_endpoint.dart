@@ -1,3 +1,5 @@
+import 'package:westwind_server/src/endpoints/rate_Table_endpoint.dart';
+import 'package:westwind_server/src/endpoints/room_guest_endpoint.dart';
 import 'package:westwind_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -177,20 +179,11 @@ class ReservationEndpoint extends Endpoint {
     if (reservation == null) {
       final id = reservationId;
       throw MyException(
-          message: 'ReservationId not found $id',
+          message: 'ReservationId not found $id during Check In',
           errorType: ErrorType.NotFound);
     }
 
-    // get the room id to find out any roommate
-    final roomId = reservation.roomId;
-
-    // find out are there any roomate with the same roomId
-    final roommates = await RoomGuest.db.find(session,
-        where: (roomGuest) => roomGuest.roomId.equals(roomId),
-        include: RoomGuest.include(
-          guest: Guest.include(),
-          room: Room.include(),
-        ));
+    final roommates = await RoomGuestEndpoint().findRoomGuestByRoomId(session, id: reservation.roomId);
 
     final RoomGuest roomGuest;
 
@@ -200,6 +193,140 @@ class ReservationEndpoint extends Endpoint {
      * if empty, checkin  with default rate of single
      */
     if (roommates.isEmpty) {
+
+       final rate = await RateTableEndpoint().getSingleRate(session, type: reservation.rateType);
+      /**
+        * create RoomGuest, and guest is alway single 
+        */
+      roomGuest = RoomGuest(
+        roomId: reservation.roomId,
+        stateDate: reservation.checkInDate,
+        guestId: reservation.guestId,
+        rateType: reservation.rateType,
+        rateReason: RateReason.single,
+        rate : rate,
+        reservationId: reservation.id!,
+        roomStatus: RoomStatus.make,
+        checkOutDate: reservation.checkOutDate,
+      );
+
+      result = await session.dbNext.transaction((transaction) async {
+        // Do some database queries here.
+        await RoomGuest.db.insertRow(session, roomGuest);
+        reservation.isCheckedIn = true;
+        await Reservation.db.updateRow(session, reservation);
+        // Optionally return a value.
+        return true;
+      });
+    } else {
+      /**
+       * Get rateTable to be computed for rate
+       */
+      final rateTable = await RateTable.db.findFirstRow(
+        session,
+        where: (item) =>
+            item.rateType.equals(reservation.rateType) &
+            item.rateReason.equals(RateReason.share),
+      );
+
+      if (rateTable == null) {
+        final type = reservation.rateType;
+        throw MyException(
+            message:
+                'Reservation RateTable not found rateType.$type and rateReason.share',
+            errorType: ErrorType.NotFound);
+      }
+
+      /*
+      * Create RoomGuest with Share and share rate.
+      */
+      roomGuest = RoomGuest(
+        roomId: reservation.roomId,
+        stateDate: reservation.checkInDate,
+        guestId: reservation.guestId,
+        rateType: reservation.rateType,
+        rateReason: RateReason.share,
+        rate: rateTable.rate,
+        reservationId: reservation.id!,
+        roomStatus: RoomStatus.make,
+        checkOutDate: reservation.checkOutDate,
+      );
+
+      result = await session.dbNext.transaction((transaction) async {
+        // Do some database queries here.
+        /*
+        * update an roommate share and rate 
+        */
+        roommates.first.rateReason = RateReason.share;
+        roommates.first.rate = rateTable.rate;
+        // Update exited roommates to Share and rate
+        await RoomGuest.db.updateRow(session, roommates.first);
+        // Insert New Room Guest
+        await RoomGuest.db.insertRow(session, roomGuest);
+
+        reservation.isCheckedIn = true;
+        await Reservation.db.updateRow(session, reservation);
+        // Optionally return a value.
+       return true;
+      });
+    }
+
+    return result;
+  }
+
+  Future<bool> delete(Session session, int id) async {
+    final reservation = await Reservation.db.findById(session, id);
+
+    if (reservation == null) {
+      return false;
+    }
+
+    final result = await Reservation.db.deleteRow(session, reservation);
+
+    if (result == id) {
+      return true;
+    }
+
+    return false;
+  }
+
+
+   Future<bool> checkInReservationSecondVersion(Session session,
+      {required int reservationId}) async {
+    // get the reservation to be checked in
+    final reservation = await Reservation.db.findById(session, reservationId);
+
+    if (reservation == null) {
+      final id = reservationId;
+      throw MyException(
+          message: 'ReservationId not found $id',
+          errorType: ErrorType.NotFound);
+    }
+
+    // get the room id to find out any roommate
+    final roomId = reservation.roomId;
+
+    // find out are there any roomate with the same roomId
+   // final roommates = await RoomGuest.db.find(session,
+   //     where: (roomGuest) => roomGuest.roomId.equals(roomId),
+  //      include: RoomGuest.include(
+  //        guest: Guest.include(),
+   //       room: Room.include(),
+    //    ));
+
+    final roommates = await RoomGuestEndpoint().findRoomGuestByRoomId(session, id: roomId);
+
+    final RoomGuest roomGuest;
+
+    final bool result;
+
+    /**
+     * if empty, checkin  with default rate of single
+     */
+    if (roommates.isEmpty) {
+
+      //  final rate = await RateTableEndpoint().getSingleRate(session, type: reservation.rateType);
+
       final rateTable = await RateTable.db.findFirstRow(
         session,
         where: (item) =>
@@ -216,7 +343,8 @@ class ReservationEndpoint extends Endpoint {
         guestId: reservation.guestId,
         rateType: reservation.rateType,
         rateReason: RateReason.single,
-        rate: rateTable!.rate,
+      rate: rateTable!.rate,
+      
         reservationId: reservation.id!,
         roomStatus: RoomStatus.make,
         checkOutDate: reservation.checkOutDate,
@@ -286,19 +414,4 @@ class ReservationEndpoint extends Endpoint {
     return result;
   }
 
-  Future<bool> delete(Session session, int id) async {
-    final reservation = await Reservation.db.findById(session, id);
-
-    if (reservation == null) {
-      return false;
-    }
-
-    final result = await Reservation.db.deleteRow(session, reservation);
-
-    if (result == id) {
-      return true;
-    }
-
-    return false;
-  }
 }

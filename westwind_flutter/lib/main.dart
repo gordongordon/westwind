@@ -16,7 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
   runApp(
-    MultiBlocProvider(
+    MultiBlocProvider
       providers: [
         BlocProvider(create: (_) => serverLocator<AppUserCubit>()),
         BlocProvider(create: (_) => serverLocator<GuestListBloc>()),

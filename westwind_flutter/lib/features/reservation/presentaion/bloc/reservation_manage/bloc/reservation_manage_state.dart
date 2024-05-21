@@ -43,4 +43,9 @@ final class ReservationManageStateCheckInSuccess extends ReservationManageState 
     
 }
 
+final class ReservationManageStateCalculateRateSuccess extends ReservationManageState {
+  final double rate;
+  ReservationManageStateCalculateRateSuccess( this.rate );
+}
+
 

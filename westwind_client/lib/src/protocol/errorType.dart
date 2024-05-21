@@ -12,7 +12,9 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 enum ErrorType with _i1.SerializableEntity {
   NotFound,
-  TooManyRoommates;
+  TooManyRoommates,
+  ProblemOfInsert,
+  ProblemOfUpdate;
 
   static ErrorType? fromJson(String name) {
     switch (name) {
@@ -20,6 +22,10 @@ enum ErrorType with _i1.SerializableEntity {
         return NotFound;
       case 'TooManyRoommates':
         return TooManyRoommates;
+      case 'ProblemOfInsert':
+        return ProblemOfInsert;
+      case 'ProblemOfUpdate':
+        return ProblemOfUpdate;
       default:
         return null;
     }

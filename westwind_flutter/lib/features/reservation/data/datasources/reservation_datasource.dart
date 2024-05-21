@@ -46,7 +46,7 @@ class ReservationDatasourceImp implements ReservationDatasource {
             throw ServerException("Reservation with $id can't be retrieved! ");
          }
          
-         return result!;
+         return result;
 
      } catch (e) {
       throw ServerException(e.toString());
