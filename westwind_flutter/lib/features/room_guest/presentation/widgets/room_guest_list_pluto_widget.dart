@@ -5,17 +5,17 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
-import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_edit_page.dart';
-import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
+import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
+import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
 
-class ReservationListWidget extends StatefulWidget {
-  const ReservationListWidget({super.key});
+class RoomGuestListPlutoWidget extends StatefulWidget {
+  const RoomGuestListPlutoWidget({super.key});
 
   @override
-  State<ReservationListWidget> createState() => _ReservationListWidgetState();
+  State<RoomGuestListPlutoWidget> createState() => _roomGuestListWidgetState();
 }
 
-class _ReservationListWidgetState extends State<ReservationListWidget> {
+class _roomGuestListWidgetState extends State<RoomGuestListPlutoWidget> {
   final List<PlutoColumn> columns = [];
 
   final List<PlutoRow> rows = [];
@@ -28,7 +28,7 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
   void initState() {
     super.initState();
 
-    context.read<ReservationListBloc>().add(FetchReservationsEvent());
+    context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
 
     //   final List<PlutoColumn> columns = <PlutoColumn>[
     columns.addAll(
@@ -66,32 +66,14 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
               );
             }),
         PlutoColumn(
-          title: 'Check In',
-          field: 'checkIn',
-          type: PlutoColumnType.date(),
-          width: 100,
+          title: 'Room Id',
+          field: 'roomId',
+          type: PlutoColumnType.number(),
+          width: 120,
         ),
         PlutoColumn(
-          title: 'check Out',
-          field: 'checkOut',
-          type: PlutoColumnType.date(),
-          width: 100,
-        ),
-        PlutoColumn(
-          title: 'Note',
-          field: 'note',
-          type: PlutoColumnType.text(),
-          width: 60,
-        ),
-        PlutoColumn(
-          title: 'Create At',
-          field: 'createAt',
-          type: PlutoColumnType.date(),
-          width: 100,
-        ),
-        PlutoColumn(
-          title: 'Update At',
-          field: 'updateAt',
+          title: 'State Date',
+          field: 'stateDate',
           type: PlutoColumnType.date(),
           width: 100,
         ),
@@ -120,94 +102,22 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
           width: 70,
         ),
         PlutoColumn(
-          title: 'is Check In',
-          field: 'isCheckIn',
-          type: PlutoColumnType.select(<bool>[true, false]),
-          width: 120,
-          renderer: (rendererContext) {
-            Color textColor = Colors.black;
-
-            if (rendererContext.cell.value == true) {
-              textColor = Colors.red;
-            } else if (rendererContext.cell.value == false) {
-              textColor = Colors.green;
-            }
-
-            return Icon(
-              Icons.single_bed,
-              color: textColor,
-            );
-            /*
-            return Text(
-              rendererContext.cell.value.toString(),
-              style: TextStyle(
-                color: textColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ); */
-          },
-        ),
-        PlutoColumn(
-          title: 'Is Canceled',
-          field: 'isCanceled',
-          type: PlutoColumnType.select(<bool>[true, false]),
-          width: 120,
-          renderer: (rendererContext) {
-            Color textColor = Colors.black;
-
-            if (rendererContext.cell.value == true) {
-              textColor = Colors.red;
-            } else if (rendererContext.cell.value == false) {
-              textColor = Colors.green;
-            }
-
-            //      return Icon(
-            //        Icons.single_bed,
-            //        color: textColor,
-            //     );
-
-            return Text(
-              rendererContext.cell.value.toString(),
-              style: TextStyle(
-                color: textColor,
-                fontWeight: FontWeight.bold,
-              ),
-            );
-          },
-        ),
-        PlutoColumn(
-          title: 'Is Night Shift',
-          field: 'isNightShift',
-          type: PlutoColumnType.select(<bool>[true, false]),
-          width: 120,
-          renderer: (rendererContext) {
-            Color textColor = Colors.black;
-
-            if (rendererContext.cell.value == true) {
-              textColor = Colors.red;
-            } else if (rendererContext.cell.value == false) {
-              textColor = Colors.green;
-            }
-
-            //      return Icon(
-            //        Icons.single_bed,
-            //        color: textColor,
-            //     );
-
-            return Text(
-              rendererContext.cell.value.toString(),
-              style: TextStyle(
-                color: textColor,
-                fontWeight: FontWeight.bold,
-              ),
-            );
-          },
-        ),
-        PlutoColumn(
-          title: 'Room Id',
-          field: 'roomId',
+          title: 'Res Id',
+          field: 'reservationId',
           type: PlutoColumnType.number(),
           width: 120,
+        ),
+        PlutoColumn(
+          title: 'check Out',
+          field: 'checkOut',
+          type: PlutoColumnType.date(),
+          width: 100,
+        ),
+        PlutoColumn(
+          title: 'Update At',
+          field: 'updateAt',
+          type: PlutoColumnType.date(),
+          width: 100,
         ),
         PlutoColumn(
           title: 'First Name',
@@ -218,6 +128,18 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
         PlutoColumn(
           title: 'Last Name',
           field: 'lastName',
+          type: PlutoColumnType.text(),
+          width: 120,
+        ),
+        PlutoColumn(
+          title: 'Rig number',
+          field: 'rigNumber',
+          type: PlutoColumnType.number(),
+          width: 120,
+        ),
+        PlutoColumn(
+          title: 'Company Name',
+          field: 'companyName',
           type: PlutoColumnType.text(),
           width: 120,
         ),
@@ -234,30 +156,32 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReservationListBloc, ReservationListState>(
+    return BlocBuilder<RoomGuestListBloc, RoomGuestListState>(
       builder: (context, state) {
-        // debugPrint("building SB");
+        debugPrint("building RoomGuest List");
         switch (state) {
-          case ReservationListStateInitial():
+          case RoomGuestListStateInitial():
             return const SizedBox.shrink();
-          case ReservationListStateLoading():
+          case RoomGuestListStateLoading():
             return const Loader();
-          case ReservationListStateLoaded():
-            final reservations = state.reservations;
-            final reservationSelected = reservations;
+          case RoomGuestListStateLoaded():
+            final roomGuests = state.roomGuests;
+            final roomGuestSelected = roomGuests;
+
             return Column(
               children: [
-                Expanded(child: buildDataTable(context, reservations)),
-                buildSubmit(context, reservationSelected),
-                buildCancelReseration(context, reservationSelected),
-                //    buildSubmit(context, ReservationSelected, ref),
+                Expanded(child: buildDataTable(context, roomGuests)),
+                buildSubmit(context, roomGuestSelected),
+                buildCancelReseration(context, roomGuestSelected),
+                //    buildSubmit(context, RoomGuestSelected, ref),
               ],
             );
-          case ReservationListStateFailure():
+          case RoomGuestListStateFailure():
             return Center(
               child: Text(state.message),
             );
-          default: return Placeholder();
+          default:
+            return Placeholder();
         }
       },
     );
@@ -268,29 +192,26 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
 
   Widget buildDataTable(
     BuildContext context,
-    List<Reservation> reservations,
-    // List<reservation> reservationSelected,
+    List<RoomGuest> roomGuests,
+    // List<roomGuest> roomGuestSelected,
   ) {
-
-    final List<PlutoRow> rows = reservations.map((reservation) {
+    final List<PlutoRow> rows = roomGuests.map((roomGuest) {
       return PlutoRow(
         cells: {
-          'id': PlutoCell(value: reservation.id!),
-          'checkIn': PlutoCell(value: reservation.checkInDate),
-          'checkOut': PlutoCell(value: reservation.checkOutDate),
-          'note': PlutoCell(value: reservation.note),
-          'createAt': PlutoCell(value: reservation.dateCreate),
-          'updateAt': PlutoCell(value: reservation.dateUpdate),
-          'guestId': PlutoCell(value: reservation.guestId),
-          'rateType': PlutoCell(value: reservation.rateType.toString()),
-          'rateReason': PlutoCell(value: reservation.rateReason.toString()),
-          'rate': PlutoCell(value: reservation.rate),
-          'isCheckIn': PlutoCell(value: reservation.isCheckedIn),
-          'isCanceled': PlutoCell(value: reservation.isCanceled),
-          'isNightShift': PlutoCell(value: reservation.isNightShift),
-          'roomId': PlutoCell(value: reservation.roomId),
-          'firstName': PlutoCell(value: reservation.guest!.firstName),
-          'lastName': PlutoCell(value: reservation.guest!.lastName),
+          'id': PlutoCell(value: roomGuest.id!),
+          'roomId': PlutoCell(value: roomGuest.roomId),
+          'stateDate': PlutoCell(value: roomGuest.stateDate),
+          'guestId': PlutoCell(value: roomGuest.guestId),
+          'rateType': PlutoCell(value: roomGuest.rateType.toString()),
+          'rateReason': PlutoCell(value: roomGuest.rateReason.toString()),
+          'rate': PlutoCell(value: roomGuest.rate),
+          'reservationId': PlutoCell(value: roomGuest.reservationId),
+          'checkOut': PlutoCell(value: roomGuest.checkOutDate),
+          'updateAt': PlutoCell(value: roomGuest.updateDate),
+          'firstName': PlutoCell(value: roomGuest.guest!.firstName),
+          'lastName': PlutoCell(value: roomGuest.guest!.lastName),
+          'rigNumber': PlutoCell(value: roomGuest.guest!.rigNumber),
+          'companyName': PlutoCell(value: roomGuest.guest!.company!.name),
         },
       );
     }).toList();
@@ -317,7 +238,7 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
           }
 
           //  if (event.row.cells['isInHouse']!.value == false) {
-          context.push(ReservationEditPage.route(field!.value));
+          context.push(RoomGuestEditPage.route(field!.value));
           //   }
         },
         configuration: PlutoGridConfiguration(
@@ -351,7 +272,7 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
 
   Widget buildSubmit(
     BuildContext context,
-    List<Reservation> reservationSelected,
+    List<RoomGuest> roomGuestSelected,
   ) =>
       Container(
         width: double.infinity,
@@ -362,24 +283,24 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
             shape: StadiumBorder(),
             minimumSize: Size.fromHeight(40),
           ),
-          child: Text('Select ${reservationSelected.length} to Check In'),
+          child: Text('Select ${roomGuestSelected.length} to Check In'),
           onPressed: () {
-            //    final id = ReservationSelected.map((Reservation) => Reservation.id).join(', ');
+            //    final id = roomGuestSelected.map((roomGuest) => roomGuest.id).join(', ');
 
-// context.read<ReservationListBloc>().add( SelectReservationEvent( Reservation: ReservationSelected.first ) );
+// context.read<roomGuestListBloc>().add( SelectroomGuestEvent( roomGuest: roomGuestSelected.first ) );
 
-            reservationSelected.forEach((element) {
-              //  ref.read(ReservationProvider(0).notifier).checkIn(element, element.id!);
-              // context.read<ReservationListBloc>().add( ReservationListStateSelected(Reservations));
+            roomGuestSelected.forEach((element) {
+              //  ref.read(roomGuestProvider(0).notifier).checkIn(element, element.id!);
+              // context.read<roomGuestListBloc>().add( roomGuestListStateSelected(roomGuests));
             });
 
-            //  Utils.showSnackBar(context, 'Selected Reservation: $id ');
+            //  Utils.showSnackBar(context, 'Selected roomGuest: $id ');
           },
         ),
       );
   Widget buildCancelReseration(
     BuildContext context,
-    List<Reservation> ReservationSelected,
+    List<RoomGuest> roomGuestSelected,
   ) =>
       Container(
         width: double.infinity,
@@ -390,18 +311,18 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
             shape: const StadiumBorder(),
             minimumSize: const Size.fromHeight(40),
           ),
-          child: Text('Select ${ReservationSelected.length} to Cancel'),
+          child: Text('Select ${roomGuestSelected.length} to Cancel'),
           onPressed: () {
-            //          final id = ReservationSelected.map((Reservation) => Reservation.id).join(', ');
+            //          final id = roomGuestSelected.map((roomGuest) => roomGuest.id).join(', ');
 
-            ReservationSelected.forEach((element) {
+            roomGuestSelected.forEach((element) {
               //       ref
-              //          .read(ReservationProvider(0).notifier)
-              //         .ReservationClient
-              //        .cancelReservation(id: element.id!);
+              //          .read(roomGuestProvider(0).notifier)
+              //         .roomGuestClient
+              //        .cancelroomGuest(id: element.id!);
             });
 
-            //  Utils.showSnackBar(context, 'Selected Reservation: $id ');
+            //  Utils.showSnackBar(context, 'Selected roomGuest: $id ');
           },
         ),
       );

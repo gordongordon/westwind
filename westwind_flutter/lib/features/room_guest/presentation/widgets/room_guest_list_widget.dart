@@ -56,6 +56,7 @@ class _RoomGuestListWidgetsState extends State<RoomGuestListWidgets> {
             return Center(
               child: Text(state.message),
             );
+                    default: return Placeholder();
         }
       },
     );
