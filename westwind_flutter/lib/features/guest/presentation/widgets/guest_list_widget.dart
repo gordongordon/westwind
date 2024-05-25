@@ -11,7 +11,6 @@ import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/gue
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_detail_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_edit_page.dart';
 
-
 class GuestListWidgets extends StatefulWidget {
   const GuestListWidgets({super.key});
 
@@ -62,7 +61,6 @@ class _GuestListWidgetsState extends State<GuestListWidgets> {
     );
   }
 
-
   Widget buildDataTable(
     BuildContext context,
     List<Guest> guests,
@@ -93,9 +91,9 @@ class _GuestListWidgetsState extends State<GuestListWidgets> {
         },
       ),
       columnSpacing: 20,
-    //  onSelectAll: (isSelectedAll) {
-    //    Utils.showSnackBar(context, 'All Selected');
-   //   },
+      //  onSelectAll: (isSelectedAll) {
+      //    Utils.showSnackBar(context, 'All Selected');
+      //   },
 
       columns: getColumns(columns),
       rows: getRows(context, guests, guestSelected),
@@ -139,12 +137,11 @@ class _GuestListWidgetsState extends State<GuestListWidgets> {
         ];
 
         return DataRow(
-         // selected: true,
-         // selected: guestSelected.contains(guest),
+          // selected: true,
+          // selected: guestSelected.contains(guest),
           onSelectChanged: (isSelected) {
-            
-                 context.push(GuestEditPage.route(guest.id));
-       //     Utils.showSnackBar(context, 'All Selected');
+            context.push(GuestEditPage.route(guest.id));
+            //     Utils.showSnackBar(context, 'All Selected');
           },
           cells: Utils.modelBuilder(cells, (index, cell) {
             return DataCell(
@@ -174,8 +171,8 @@ class _GuestListWidgetsState extends State<GuestListWidgets> {
 // context.read<GuestListBloc>().add( SelectGuestEvent( guest: guestSelected.first ) );
 
             guestSelected.forEach((element) {
-             //  ref.read(guestProvider(0).notifier).checkIn(element, element.id!);
-               // context.read<GuestListBloc>().add( GuestListStateSelected(guests));
+              //  ref.read(guestProvider(0).notifier).checkIn(element, element.id!);
+              // context.read<GuestListBloc>().add( GuestListStateSelected(guests));
             });
 
             //  Utils.showSnackBar(context, 'Selected guest: $id ');
@@ -200,10 +197,10 @@ class _GuestListWidgetsState extends State<GuestListWidgets> {
             final id = guestSelected.map((guest) => guest.id).join(', ');
 
             guestSelected.forEach((element) {
-       //       ref
-        //          .read(guestProvider(0).notifier)
-         //         .guestClient
-          //        .cancelguest(id: element.id!);
+              //       ref
+              //          .read(guestProvider(0).notifier)
+              //         .guestClient
+              //        .cancelguest(id: element.id!);
             });
 
             //  Utils.showSnackBar(context, 'Selected guest: $id ');

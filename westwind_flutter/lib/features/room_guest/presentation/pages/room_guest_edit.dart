@@ -360,7 +360,6 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                         FormBuilderValidators.required(),
                       ]),
                     ),
-
                     if (isEditing)
                       Padding(
                         padding: const EdgeInsets.all(8.0),

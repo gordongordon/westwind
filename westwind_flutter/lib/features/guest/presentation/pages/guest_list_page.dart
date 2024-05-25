@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_flutter/features/app_user/presentation/widgets/app_user_dropdown.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_edit_page.dart';
+import 'package:westwind_flutter/features/guest/presentation/widgets/guest_list_pluto_widget.dart';
 
 import 'package:westwind_flutter/features/guest/presentation/widgets/guest_list_widget.dart';
 
@@ -23,7 +24,8 @@ class GuestListPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(onPressed: () {
            context.push(GuestEditPage.routeNew());   
       },child: const Icon( Icons.add),),
-      body: const GuestListWidgets(),
+     // body: const GuestListWidgets(),
+      body: const GuestListPlutoWidget(),
     );
     
   }
