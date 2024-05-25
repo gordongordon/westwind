@@ -20,7 +20,8 @@ class GuestListWidget extends StatefulWidget {
 class _GuestListWidgetState extends State<GuestListWidget> {
   final List<PlutoColumn> columns = [];
 
-  final List<PlutoRow> rows = [];
+  //  final List<PlutoRow> rows = [];
+
   final List<String> _rateTypeOptions =
       RateType.values.map((e) => e.name).toList();
 
@@ -29,55 +30,7 @@ class _GuestListWidgetState extends State<GuestListWidget> {
     super.initState();
 
     context.read<GuestListBloc>().add(FetchGuestsEvent());
-  }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  late final PlutoGridStateManager stateManager;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<GuestListBloc, GuestListState>(
-      builder: (context, state) {
-        debugPrint("building SB");
-        switch (state) {
-          case GuestListStateInitial():
-            return const SizedBox.shrink();
-          case GuestListStateLoading():
-            return const Loader();
-          case GuestListStateLoaded():
-            final guests = state.guests;
-            final guestSelected = guests;
-            return Column(
-              children: [
-                Expanded(child: buildDataTable(context, guests, guestSelected)),
-                buildSubmit(context, guestSelected),
-                buildCancelReseration(context, guestSelected),
-                //    buildSubmit(context, guestSelected, ref),
-              ],
-            );
-          case GuestListStateFailure():
-            return Center(
-              child: Text(state.message),
-            );
-        }
-      },
-    );
-  }
-
-  // final List<String> _rateTypeOptions =
-  //   RateType.values.map((e) => e.name).toList();
-
-  Widget buildDataTable(
-    BuildContext context,
-    List<Guest> guests,
-    List<Guest> guestSelected,
-  ) {
-//! Column
-    //   final List<PlutoColumn> columns = <PlutoColumn>[
     columns.addAll(
       [
         PlutoColumn(
@@ -218,11 +171,59 @@ class _GuestListWidgetState extends State<GuestListWidget> {
         ),
       ],
     );
+  }
 
-    // rows.addAll(DummyData.rowsByColumns(length: 30, columns: columns));
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  late final PlutoGridStateManager stateManager;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GuestListBloc, GuestListState>(
+      builder: (context, state) {
+        debugPrint("building SB");
+        switch (state) {
+          case GuestListStateInitial():
+            return const SizedBox.shrink();
+          case GuestListStateLoading():
+            return const Loader();
+          case GuestListStateLoaded():
+            final guests = state.guests;
+            final guestSelected = guests;
+
+            return Column(
+              children: [
+                Expanded(child: buildDataTable(context, guests)),
+                buildSubmit(context, guestSelected),
+                buildCancelReseration(context, guestSelected),
+                //    buildSubmit(context, guestSelected, ref),
+              ],
+            );
+          case GuestListStateFailure():
+            return Center(
+              child: Text(state.message),
+            );
+          default:
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  // final List<String> _rateTypeOptions =
+  //   RateType.values.map((e) => e.name).toList();
+
+  Widget buildDataTable(
+    BuildContext context,
+    List<Guest> guests,
+  ) {
+//! Column
 
     // List<PlutoRow> rows = guests.map((guest) {
-    rows.addAll(guests.map((guest) {
+    final List<PlutoRow> rows = guests.map((guest) {
       return PlutoRow(
         cells: {
           'id': PlutoCell(value: guest.id!),
@@ -241,7 +242,9 @@ class _GuestListWidgetState extends State<GuestListWidget> {
           //  'salary' : PlutoCell(value: 100),
         },
       );
-    }).toList());
+    }).toList();
+
+    //   final List<PlutoColumn> columns = <PlutoColumn>[
 
     return PlutoGrid(
         columns: columns,
@@ -250,7 +253,7 @@ class _GuestListWidgetState extends State<GuestListWidget> {
         //    print(event);
         //     },
         onLoaded: (PlutoGridOnLoadedEvent event) {
-          event.stateManager.setShowColumnFilter(true);
+          //     event.stateManager.setShowColumnFilter(true);
           stateManager = event.stateManager;
         },
         onRowDoubleTap: (event) {
@@ -260,7 +263,7 @@ class _GuestListWidgetState extends State<GuestListWidget> {
           debugPrint('onSelected');
           final field = event.row.cells['id'];
 
-          if ( field  == null) {
+          if (field == null) {
             showSnackbar(context, 'Cell id cannot be found!');
           }
 
@@ -290,7 +293,6 @@ class _GuestListWidgetState extends State<GuestListWidget> {
               } else if (column.field == 'rateType') {
                 return resolver<ClassYouImplemented>() as PlutoFilterType;
               }
-
               return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
             },
           ),
@@ -312,7 +314,7 @@ class _GuestListWidgetState extends State<GuestListWidget> {
           ),
           child: Text('Select ${guestSelected.length} to Check In'),
           onPressed: () {
-            final id = guestSelected.map((guest) => guest.id).join(', ');
+            //      final id = guestSelected.map((guest) => guest.id).join(', ');
 
 // context.read<GuestListBloc>().add( SelectGuestEvent( guest: guestSelected.first ) );
 

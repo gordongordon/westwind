@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:westwind_flutter/features/app_user/presentation/widgets/app_user_dropdown.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_edit_page.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/widgets/reservation_list_widget.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/widgets/reservation_list_widget.dart';
 
 class ReservationListPage extends StatelessWidget {
   static String route() => "/reservations";
@@ -22,7 +23,8 @@ class ReservationListPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(onPressed: () {
            context.push(ReservationEditPage.routeNew());   
       },child: const Icon( Icons.add),),
-      body: const ReservationListWidgets(),
+    //   body: const ReservationListWidgets(),
+    body: const ReservationListWidget(),
     );
     
   }
