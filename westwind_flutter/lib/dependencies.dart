@@ -83,21 +83,21 @@ Future<void> initDependencies() async {
 
 void _initRateTable() {
   // DataSource
-  serverLocator.registerFactory<RateTableDatasource>(
+  serverLocator.registerLazySingleton<RateTableDatasource>(
     () => RateTableDatasourceImpl(
       serverLocator<Client>(),
     ),
   );
 
   // Repositories
-  serverLocator.registerFactory<RateTableRepository>(
+  serverLocator.registerLazySingleton<RateTableRepository>(
     () => RateTableRepositoryImpl(
       serverLocator<RateTableDatasource>(),
     ),
   );
 
   // Use Case
-  serverLocator.registerFactory<RateTableGetRateUseCase>(
+  serverLocator.registerLazySingleton<RateTableGetRateUseCase>(
     () => RateTableGetRateUseCase(
       serverLocator<RateTableRepository>(),
     ),
@@ -106,7 +106,7 @@ void _initRateTable() {
 
 void _initAuth() {
   // DataSource
-  serverLocator.registerFactory<AuthDataSource>(
+  serverLocator.registerLazySingleton<AuthDataSource>(
     () => AuthDataSourceImpl(
       serverLocator<Client>(),
       serverLocator<SessionManager>(),
@@ -114,41 +114,41 @@ void _initAuth() {
   );
 
   // Repositories
-  serverLocator.registerFactory<AuthRepository>(
+  serverLocator.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImp(
       serverLocator<AuthDataSource>(),
     ),
   );
 
   // Use Case
-  serverLocator.registerFactory<CurrentUserUseCase>(
+  serverLocator.registerLazySingleton<CurrentUserUseCase>(
     () => CurrentUserUseCase(
       serverLocator<AuthRepository>(),
     ),
   );
-  serverLocator.registerFactory<UserLoginUseCase>(
+  serverLocator.registerLazySingleton<UserLoginUseCase>(
     () => UserLoginUseCase(
       serverLocator<AuthRepository>(),
     ),
   );
-  serverLocator.registerFactory<UserLogoutUseCase>(
+  serverLocator.registerLazySingleton<UserLogoutUseCase>(
     () => UserLogoutUseCase(
       serverLocator<AuthRepository>(),
     ),
   );
-  serverLocator.registerFactory<UserRegisterUseCase>(
+  serverLocator.registerLazySingleton<UserRegisterUseCase>(
     () => UserRegisterUseCase(
       serverLocator<AuthRepository>(),
     ),
   );
-  serverLocator.registerFactory<UserConfirmRegistrationUseCase>(
+  serverLocator.registerLazySingleton<UserConfirmRegistrationUseCase>(
     () => UserConfirmRegistrationUseCase(
       serverLocator<AuthRepository>(),
     ),
   );
 
   // Bloc
-  serverLocator.registerLazySingleton<AuthBloc>(
+  serverLocator.registerFactory<AuthBloc>(
     () => AuthBloc(
       appUserCubit: serverLocator<AppUserCubit>(),
       currentUser: serverLocator<CurrentUserUseCase>(),
@@ -162,14 +162,14 @@ void _initAuth() {
 
 void _initGuest() {
   // Data Source
-  serverLocator.registerFactory<GuestDatasource>(
+  serverLocator.registerLazySingleton<GuestDatasource>(
     () => GuestDatasourceImpl(
       serverLocator<Client>(),
     ),
   );
 
   // Repository
-  serverLocator.registerFactory<GuestRepository>(
+  serverLocator.registerLazySingleton<GuestRepository>(
     () => GuestRepositoryImp(
       serverLocator<GuestDatasource>(),
     ),
@@ -177,27 +177,27 @@ void _initGuest() {
 
   // Use Cases
   //! register as Singleton base on Reso coder, for cacheing .
-  serverLocator.registerFactory<ListGuestsUseCase>(
+  serverLocator.registerLazySingleton<ListGuestsUseCase>(
     () => ListGuestsUseCase(
       serverLocator<GuestRepository>(),
     ),
   );
-  serverLocator.registerFactory<DeleteGuestUseCase>(
+  serverLocator.registerLazySingleton<DeleteGuestUseCase>(
     () => DeleteGuestUseCase(
       serverLocator<GuestRepository>(),
     ),
   );
-  serverLocator.registerFactory<RetrieveGuestUseCase>(
+  serverLocator.registerLazySingleton<RetrieveGuestUseCase>(
     () => RetrieveGuestUseCase(
       serverLocator<GuestRepository>(),
     ),
   );
-  serverLocator.registerFactory<SaveGuestUseCase>(
+  serverLocator.registerLazySingleton<SaveGuestUseCase>(
     () => SaveGuestUseCase(
       serverLocator<GuestRepository>(),
     ),
   );
-  serverLocator.registerFactory<RetrieveGuestByPhoneUseCase>(
+  serverLocator.registerLazySingleton<RetrieveGuestByPhoneUseCase>(
     () => RetrieveGuestByPhoneUseCase(
       serverLocator<GuestRepository>(),
     ),
@@ -205,14 +205,14 @@ void _initGuest() {
 
   // Blocs
   //! May be register as Factory base on Reso Coder for all bloc, because of Close stream issum after user come back to the page.
-  serverLocator.registerLazySingleton(
+  serverLocator.registerFactory(
     () => GuestListBloc(
       listGuests: serverLocator<ListGuestsUseCase>(),
       deleteGuest: serverLocator<DeleteGuestUseCase>(),
     ),
   );
 
-  serverLocator.registerLazySingleton(
+  serverLocator.registerFactory(
     () => GuestManageBloc(
       deleteGuest: serverLocator<DeleteGuestUseCase>(),
       retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
@@ -221,7 +221,7 @@ void _initGuest() {
     ),
   );
 
-  serverLocator.registerLazySingleton(
+  serverLocator.registerFactory(
     () => GuestDetailBloc(
       retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
     ),
@@ -230,14 +230,14 @@ void _initGuest() {
 
 void _initReservation() {
   // Data Source
-  serverLocator.registerFactory<ReservationDatasource>(
+  serverLocator.registerLazySingleton<ReservationDatasource>(
     () => ReservationDatasourceImp(
       serverLocator<Client>(),
     ),
   );
 
   // Repository
-  serverLocator.registerFactory<ReservationRepository>(
+  serverLocator.registerLazySingleton<ReservationRepository>(
     () => ReservationRepositoryImp(
       serverLocator<ReservationDatasource>(),
     ),
@@ -245,38 +245,38 @@ void _initReservation() {
 
   // Use Cases
   //! register as Singleton base on Reso coder, for cacheing .
-  serverLocator.registerFactory<ListReservationUseCase>(
+  serverLocator.registerLazySingleton<ListReservationUseCase>(
     () => ListReservationUseCase(
       serverLocator<ReservationRepository>(),
     ),
   );
 
-  serverLocator.registerFactory<RetrieveReservationUseCase>(
+  serverLocator.registerLazySingleton<RetrieveReservationUseCase>(
     () => RetrieveReservationUseCase(
       serverLocator<ReservationRepository>(),
     ),
   );
 
-  serverLocator.registerFactory<SaveReservationUseCase>(
+  serverLocator.registerLazySingleton<SaveReservationUseCase>(
     () => SaveReservationUseCase(
       serverLocator<ReservationRepository>(),
     ),
   );
 
-  serverLocator.registerFactory<DeleteReservationUseCase>(
+  serverLocator.registerLazySingleton<DeleteReservationUseCase>(
     () => DeleteReservationUseCase(
       serverLocator<ReservationRepository>(),
     ),
   );
 
-  serverLocator.registerFactory<CheckInReservationUseCase>(
+  serverLocator.registerLazySingleton<CheckInReservationUseCase>(
     () => CheckInReservationUseCase(
       serverLocator<ReservationRepository>(),
     ),
   );
 
 /*
-  serverLocator.registerFactory<RetrieveGuestUseCase>(
+  serverLocator.registerLazySingleton<RetrieveGuestUseCase>(
     () => RetrieveGuestUseCase(
       serverLocator<GuestRepository>(),
     ),
@@ -284,12 +284,12 @@ void _initReservation() {
 */
   // Bloc
   serverLocator
-      .registerLazySingleton<ReservationListBloc>(() => ReservationListBloc(
+      .registerFactory<ReservationListBloc>(() => ReservationListBloc(
             listReservations: serverLocator<ListReservationUseCase>(),
           ));
 
   serverLocator
-      .registerLazySingleton<ReservationManageBloc>(() => ReservationManageBloc(
+      .registerFactory<ReservationManageBloc>(() => ReservationManageBloc(
             retrieveReservation: serverLocator<RetrieveReservationUseCase>(),
             saveReservation: serverLocator<SaveReservationUseCase>(),
             deleteReservation: serverLocator<DeleteReservationUseCase>(),
@@ -302,46 +302,46 @@ void _initReservation() {
 
 void _initRoomGuest() {
   // DataSource
-  serverLocator.registerFactory<RoomGuestDatasource>(
+  serverLocator.registerLazySingleton<RoomGuestDatasource>(
     () => RoomGuestDatasourceImpl(
       serverLocator<Client>(),
     ),
   );
 
   // Repositories
-  serverLocator.registerFactory<RoomGuestRepository>(
+  serverLocator.registerLazySingleton<RoomGuestRepository>(
     () => RoomGuestRepositoryImpl(
       serverLocator<RoomGuestDatasource>(),
     ),
   );
 
   // Use Case
-  serverLocator.registerFactory<CheckInRoomGuestUseCase>(
+  serverLocator.registerLazySingleton<CheckInRoomGuestUseCase>(
     () => CheckInRoomGuestUseCase(
       serverLocator<RoomGuestRepository>(),
       serverLocator<RateTableRepository>(),
     ),
   );
 
-  serverLocator.registerFactory<DeleteRoomGuestUseCase>(
+  serverLocator.registerLazySingleton<DeleteRoomGuestUseCase>(
     () => DeleteRoomGuestUseCase(
       serverLocator<RoomGuestRepository>(),
     ),
   );
 
-  serverLocator.registerFactory<ListRoomGuestUseCase>(
+  serverLocator.registerLazySingleton<ListRoomGuestUseCase>(
     () => ListRoomGuestUseCase(
       serverLocator<RoomGuestRepository>(),
     ),
   );
 
-  serverLocator.registerFactory<RetrieveRoomGuestUseCase>(
+  serverLocator.registerLazySingleton<RetrieveRoomGuestUseCase>(
     () => RetrieveRoomGuestUseCase(
       serverLocator<RoomGuestRepository>(),
     ),
   );
 
-  serverLocator.registerFactory<SaveRoomGuestUseCase>(
+  serverLocator.registerLazySingleton<SaveRoomGuestUseCase>(
     () => SaveRoomGuestUseCase(
       serverLocator<RoomGuestRepository>(),
     ),
@@ -349,12 +349,12 @@ void _initRoomGuest() {
 
   // Bloc
   serverLocator
-      .registerLazySingleton<RoomGuestListBloc>(() => RoomGuestListBloc(
+      .registerFactory<RoomGuestListBloc>(() => RoomGuestListBloc(
             listRoomGuests: serverLocator<ListRoomGuestUseCase>(),
           ));
 
   serverLocator
-      .registerLazySingleton<RoomGuestManageBloc>(() => RoomGuestManageBloc(
+      .registerFactory<RoomGuestManageBloc>(() => RoomGuestManageBloc(
             deleteRoomGuest: serverLocator<DeleteRoomGuestUseCase>(),
             retrieveRoomGuest: serverLocator<RetrieveRoomGuestUseCase>(),
             //     saveRoomGuest: serverLocator<SaveRoomGuestUseCase>(),

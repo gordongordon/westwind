@@ -20,7 +20,6 @@ class GuestListWidget extends StatefulWidget {
 class _GuestListWidgetState extends State<GuestListWidget> {
   final List<PlutoColumn> columns = [];
 
-  //  final List<PlutoRow> rows = [];
 
   final List<String> _rateTypeOptions =
       RateType.values.map((e) => e.name).toList();
@@ -184,7 +183,7 @@ class _GuestListWidgetState extends State<GuestListWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<GuestListBloc, GuestListState>(
       builder: (context, state) {
-        debugPrint("building SB");
+        debugPrint("building GuestListWidget");
         switch (state) {
           case GuestListStateInitial():
             return const SizedBox.shrink();

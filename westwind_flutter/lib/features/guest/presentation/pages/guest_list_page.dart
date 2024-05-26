@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:westwind_flutter/core/widgets/dashboard.dart';
 import 'package:westwind_flutter/features/app_user/presentation/widgets/app_user_dropdown.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_edit_page.dart';
-import 'package:westwind_flutter/features/guest/presentation/widgets/guest_list_widget.dart';
+
 
 class GuestListPage extends StatelessWidget {
   static String route() => "/guests";
@@ -22,8 +23,8 @@ class GuestListPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(onPressed: () {
            context.push(GuestEditPage.routeNew());   
       },child: const Icon( Icons.add),),
-      body: const GuestListWidget(),
-     // body: const GuestListPlutoWidget(),
+      // body: const GuestListWidget(),
+       body: const Dashboard(),
     );
     
   }
