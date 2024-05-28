@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -213,13 +214,55 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
           title: 'First Name',
           field: 'firstName',
           type: PlutoColumnType.text(),
-          width: 120,
+          width: 100,
+          titleSpan: const TextSpan(
+            text: 'First Name',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+            ),
+
+
+          renderer: (rendererContext) {
+            Color textColor = Colors.black;
+
+            return Text(
+              rendererContext.cell.value.toString(),
+              style: TextStyle(
+                color: textColor,
+             //   fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            );
+          },
         ),
         PlutoColumn(
           title: 'Last Name',
           field: 'lastName',
           type: PlutoColumnType.text(),
-          width: 120,
+          width: 100,
+                  titleSpan: const TextSpan(
+            text: 'Last Name',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+            ),
+            renderer: (rendererContext) {
+            Color textColor = Colors.black;
+
+            return Text(
+              rendererContext.cell.value.toString(),
+              style: TextStyle(
+                color: textColor,
+             //   fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            );
+          },
         ),
       ],
     );
@@ -257,7 +300,8 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
             return Center(
               child: Text(state.message),
             );
-          default: return Placeholder();
+          default:
+            return Placeholder();
         }
       },
     );
@@ -271,7 +315,6 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
     List<Reservation> reservations,
     // List<reservation> reservationSelected,
   ) {
-
     final List<PlutoRow> rows = reservations.map((reservation) {
       return PlutoRow(
         cells: {

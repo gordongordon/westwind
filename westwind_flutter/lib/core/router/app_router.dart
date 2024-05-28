@@ -4,6 +4,7 @@ import 'package:westwind_flutter/features/app_user/presentation/cubits/cubit/app
 import 'package:westwind_flutter/features/auth/presentation/pages/login_page.dart';
 import 'package:westwind_flutter/features/auth/presentation/pages/register_confirmation_page.dart';
 import 'package:westwind_flutter/features/auth/presentation/pages/register_page.dart';
+import 'package:westwind_flutter/features/dashboard/screens/main_screen.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_detail_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_edit_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
@@ -16,6 +17,10 @@ class AppRouter {
   static GoRouter router = GoRouter(
       initialLocation: LoginPage.route(),
       routes: [
+        GoRoute(
+          path: MainScreen.route(),
+          builder: (context, _) => const MainScreen(),
+        ), 
         GoRoute(
           path: LoginPage.route(),
           builder: (context, _) => const LoginPage(),
@@ -62,12 +67,10 @@ class AppRouter {
             reservationId: int.parse(state.pathParameters['id'] ?? '0'),
           ),
         ),
-
         GoRoute(
           path: RoomGuestListPage.route(),
           builder: (context, _) => const RoomGuestListPage(),
         ),
-        
         GoRoute(
           path: RoomGuestEditPage.routeNew(),
           builder: (context, _) => RoomGuestEditPage(),
@@ -78,7 +81,6 @@ class AppRouter {
             roomGuestId: int.parse(state.pathParameters['id'] ?? '0'),
           ),
         ),
-        
       ],
       redirect: (context, state) {
         final userState = context.read<AppUserCubit>().state;

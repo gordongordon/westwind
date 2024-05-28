@@ -11,6 +11,7 @@ import 'package:westwind_flutter/features/auth/domain/usecases/user_login.dart';
 import 'package:westwind_flutter/features/auth/domain/usecases/user_logout.dart';
 import 'package:westwind_flutter/features/auth/domain/usecases/user_register.dart';
 import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:westwind_flutter/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:westwind_flutter/features/guest/data/datasources/guest_datasource.dart';
 import 'package:westwind_flutter/features/guest/data/repositories/guest_repository_imp.dart';
 import 'package:westwind_flutter/features/guest/domain/repositories/guest_repository.dart';
@@ -79,7 +80,20 @@ Future<void> initDependencies() async {
   _initRateTable();
 
   _initRoomGuest();
+
+  _initDashboard();
 }
+
+
+void   _initDashboard() {
+
+  // Bloc
+  serverLocator.registerFactory<DashboardBloc> (
+    () => DashboardBloc(),
+  );
+
+}
+
 
 void _initRateTable() {
   // DataSource

@@ -8,17 +8,16 @@ import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_events.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_state.dart';
-import 'package:westwind_flutter/features/guest/presentation/pages/guest_detail_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_edit_page.dart';
 
-class GuestListWidgets extends StatefulWidget {
-  const GuestListWidgets({super.key});
+class GuestListWidget extends StatefulWidget {
+  const GuestListWidget({super.key});
 
   @override
-  State<GuestListWidgets> createState() => _GuestListWidgetsState();
+  State<GuestListWidget> createState() => _GuestListWidgetsState();
 }
 
-class _GuestListWidgetsState extends State<GuestListWidgets> {
+class _GuestListWidgetsState extends State<GuestListWidget> {
   @override
   void initState() {
     super.initState();

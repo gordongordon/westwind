@@ -69,6 +69,18 @@ class _GuestListWidgetState extends State<GuestListWidget> {
           field: 'firstName',
           type: PlutoColumnType.text(),
           width: 120,
+        renderer: (rendererContext) {
+            Color textColor = Colors.black;
+
+            return Text(
+              rendererContext.cell.value.toString(),
+              style: TextStyle(
+                color: textColor,
+            //    fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ); 
+          },
         ),
         PlutoColumn(
           title: 'Last Name',
@@ -186,21 +198,37 @@ class _GuestListWidgetState extends State<GuestListWidget> {
         debugPrint("building GuestListWidget");
         switch (state) {
           case GuestListStateInitial():
-            return const SizedBox.shrink();
+            // return const SizedBox.shrink();
+          return const Placeholder();
           case GuestListStateLoading():
             return const Loader();
           case GuestListStateLoaded():
             final guests = state.guests;
             final guestSelected = guests;
-
+            
+            debugPrint("GusetListStateLoaded");
+             return   buildDataTable(context, guests);
+      //   return  buildSubmit(context, guestSelected);
+/* 
             return Column(
+            //    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                     //       mainAxisAlignment: MainAxisAlignment,
+                            mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(child: buildDataTable(context, guests)),
-                buildSubmit(context, guestSelected),
-                buildCancelReseration(context, guestSelected),
+       //           Padding(
+        //             padding: const EdgeInsets.only(right: 20),
+               //      child: Placeholder(),
+      //   child :   
+              buildDataTable(context, guests)
+
+           //   Expanded(child: buildDataTable(context, guests)),
+           //  child:   buildSubmit(context, guestSelected),
+      //     child:      buildCancelReseration(context, guestSelected),
                 //    buildSubmit(context, guestSelected, ref),
+              //  ),
               ],
             );
+            */
           case GuestListStateFailure():
             return Center(
               child: Text(state.message),
@@ -248,6 +276,7 @@ class _GuestListWidgetState extends State<GuestListWidget> {
     return PlutoGrid(
         columns: columns,
         rows: rows,
+
         //     onChanged: (PlutoGridOnChangedEvent event) {
         //    print(event);
         //     },
@@ -317,15 +346,18 @@ class _GuestListWidgetState extends State<GuestListWidget> {
 
 // context.read<GuestListBloc>().add( SelectGuestEvent( guest: guestSelected.first ) );
 
-            guestSelected.forEach((element) {
+        //    guestSelected.forEach((element) {
               //  ref.read(guestProvider(0).notifier).checkIn(element, element.id!);
               // context.read<GuestListBloc>().add( GuestListStateSelected(guests));
-            });
+         //   });
 
             //  Utils.showSnackBar(context, 'Selected guest: $id ');
           },
         ),
       );
+
+
+
   Widget buildCancelReseration(
     BuildContext context,
     List<Guest> guestSelected,

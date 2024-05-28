@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:westwind_flutter/core/utils/app_bloc_observer.dart';
+import 'package:westwind_flutter/core/widgets/dashboard_testing.dart';
 import 'package:westwind_flutter/features/app_user/presentation/cubits/cubit/app_user_cubit.dart';
 import 'package:westwind_flutter/core/router/app_router.dart';
 import 'package:westwind_flutter/dependencies.dart';
 import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:westwind_flutter/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_manage/guest_manage_bloc.dart';
@@ -31,6 +33,7 @@ void main() async {
       BlocProvider(create: (_) => serverLocator<ReservationManageBloc>()),
       BlocProvider(create: (_) => serverLocator<RoomGuestListBloc>()),
       BlocProvider(create: (_) => serverLocator<RoomGuestManageBloc>()),
+      BlocProvider(create: (_) => serverLocator<DashboardBloc>()),
     ],
     child: const MyApp(),
   ));

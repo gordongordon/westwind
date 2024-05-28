@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
+import 'package:westwind_flutter/core/widgets/dashboard_testing.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:westwind_flutter/features/auth/presentation/pages/register_page.dart';
+import 'package:westwind_flutter/features/dashboard/screens/main_screen.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -30,8 +32,12 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
+    return 
+    
+    Scaffold(
+      body: 
+      
+      Padding(
         padding: const EdgeInsets.all(16.0),
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
@@ -40,7 +46,8 @@ class _LoginPageState extends State<LoginPage> {
             }
 
             if (state is AuthStateSuccess) {
-              context.go(GuestListPage.route());
+           //   context.go(GuestListPage.route());
+                   context.go(MainScreen.route());
             }
           },
           builder: (context, state) {
