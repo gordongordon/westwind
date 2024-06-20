@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/app_bloc_observer.dart';
 import 'package:westwind_flutter/core/widgets/dashboard_testing.dart';
 import 'package:westwind_flutter/features/app_user/presentation/cubits/cubit/app_user_cubit.dart';
@@ -14,6 +15,7 @@ import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservati
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_list_bloc.dart';
 
 void main() async {
 
@@ -38,6 +40,7 @@ void main() async {
       BlocProvider(create: (_) => serverLocator<RoomGuestListBloc>()),
       BlocProvider(create: (_) => serverLocator<RoomGuestManageBloc>()),
       BlocProvider(create: (_) => serverLocator<DashboardBloc>()),
+      BlocProvider(create: (_) => serverLocator<RoomTransactionListBloc>()),
     ],
     child: const MyApp(),
   ));

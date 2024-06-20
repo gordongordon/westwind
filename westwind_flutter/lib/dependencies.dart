@@ -49,6 +49,14 @@ import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_r
 import 'package:westwind_flutter/features/room_guest/domain/usescases/save_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
+import 'package:westwind_flutter/features/room_transaction/data/datasources/room_transaction_datasource.dart';
+import 'package:westwind_flutter/features/room_transaction/data/repositories/room_transaction_repository_imp.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_Transaction_list_usercase.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_create_usecase.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_delete_usecase.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_usecase.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_list_bloc.dart';
 
 final serverLocator = GetIt.instance;
 
@@ -83,18 +91,67 @@ Future<void> initDependencies() async {
   _initRoomGuest();
 
   _initDashboard();
+
+  _initRoomTransaction();
 }
 
-
-void   _initDashboard() {
-
-  // Bloc
-  serverLocator.registerFactory<DashboardBloc> (
-    () => DashboardBloc(),
+void _initRoomTransaction() {
+  // DataSource
+  serverLocator.registerLazySingleton<RoomTransactionDatasource>(
+    () => RoomTransactionDatasourceImpl(
+      serverLocator<Client>(),
+    ),
   );
 
+  // Repositories
+  serverLocator.registerLazySingleton<RoomTransactionRepository>(
+    () => RoomTransactionRepositoryImp(
+      serverLocator<RoomTransactionDatasource>(),
+    ),
+  );
+
+  // Use Case
+  serverLocator.registerLazySingleton<ListRoomTransactionsUseCase>(
+    () => ListRoomTransactionsUseCase(
+      serverLocator<RoomTransactionRepository>(),
+    ),
+  );
+
+  serverLocator.registerLazySingleton<DeleteRoomTransactionUseCase>(
+    () => DeleteRoomTransactionUseCase(
+      serverLocator<RoomTransactionRepository>(),
+    ),
+  );
+
+  serverLocator.registerLazySingleton<RetrieveRoomTransactionUseCase>(
+    () => RetrieveRoomTransactionUseCase(
+      serverLocator<RoomTransactionRepository>(),
+    ),
+  );
+
+  serverLocator.registerLazySingleton<CreateRoomTransactionUseCase>(
+    () => CreateRoomTransactionUseCase(
+      serverLocator<RoomTransactionRepository>(),
+    ),
+  );
+
+  // bloc
+  serverLocator.registerFactory<RoomTransactionListBloc>(
+    () => RoomTransactionListBloc(
+      listRoomTransactions: serverLocator<ListRoomTransactionsUseCase>(),
+      deleteRoomTransaction: serverLocator<DeleteRoomTransactionUseCase>(),
+      retrieveRoomTransaction: serverLocator<RetrieveRoomTransactionUseCase>(),
+      createRoomTransaction: serverLocator<CreateRoomTransactionUseCase>(),
+    ),
+  );
 }
 
+void _initDashboard() {
+  // Bloc
+  serverLocator.registerFactory<DashboardBloc>(
+    () => DashboardBloc(),
+  );
+}
 
 void _initRateTable() {
   // DataSource
@@ -298,10 +355,9 @@ void _initReservation() {
   );
 */
   // Bloc
-  serverLocator
-      .registerFactory<ReservationListBloc>(() => ReservationListBloc(
-            listReservations: serverLocator<ListReservationUseCase>(),
-          ));
+  serverLocator.registerFactory<ReservationListBloc>(() => ReservationListBloc(
+        listReservations: serverLocator<ListReservationUseCase>(),
+      ));
 
   serverLocator
       .registerFactory<ReservationManageBloc>(() => ReservationManageBloc(
@@ -369,22 +425,19 @@ void _initRoomGuest() {
   );
 
   // Bloc
-  serverLocator
-      .registerFactory<RoomGuestListBloc>(() => RoomGuestListBloc(
-            listRoomGuests: serverLocator<ListRoomGuestUseCase>(),
-          ));
+  serverLocator.registerFactory<RoomGuestListBloc>(() => RoomGuestListBloc(
+        listRoomGuests: serverLocator<ListRoomGuestUseCase>(),
+      ));
 
-  serverLocator
-      .registerFactory<RoomGuestManageBloc>(() => RoomGuestManageBloc(
-            deleteRoomGuest: serverLocator<DeleteRoomGuestUseCase>(),
-            retrieveRoomGuest: serverLocator<RetrieveRoomGuestUseCase>(),
-            //     saveRoomGuest: serverLocator<SaveRoomGuestUseCase>(),
+  serverLocator.registerFactory<RoomGuestManageBloc>(() => RoomGuestManageBloc(
+        deleteRoomGuest: serverLocator<DeleteRoomGuestUseCase>(),
+        retrieveRoomGuest: serverLocator<RetrieveRoomGuestUseCase>(),
+        //     saveRoomGuest: serverLocator<SaveRoomGuestUseCase>(),
 
-            //       retrieveGuest: serverLocator<RetrieveRoomGuestUseCase>(),
-            checkInRoomGuest: serverLocator<CheckInRoomGuestUseCase>(),
-            calculateRateRoomGuest: serverLocator<CalculateRateRoomGuestUseCase>(),
-          ));
+        //       retrieveGuest: serverLocator<RetrieveRoomGuestUseCase>(),
+        checkInRoomGuest: serverLocator<CheckInRoomGuestUseCase>(),
+        calculateRateRoomGuest: serverLocator<CalculateRateRoomGuestUseCase>(),
+      ));
 }
 
-class CalcullateRateRoomGuestUseCase {
-}
+// class CalcullateRateRoomGuestUseCase {}

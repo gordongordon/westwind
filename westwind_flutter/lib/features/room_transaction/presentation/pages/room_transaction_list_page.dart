@@ -6,7 +6,7 @@ import 'package:westwind_flutter/features/room_transaction/presentation/widgets/
 
 
 class RoomTransactionListPage extends StatelessWidget {
-  static String route() => "/roomguests";
+  static String route() => "/roomTransactioins";
 
   const RoomTransactionListPage({super.key});
 

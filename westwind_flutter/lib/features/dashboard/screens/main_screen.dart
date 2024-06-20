@@ -11,6 +11,7 @@ import 'package:westwind_flutter/features/reservation/presentaion/pages/reservat
 import 'package:westwind_flutter/features/reservation/presentaion/widgets/reservation_list_widget.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/widgets/room_guest_list_widget.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_list_page.dart';
 
 List<BottomNavigationBarItem> bottomNavItems = const <BottomNavigationBarItem>[
   BottomNavigationBarItem(
@@ -56,6 +57,7 @@ const List<Widget> menuPages = <Widget>[
   GuestListPage(),
   ReservationListPage(),
   RoomGuestListPage(),
+  RoomTransactionListPage(),
 ];
 
 class MainScreen extends StatelessWidget {
