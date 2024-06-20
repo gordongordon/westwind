@@ -35,11 +35,13 @@ import 'roomNumber.dart' as _i23;
 import 'roomStatus.dart' as _i24;
 import 'roomTransaction.dart' as _i25;
 import 'staff.dart' as _i26;
-import 'protocol.dart' as _i27;
-import 'package:westwind_server/src/generated/guest.dart' as _i28;
-import 'package:westwind_server/src/generated/rateTable.dart' as _i29;
-import 'package:westwind_server/src/generated/reservation.dart' as _i30;
-import 'package:westwind_server/src/generated/roomGuest.dart' as _i31;
+import 'transactionType.dart' as _i27;
+import 'protocol.dart' as _i28;
+import 'package:westwind_server/src/generated/guest.dart' as _i29;
+import 'package:westwind_server/src/generated/rateTable.dart' as _i30;
+import 'package:westwind_server/src/generated/reservation.dart' as _i31;
+import 'package:westwind_server/src/generated/roomGuest.dart' as _i32;
+import 'package:westwind_server/src/generated/roomTransaction.dart' as _i33;
 export 'company.dart';
 export 'errorType.dart';
 export 'example.dart';
@@ -63,6 +65,7 @@ export 'roomNumber.dart';
 export 'roomStatus.dart';
 export 'roomTransaction.dart';
 export 'staff.dart';
+export 'transactionType.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -241,10 +244,10 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'int',
         ),
         _i2.ColumnDefinition(
-          name: '_roomTransactionGuestsRoomTransactionId',
-          columnType: _i2.ColumnType.integer,
-          isNullable: true,
-          dartType: 'int?',
+          name: 'accountBalance',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
         ),
       ],
       foreignKeys: [
@@ -257,17 +260,7 @@ class Protocol extends _i1.SerializationManagerServer {
           onUpdate: _i2.ForeignKeyAction.noAction,
           onDelete: _i2.ForeignKeyAction.noAction,
           matchType: null,
-        ),
-        _i2.ForeignKeyDefinition(
-          constraintName: 'guest_fk_1',
-          columns: ['_roomTransactionGuestsRoomTransactionId'],
-          referenceTable: 'room_transaction',
-          referenceTableSchema: 'public',
-          referenceColumns: ['id'],
-          onUpdate: _i2.ForeignKeyAction.noAction,
-          onDelete: _i2.ForeignKeyAction.noAction,
-          matchType: null,
-        ),
+        )
       ],
       indexes: [
         _i2.IndexDefinition(
@@ -290,7 +283,11 @@ class Protocol extends _i1.SerializationManagerServer {
             _i2.IndexElementDefinition(
               type: _i2.IndexElementDefinitionType.column,
               definition: 'email',
-            )
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'phone',
+            ),
           ],
           type: 'btree',
           isUnique: true,
@@ -493,7 +490,7 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'int',
         ),
         _i2.ColumnDefinition(
-          name: 'dateCreate',
+          name: 'chargeDate',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
           isNullable: false,
           dartType: 'DateTime',
@@ -505,22 +502,22 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'DateTime',
         ),
         _i2.ColumnDefinition(
-          name: 'paymentAmount',
+          name: 'amount',
           columnType: _i2.ColumnType.doublePrecision,
           isNullable: false,
           dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'description',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
         ),
         _i2.ColumnDefinition(
           name: 'paymentType',
           columnType: _i2.ColumnType.text,
           isNullable: false,
           dartType: 'protocol:PaymentType',
-        ),
-        _i2.ColumnDefinition(
-          name: 'roomChargeType',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'protocol:RoomChargeType',
         ),
         _i2.ColumnDefinition(
           name: 'userId',
@@ -604,7 +601,24 @@ class Protocol extends _i1.SerializationManagerServer {
           type: 'btree',
           isUnique: true,
           isPrimary: true,
-        )
+        ),
+        _i2.IndexDefinition(
+          indexName: 'rate_table_unique_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'rateType',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'rateReason',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
       ],
       managed: true,
     ),
@@ -873,7 +887,7 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'int',
         ),
         _i2.ColumnDefinition(
-          name: 'stateDate',
+          name: 'stayDate',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
           isNullable: false,
           dartType: 'DateTime',
@@ -1080,43 +1094,82 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: 'nextval(\'room_transaction_id_seq\'::regclass)',
         ),
         _i2.ColumnDefinition(
-          name: 'roomNumber',
-          columnType: _i2.ColumnType.text,
+          name: 'guestId',
+          columnType: _i2.ColumnType.integer,
           isNullable: false,
-          dartType: 'protocol:RoomNumber',
+          dartType: 'int',
         ),
         _i2.ColumnDefinition(
-          name: 'dateState',
+          name: 'roomId',
+          columnType: _i2.ColumnType.integer,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transactionDay',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
           isNullable: false,
           dartType: 'DateTime',
         ),
         _i2.ColumnDefinition(
-          name: 'rateType',
+          name: 'transactionType',
           columnType: _i2.ColumnType.text,
           isNullable: false,
-          dartType: 'protocol:RateType',
+          dartType: 'protocol:TransactionType',
         ),
         _i2.ColumnDefinition(
-          name: 'rate',
+          name: 'amount',
           columnType: _i2.ColumnType.doublePrecision,
           isNullable: false,
           dartType: 'double',
         ),
         _i2.ColumnDefinition(
-          name: 'dateCreate',
-          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          name: 'tax1',
+          columnType: _i2.ColumnType.doublePrecision,
           isNullable: false,
-          dartType: 'DateTime',
+          dartType: 'double',
         ),
         _i2.ColumnDefinition(
-          name: 'dateUpdate',
-          columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: true,
-          dartType: 'DateTime?',
+          name: 'tax2',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'tax3',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'description',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
         ),
       ],
-      foreignKeys: [],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'room_transaction_fk_0',
+          columns: ['guestId'],
+          referenceTable: 'guest',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'room_transaction_fk_1',
+          columns: ['roomId'],
+          referenceTable: 'room',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
       indexes: [
         _i2.IndexDefinition(
           indexName: 'room_transaction_pkey',
@@ -1321,6 +1374,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i26.Staff) {
       return _i26.Staff.fromJson(data, this) as T;
     }
+    if (t == _i27.TransactionType) {
+      return _i27.TransactionType.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i4.Company?>()) {
       return (data != null ? _i4.Company.fromJson(data, this) : null) as T;
     }
@@ -1394,35 +1450,38 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i26.Staff?>()) {
       return (data != null ? _i26.Staff.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<List<_i27.Reservation>?>()) {
+    if (t == _i1.getType<_i27.TransactionType?>()) {
+      return (data != null ? _i27.TransactionType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<List<_i28.Reservation>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i27.Reservation>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i28.Reservation>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i27.Guest>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<_i27.Guest>(e)).toList()
-          : null) as dynamic;
-    }
-    if (t == List<_i28.Guest>) {
-      return (data as List).map((e) => deserialize<_i28.Guest>(e)).toList()
+    if (t == List<_i29.Guest>) {
+      return (data as List).map((e) => deserialize<_i29.Guest>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i29.RateTable>) {
-      return (data as List).map((e) => deserialize<_i29.RateTable>(e)).toList()
+    if (t == List<_i30.RateTable>) {
+      return (data as List).map((e) => deserialize<_i30.RateTable>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i30.Reservation>) {
+    if (t == List<_i31.Reservation>) {
       return (data as List)
-          .map((e) => deserialize<_i30.Reservation>(e))
+          .map((e) => deserialize<_i31.Reservation>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i31.RoomGuest>) {
-      return (data as List).map((e) => deserialize<_i31.RoomGuest>(e)).toList()
+    if (t == List<_i32.RoomGuest>) {
+      return (data as List).map((e) => deserialize<_i32.RoomGuest>(e)).toList()
           as dynamic;
     }
     if (t == List<int>) {
       return (data as List).map((e) => deserialize<int>(e)).toList() as dynamic;
+    }
+    if (t == List<_i33.RoomTransaction>) {
+      return (data as List)
+          .map((e) => deserialize<_i33.RoomTransaction>(e))
+          .toList() as dynamic;
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);
@@ -1509,6 +1568,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (data is _i26.Staff) {
       return 'Staff';
     }
+    if (data is _i27.TransactionType) {
+      return 'TransactionType';
+    }
     return super.getClassNameForObject(data);
   }
 
@@ -1586,6 +1648,9 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (data['className'] == 'Staff') {
       return deserialize<_i26.Staff>(data['data']);
+    }
+    if (data['className'] == 'TransactionType') {
+      return deserialize<_i27.TransactionType>(data['data']);
     }
     return super.deserializeByClassName(data);
   }

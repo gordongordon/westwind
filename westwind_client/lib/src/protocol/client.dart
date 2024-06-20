@@ -16,8 +16,9 @@ import 'package:westwind_client/src/protocol/rateType.dart' as _i5;
 import 'package:westwind_client/src/protocol/rateReason.dart' as _i6;
 import 'package:westwind_client/src/protocol/reservation.dart' as _i7;
 import 'package:westwind_client/src/protocol/roomGuest.dart' as _i8;
-import 'package:serverpod_auth_client/module.dart' as _i9;
-import 'protocol.dart' as _i10;
+import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i9;
+import 'package:serverpod_auth_client/module.dart' as _i10;
+import 'protocol.dart' as _i11;
 
 /// {@category Endpoint}
 class EndpointExample extends _i1.EndpointRef {
@@ -251,6 +252,13 @@ class EndpointReservation extends _i1.EndpointRef {
         {},
       );
 
+  _i2.Future<bool> checkIn({required int reservationId}) =>
+      caller.callServerEndpoint<bool>(
+        'reservation',
+        'checkIn',
+        {'reservationId': reservationId},
+      );
+
   _i2.Future<bool> checkInReservation({required int reservationId}) =>
       caller.callServerEndpoint<bool>(
         'reservation',
@@ -285,6 +293,19 @@ class EndpointRoomGuest extends _i1.EndpointRef {
         'roomGuest',
         'createRoomGuest',
         {'res': res},
+      );
+
+  _i2.Future<_i8.RoomGuest> insertGuestByReservation(
+    _i8.RoomGuest checkInGuest,
+    _i7.Reservation reservation,
+  ) =>
+      caller.callServerEndpoint<_i8.RoomGuest>(
+        'roomGuest',
+        'insertGuestByReservation',
+        {
+          'checkInGuest': checkInGuest,
+          'reservation': reservation,
+        },
       );
 
   _i2.Future<_i8.RoomGuest> createRoomGuestByReservation(
@@ -340,6 +361,14 @@ class EndpointRoomGuest extends _i1.EndpointRef {
         'roomGuest',
         'updateRoomGuest',
         {'roomGuest': roomGuest},
+      );
+
+  _i2.Future<List<_i8.RoomGuest>> updateRoomGuests(
+          {required List<_i8.RoomGuest> roomGuests}) =>
+      caller.callServerEndpoint<List<_i8.RoomGuest>>(
+        'roomGuest',
+        'updateRoomGuests',
+        {'roomGuests': roomGuests},
       );
 
   _i2.Future<List<_i8.RoomGuest>> findRoomGuestByRoomId({required int id}) =>
@@ -470,12 +499,47 @@ class EndpointRoomGuest extends _i1.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointRoomTransaction extends _i1.EndpointRef {
+  EndpointRoomTransaction(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'roomTransaction';
+
+  _i2.Future<List<_i9.RoomTransaction>> list() =>
+      caller.callServerEndpoint<List<_i9.RoomTransaction>>(
+        'roomTransaction',
+        'list',
+        {},
+      );
+
+  _i2.Future<_i9.RoomTransaction> create(_i9.RoomTransaction rt) =>
+      caller.callServerEndpoint<_i9.RoomTransaction>(
+        'roomTransaction',
+        'create',
+        {'rt': rt},
+      );
+
+  _i2.Future<_i9.RoomTransaction?> retrieve(int id) =>
+      caller.callServerEndpoint<_i9.RoomTransaction?>(
+        'roomTransaction',
+        'retrieve',
+        {'id': id},
+      );
+
+  _i2.Future<bool> delete(int id) => caller.callServerEndpoint<bool>(
+        'roomTransaction',
+        'delete',
+        {'id': id},
+      );
+}
+
 class _Modules {
   _Modules(Client client) {
-    auth = _i9.Caller(client);
+    auth = _i10.Caller(client);
   }
 
-  late final _i9.Caller auth;
+  late final _i10.Caller auth;
 }
 
 class Client extends _i1.ServerpodClient {
@@ -487,7 +551,7 @@ class Client extends _i1.ServerpodClient {
     Duration? connectionTimeout,
   }) : super(
           host,
-          _i10.Protocol(),
+          _i11.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -498,6 +562,7 @@ class Client extends _i1.ServerpodClient {
     rateTable = EndpointRateTable(this);
     reservation = EndpointReservation(this);
     roomGuest = EndpointRoomGuest(this);
+    roomTransaction = EndpointRoomTransaction(this);
     modules = _Modules(this);
   }
 
@@ -511,6 +576,8 @@ class Client extends _i1.ServerpodClient {
 
   late final EndpointRoomGuest roomGuest;
 
+  late final EndpointRoomTransaction roomTransaction;
+
   late final _Modules modules;
 
   @override
@@ -520,6 +587,7 @@ class Client extends _i1.ServerpodClient {
         'rateTable': rateTable,
         'reservation': reservation,
         'roomGuest': roomGuest,
+        'roomTransaction': roomTransaction,
       };
 
   @override

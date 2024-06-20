@@ -11,16 +11,16 @@ abstract interface class GuestDatasource {
 }
 
 class GuestDatasourceImpl implements GuestDatasource {
-  final Client client;
+  final Client _client;
 
-  const GuestDatasourceImpl( this.client );
+  const GuestDatasourceImpl( this._client );
 
   // final SessionManager sessionManager;
 
   @override
   Future<List<Guest>> list() async {
     try { 
-     return await client.guest.list();
+     return await _client.guest.list();
     } catch (e) {
       throw ServerException( e.toString() );
     }
@@ -29,7 +29,7 @@ class GuestDatasourceImpl implements GuestDatasource {
   @override
   Future<Guest> retrieve(int id) async {
     try { 
-      final result = await client.guest.retrieve(id);
+      final result = await _client.guest.retrieve(id);
 
       if ( result == null)  {
         throw  ServerException("Guest with ID : $id not found ");
@@ -63,7 +63,7 @@ class GuestDatasourceImpl implements GuestDatasource {
   @override
   Future<bool> delete(int id) async {
     try { 
-      final result = await client.guest.delete( id );
+      final result = await _client.guest.delete( id );
 
       if ( result == false )  {
         throw  ServerException("Guest can't be delete $id !");
@@ -78,7 +78,7 @@ class GuestDatasourceImpl implements GuestDatasource {
   @override
   Future<Guest> save(Guest guest) async{
     try {
-        final result = await client.guest.save(guest);
+        final result = await _client.guest.save(guest);
         
         //! Missing checkcing if update success ? 
         if ( result.id == null ) {
@@ -94,7 +94,7 @@ class GuestDatasourceImpl implements GuestDatasource {
   @override
   Future<Guest> retrieveByPhone(String phone) async {
      try {
-        final result = await client.guest.retrieveGuestByPhone(phone: phone);
+        final result = await _client.guest.retrieveGuestByPhone(phone: phone);
 
         if ( result == null ) {
           throw ServerException("Guest n't find by this phone $phone");

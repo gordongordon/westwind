@@ -71,7 +71,8 @@ class ReservationDatasourceImp implements ReservationDatasource {
   @override
   Future<bool> checkIn(int id)async {
       try {
-          final result = await client.reservation.checkInReservation(reservationId: id);
+    //      final result = await client.reservation.checkInReservation(reservationId: id);
+          final result = await client.reservation.checkIn(reservationId: id);
           if ( result == false ) {
             throw ServerException("Reservation with $id can't be checked in! ");
           }

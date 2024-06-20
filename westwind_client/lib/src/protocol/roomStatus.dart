@@ -11,6 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 enum RoomStatus with _i1.SerializableEntity {
+  vacancy,
   empty,
   checkout,
   clean,
@@ -22,6 +23,8 @@ enum RoomStatus with _i1.SerializableEntity {
 
   static RoomStatus? fromJson(String name) {
     switch (name) {
+      case 'vacancy':
+        return vacancy;
       case 'empty':
         return empty;
       case 'checkout':

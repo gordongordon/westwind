@@ -8,6 +8,7 @@ class SideMenuData {
     MenuModel(icon: Icons.person, title: 'Guests'),
     MenuModel(icon: Icons.app_registration_rounded, title: 'Reservtions'),
     MenuModel(icon: Icons.bed_rounded, title: 'RoomGuests'),
+    MenuModel(icon: Icons.bed_rounded, title: 'Charges'),
     MenuModel(icon: Icons.history, title: 'History'),
     MenuModel(icon: Icons.logout, title: 'SignOut'),
   ];

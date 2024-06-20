@@ -7,7 +7,9 @@ import 'package:westwind_flutter/features/dashboard/widgets/side_menu_widget.dar
 import 'package:westwind_flutter/features/dashboard/widgets/summary_widget.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/widgets/guest_list_widget.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_list_page.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/widgets/reservation_list_widget.dart';
+import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/widgets/room_guest_list_widget.dart';
 
 List<BottomNavigationBarItem> bottomNavItems = const <BottomNavigationBarItem>[
@@ -31,15 +33,29 @@ List<BottomNavigationBarItem> bottomNavItems = const <BottomNavigationBarItem>[
     icon: Icon(Icons.shopping_bag_outlined),
     label: 'Cart',
   ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.shopping_bag_outlined),
+    label: 'Cart',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.shopping_bag_outlined),
+    label: 'Cart',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.shopping_bag_outlined),
+    label: 'Cart',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.shopping_bag_outlined),
+    label: 'Cart',
+  ),
 ];
 
-
-const List<Widget> menuPages = <Widget> [
-   DashboardWidget(),
-   GuestListWidget(),
-   ReservationListWidget(),
-   RoomGuestListWidget(),
-   
+const List<Widget> menuPages = <Widget>[
+  DashboardWidget(),
+  GuestListPage(),
+  ReservationListPage(),
+  RoomGuestListPage(),
 ];
 
 class MainScreen extends StatelessWidget {
@@ -52,6 +68,12 @@ class MainScreen extends StatelessWidget {
     final isDesktop = Responsive.isDesktop(context);
 
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        items: bottomNavItems,
+        backgroundColor: Colors.white,
+        fixedColor: Colors.white,
+        unselectedItemColor: Colors.blue,
+      ),
       drawer: !isDesktop
           ? const SizedBox(
               width: 250,
@@ -84,28 +106,15 @@ class MainScreen extends StatelessWidget {
                     ),
                   ),
                 if (state is DashboardStateLoaded)
-                  
-                    Expanded(
-                      flex: 14,
-                      //  child: DashboardWidget(),
-
-                      child: menuPages.elementAt( state.menuIndex ),
-                    ),
-                  
-            /*    Expanded(
-                  flex: 7,
-                  //  child: DashboardWidget(),
-
-                  child: const GuestListWidget(),
-                ),
-                */
-                /*
-            if (isDesktop)
-              Expanded(
-                flex: 3,
-                child: SummaryWidget(),
-              ),
-              */
+                  Expanded(
+                    flex: 14,
+                    child: menuPages.elementAt(state.menuIndex),
+                  ),
+                if (isDesktop)
+                  Expanded(
+                    flex: 3,
+                    child: SummaryWidget(),
+                  ),
               ],
             ),
           );

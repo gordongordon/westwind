@@ -14,24 +14,32 @@ import 'protocol.dart' as _i2;
 abstract class RoomTransaction extends _i1.SerializableEntity {
   RoomTransaction._({
     this.id,
-    required this.roomNumber,
-    required this.dateState,
-    required this.rateType,
-    required this.rate,
-    required this.dateCreate,
-    this.dateUpdate,
-    this.guests,
+    required this.guestId,
+    this.guest,
+    required this.roomId,
+    this.room,
+    required this.transactionDay,
+    required this.transactionType,
+    required this.amount,
+    required this.tax1,
+    required this.tax2,
+    required this.tax3,
+    required this.description,
   });
 
   factory RoomTransaction({
     int? id,
-    required _i2.RoomNumber roomNumber,
-    required DateTime dateState,
-    required _i2.RateType rateType,
-    required double rate,
-    required DateTime dateCreate,
-    DateTime? dateUpdate,
-    List<_i2.Guest>? guests,
+    required int guestId,
+    _i2.Guest? guest,
+    required int roomId,
+    _i2.Room? room,
+    required DateTime transactionDay,
+    required _i2.TransactionType transactionType,
+    required double amount,
+    required double tax1,
+    required double tax2,
+    required double tax3,
+    required String description,
   }) = _RoomTransactionImpl;
 
   factory RoomTransaction.fromJson(
@@ -40,19 +48,25 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
   ) {
     return RoomTransaction(
       id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      roomNumber: serializationManager
-          .deserialize<_i2.RoomNumber>(jsonSerialization['roomNumber']),
-      dateState: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateState']),
-      rateType: serializationManager
-          .deserialize<_i2.RateType>(jsonSerialization['rateType']),
-      rate: serializationManager.deserialize<double>(jsonSerialization['rate']),
-      dateCreate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateCreate']),
-      dateUpdate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['dateUpdate']),
-      guests: serializationManager
-          .deserialize<List<_i2.Guest>?>(jsonSerialization['guests']),
+      guestId:
+          serializationManager.deserialize<int>(jsonSerialization['guestId']),
+      guest: serializationManager
+          .deserialize<_i2.Guest?>(jsonSerialization['guest']),
+      roomId:
+          serializationManager.deserialize<int>(jsonSerialization['roomId']),
+      room: serializationManager
+          .deserialize<_i2.Room?>(jsonSerialization['room']),
+      transactionDay: serializationManager
+          .deserialize<DateTime>(jsonSerialization['transactionDay']),
+      transactionType: serializationManager.deserialize<_i2.TransactionType>(
+          jsonSerialization['transactionType']),
+      amount:
+          serializationManager.deserialize<double>(jsonSerialization['amount']),
+      tax1: serializationManager.deserialize<double>(jsonSerialization['tax1']),
+      tax2: serializationManager.deserialize<double>(jsonSerialization['tax2']),
+      tax3: serializationManager.deserialize<double>(jsonSerialization['tax3']),
+      description: serializationManager
+          .deserialize<String>(jsonSerialization['description']),
     );
   }
 
@@ -61,42 +75,57 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
   /// the id will be null.
   int? id;
 
-  _i2.RoomNumber roomNumber;
+  int guestId;
 
-  DateTime dateState;
+  _i2.Guest? guest;
 
-  _i2.RateType rateType;
+  int roomId;
 
-  double rate;
+  _i2.Room? room;
 
-  DateTime dateCreate;
+  DateTime transactionDay;
 
-  DateTime? dateUpdate;
+  _i2.TransactionType transactionType;
 
-  List<_i2.Guest>? guests;
+  double amount;
+
+  double tax1;
+
+  double tax2;
+
+  double tax3;
+
+  String description;
 
   RoomTransaction copyWith({
     int? id,
-    _i2.RoomNumber? roomNumber,
-    DateTime? dateState,
-    _i2.RateType? rateType,
-    double? rate,
-    DateTime? dateCreate,
-    DateTime? dateUpdate,
-    List<_i2.Guest>? guests,
+    int? guestId,
+    _i2.Guest? guest,
+    int? roomId,
+    _i2.Room? room,
+    DateTime? transactionDay,
+    _i2.TransactionType? transactionType,
+    double? amount,
+    double? tax1,
+    double? tax2,
+    double? tax3,
+    String? description,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
-      'roomNumber': roomNumber.toJson(),
-      'dateState': dateState.toJson(),
-      'rateType': rateType.toJson(),
-      'rate': rate,
-      'dateCreate': dateCreate.toJson(),
-      if (dateUpdate != null) 'dateUpdate': dateUpdate?.toJson(),
-      if (guests != null)
-        'guests': guests?.toJson(valueToJson: (v) => v.toJson()),
+      'guestId': guestId,
+      if (guest != null) 'guest': guest?.toJson(),
+      'roomId': roomId,
+      if (room != null) 'room': room?.toJson(),
+      'transactionDay': transactionDay.toJson(),
+      'transactionType': transactionType.toJson(),
+      'amount': amount,
+      'tax1': tax1,
+      'tax2': tax2,
+      'tax3': tax3,
+      'description': description,
     };
   }
 }
@@ -106,44 +135,60 @@ class _Undefined {}
 class _RoomTransactionImpl extends RoomTransaction {
   _RoomTransactionImpl({
     int? id,
-    required _i2.RoomNumber roomNumber,
-    required DateTime dateState,
-    required _i2.RateType rateType,
-    required double rate,
-    required DateTime dateCreate,
-    DateTime? dateUpdate,
-    List<_i2.Guest>? guests,
+    required int guestId,
+    _i2.Guest? guest,
+    required int roomId,
+    _i2.Room? room,
+    required DateTime transactionDay,
+    required _i2.TransactionType transactionType,
+    required double amount,
+    required double tax1,
+    required double tax2,
+    required double tax3,
+    required String description,
   }) : super._(
           id: id,
-          roomNumber: roomNumber,
-          dateState: dateState,
-          rateType: rateType,
-          rate: rate,
-          dateCreate: dateCreate,
-          dateUpdate: dateUpdate,
-          guests: guests,
+          guestId: guestId,
+          guest: guest,
+          roomId: roomId,
+          room: room,
+          transactionDay: transactionDay,
+          transactionType: transactionType,
+          amount: amount,
+          tax1: tax1,
+          tax2: tax2,
+          tax3: tax3,
+          description: description,
         );
 
   @override
   RoomTransaction copyWith({
     Object? id = _Undefined,
-    _i2.RoomNumber? roomNumber,
-    DateTime? dateState,
-    _i2.RateType? rateType,
-    double? rate,
-    DateTime? dateCreate,
-    Object? dateUpdate = _Undefined,
-    Object? guests = _Undefined,
+    int? guestId,
+    Object? guest = _Undefined,
+    int? roomId,
+    Object? room = _Undefined,
+    DateTime? transactionDay,
+    _i2.TransactionType? transactionType,
+    double? amount,
+    double? tax1,
+    double? tax2,
+    double? tax3,
+    String? description,
   }) {
     return RoomTransaction(
       id: id is int? ? id : this.id,
-      roomNumber: roomNumber ?? this.roomNumber,
-      dateState: dateState ?? this.dateState,
-      rateType: rateType ?? this.rateType,
-      rate: rate ?? this.rate,
-      dateCreate: dateCreate ?? this.dateCreate,
-      dateUpdate: dateUpdate is DateTime? ? dateUpdate : this.dateUpdate,
-      guests: guests is List<_i2.Guest>? ? guests : this.guests?.clone(),
+      guestId: guestId ?? this.guestId,
+      guest: guest is _i2.Guest? ? guest : this.guest?.copyWith(),
+      roomId: roomId ?? this.roomId,
+      room: room is _i2.Room? ? room : this.room?.copyWith(),
+      transactionDay: transactionDay ?? this.transactionDay,
+      transactionType: transactionType ?? this.transactionType,
+      amount: amount ?? this.amount,
+      tax1: tax1 ?? this.tax1,
+      tax2: tax2 ?? this.tax2,
+      tax3: tax3 ?? this.tax3,
+      description: description ?? this.description,
     );
   }
 }

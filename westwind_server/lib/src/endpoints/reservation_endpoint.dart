@@ -51,7 +51,7 @@ class ReservationEndpoint extends Endpoint {
   }
 
   Future<Reservation?> retrieve(Session session, {required int id}) async {
-   final res = await Reservation.db.findById(session, id,
+    final res = await Reservation.db.findById(session, id,
         include: Reservation.include(
           guest: Guest.include(),
           room: Room.include(),
@@ -104,6 +104,7 @@ class ReservationEndpoint extends Endpoint {
     return await Reservation.db.find(
       session,
       limit: 20,
+      where: (reservation) => reservation.isCheckedIn.equals(false),
       include: Reservation.include(
         guest: Guest.include(),
         room: Room.include(),
@@ -160,6 +161,47 @@ class ReservationEndpoint extends Endpoint {
     );
   }
 
+  Future<bool> checkIn(Session session, {required int reservationId}) async {
+    // get the reservation to be checked in
+    final reservation = await Reservation.db.findById(session, reservationId);
+
+    if (reservation == null) {
+      final id = reservationId;
+      throw MyException(
+          message: 'ReservationId not found $id during Check In',
+          errorType: ErrorType.NotFound);
+    }
+
+    final roomGuest = createRoomGuest(reservation);
+
+    reservation.isCheckedIn = true;
+    await Reservation.db.updateRow(session, reservation);
+    // Insert New Room Guest
+    final result = await RoomGuest.db.insertRow(session, roomGuest);
+
+    if (result.id != null) {
+      return true;
+    }
+
+    return false;
+  }
+
+  RoomGuest createRoomGuest(Reservation reservation) {
+    
+    final roomGuest = RoomGuest(
+      roomId: reservation.roomId,
+      stayDate: reservation.checkInDate,
+      guestId: reservation.guestId,
+      rateType: reservation.rateType,
+      rateReason: RateReason.single,
+      rate: reservation.rate,
+      reservationId: reservation.id!,
+      roomStatus: RoomStatus.make,
+      checkOutDate: reservation.checkOutDate,
+    );
+
+    return roomGuest;
+  }
 
 //! guest retrieveRoommateRoomGuest( roomid )
 //! rate getSingleRate( rateType )
@@ -183,7 +225,8 @@ class ReservationEndpoint extends Endpoint {
           errorType: ErrorType.NotFound);
     }
 
-    final roommates = await RoomGuestEndpoint().findRoomGuestByRoomId(session, id: reservation.roomId);
+    final roommates = await RoomGuestEndpoint()
+        .findRoomGuestByRoomId(session, id: reservation.roomId);
 
     final RoomGuest roomGuest;
 
@@ -193,18 +236,18 @@ class ReservationEndpoint extends Endpoint {
      * if empty, checkin  with default rate of single
      */
     if (roommates.isEmpty) {
-
-       final rate = await RateTableEndpoint().getSingleRate(session, type: reservation.rateType);
+      final rate = await RateTableEndpoint()
+          .getSingleRate(session, type: reservation.rateType);
       /**
         * create RoomGuest, and guest is alway single 
         */
       roomGuest = RoomGuest(
         roomId: reservation.roomId,
-        stateDate: reservation.checkInDate,
+        stayDate: reservation.checkInDate,
         guestId: reservation.guestId,
         rateType: reservation.rateType,
         rateReason: RateReason.single,
-        rate : rate,
+        rate: rate,
         reservationId: reservation.id!,
         roomStatus: RoomStatus.make,
         checkOutDate: reservation.checkOutDate,
@@ -242,7 +285,7 @@ class ReservationEndpoint extends Endpoint {
       */
       roomGuest = RoomGuest(
         roomId: reservation.roomId,
-        stateDate: reservation.checkInDate,
+        stayDate: reservation.checkInDate,
         guestId: reservation.guestId,
         rateType: reservation.rateType,
         rateReason: RateReason.share,
@@ -267,7 +310,7 @@ class ReservationEndpoint extends Endpoint {
         reservation.isCheckedIn = true;
         await Reservation.db.updateRow(session, reservation);
         // Optionally return a value.
-       return true;
+        return true;
       });
     }
 
@@ -290,8 +333,7 @@ class ReservationEndpoint extends Endpoint {
     return false;
   }
 
-
-   Future<bool> checkInReservationSecondVersion(Session session,
+  Future<bool> checkInReservationSecondVersion(Session session,
       {required int reservationId}) async {
     // get the reservation to be checked in
     final reservation = await Reservation.db.findById(session, reservationId);
@@ -307,14 +349,15 @@ class ReservationEndpoint extends Endpoint {
     final roomId = reservation.roomId;
 
     // find out are there any roomate with the same roomId
-   // final roommates = await RoomGuest.db.find(session,
-   //     where: (roomGuest) => roomGuest.roomId.equals(roomId),
-  //      include: RoomGuest.include(
-  //        guest: Guest.include(),
-   //       room: Room.include(),
+    // final roommates = await RoomGuest.db.find(session,
+    //     where: (roomGuest) => roomGuest.roomId.equals(roomId),
+    //      include: RoomGuest.include(
+    //        guest: Guest.include(),
+    //       room: Room.include(),
     //    ));
 
-    final roommates = await RoomGuestEndpoint().findRoomGuestByRoomId(session, id: roomId);
+    final roommates =
+        await RoomGuestEndpoint().findRoomGuestByRoomId(session, id: roomId);
 
     final RoomGuest roomGuest;
 
@@ -324,7 +367,6 @@ class ReservationEndpoint extends Endpoint {
      * if empty, checkin  with default rate of single
      */
     if (roommates.isEmpty) {
-
       //  final rate = await RateTableEndpoint().getSingleRate(session, type: reservation.rateType);
 
       final rateTable = await RateTable.db.findFirstRow(
@@ -339,12 +381,11 @@ class ReservationEndpoint extends Endpoint {
         */
       roomGuest = RoomGuest(
         roomId: reservation.roomId,
-        stateDate: reservation.checkInDate,
+        stayDate: reservation.checkInDate,
         guestId: reservation.guestId,
         rateType: reservation.rateType,
         rateReason: RateReason.single,
-      rate: rateTable!.rate,
-      
+        rate: rateTable!.rate,
         reservationId: reservation.id!,
         roomStatus: RoomStatus.make,
         checkOutDate: reservation.checkOutDate,
@@ -382,7 +423,7 @@ class ReservationEndpoint extends Endpoint {
       */
       roomGuest = RoomGuest(
         roomId: reservation.roomId,
-        stateDate: reservation.checkInDate,
+        stayDate: reservation.checkInDate,
         guestId: reservation.guestId,
         rateType: reservation.rateType,
         rateReason: RateReason.share,
@@ -413,5 +454,4 @@ class ReservationEndpoint extends Endpoint {
 
     return result;
   }
-
 }

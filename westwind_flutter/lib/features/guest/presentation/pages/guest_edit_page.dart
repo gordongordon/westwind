@@ -96,6 +96,7 @@ class _GuetEditPageState extends State<GuestEditPage> {
                     staffId: 1,
                     companyId: 1,
                     rigNumber: int.parse(rigNumberController.text),
+                    accountBalance: 0,
                   );
 
                   debugPrint(guest.toString());

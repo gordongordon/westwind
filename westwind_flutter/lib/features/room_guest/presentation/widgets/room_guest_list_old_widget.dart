@@ -72,7 +72,7 @@ class _RoomGuestListWidgetsState extends State<RoomGuestListWidgets> {
     final columns = [
       'RoomGuest Id',
       'Room Id',
-      'State Date',
+      'Stay Date',
       'Guest Id',
       'Rate Type',
       'Rate Reason',
@@ -120,7 +120,7 @@ class _RoomGuestListWidgetsState extends State<RoomGuestListWidgets> {
         final cells = [
           roomGuest.id,
           roomGuest.roomId,
-          roomGuest.stateDate
+          roomGuest.stayDate
               .getDateOnly()
               .toString()
               .replaceAll("00:00:00.000", ""),

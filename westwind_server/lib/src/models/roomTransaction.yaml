@@ -1,10 +1,13 @@
 class : RoomTransaction
 table : room_transaction
 fields :
-   roomNumber : RoomNumber
-   dateState : DateTime
-   rateType : RateType
-   rate     : double
-   dateCreate : DateTime
-   dateUpdate : DateTime?
-   guests : List<Guest>?, relation
+   guest :  Guest? , relation 
+   room  :  Room? , relation
+   transactionDay  : DateTime
+   transactionType : TransactionType
+   amount : double 
+   tax1   : double    
+   tax2   : double
+   tax3   : double 
+   description : String 
+

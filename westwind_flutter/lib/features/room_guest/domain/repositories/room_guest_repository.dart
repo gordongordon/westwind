@@ -14,5 +14,6 @@ abstract interface class RoomGuestRepository {
    Future<Either<Failure,RoomGuest>> retrieve( int id);
    Future<Either<Failure,bool>> hasRoomate( int roomId );
    Future<Either<Failure,List<RoomGuest>>> retrieveByRoomId( int roomId );
-   Future<Either<Failure,RoomGuest>> checkIn({required RoomGuest checkInRoomGuest, required List<RoomGuest> roommates, required Reservation reservation,});
+   Future<Either<Failure,RoomGuest>> checkIn({required RoomGuest checkInRoomGuest, required Reservation reservation,});
+   Future<Either<Failure,List<RoomGuest>>> update({required List<RoomGuest> roomGuests});
 }

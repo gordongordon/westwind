@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:westwind_flutter/features/dashboard/bloc/dashboard_bloc.dart';
@@ -17,14 +16,9 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
 
   @override
   void initState() {
-
     super.initState();
-          context
-          .read<DashboardBloc>()
-          .add(DashboardMenuChange( menuIndex: 0 ));
+    context.read<DashboardBloc>().add(DashboardMenuChange(menuIndex: 0));
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +48,9 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
       child: InkWell(
         onTap: () => setState(() {
           selectedIndex = index;
-          context.read<DashboardBloc>().add(DashboardMenuChange(menuIndex: selectedIndex ));
+          context
+              .read<DashboardBloc>()
+              .add(DashboardMenuChange(menuIndex: selectedIndex));
         }),
         child: Row(
           children: [
@@ -68,7 +64,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             Text(
               data.menu[index].title,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 color: isSelected ? Colors.black : Colors.grey,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),

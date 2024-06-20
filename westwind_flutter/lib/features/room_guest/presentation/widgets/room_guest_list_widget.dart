@@ -72,8 +72,8 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
           width: 120,
         ),
         PlutoColumn(
-          title: 'State Date',
-          field: 'stateDate',
+          title: 'Stay Date',
+          field: 'stayDate',
           type: PlutoColumnType.date(startDate: DateTime.now(), format:  'yyyy-MM-dd'),
           width: 100,
         ),
@@ -219,7 +219,7 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
         cells: {
           'id': PlutoCell(value: roomGuest.id!),
           'roomId': PlutoCell(value: roomGuest.roomId),
-          'stateDate': PlutoCell(value: roomGuest.stateDate),
+          'stayDate': PlutoCell(value: roomGuest.stayDate),
           'guestId': PlutoCell(value: roomGuest.guestId),
           'rateType': PlutoCell(value: roomGuest.rateType.toString()),
           'rateReason': PlutoCell(value: roomGuest.rateReason.toString()),

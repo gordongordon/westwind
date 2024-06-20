@@ -68,17 +68,27 @@ class RoomGuestRepositoryImpl implements RoomGuestRepository {
   @override
   Future<Either<Failure, RoomGuest>> checkIn({
     required RoomGuest checkInRoomGuest,
-    required List<RoomGuest> roommates,
+//    required List<RoomGuest> roommates,
     required Reservation reservation,
   }) async {
     try {
       return Right(
         await roomGuestDatasource.checkInRoomGuest(
             checkInRoomGuest: checkInRoomGuest,
-            roommates: roommates,
+      //      roommates: roommates,
             reservation: reservation ),
       );
     } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, List<RoomGuest>>> update({required List<RoomGuest> roomGuests}) async {
+    try {
+       return Right( await roomGuestDatasource.update(roomGuests: roomGuests)); 
+    }
+   on ServerException catch (e) {
       return Left(Failure(e.message));
     }
   }

@@ -4,3 +4,8 @@ fields :
    rateType : RateType
    rateReason : RateReason
    rate : double
+
+indexes:
+   rate_table_unique_idx:
+      fields: rateType, rateReason
+      unique: true 

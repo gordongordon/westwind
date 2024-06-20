@@ -2,6 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/error/failure.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/calculate_rate_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/check_in_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/delete_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_room_guest.dart';
@@ -14,11 +16,13 @@ class RoomGuestManageBloc
   final DeleteRoomGuestUseCase deleteRoomGuest;
   final RetrieveRoomGuestUseCase retrieveRoomGuest;
   final CheckInRoomGuestUseCase checkInRoomGuest;
+  final CalculateRateRoomGuestUseCase calculateRateRoomGuest;
 
   RoomGuestManageBloc({
     required this.deleteRoomGuest,
     required this.checkInRoomGuest,
     required this.retrieveRoomGuest,
+    required this.calculateRateRoomGuest,
   }) : super(RoomGuestManageStateInitial()) {
     on<RoomGuestManageEvent>((event, emit) {
       emit( RoomGuestManageStateLoading() );
@@ -26,6 +30,7 @@ class RoomGuestManageBloc
     on<DeleteRoomGuest>(_onDeleteRoomGuest);
     on<RetrieveRoomGuest>(_onRetrieveRoomGuest);
     on<CheckInRoomGuest>(_onCheckInRoomGuest);
+    on<CalculateRateRoomGuest>(_onCalculateRateRoomGuest);
   }
 
   Future<void> _onDeleteRoomGuest(
@@ -63,6 +68,22 @@ class RoomGuestManageBloc
   ) async {
     final result = await checkInRoomGuest(
         CheckInRoomGuestParams(reservation: event.reservation));
+
+    result.fold(
+      (failure) => emit(RoomGuestManageStateFailure(failure.message)),
+      (_) => emit(RoomGuestManageStateDeleteSuccess()),
+    );
+
+    return;
+  }
+
+
+  Future<void> _onCalculateRateRoomGuest(
+    CalculateRateRoomGuest event,
+    Emitter<RoomGuestManageState> emit,
+  ) async {
+    final result = await calculateRateRoomGuest(
+        CalculateRateRoomGuestParams( id: event.id ));
 
     result.fold(
       (failure) => emit(RoomGuestManageStateFailure(failure.message)),

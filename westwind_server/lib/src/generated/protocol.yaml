@@ -30,16 +30,19 @@ reservation:
   - getNullCheckInReservations:
   - getAllReservationsByDay:
   - getTodayReservations:
+  - checkIn:
   - checkInReservation:
   - delete:
   - checkInReservationSecondVersion:
 roomGuest:
   - createRoomGuest:
+  - insertGuestByReservation:
   - createRoomGuestByReservation:
   - changeAllRateByRoomId:
   - changeAllRateReasonByRoomId:
   - findRoomGuest:
   - updateRoomGuest:
+  - updateRoomGuests:
   - findRoomGuestByRoomId:
   - getAllRoomGuest:
   - getAllRoomGuestByDay:
@@ -56,3 +59,8 @@ roomGuest:
   - deleteById:
   - checkOut:
   - updateGuestRate:
+roomTransaction:
+  - list:
+  - create:
+  - retrieve:
+  - delete:

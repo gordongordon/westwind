@@ -35,7 +35,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   final rateReasonController = TextEditingController();
   final reservationIdController = TextEditingController();
 
-  var stateDate = DateTime.now();
+  var stayDate = DateTime.now();
   var updatedDate = DateTime.now();
   var checkOutDate = DateTime.now();
 
@@ -89,7 +89,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                     id: widget.roomGuestId,
                     guestId: int.parse(guestIdController.text),
                     roomId: int.parse(roomIdController.text),
-                    stateDate: formkey.currentState!.fields['stateDate']!.value,
+                    stayDate: formkey.currentState!.fields['stateDate']!.value,
                     updateDate:
                         formkey.currentState!.fields['updateDate']!.value,
                     checkOutDate:
@@ -167,6 +167,9 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                 key: formkey,
                 child: Column(
                   children: [
+
+                    //  
+
                     FormBuilderTextField(
                       name: 'id',
                       enabled: false,
@@ -181,10 +184,10 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                     ),
                     //  const SizedBox(height: 10),
                     FormBuilderDateTimePicker(
-                      name: 'stateDate',
+                      name: 'stayDate',
                       decoration:
-                          const InputDecoration(labelText: 'State Date'),
-                      initialValue: stateDate,
+                          const InputDecoration(labelText: 'Stay Date'),
+                      initialValue: stayDate,
                       initialDate: DateTime.now().add(const Duration(days: 10)),
                       initialDatePickerMode: DatePickerMode.day,
                       timePickerInitialEntryMode: TimePickerEntryMode.input,
@@ -277,6 +280,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                     ),
                     //        const SizedBox(height: 10),
 
+                    
                     FormBuilderTextField(
                       name: 'rate',
                       controller: rateController,
@@ -376,11 +380,11 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                             onPressed: () {
-                              //            context.read<RoomGuestManageBloc>().add(
-                              //               CheckInRoomGuest(
-                              //                   widget.roomGuestId!));
+                                          context.read<RoomGuestManageBloc>().add(
+                                             CalculateRateRoomGuest(
+                                                 widget.roomGuestId!));
                             },
-                            child: const Text("CheckIn")),
+                            child: const Text("Calculate Rate")),
                       ),
                   ],
                 ),

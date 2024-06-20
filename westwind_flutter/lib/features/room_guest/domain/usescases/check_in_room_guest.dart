@@ -1,3 +1,4 @@
+
 import 'package:fpdart/fpdart.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/error/failure.dart';
@@ -12,62 +13,72 @@ class CheckInRoomGuestUseCase
 
   CheckInRoomGuestUseCase(this.roomGuestRepository, this.rateTableRepository);
 
-  @override
-  Future<Either<Failure, RoomGuest>> call(CheckInRoomGuestParams params) async {
-    
-    final reservation = params.reservation;
+@override
+Future<Either<Failure, RoomGuest>> call(CheckInRoomGuestParams params) async {
+  
+  final reservation = params.reservation;
+  
+  // Calculate rate
+  final rate = await computeRate(reservation);
+  
+  // Retrieve roommates
+  final roommates = await handleRetrieveByRoomId(reservation.roomId);
 
-    final rate = await computeRate(reservation);
+  // Determine the RateReason based on whether there are any roommates
+  final reason = roommates.isEmpty ? RateReason.single : RateReason.share;
+  
+  // Update each roommate's rate and rate reason
+  _updateRoomMatesRateAndReason(roommates, rate, reason);
 
-    final roommates = await handleRetrieveByRoomId(reservation.roomId);
+  // Create RoomGuest object with calculated values
+  final roomGuest = createRoomGuestObject(reservation, rate, reason);
 
-    final RateReason reason;
+  
+  return await roomGuestRepository.checkIn(
+    checkInRoomGuest: roomGuest,
+   // roommates: roommates,
+    reservation: reservation,
+    );
+}
 
-    if (roommates.isEmpty) {
-      reason = RateReason.single;
-    } else {
-      reason = RateReason.share;
-    }
+// New method to update the rate and rate reason for each roommate
+void _updateRoomMatesRateAndReason(List<RoomGuest> roommates, double rate, RateReason reason) {
+  for (var roommate in roommates) {
+    roommate.rate = rate;
+    roommate.rateReason = reason;
+  }
+}
 
-    roommates.map((e) {
-      e.rate = rate;
-      e.rateReason = RateReason.share;
-      return e;
-    }).toList();
-
-    final roomGuest = RoomGuest(
+// New method to create a RoomGuest object with the given parameters
+RoomGuest createRoomGuestObject(Reservation reservation, double rate, RateReason reason) {
+  return RoomGuest(
       roomId: reservation.roomId,
-      stateDate: DateTime.now(),
+      stayDate: DateTime.now(),
       guestId: reservation.guestId,
-      rateType: reservation.rateType, //! todo
-      rateReason: reason, //! todo
+      rateType: reservation.rateType,
+      rateReason: reason,
       rate: rate,
       reservationId: reservation.id!,
       roomStatus: RoomStatus.change,
-      checkOutDate: reservation.checkOutDate,
-    );
+      checkOutDate: reservation.checkOutDate);
+}
 
-    return await roomGuestRepository.checkIn(
-      checkInRoomGuest: roomGuest,
-      roommates: roommates,
-      reservation: reservation,
-    );
-  }
-
+// New methods to handle errors and return the results of asynchronous operations
   bool handleHasRoommate(Either<Failure, bool> input) {
     return input.fold(
-      (failure) => throw failure,
-      (r) => r,
+    (failure) => throw failure, // Throw the error if it exists
+    (r) => r, // Return the result if there is no error
     );
   }
 
   double handleRate(Either<Failure, double> input) {
     return input.fold(
-      (failure) => throw failure,
-      (r) => r,
+    (failure) => throw failure, // Throw the error if it exists
+    (r) => r, // Return the result if there is no error
     );
   }
 
+// New method to compute the rate based on whether there are roommates
   Future<double> computeRate(Reservation reservation) async {
     final result = await roomGuestRepository.hasRoomate(reservation.roomId);
 
@@ -85,12 +96,13 @@ class CheckInRoomGuestUseCase
     }
   }
 
+// New method to retrieve a list of RoomGuest objects by room ID
   Future<List<RoomGuest>> handleRetrieveByRoomId(int id) async {
     final result = await roomGuestRepository.retrieveByRoomId(id);
 
     return result.fold(
-      (failure) => throw failure,
-      (r) => r,
+    (failure) => throw failure, // Throw the error if it exists
+    (r) => r, // Return the result if there is no error
     );
   }
 }

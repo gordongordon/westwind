@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -15,6 +16,7 @@ class ReservationEditPage extends StatefulWidget {
       "/reservations/edit/${reservationId ?? ':id'}";
   static String routeNew() => "/reservations/new";
 
+
   const ReservationEditPage({super.key, this.reservationId});
 
   @override
@@ -23,6 +25,10 @@ class ReservationEditPage extends StatefulWidget {
 
 class _GuetEditPageState extends State<ReservationEditPage> {
   final formkey = GlobalKey<FormBuilderState>();
+
+  late TextEditingController idController;
+
+
   final roomNumberController = TextEditingController();
   final roomIdController = TextEditingController();
   final guestIdController = TextEditingController();
@@ -30,15 +36,17 @@ class _GuetEditPageState extends State<ReservationEditPage> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final phoneController = TextEditingController();
-  final rateTypeController = TextEditingController();
+  final rateTypeController = TextEditingController(text: RateType.standard.toString());
   final dateCreateController = TextEditingController();
-  final idController = TextEditingController(text: "0");
+//  final idController = TextEditingController(text: "0");
   final rigNumberController = TextEditingController();
   bool isCheckedIn = false;
   bool isCanceled = false;
   bool isNightShift = false;
   final rateController = TextEditingController();
-  final rateReasonController = TextEditingController();
+  final rateReasonController = TextEditingController(text: RateReason.single.toString());
+
+
 
   var dateCreate = DateTime.now();
   var dateUpdate = DateTime.now();
@@ -64,7 +72,9 @@ class _GuetEditPageState extends State<ReservationEditPage> {
   void initState() {
     super.initState();
 
-    if (isEditing) {
+    idController = TextEditingController( text : widget.reservationId.toString() );
+
+    if (isEditing ) {
       print("isEditing ");
       print(widget.reservationId);
       context
@@ -72,6 +82,14 @@ class _GuetEditPageState extends State<ReservationEditPage> {
           .add(RetrieveReservation(id: widget.reservationId!));
     }
   }
+
+  @override
+  void dispose() {
+    idController.dispose();
+    // Dispose other controllers...
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -190,6 +208,7 @@ class _GuetEditPageState extends State<ReservationEditPage> {
               //  rateController.text = state.guest.rrate.toString();
             } else if (state
                 is ReservationManageStateRetrieveGuestByPhoneSuccess) {
+              guestIdController.text = state.guest.id.toString();
               firstNameController.text = state.guest.firstName;
               lastNameController.text = state.guest.lastName;
               phoneController.text = state.guest.phone;
@@ -214,6 +233,8 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                   key: formkey,
                   child: Column(
                     children: [
+                                          
+
                       FormBuilderTextField(
                         name: 'id',
                         enabled: false,
@@ -221,10 +242,10 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                         controller: idController,
                         keyboardType: TextInputType.phone,
                         decoration: const InputDecoration(labelText: 'ID'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.numeric(),
-                        ]),
+                   //     validator: FormBuilderValidators.compose([
+                   //       FormBuilderValidators.required(),
+                   //       FormBuilderValidators.numeric(),
+                   //     ]),
                       ),
                       //  const SizedBox(height: 10),
                       FormBuilderDateTimePicker(
@@ -238,6 +259,7 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                         timePickerInitialEntryMode: TimePickerEntryMode.input,
                         initialEntryMode: DatePickerEntryMode.calendarOnly,
                         inputType: InputType.date,
+                        lastDate: DateTime.now().add(Duration(days: 365)),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                         ]),
@@ -437,6 +459,7 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                         decoration:
                             const InputDecoration(labelText: 'Date Updated'),
                         initialValue: dateUpdate,
+
                         initialDatePickerMode: DatePickerMode.day,
                         timePickerInitialEntryMode: TimePickerEntryMode.input,
                         initialEntryMode: DatePickerEntryMode.calendarOnly,

@@ -15,24 +15,32 @@ import 'package:serverpod_serialization/serverpod_serialization.dart';
 abstract class RoomTransaction extends _i1.TableRow {
   RoomTransaction._({
     int? id,
-    required this.roomNumber,
-    required this.dateState,
-    required this.rateType,
-    required this.rate,
-    required this.dateCreate,
-    this.dateUpdate,
-    this.guests,
+    required this.guestId,
+    this.guest,
+    required this.roomId,
+    this.room,
+    required this.transactionDay,
+    required this.transactionType,
+    required this.amount,
+    required this.tax1,
+    required this.tax2,
+    required this.tax3,
+    required this.description,
   }) : super(id);
 
   factory RoomTransaction({
     int? id,
-    required _i2.RoomNumber roomNumber,
-    required DateTime dateState,
-    required _i2.RateType rateType,
-    required double rate,
-    required DateTime dateCreate,
-    DateTime? dateUpdate,
-    List<_i2.Guest>? guests,
+    required int guestId,
+    _i2.Guest? guest,
+    required int roomId,
+    _i2.Room? room,
+    required DateTime transactionDay,
+    required _i2.TransactionType transactionType,
+    required double amount,
+    required double tax1,
+    required double tax2,
+    required double tax3,
+    required String description,
   }) = _RoomTransactionImpl;
 
   factory RoomTransaction.fromJson(
@@ -41,19 +49,25 @@ abstract class RoomTransaction extends _i1.TableRow {
   ) {
     return RoomTransaction(
       id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      roomNumber: serializationManager
-          .deserialize<_i2.RoomNumber>(jsonSerialization['roomNumber']),
-      dateState: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateState']),
-      rateType: serializationManager
-          .deserialize<_i2.RateType>(jsonSerialization['rateType']),
-      rate: serializationManager.deserialize<double>(jsonSerialization['rate']),
-      dateCreate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateCreate']),
-      dateUpdate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['dateUpdate']),
-      guests: serializationManager
-          .deserialize<List<_i2.Guest>?>(jsonSerialization['guests']),
+      guestId:
+          serializationManager.deserialize<int>(jsonSerialization['guestId']),
+      guest: serializationManager
+          .deserialize<_i2.Guest?>(jsonSerialization['guest']),
+      roomId:
+          serializationManager.deserialize<int>(jsonSerialization['roomId']),
+      room: serializationManager
+          .deserialize<_i2.Room?>(jsonSerialization['room']),
+      transactionDay: serializationManager
+          .deserialize<DateTime>(jsonSerialization['transactionDay']),
+      transactionType: serializationManager.deserialize<_i2.TransactionType>(
+          jsonSerialization['transactionType']),
+      amount:
+          serializationManager.deserialize<double>(jsonSerialization['amount']),
+      tax1: serializationManager.deserialize<double>(jsonSerialization['tax1']),
+      tax2: serializationManager.deserialize<double>(jsonSerialization['tax2']),
+      tax3: serializationManager.deserialize<double>(jsonSerialization['tax3']),
+      description: serializationManager
+          .deserialize<String>(jsonSerialization['description']),
     );
   }
 
@@ -61,45 +75,60 @@ abstract class RoomTransaction extends _i1.TableRow {
 
   static const db = RoomTransactionRepository._();
 
-  _i2.RoomNumber roomNumber;
+  int guestId;
 
-  DateTime dateState;
+  _i2.Guest? guest;
 
-  _i2.RateType rateType;
+  int roomId;
 
-  double rate;
+  _i2.Room? room;
 
-  DateTime dateCreate;
+  DateTime transactionDay;
 
-  DateTime? dateUpdate;
+  _i2.TransactionType transactionType;
 
-  List<_i2.Guest>? guests;
+  double amount;
+
+  double tax1;
+
+  double tax2;
+
+  double tax3;
+
+  String description;
 
   @override
   _i1.Table get table => t;
 
   RoomTransaction copyWith({
     int? id,
-    _i2.RoomNumber? roomNumber,
-    DateTime? dateState,
-    _i2.RateType? rateType,
-    double? rate,
-    DateTime? dateCreate,
-    DateTime? dateUpdate,
-    List<_i2.Guest>? guests,
+    int? guestId,
+    _i2.Guest? guest,
+    int? roomId,
+    _i2.Room? room,
+    DateTime? transactionDay,
+    _i2.TransactionType? transactionType,
+    double? amount,
+    double? tax1,
+    double? tax2,
+    double? tax3,
+    String? description,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
-      'roomNumber': roomNumber.toJson(),
-      'dateState': dateState.toJson(),
-      'rateType': rateType.toJson(),
-      'rate': rate,
-      'dateCreate': dateCreate.toJson(),
-      if (dateUpdate != null) 'dateUpdate': dateUpdate?.toJson(),
-      if (guests != null)
-        'guests': guests?.toJson(valueToJson: (v) => v.toJson()),
+      'guestId': guestId,
+      if (guest != null) 'guest': guest?.toJson(),
+      'roomId': roomId,
+      if (room != null) 'room': room?.toJson(),
+      'transactionDay': transactionDay.toJson(),
+      'transactionType': transactionType.toJson(),
+      'amount': amount,
+      'tax1': tax1,
+      'tax2': tax2,
+      'tax3': tax3,
+      'description': description,
     };
   }
 
@@ -108,12 +137,15 @@ abstract class RoomTransaction extends _i1.TableRow {
   Map<String, dynamic> toJsonForDatabase() {
     return {
       'id': id,
-      'roomNumber': roomNumber,
-      'dateState': dateState,
-      'rateType': rateType,
-      'rate': rate,
-      'dateCreate': dateCreate,
-      'dateUpdate': dateUpdate,
+      'guestId': guestId,
+      'roomId': roomId,
+      'transactionDay': transactionDay,
+      'transactionType': transactionType,
+      'amount': amount,
+      'tax1': tax1,
+      'tax2': tax2,
+      'tax3': tax3,
+      'description': description,
     };
   }
 
@@ -121,14 +153,17 @@ abstract class RoomTransaction extends _i1.TableRow {
   Map<String, dynamic> allToJson() {
     return {
       if (id != null) 'id': id,
-      'roomNumber': roomNumber.toJson(),
-      'dateState': dateState.toJson(),
-      'rateType': rateType.toJson(),
-      'rate': rate,
-      'dateCreate': dateCreate.toJson(),
-      if (dateUpdate != null) 'dateUpdate': dateUpdate?.toJson(),
-      if (guests != null)
-        'guests': guests?.toJson(valueToJson: (v) => v.allToJson()),
+      'guestId': guestId,
+      if (guest != null) 'guest': guest?.allToJson(),
+      'roomId': roomId,
+      if (room != null) 'room': room?.allToJson(),
+      'transactionDay': transactionDay.toJson(),
+      'transactionType': transactionType.toJson(),
+      'amount': amount,
+      'tax1': tax1,
+      'tax2': tax2,
+      'tax3': tax3,
+      'description': description,
     };
   }
 
@@ -142,23 +177,32 @@ abstract class RoomTransaction extends _i1.TableRow {
       case 'id':
         id = value;
         return;
-      case 'roomNumber':
-        roomNumber = value;
+      case 'guestId':
+        guestId = value;
         return;
-      case 'dateState':
-        dateState = value;
+      case 'roomId':
+        roomId = value;
         return;
-      case 'rateType':
-        rateType = value;
+      case 'transactionDay':
+        transactionDay = value;
         return;
-      case 'rate':
-        rate = value;
+      case 'transactionType':
+        transactionType = value;
         return;
-      case 'dateCreate':
-        dateCreate = value;
+      case 'amount':
+        amount = value;
         return;
-      case 'dateUpdate':
-        dateUpdate = value;
+      case 'tax1':
+        tax1 = value;
+        return;
+      case 'tax2':
+        tax2 = value;
+        return;
+      case 'tax3':
+        tax3 = value;
+        return;
+      case 'description':
+        description = value;
         return;
       default:
         throw UnimplementedError();
@@ -290,8 +334,14 @@ abstract class RoomTransaction extends _i1.TableRow {
     );
   }
 
-  static RoomTransactionInclude include({_i2.GuestIncludeList? guests}) {
-    return RoomTransactionInclude._(guests: guests);
+  static RoomTransactionInclude include({
+    _i2.GuestInclude? guest,
+    _i2.RoomInclude? room,
+  }) {
+    return RoomTransactionInclude._(
+      guest: guest,
+      room: room,
+    );
   }
 
   static RoomTransactionIncludeList includeList({
@@ -320,44 +370,60 @@ class _Undefined {}
 class _RoomTransactionImpl extends RoomTransaction {
   _RoomTransactionImpl({
     int? id,
-    required _i2.RoomNumber roomNumber,
-    required DateTime dateState,
-    required _i2.RateType rateType,
-    required double rate,
-    required DateTime dateCreate,
-    DateTime? dateUpdate,
-    List<_i2.Guest>? guests,
+    required int guestId,
+    _i2.Guest? guest,
+    required int roomId,
+    _i2.Room? room,
+    required DateTime transactionDay,
+    required _i2.TransactionType transactionType,
+    required double amount,
+    required double tax1,
+    required double tax2,
+    required double tax3,
+    required String description,
   }) : super._(
           id: id,
-          roomNumber: roomNumber,
-          dateState: dateState,
-          rateType: rateType,
-          rate: rate,
-          dateCreate: dateCreate,
-          dateUpdate: dateUpdate,
-          guests: guests,
+          guestId: guestId,
+          guest: guest,
+          roomId: roomId,
+          room: room,
+          transactionDay: transactionDay,
+          transactionType: transactionType,
+          amount: amount,
+          tax1: tax1,
+          tax2: tax2,
+          tax3: tax3,
+          description: description,
         );
 
   @override
   RoomTransaction copyWith({
     Object? id = _Undefined,
-    _i2.RoomNumber? roomNumber,
-    DateTime? dateState,
-    _i2.RateType? rateType,
-    double? rate,
-    DateTime? dateCreate,
-    Object? dateUpdate = _Undefined,
-    Object? guests = _Undefined,
+    int? guestId,
+    Object? guest = _Undefined,
+    int? roomId,
+    Object? room = _Undefined,
+    DateTime? transactionDay,
+    _i2.TransactionType? transactionType,
+    double? amount,
+    double? tax1,
+    double? tax2,
+    double? tax3,
+    String? description,
   }) {
     return RoomTransaction(
       id: id is int? ? id : this.id,
-      roomNumber: roomNumber ?? this.roomNumber,
-      dateState: dateState ?? this.dateState,
-      rateType: rateType ?? this.rateType,
-      rate: rate ?? this.rate,
-      dateCreate: dateCreate ?? this.dateCreate,
-      dateUpdate: dateUpdate is DateTime? ? dateUpdate : this.dateUpdate,
-      guests: guests is List<_i2.Guest>? ? guests : this.guests?.clone(),
+      guestId: guestId ?? this.guestId,
+      guest: guest is _i2.Guest? ? guest : this.guest?.copyWith(),
+      roomId: roomId ?? this.roomId,
+      room: room is _i2.Room? ? room : this.room?.copyWith(),
+      transactionDay: transactionDay ?? this.transactionDay,
+      transactionType: transactionType ?? this.transactionType,
+      amount: amount ?? this.amount,
+      tax1: tax1 ?? this.tax1,
+      tax2: tax2 ?? this.tax2,
+      tax3: tax3 ?? this.tax3,
+      description: description ?? this.description,
     );
   }
 }
@@ -365,96 +431,114 @@ class _RoomTransactionImpl extends RoomTransaction {
 class RoomTransactionTable extends _i1.Table {
   RoomTransactionTable({super.tableRelation})
       : super(tableName: 'room_transaction') {
-    roomNumber = _i1.ColumnEnum(
-      'roomNumber',
+    guestId = _i1.ColumnInt(
+      'guestId',
+      this,
+    );
+    roomId = _i1.ColumnInt(
+      'roomId',
+      this,
+    );
+    transactionDay = _i1.ColumnDateTime(
+      'transactionDay',
+      this,
+    );
+    transactionType = _i1.ColumnEnum(
+      'transactionType',
       this,
       _i1.EnumSerialization.byName,
     );
-    dateState = _i1.ColumnDateTime(
-      'dateState',
+    amount = _i1.ColumnDouble(
+      'amount',
       this,
     );
-    rateType = _i1.ColumnEnum(
-      'rateType',
-      this,
-      _i1.EnumSerialization.byName,
-    );
-    rate = _i1.ColumnDouble(
-      'rate',
+    tax1 = _i1.ColumnDouble(
+      'tax1',
       this,
     );
-    dateCreate = _i1.ColumnDateTime(
-      'dateCreate',
+    tax2 = _i1.ColumnDouble(
+      'tax2',
       this,
     );
-    dateUpdate = _i1.ColumnDateTime(
-      'dateUpdate',
+    tax3 = _i1.ColumnDouble(
+      'tax3',
+      this,
+    );
+    description = _i1.ColumnString(
+      'description',
       this,
     );
   }
 
-  late final _i1.ColumnEnum<_i2.RoomNumber> roomNumber;
+  late final _i1.ColumnInt guestId;
 
-  late final _i1.ColumnDateTime dateState;
+  _i2.GuestTable? _guest;
 
-  late final _i1.ColumnEnum<_i2.RateType> rateType;
+  late final _i1.ColumnInt roomId;
 
-  late final _i1.ColumnDouble rate;
+  _i2.RoomTable? _room;
 
-  late final _i1.ColumnDateTime dateCreate;
+  late final _i1.ColumnDateTime transactionDay;
 
-  late final _i1.ColumnDateTime dateUpdate;
+  late final _i1.ColumnEnum<_i2.TransactionType> transactionType;
 
-  _i2.GuestTable? ___guests;
+  late final _i1.ColumnDouble amount;
 
-  _i1.ManyRelation<_i2.GuestTable>? _guests;
+  late final _i1.ColumnDouble tax1;
 
-  _i2.GuestTable get __guests {
-    if (___guests != null) return ___guests!;
-    ___guests = _i1.createRelationTable(
-      relationFieldName: '__guests',
-      field: RoomTransaction.t.id,
-      foreignField: _i2.Guest.t.$_roomTransactionGuestsRoomTransactionId,
+  late final _i1.ColumnDouble tax2;
+
+  late final _i1.ColumnDouble tax3;
+
+  late final _i1.ColumnString description;
+
+  _i2.GuestTable get guest {
+    if (_guest != null) return _guest!;
+    _guest = _i1.createRelationTable(
+      relationFieldName: 'guest',
+      field: RoomTransaction.t.guestId,
+      foreignField: _i2.Guest.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
           _i2.GuestTable(tableRelation: foreignTableRelation),
     );
-    return ___guests!;
+    return _guest!;
   }
 
-  _i1.ManyRelation<_i2.GuestTable> get guests {
-    if (_guests != null) return _guests!;
-    var relationTable = _i1.createRelationTable(
-      relationFieldName: 'guests',
-      field: RoomTransaction.t.id,
-      foreignField: _i2.Guest.t.$_roomTransactionGuestsRoomTransactionId,
+  _i2.RoomTable get room {
+    if (_room != null) return _room!;
+    _room = _i1.createRelationTable(
+      relationFieldName: 'room',
+      field: RoomTransaction.t.roomId,
+      foreignField: _i2.Room.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.GuestTable(tableRelation: foreignTableRelation),
+          _i2.RoomTable(tableRelation: foreignTableRelation),
     );
-    _guests = _i1.ManyRelation<_i2.GuestTable>(
-      tableWithRelations: relationTable,
-      table: _i2.GuestTable(
-          tableRelation: relationTable.tableRelation!.lastRelation),
-    );
-    return _guests!;
+    return _room!;
   }
 
   @override
   List<_i1.Column> get columns => [
         id,
-        roomNumber,
-        dateState,
-        rateType,
-        rate,
-        dateCreate,
-        dateUpdate,
+        guestId,
+        roomId,
+        transactionDay,
+        transactionType,
+        amount,
+        tax1,
+        tax2,
+        tax3,
+        description,
       ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
-    if (relationField == 'guests') {
-      return __guests;
+    if (relationField == 'guest') {
+      return guest;
+    }
+    if (relationField == 'room') {
+      return room;
     }
     return null;
   }
@@ -464,14 +548,23 @@ class RoomTransactionTable extends _i1.Table {
 RoomTransactionTable tRoomTransaction = RoomTransactionTable();
 
 class RoomTransactionInclude extends _i1.IncludeObject {
-  RoomTransactionInclude._({_i2.GuestIncludeList? guests}) {
-    _guests = guests;
+  RoomTransactionInclude._({
+    _i2.GuestInclude? guest,
+    _i2.RoomInclude? room,
+  }) {
+    _guest = guest;
+    _room = room;
   }
 
-  _i2.GuestIncludeList? _guests;
+  _i2.GuestInclude? _guest;
+
+  _i2.RoomInclude? _room;
 
   @override
-  Map<String, _i1.Include?> get includes => {'guests': _guests};
+  Map<String, _i1.Include?> get includes => {
+        'guest': _guest,
+        'room': _room,
+      };
 
   @override
   _i1.Table get table => RoomTransaction.t;
@@ -500,13 +593,7 @@ class RoomTransactionIncludeList extends _i1.IncludeList {
 class RoomTransactionRepository {
   const RoomTransactionRepository._();
 
-  final attach = const RoomTransactionAttachRepository._();
-
   final attachRow = const RoomTransactionAttachRowRepository._();
-
-  final detach = const RoomTransactionDetachRepository._();
-
-  final detachRow = const RoomTransactionDetachRowRepository._();
 
   Future<List<RoomTransaction>> find(
     _i1.Session session, {
@@ -660,102 +747,44 @@ class RoomTransactionRepository {
   }
 }
 
-class RoomTransactionAttachRepository {
-  const RoomTransactionAttachRepository._();
-
-  Future<void> guests(
-    _i1.Session session,
-    RoomTransaction roomTransaction,
-    List<_i2.Guest> guest,
-  ) async {
-    if (guest.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('guest.id');
-    }
-    if (roomTransaction.id == null) {
-      throw ArgumentError.notNull('roomTransaction.id');
-    }
-
-    var $guest = guest
-        .map((e) => _i2.GuestImplicit(
-              e,
-              $_roomTransactionGuestsRoomTransactionId: roomTransaction.id,
-            ))
-        .toList();
-    await session.dbNext.update<_i2.Guest>(
-      $guest,
-      columns: [_i2.Guest.t.$_roomTransactionGuestsRoomTransactionId],
-    );
-  }
-}
-
 class RoomTransactionAttachRowRepository {
   const RoomTransactionAttachRowRepository._();
 
-  Future<void> guests(
+  Future<void> guest(
     _i1.Session session,
     RoomTransaction roomTransaction,
     _i2.Guest guest,
   ) async {
-    if (guest.id == null) {
-      throw ArgumentError.notNull('guest.id');
-    }
     if (roomTransaction.id == null) {
       throw ArgumentError.notNull('roomTransaction.id');
     }
-
-    var $guest = _i2.GuestImplicit(
-      guest,
-      $_roomTransactionGuestsRoomTransactionId: roomTransaction.id,
-    );
-    await session.dbNext.updateRow<_i2.Guest>(
-      $guest,
-      columns: [_i2.Guest.t.$_roomTransactionGuestsRoomTransactionId],
-    );
-  }
-}
-
-class RoomTransactionDetachRepository {
-  const RoomTransactionDetachRepository._();
-
-  Future<void> guests(
-    _i1.Session session,
-    List<_i2.Guest> guest,
-  ) async {
-    if (guest.any((e) => e.id == null)) {
-      throw ArgumentError.notNull('guest.id');
-    }
-
-    var $guest = guest
-        .map((e) => _i2.GuestImplicit(
-              e,
-              $_roomTransactionGuestsRoomTransactionId: null,
-            ))
-        .toList();
-    await session.dbNext.update<_i2.Guest>(
-      $guest,
-      columns: [_i2.Guest.t.$_roomTransactionGuestsRoomTransactionId],
-    );
-  }
-}
-
-class RoomTransactionDetachRowRepository {
-  const RoomTransactionDetachRowRepository._();
-
-  Future<void> guests(
-    _i1.Session session,
-    _i2.Guest guest,
-  ) async {
     if (guest.id == null) {
       throw ArgumentError.notNull('guest.id');
     }
 
-    var $guest = _i2.GuestImplicit(
-      guest,
-      $_roomTransactionGuestsRoomTransactionId: null,
+    var $roomTransaction = roomTransaction.copyWith(guestId: guest.id);
+    await session.dbNext.updateRow<RoomTransaction>(
+      $roomTransaction,
+      columns: [RoomTransaction.t.guestId],
     );
-    await session.dbNext.updateRow<_i2.Guest>(
-      $guest,
-      columns: [_i2.Guest.t.$_roomTransactionGuestsRoomTransactionId],
+  }
+
+  Future<void> room(
+    _i1.Session session,
+    RoomTransaction roomTransaction,
+    _i2.Room room,
+  ) async {
+    if (roomTransaction.id == null) {
+      throw ArgumentError.notNull('roomTransaction.id');
+    }
+    if (room.id == null) {
+      throw ArgumentError.notNull('room.id');
+    }
+
+    var $roomTransaction = roomTransaction.copyWith(roomId: room.id);
+    await session.dbNext.updateRow<RoomTransaction>(
+      $roomTransaction,
+      columns: [RoomTransaction.t.roomId],
     );
   }
 }

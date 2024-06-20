@@ -12,8 +12,9 @@ fields:
       staffId  :  int
       company : Company?, relation 
       rigNumber : int
+      accountBalance : double 
 indexes:
    guest_index_idx: 
-       fields: email
+       fields: email, phone
        unique: true
 # add fileds of Phone ## base on someone may search by phone

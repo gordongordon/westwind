@@ -8,6 +8,6 @@ abstract interface class RateTableRepository {
    
    Future<Either<Failure, double>> getRate( RateType type, RateReason reason );
    Future<Either<Failure, double>> getSingleRate( RateType type );
-   Future<Either<Failure, double>> getShareRate( RateType typpe );
+   Future<Either<Failure, double>> getShareRate( RateType type );
 
 }

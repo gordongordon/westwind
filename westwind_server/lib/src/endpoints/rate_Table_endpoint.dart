@@ -28,12 +28,14 @@ class RateTableEndpoint extends Endpoint {
 
   Future<double?> findRate(Session session,
       {required RateType rateType, required RateReason rateReason}) async {
+
     final item = await RateTable.db.findFirstRow(session,
         where: (t) =>
             (t.rateType.equals(rateType) & t.rateReason.equals(rateReason)));
     
     if ( item == null ) {
-      return null;
+        return null;
+     //   MyException( message: "ServerPod : Rate can't be found base on type $rateType & reason $rateReason ! ", errorType: ErrorType.NotFound);
     }
 
     return item.rate;
@@ -43,15 +45,13 @@ class RateTableEndpoint extends Endpoint {
   Future<double> getSingleRate( Session session, {required RateType type }) async {
 
     final result = await RateTable.db.findFirstRow(session, 
-          where:  (r) => (r.rateType.equals(type) & r.rateReason.equals( RateReason.single ) ),);
+          where:  (r) => (r.rateType.equals( type ) & r.rateReason.equals( RateReason.single )),);
 
      if ( result == null ) {
-         throw MyException(message: "Rate can't be found base on single and $type", errorType: ErrorType.NotFound );
-      //  return null;
+         throw MyException(message: "ServerPod : Rate can't be found base on single and $type", errorType: ErrorType.NotFound );
      }
     
      return result.rate;
-
      
   }
   Future<bool> updateRateTable(Session session,

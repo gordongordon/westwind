@@ -24,6 +24,14 @@ final class RoomGuestManageStateCheckInSuccess extends RoomGuestManageState {
   RoomGuestManageStateCheckInSuccess( this.roomGuest );
 }
 
+
+final class RoomGuestManageStateCalculateRateSuccess extends RoomGuestManageState {
+  final RoomGuest roomGuest;
+
+  RoomGuestManageStateCalculateRateSuccess( this.roomGuest );
+}
+
+
 final class RoomGuestManageStateDeleteSuccess extends RoomGuestManageState {}
 
 final class RoomGuestManageStateFailure extends RoomGuestManageState {

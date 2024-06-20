@@ -1,0 +1,837 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "guest"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "guest",
+        "dartName": "Guest",
+        "module": "westwind",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 2,
+            "isNullable": false,
+            "columnDefault": "nextval('guest_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "firstName",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "lastName",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "phone",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "email",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "isInHouse",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "name": "dateCreate",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "dateUpdate",
+            "columnType": 4,
+            "isNullable": true,
+            "dartType": "DateTime?"
+          },
+          {
+            "name": "rateType",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:RateType"
+          },
+          {
+            "name": "staffId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "companyId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "rigNumber",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "accountBalance",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "guest_fk_0",
+            "columns": [
+              "companyId"
+            ],
+            "referenceTable": "company",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "guest_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "guest_index_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "email"
+              },
+              {
+                "type": 0,
+                "definition": "phone"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "deleteTable",
+      "deleteTable": "payment"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "payment",
+        "dartName": "Payment",
+        "module": "westwind",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 2,
+            "isNullable": false,
+            "columnDefault": "nextval('payment_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "guestId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "chargeDate",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "dateVoid",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "amount",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "description",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "paymentType",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:PaymentType"
+          },
+          {
+            "name": "userId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "payment_fk_0",
+            "columns": [
+              "guestId"
+            ],
+            "referenceTable": "guest",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "payment_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "rate_table",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [],
+        "modifyColumns": [],
+        "addIndexes": [
+          {
+            "indexName": "rate_table_unique_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "rateType"
+              },
+              {
+                "type": 0,
+                "definition": "rateReason"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          }
+        ],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": [
+          {
+            "type": "columnDropped",
+            "message": "Column \"_roomTransactionGuestsRoomTransactionId\" of table \"guest\" will be dropped.",
+            "table": "guest",
+            "columns": [
+              "_roomTransactionGuestsRoomTransactionId"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "tableDropped",
+            "message": "One or more columns are added to table \"guest\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+            "table": "guest",
+            "columns": [
+              "accountBalance"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"dateCreate\" of table \"payment\" will be dropped.",
+            "table": "payment",
+            "columns": [
+              "dateCreate"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"paymentAmount\" of table \"payment\" will be dropped.",
+            "table": "payment",
+            "columns": [
+              "paymentAmount"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"roomChargeType\" of table \"payment\" will be dropped.",
+            "table": "payment",
+            "columns": [
+              "roomChargeType"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "tableDropped",
+            "message": "One or more columns are added to table \"payment\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+            "table": "payment",
+            "columns": [
+              "chargeDate"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "uniqueIndexCreated",
+            "message": "Unique index \"rate_table_unique_idx\" is added to table \"rate_table\". If there are existing rows with duplicate values, this migration will fail.",
+            "table": "rate_table",
+            "columns": [
+              "rateType",
+              "rateReason"
+            ],
+            "destrucive": false
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"stateDate\" of table \"room_guest\" will be dropped.",
+            "table": "room_guest",
+            "columns": [
+              "stateDate"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "tableDropped",
+            "message": "One or more columns are added to table \"room_guest\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+            "table": "room_guest",
+            "columns": [
+              "stayDate"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"roomNumber\" of table \"room_transaction\" will be dropped.",
+            "table": "room_transaction",
+            "columns": [
+              "roomNumber"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"dateState\" of table \"room_transaction\" will be dropped.",
+            "table": "room_transaction",
+            "columns": [
+              "dateState"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"rateType\" of table \"room_transaction\" will be dropped.",
+            "table": "room_transaction",
+            "columns": [
+              "rateType"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"rate\" of table \"room_transaction\" will be dropped.",
+            "table": "room_transaction",
+            "columns": [
+              "rate"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"dateCreate\" of table \"room_transaction\" will be dropped.",
+            "table": "room_transaction",
+            "columns": [
+              "dateCreate"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "columnDropped",
+            "message": "Column \"dateUpdate\" of table \"room_transaction\" will be dropped.",
+            "table": "room_transaction",
+            "columns": [
+              "dateUpdate"
+            ],
+            "destrucive": true
+          },
+          {
+            "type": "tableDropped",
+            "message": "One or more columns are added to table \"room_transaction\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+            "table": "room_transaction",
+            "columns": [
+              "guestId"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "deleteTable",
+      "deleteTable": "room_guest"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "room_guest",
+        "dartName": "RoomGuest",
+        "module": "westwind",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 2,
+            "isNullable": false,
+            "columnDefault": "nextval('room_guest_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "roomId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "stayDate",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "guestId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "rateType",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:RateType"
+          },
+          {
+            "name": "rateReason",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:RateReason"
+          },
+          {
+            "name": "rate",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "reservationId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "roomStatus",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:RoomStatus"
+          },
+          {
+            "name": "checkOutDate",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "updateDate",
+            "columnType": 4,
+            "isNullable": true,
+            "dartType": "DateTime?"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "room_guest_fk_0",
+            "columns": [
+              "roomId"
+            ],
+            "referenceTable": "room",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          },
+          {
+            "constraintName": "room_guest_fk_1",
+            "columns": [
+              "guestId"
+            ],
+            "referenceTable": "guest",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          },
+          {
+            "constraintName": "room_guest_fk_2",
+            "columns": [
+              "reservationId"
+            ],
+            "referenceTable": "reservation",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "room_guest_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "room_guest_index_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "roomId"
+              },
+              {
+                "type": 0,
+                "definition": "guestId"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "deleteTable",
+      "deleteTable": "room_transaction"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "room_transaction",
+        "dartName": "RoomTransaction",
+        "module": "westwind",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 2,
+            "isNullable": false,
+            "columnDefault": "nextval('room_transaction_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "guestId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "roomId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "transactionDay",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "transactionType",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:TransactionType"
+          },
+          {
+            "name": "amount",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "tax1",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "tax2",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "tax3",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "description",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "room_transaction_fk_0",
+            "columns": [
+              "guestId"
+            ],
+            "referenceTable": "guest",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          },
+          {
+            "constraintName": "room_transaction_fk_1",
+            "columns": [
+              "roomId"
+            ],
+            "referenceTable": "room",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "room_transaction_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "columnDropped",
+      "message": "Column \"_roomTransactionGuestsRoomTransactionId\" of table \"guest\" will be dropped.",
+      "table": "guest",
+      "columns": [
+        "_roomTransactionGuestsRoomTransactionId"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"guest\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "guest",
+      "columns": [
+        "accountBalance"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"dateCreate\" of table \"payment\" will be dropped.",
+      "table": "payment",
+      "columns": [
+        "dateCreate"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"paymentAmount\" of table \"payment\" will be dropped.",
+      "table": "payment",
+      "columns": [
+        "paymentAmount"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"roomChargeType\" of table \"payment\" will be dropped.",
+      "table": "payment",
+      "columns": [
+        "roomChargeType"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"payment\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "payment",
+      "columns": [
+        "chargeDate"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "uniqueIndexCreated",
+      "message": "Unique index \"rate_table_unique_idx\" is added to table \"rate_table\". If there are existing rows with duplicate values, this migration will fail.",
+      "table": "rate_table",
+      "columns": [
+        "rateType",
+        "rateReason"
+      ],
+      "destrucive": false
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"stateDate\" of table \"room_guest\" will be dropped.",
+      "table": "room_guest",
+      "columns": [
+        "stateDate"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"room_guest\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "room_guest",
+      "columns": [
+        "stayDate"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"roomNumber\" of table \"room_transaction\" will be dropped.",
+      "table": "room_transaction",
+      "columns": [
+        "roomNumber"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"dateState\" of table \"room_transaction\" will be dropped.",
+      "table": "room_transaction",
+      "columns": [
+        "dateState"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"rateType\" of table \"room_transaction\" will be dropped.",
+      "table": "room_transaction",
+      "columns": [
+        "rateType"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"rate\" of table \"room_transaction\" will be dropped.",
+      "table": "room_transaction",
+      "columns": [
+        "rate"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"dateCreate\" of table \"room_transaction\" will be dropped.",
+      "table": "room_transaction",
+      "columns": [
+        "dateCreate"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "columnDropped",
+      "message": "Column \"dateUpdate\" of table \"room_transaction\" will be dropped.",
+      "table": "room_transaction",
+      "columns": [
+        "dateUpdate"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"room_transaction\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "room_transaction",
+      "columns": [
+        "guestId"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

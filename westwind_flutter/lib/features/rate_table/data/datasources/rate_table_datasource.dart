@@ -33,7 +33,7 @@ class RateTableDatasourceImpl implements RateTableDatasource {
   Future<double> getShareRate(RateType type ) async {
     try {
       final result =
-          await client.rateTable.findRate(rateType: type, rateReason: RateReason.double );
+          await client.rateTable.findRate(rateType: type, rateReason: RateReason.share );
 
       if (result == null) {
         throw ServerException(
@@ -50,12 +50,14 @@ class RateTableDatasourceImpl implements RateTableDatasource {
   Future<double> getSingleRate(RateType type ) async {
     try {
       final result =
-          await client.rateTable.findRate(rateType: type, rateReason: RateReason.single );
-
+          // await client.rateTable.findRate(rateType: type, rateReason: RateReason.single );
+          await client.rateTable.getSingleRate(type: type);
+/*
       if (result == null) {
         throw ServerException(
             "Rate can't be finded base on type of $type and reason of single");
       }
+      */
 
       return result;
     } catch (e) {

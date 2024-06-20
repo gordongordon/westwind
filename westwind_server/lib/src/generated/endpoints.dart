@@ -14,13 +14,15 @@ import '../endpoints/guest_endpoint.dart' as _i3;
 import '../endpoints/rate_Table_endpoint.dart' as _i4;
 import '../endpoints/reservation_endpoint.dart' as _i5;
 import '../endpoints/room_guest_endpoint.dart' as _i6;
-import 'package:westwind_server/src/generated/guest.dart' as _i7;
-import 'package:westwind_server/src/generated/rateTable.dart' as _i8;
-import 'package:westwind_server/src/generated/rateType.dart' as _i9;
-import 'package:westwind_server/src/generated/rateReason.dart' as _i10;
-import 'package:westwind_server/src/generated/reservation.dart' as _i11;
-import 'package:westwind_server/src/generated/roomGuest.dart' as _i12;
-import 'package:serverpod_auth_server/module.dart' as _i13;
+import '../endpoints/room_transaction_endpoint.dart' as _i7;
+import 'package:westwind_server/src/generated/guest.dart' as _i8;
+import 'package:westwind_server/src/generated/rateTable.dart' as _i9;
+import 'package:westwind_server/src/generated/rateType.dart' as _i10;
+import 'package:westwind_server/src/generated/rateReason.dart' as _i11;
+import 'package:westwind_server/src/generated/reservation.dart' as _i12;
+import 'package:westwind_server/src/generated/roomGuest.dart' as _i13;
+import 'package:westwind_server/src/generated/roomTransaction.dart' as _i14;
+import 'package:serverpod_auth_server/module.dart' as _i15;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -54,6 +56,12 @@ class Endpoints extends _i1.EndpointDispatch {
         ..initialize(
           server,
           'roomGuest',
+          null,
+        ),
+      'roomTransaction': _i7.RoomTransactionEndpoint()
+        ..initialize(
+          server,
+          'roomTransaction',
           null,
         ),
     };
@@ -117,7 +125,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'guest': _i1.ParameterDescription(
               name: 'guest',
-              type: _i1.getType<_i7.Guest>(),
+              type: _i1.getType<_i8.Guest>(),
               nullable: false,
             )
           },
@@ -153,7 +161,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'guest': _i1.ParameterDescription(
               name: 'guest',
-              type: _i1.getType<_i7.Guest>(),
+              type: _i1.getType<_i8.Guest>(),
               nullable: false,
             )
           },
@@ -171,7 +179,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'guest': _i1.ParameterDescription(
               name: 'guest',
-              type: _i1.getType<_i7.Guest>(),
+              type: _i1.getType<_i8.Guest>(),
               nullable: false,
             )
           },
@@ -258,7 +266,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'rateTable': _i1.ParameterDescription(
               name: 'rateTable',
-              type: _i1.getType<_i8.RateTable>(),
+              type: _i1.getType<_i9.RateTable>(),
               nullable: false,
             )
           },
@@ -276,12 +284,12 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'rateType': _i1.ParameterDescription(
               name: 'rateType',
-              type: _i1.getType<_i9.RateType>(),
+              type: _i1.getType<_i10.RateType>(),
               nullable: false,
             ),
             'rateReason': _i1.ParameterDescription(
               name: 'rateReason',
-              type: _i1.getType<_i10.RateReason>(),
+              type: _i1.getType<_i11.RateReason>(),
               nullable: false,
             ),
           },
@@ -300,7 +308,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i9.RateType>(),
+              type: _i1.getType<_i10.RateType>(),
               nullable: false,
             )
           },
@@ -318,7 +326,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'rateTable': _i1.ParameterDescription(
               name: 'rateTable',
-              type: _i1.getType<_i8.RateTable>(),
+              type: _i1.getType<_i9.RateTable>(),
               nullable: false,
             )
           },
@@ -389,7 +397,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'reservation': _i1.ParameterDescription(
               name: 'reservation',
-              type: _i1.getType<_i11.Reservation>(),
+              type: _i1.getType<_i12.Reservation>(),
               nullable: false,
             )
           },
@@ -407,7 +415,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'res': _i1.ParameterDescription(
               name: 'res',
-              type: _i1.getType<_i11.Reservation>(),
+              type: _i1.getType<_i12.Reservation>(),
               nullable: false,
             )
           },
@@ -463,7 +471,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'reservation': _i1.ParameterDescription(
               name: 'reservation',
-              type: _i1.getType<_i11.Reservation>(),
+              type: _i1.getType<_i12.Reservation>(),
               nullable: false,
             )
           },
@@ -545,6 +553,24 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['reservation'] as _i5.ReservationEndpoint)
                   .getTodayReservations(session),
         ),
+        'checkIn': _i1.MethodConnector(
+          name: 'checkIn',
+          params: {
+            'reservationId': _i1.ParameterDescription(
+              name: 'reservationId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['reservation'] as _i5.ReservationEndpoint).checkIn(
+            session,
+            reservationId: params['reservationId'],
+          ),
+        ),
         'checkInReservation': _i1.MethodConnector(
           name: 'checkInReservation',
           params: {
@@ -612,7 +638,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'res': _i1.ParameterDescription(
               name: 'res',
-              type: _i1.getType<_i12.RoomGuest>(),
+              type: _i1.getType<_i13.RoomGuest>(),
               nullable: false,
             )
           },
@@ -625,22 +651,47 @@ class Endpoints extends _i1.EndpointDispatch {
             params['res'],
           ),
         ),
+        'insertGuestByReservation': _i1.MethodConnector(
+          name: 'insertGuestByReservation',
+          params: {
+            'checkInGuest': _i1.ParameterDescription(
+              name: 'checkInGuest',
+              type: _i1.getType<_i13.RoomGuest>(),
+              nullable: false,
+            ),
+            'reservation': _i1.ParameterDescription(
+              name: 'reservation',
+              type: _i1.getType<_i12.Reservation>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i6.RoomGuestEndpoint)
+                  .insertGuestByReservation(
+            session,
+            params['checkInGuest'],
+            params['reservation'],
+          ),
+        ),
         'createRoomGuestByReservation': _i1.MethodConnector(
           name: 'createRoomGuestByReservation',
           params: {
             'checkInGuest': _i1.ParameterDescription(
               name: 'checkInGuest',
-              type: _i1.getType<_i12.RoomGuest>(),
+              type: _i1.getType<_i13.RoomGuest>(),
               nullable: false,
             ),
             'roommates': _i1.ParameterDescription(
               name: 'roommates',
-              type: _i1.getType<List<_i12.RoomGuest>>(),
+              type: _i1.getType<List<_i13.RoomGuest>>(),
               nullable: false,
             ),
             'reservation': _i1.ParameterDescription(
               name: 'reservation',
-              type: _i1.getType<_i11.Reservation>(),
+              type: _i1.getType<_i12.Reservation>(),
               nullable: false,
             ),
           },
@@ -691,7 +742,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'reason': _i1.ParameterDescription(
               name: 'reason',
-              type: _i1.getType<_i10.RateReason>(),
+              type: _i1.getType<_i11.RateReason>(),
               nullable: false,
             ),
           },
@@ -729,7 +780,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'roomGuest': _i1.ParameterDescription(
               name: 'roomGuest',
-              type: _i1.getType<_i12.RoomGuest>(),
+              type: _i1.getType<_i13.RoomGuest>(),
               nullable: false,
             )
           },
@@ -740,6 +791,25 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['roomGuest'] as _i6.RoomGuestEndpoint).updateRoomGuest(
             session,
             roomGuest: params['roomGuest'],
+          ),
+        ),
+        'updateRoomGuests': _i1.MethodConnector(
+          name: 'updateRoomGuests',
+          params: {
+            'roomGuests': _i1.ParameterDescription(
+              name: 'roomGuests',
+              type: _i1.getType<List<_i13.RoomGuest>>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i6.RoomGuestEndpoint)
+                  .updateRoomGuests(
+            session,
+            roomGuests: params['roomGuests'],
           ),
         ),
         'findRoomGuestByRoomId': _i1.MethodConnector(
@@ -805,7 +875,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'rateReason': _i1.ParameterDescription(
               name: 'rateReason',
-              type: _i1.getType<_i10.RateReason>(),
+              type: _i1.getType<_i11.RateReason>(),
               nullable: false,
             )
           },
@@ -824,7 +894,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'rateReason': _i1.ParameterDescription(
               name: 'rateReason',
-              type: _i1.getType<_i10.RateReason>(),
+              type: _i1.getType<_i11.RateReason>(),
               nullable: false,
             )
           },
@@ -843,7 +913,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'rateReason': _i1.ParameterDescription(
               name: 'rateReason',
-              type: _i1.getType<_i10.RateReason>(),
+              type: _i1.getType<_i11.RateReason>(),
               nullable: false,
             )
           },
@@ -862,7 +932,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'rateReason': _i1.ParameterDescription(
               name: 'rateReason',
-              type: _i1.getType<_i10.RateReason>(),
+              type: _i1.getType<_i11.RateReason>(),
               nullable: false,
             )
           },
@@ -881,7 +951,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'rateReason': _i1.ParameterDescription(
               name: 'rateReason',
-              type: _i1.getType<_i10.RateReason>(),
+              type: _i1.getType<_i11.RateReason>(),
               nullable: false,
             )
           },
@@ -900,7 +970,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'roomGuest': _i1.ParameterDescription(
               name: 'roomGuest',
-              type: _i1.getType<_i12.RoomGuest>(),
+              type: _i1.getType<_i13.RoomGuest>(),
               nullable: false,
             )
           },
@@ -918,7 +988,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'roomGuest': _i1.ParameterDescription(
               name: 'roomGuest',
-              type: _i1.getType<_i12.RoomGuest>(),
+              type: _i1.getType<_i13.RoomGuest>(),
               nullable: false,
             )
           },
@@ -990,12 +1060,12 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'roommate': _i1.ParameterDescription(
               name: 'roommate',
-              type: _i1.getType<_i12.RoomGuest>(),
+              type: _i1.getType<_i13.RoomGuest>(),
               nullable: false,
             ),
             'roomGuest': _i1.ParameterDescription(
               name: 'roomGuest',
-              type: _i1.getType<_i12.RoomGuest>(),
+              type: _i1.getType<_i13.RoomGuest>(),
               nullable: false,
             ),
           },
@@ -1035,6 +1105,79 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth'] = _i13.Endpoints()..initializeEndpoints(server);
+    connectors['roomTransaction'] = _i1.EndpointConnector(
+      name: 'roomTransaction',
+      endpoint: endpoints['roomTransaction']!,
+      methodConnectors: {
+        'list': _i1.MethodConnector(
+          name: 'list',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomTransaction'] as _i7.RoomTransactionEndpoint)
+                  .list(session),
+        ),
+        'create': _i1.MethodConnector(
+          name: 'create',
+          params: {
+            'rt': _i1.ParameterDescription(
+              name: 'rt',
+              type: _i1.getType<_i14.RoomTransaction>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomTransaction'] as _i7.RoomTransactionEndpoint)
+                  .create(
+            session,
+            params['rt'],
+          ),
+        ),
+        'retrieve': _i1.MethodConnector(
+          name: 'retrieve',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomTransaction'] as _i7.RoomTransactionEndpoint)
+                  .retrieve(
+            session,
+            params['id'],
+          ),
+        ),
+        'delete': _i1.MethodConnector(
+          name: 'delete',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomTransaction'] as _i7.RoomTransactionEndpoint)
+                  .delete(
+            session,
+            params['id'],
+          ),
+        ),
+      },
+    );
+    modules['serverpod_auth'] = _i15.Endpoints()..initializeEndpoints(server);
   }
 }

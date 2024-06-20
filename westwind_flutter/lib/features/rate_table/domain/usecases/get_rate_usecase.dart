@@ -14,9 +14,7 @@ class RateTableGetRateUseCase
   @override
   Future<Either<Failure, double>> call(RateTableGetRateParams params ) async {
     return  await rateTableRepository.getRate(
-         params.type, params.reason);
-
-  
+         params.type, params.reason);  
   }
 }
 

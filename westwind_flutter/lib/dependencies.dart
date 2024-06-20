@@ -41,6 +41,7 @@ import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservati
 import 'package:westwind_flutter/features/room_guest/data/datasources/room_guest_datasource.dart';
 import 'package:westwind_flutter/features/room_guest/data/repositories/room_guest_repository.dart';
 import 'package:westwind_flutter/features/room_guest/domain/repositories/room_guest_repository.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/calculate_rate_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/check_in_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/delete_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest.dart';
@@ -360,6 +361,12 @@ void _initRoomGuest() {
       serverLocator<RoomGuestRepository>(),
     ),
   );
+  serverLocator.registerLazySingleton<CalculateRateRoomGuestUseCase>(
+    () => CalculateRateRoomGuestUseCase(
+      serverLocator<RoomGuestRepository>(),
+      serverLocator<RateTableRepository>(),
+    ),
+  );
 
   // Bloc
   serverLocator
@@ -375,5 +382,9 @@ void _initRoomGuest() {
 
             //       retrieveGuest: serverLocator<RetrieveRoomGuestUseCase>(),
             checkInRoomGuest: serverLocator<CheckInRoomGuestUseCase>(),
+            calculateRateRoomGuest: serverLocator<CalculateRateRoomGuestUseCase>(),
           ));
+}
+
+class CalcullateRateRoomGuestUseCase {
 }

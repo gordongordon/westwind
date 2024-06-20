@@ -9,8 +9,9 @@ abstract interface class RoomGuestDatasource {
   Future<RoomGuest>  retrieve( int id);
   Future<bool> hasRoomate( int roomId );
   Future<List<RoomGuest>> retrieveByRoomId( int roomId );
-  Future<RoomGuest> checkInRoomGuest( {required RoomGuest checkInRoomGuest, required List<RoomGuest> roommates, required Reservation reservation } );
-
+  Future<RoomGuest> checkInRoomGuest( {required RoomGuest checkInRoomGuest, required Reservation reservation } );
+//  Future<RoomGuest> checkInRoomGuest( {required RoomGuest checkInRoomGuest, required List<RoomGuest> roommates, required Reservation reservation } );
+  Future<List<RoomGuest>> update({required List<RoomGuest> roomGuests });
 }
 
 class RoomGuestDatasourceImpl implements RoomGuestDatasource {
@@ -100,10 +101,31 @@ class RoomGuestDatasourceImpl implements RoomGuestDatasource {
   }
   
   @override
+  Future<RoomGuest> checkInRoomGuest( {required RoomGuest checkInRoomGuest, required Reservation reservation } ) async {
+             try {
+         return await client.roomGuest.insertGuestByReservation( checkInRoomGuest, reservation);
+      } catch (e) {
+        throw ServerException(e.toString());
+      }
+  }
+
+/*  
+ * Check In with roommate 
+    @override
   Future<RoomGuest> checkInRoomGuest( {required RoomGuest checkInRoomGuest, required List<RoomGuest> roommates, required Reservation reservation } ) async {
              try {
          return await client.roomGuest.createRoomGuestByReservation( checkInRoomGuest, roommates, reservation);
       } catch (e) {
+        throw ServerException(e.toString());
+      }
+  }
+  */
+  
+  @override
+  Future<List<RoomGuest>> update({required List<RoomGuest> roomGuests}) async {
+      try {
+        return await client.roomGuest.updateRoomGuests(roomGuests: roomGuests);
+      }  catch (e) {
         throw ServerException(e.toString());
       }
   }

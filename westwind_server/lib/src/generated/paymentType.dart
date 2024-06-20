@@ -15,6 +15,8 @@ enum PaymentType with _i1.SerializableEntity {
   master,
   debit,
   cash,
+  eTransfer,
+  cheque,
   bill,
   other;
 
@@ -28,6 +30,10 @@ enum PaymentType with _i1.SerializableEntity {
         return debit;
       case 'cash':
         return cash;
+      case 'eTransfer':
+        return eTransfer;
+      case 'cheque':
+        return cheque;
       case 'bill':
         return bill;
       case 'other':

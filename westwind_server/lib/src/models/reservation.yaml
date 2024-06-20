@@ -14,6 +14,7 @@ fields :
    isCanceled  : bool
    isNightShift : bool
    room : Room?, relation
+
 #indexes:
 #   reservation_unique_idx:
 #      fields: guestId, roomId

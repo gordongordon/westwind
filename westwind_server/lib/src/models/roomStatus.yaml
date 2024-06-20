@@ -1,6 +1,7 @@
 enum: RoomStatus
 serialized: byName
 values:
+ - vacancy
  - empty
  - checkout
  - clean

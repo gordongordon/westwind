@@ -21,6 +21,33 @@ class RoomGuestEndpoint extends Endpoint {
     return await RoomGuest.db.insertRow(session, res);
   }
 
+
+
+  Future<RoomGuest> insertGuestByReservation(
+      Session session,
+      RoomGuest checkInGuest,
+      Reservation reservation) async {
+
+    final result =
+        await session.dbNext.transaction<RoomGuest>((transaction) async {
+
+      reservation.isCheckedIn = true;
+      await Reservation.db.updateRow(session, reservation);
+      // Insert New Room Guest
+      return await RoomGuest.db.insertRow(session, checkInGuest);
+    });
+
+    if (result == false) {
+      final id = reservation.id!;
+      throw MyException(
+          message: "Guest can't be checked with reservation id $id",
+          errorType: ErrorType.ProblemOfInsert);
+    }
+    return result;
+  }
+
+
+
   Future<RoomGuest> createRoomGuestByReservation(
       Session session,
       RoomGuest checkInGuest,
@@ -88,6 +115,13 @@ class RoomGuestEndpoint extends Endpoint {
     return true;
   }
 
+  Future<List<RoomGuest>> updateRoomGuests( Session session, { required List<RoomGuest> roomGuests }) async {
+
+       return await RoomGuest.db.update(session, roomGuests);
+
+  }
+
+
   Future<List<RoomGuest>> findRoomGuestByRoomId(Session session,
       {required int id}) async {
     return await RoomGuest.db.find(session,
@@ -111,7 +145,7 @@ class RoomGuestEndpoint extends Endpoint {
   Future<List<RoomGuest>> getAllRoomGuestByDay(
       Session session, DateTime datetime) async {
     return await RoomGuest.db.find(session,
-        where: (t) => t.stateDate.between(
+        where: (t) => t.stayDate.between(
             datetime.subtract(const Duration(days: 1)),
             datetime.add(const Duration(days: 1))));
   }
@@ -285,4 +319,5 @@ class RoomGuestEndpoint extends Endpoint {
 
     return await RoomGuest.db.updateRow(session, roomGuest);
   }
+  
 }

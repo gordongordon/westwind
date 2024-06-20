@@ -16,7 +16,11 @@ import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_gues
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
 
 void main() async {
-  Bloc.observer = AppBlocObserver();
+
+
+
+
+ // Bloc.observer = AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
   runApp(MultiBlocProvider(

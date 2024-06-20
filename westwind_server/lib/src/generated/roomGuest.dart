@@ -17,7 +17,7 @@ abstract class RoomGuest extends _i1.TableRow {
     int? id,
     required this.roomId,
     this.room,
-    required this.stateDate,
+    required this.stayDate,
     required this.guestId,
     this.guest,
     required this.rateType,
@@ -34,7 +34,7 @@ abstract class RoomGuest extends _i1.TableRow {
     int? id,
     required int roomId,
     _i2.Room? room,
-    required DateTime stateDate,
+    required DateTime stayDate,
     required int guestId,
     _i2.Guest? guest,
     required _i2.RateType rateType,
@@ -57,8 +57,8 @@ abstract class RoomGuest extends _i1.TableRow {
           serializationManager.deserialize<int>(jsonSerialization['roomId']),
       room: serializationManager
           .deserialize<_i2.Room?>(jsonSerialization['room']),
-      stateDate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['stateDate']),
+      stayDate: serializationManager
+          .deserialize<DateTime>(jsonSerialization['stayDate']),
       guestId:
           serializationManager.deserialize<int>(jsonSerialization['guestId']),
       guest: serializationManager
@@ -89,7 +89,7 @@ abstract class RoomGuest extends _i1.TableRow {
 
   _i2.Room? room;
 
-  DateTime stateDate;
+  DateTime stayDate;
 
   int guestId;
 
@@ -118,7 +118,7 @@ abstract class RoomGuest extends _i1.TableRow {
     int? id,
     int? roomId,
     _i2.Room? room,
-    DateTime? stateDate,
+    DateTime? stayDate,
     int? guestId,
     _i2.Guest? guest,
     _i2.RateType? rateType,
@@ -136,7 +136,7 @@ abstract class RoomGuest extends _i1.TableRow {
       if (id != null) 'id': id,
       'roomId': roomId,
       if (room != null) 'room': room?.toJson(),
-      'stateDate': stateDate.toJson(),
+      'stayDate': stayDate.toJson(),
       'guestId': guestId,
       if (guest != null) 'guest': guest?.toJson(),
       'rateType': rateType.toJson(),
@@ -156,7 +156,7 @@ abstract class RoomGuest extends _i1.TableRow {
     return {
       'id': id,
       'roomId': roomId,
-      'stateDate': stateDate,
+      'stayDate': stayDate,
       'guestId': guestId,
       'rateType': rateType,
       'rateReason': rateReason,
@@ -174,7 +174,7 @@ abstract class RoomGuest extends _i1.TableRow {
       if (id != null) 'id': id,
       'roomId': roomId,
       if (room != null) 'room': room?.allToJson(),
-      'stateDate': stateDate.toJson(),
+      'stayDate': stayDate.toJson(),
       'guestId': guestId,
       if (guest != null) 'guest': guest?.allToJson(),
       'rateType': rateType.toJson(),
@@ -201,8 +201,8 @@ abstract class RoomGuest extends _i1.TableRow {
       case 'roomId':
         roomId = value;
         return;
-      case 'stateDate':
-        stateDate = value;
+      case 'stayDate':
+        stayDate = value;
         return;
       case 'guestId':
         guestId = value;
@@ -398,7 +398,7 @@ class _RoomGuestImpl extends RoomGuest {
     int? id,
     required int roomId,
     _i2.Room? room,
-    required DateTime stateDate,
+    required DateTime stayDate,
     required int guestId,
     _i2.Guest? guest,
     required _i2.RateType rateType,
@@ -413,7 +413,7 @@ class _RoomGuestImpl extends RoomGuest {
           id: id,
           roomId: roomId,
           room: room,
-          stateDate: stateDate,
+          stayDate: stayDate,
           guestId: guestId,
           guest: guest,
           rateType: rateType,
@@ -431,7 +431,7 @@ class _RoomGuestImpl extends RoomGuest {
     Object? id = _Undefined,
     int? roomId,
     Object? room = _Undefined,
-    DateTime? stateDate,
+    DateTime? stayDate,
     int? guestId,
     Object? guest = _Undefined,
     _i2.RateType? rateType,
@@ -447,7 +447,7 @@ class _RoomGuestImpl extends RoomGuest {
       id: id is int? ? id : this.id,
       roomId: roomId ?? this.roomId,
       room: room is _i2.Room? ? room : this.room?.copyWith(),
-      stateDate: stateDate ?? this.stateDate,
+      stayDate: stayDate ?? this.stayDate,
       guestId: guestId ?? this.guestId,
       guest: guest is _i2.Guest? ? guest : this.guest?.copyWith(),
       rateType: rateType ?? this.rateType,
@@ -470,8 +470,8 @@ class RoomGuestTable extends _i1.Table {
       'roomId',
       this,
     );
-    stateDate = _i1.ColumnDateTime(
-      'stateDate',
+    stayDate = _i1.ColumnDateTime(
+      'stayDate',
       this,
     );
     guestId = _i1.ColumnInt(
@@ -515,7 +515,7 @@ class RoomGuestTable extends _i1.Table {
 
   _i2.RoomTable? _room;
 
-  late final _i1.ColumnDateTime stateDate;
+  late final _i1.ColumnDateTime stayDate;
 
   late final _i1.ColumnInt guestId;
 
@@ -580,7 +580,7 @@ class RoomGuestTable extends _i1.Table {
   List<_i1.Column> get columns => [
         id,
         roomId,
-        stateDate,
+        stayDate,
         guestId,
         rateType,
         rateReason,

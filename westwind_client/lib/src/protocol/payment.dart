@@ -16,11 +16,11 @@ abstract class Payment extends _i1.SerializableEntity {
     this.id,
     required this.guestId,
     this.guest,
-    required this.dateCreate,
+    required this.chargeDate,
     required this.dateVoid,
-    required this.paymentAmount,
+    required this.amount,
+    required this.description,
     required this.paymentType,
-    required this.roomChargeType,
     required this.userId,
   });
 
@@ -28,11 +28,11 @@ abstract class Payment extends _i1.SerializableEntity {
     int? id,
     required int guestId,
     _i2.Guest? guest,
-    required DateTime dateCreate,
+    required DateTime chargeDate,
     required DateTime dateVoid,
-    required double paymentAmount,
+    required double amount,
+    required String description,
     required _i2.PaymentType paymentType,
-    required _i2.RoomChargeType roomChargeType,
     required int userId,
   }) = _PaymentImpl;
 
@@ -46,16 +46,16 @@ abstract class Payment extends _i1.SerializableEntity {
           serializationManager.deserialize<int>(jsonSerialization['guestId']),
       guest: serializationManager
           .deserialize<_i2.Guest?>(jsonSerialization['guest']),
-      dateCreate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateCreate']),
+      chargeDate: serializationManager
+          .deserialize<DateTime>(jsonSerialization['chargeDate']),
       dateVoid: serializationManager
           .deserialize<DateTime>(jsonSerialization['dateVoid']),
-      paymentAmount: serializationManager
-          .deserialize<double>(jsonSerialization['paymentAmount']),
+      amount:
+          serializationManager.deserialize<double>(jsonSerialization['amount']),
+      description: serializationManager
+          .deserialize<String>(jsonSerialization['description']),
       paymentType: serializationManager
           .deserialize<_i2.PaymentType>(jsonSerialization['paymentType']),
-      roomChargeType: serializationManager
-          .deserialize<_i2.RoomChargeType>(jsonSerialization['roomChargeType']),
       userId:
           serializationManager.deserialize<int>(jsonSerialization['userId']),
     );
@@ -70,15 +70,15 @@ abstract class Payment extends _i1.SerializableEntity {
 
   _i2.Guest? guest;
 
-  DateTime dateCreate;
+  DateTime chargeDate;
 
   DateTime dateVoid;
 
-  double paymentAmount;
+  double amount;
+
+  String description;
 
   _i2.PaymentType paymentType;
-
-  _i2.RoomChargeType roomChargeType;
 
   int userId;
 
@@ -86,11 +86,11 @@ abstract class Payment extends _i1.SerializableEntity {
     int? id,
     int? guestId,
     _i2.Guest? guest,
-    DateTime? dateCreate,
+    DateTime? chargeDate,
     DateTime? dateVoid,
-    double? paymentAmount,
+    double? amount,
+    String? description,
     _i2.PaymentType? paymentType,
-    _i2.RoomChargeType? roomChargeType,
     int? userId,
   });
   @override
@@ -99,11 +99,11 @@ abstract class Payment extends _i1.SerializableEntity {
       if (id != null) 'id': id,
       'guestId': guestId,
       if (guest != null) 'guest': guest?.toJson(),
-      'dateCreate': dateCreate.toJson(),
+      'chargeDate': chargeDate.toJson(),
       'dateVoid': dateVoid.toJson(),
-      'paymentAmount': paymentAmount,
+      'amount': amount,
+      'description': description,
       'paymentType': paymentType.toJson(),
-      'roomChargeType': roomChargeType.toJson(),
       'userId': userId,
     };
   }
@@ -116,21 +116,21 @@ class _PaymentImpl extends Payment {
     int? id,
     required int guestId,
     _i2.Guest? guest,
-    required DateTime dateCreate,
+    required DateTime chargeDate,
     required DateTime dateVoid,
-    required double paymentAmount,
+    required double amount,
+    required String description,
     required _i2.PaymentType paymentType,
-    required _i2.RoomChargeType roomChargeType,
     required int userId,
   }) : super._(
           id: id,
           guestId: guestId,
           guest: guest,
-          dateCreate: dateCreate,
+          chargeDate: chargeDate,
           dateVoid: dateVoid,
-          paymentAmount: paymentAmount,
+          amount: amount,
+          description: description,
           paymentType: paymentType,
-          roomChargeType: roomChargeType,
           userId: userId,
         );
 
@@ -139,22 +139,22 @@ class _PaymentImpl extends Payment {
     Object? id = _Undefined,
     int? guestId,
     Object? guest = _Undefined,
-    DateTime? dateCreate,
+    DateTime? chargeDate,
     DateTime? dateVoid,
-    double? paymentAmount,
+    double? amount,
+    String? description,
     _i2.PaymentType? paymentType,
-    _i2.RoomChargeType? roomChargeType,
     int? userId,
   }) {
     return Payment(
       id: id is int? ? id : this.id,
       guestId: guestId ?? this.guestId,
       guest: guest is _i2.Guest? ? guest : this.guest?.copyWith(),
-      dateCreate: dateCreate ?? this.dateCreate,
+      chargeDate: chargeDate ?? this.chargeDate,
       dateVoid: dateVoid ?? this.dateVoid,
-      paymentAmount: paymentAmount ?? this.paymentAmount,
+      amount: amount ?? this.amount,
+      description: description ?? this.description,
       paymentType: paymentType ?? this.paymentType,
-      roomChargeType: roomChargeType ?? this.roomChargeType,
       userId: userId ?? this.userId,
     );
   }

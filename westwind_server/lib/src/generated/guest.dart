@@ -27,6 +27,7 @@ abstract class Guest extends _i1.TableRow {
     required this.companyId,
     this.company,
     required this.rigNumber,
+    required this.accountBalance,
   }) : super(id);
 
   factory Guest({
@@ -43,6 +44,7 @@ abstract class Guest extends _i1.TableRow {
     required int companyId,
     _i2.Company? company,
     required int rigNumber,
+    required double accountBalance,
   }) = _GuestImpl;
 
   factory Guest.fromJson(
@@ -75,6 +77,8 @@ abstract class Guest extends _i1.TableRow {
           .deserialize<_i2.Company?>(jsonSerialization['company']),
       rigNumber:
           serializationManager.deserialize<int>(jsonSerialization['rigNumber']),
+      accountBalance: serializationManager
+          .deserialize<double>(jsonSerialization['accountBalance']),
     );
   }
 
@@ -106,7 +110,7 @@ abstract class Guest extends _i1.TableRow {
 
   int rigNumber;
 
-  int? _roomTransactionGuestsRoomTransactionId;
+  double accountBalance;
 
   @override
   _i1.Table get table => t;
@@ -125,6 +129,7 @@ abstract class Guest extends _i1.TableRow {
     int? companyId,
     _i2.Company? company,
     int? rigNumber,
+    double? accountBalance,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -142,6 +147,7 @@ abstract class Guest extends _i1.TableRow {
       'companyId': companyId,
       if (company != null) 'company': company?.toJson(),
       'rigNumber': rigNumber,
+      'accountBalance': accountBalance,
     };
   }
 
@@ -161,8 +167,7 @@ abstract class Guest extends _i1.TableRow {
       'staffId': staffId,
       'companyId': companyId,
       'rigNumber': rigNumber,
-      '_roomTransactionGuestsRoomTransactionId':
-          _roomTransactionGuestsRoomTransactionId,
+      'accountBalance': accountBalance,
     };
   }
 
@@ -182,9 +187,7 @@ abstract class Guest extends _i1.TableRow {
       'companyId': companyId,
       if (company != null) 'company': company?.allToJson(),
       'rigNumber': rigNumber,
-      if (_roomTransactionGuestsRoomTransactionId != null)
-        '_roomTransactionGuestsRoomTransactionId':
-            _roomTransactionGuestsRoomTransactionId,
+      'accountBalance': accountBalance,
     };
   }
 
@@ -231,8 +234,8 @@ abstract class Guest extends _i1.TableRow {
       case 'rigNumber':
         rigNumber = value;
         return;
-      case '_roomTransactionGuestsRoomTransactionId':
-        _roomTransactionGuestsRoomTransactionId = value;
+      case 'accountBalance':
+        accountBalance = value;
         return;
       default:
         throw UnimplementedError();
@@ -406,6 +409,7 @@ class _GuestImpl extends Guest {
     required int companyId,
     _i2.Company? company,
     required int rigNumber,
+    required double accountBalance,
   }) : super._(
           id: id,
           firstName: firstName,
@@ -420,6 +424,7 @@ class _GuestImpl extends Guest {
           companyId: companyId,
           company: company,
           rigNumber: rigNumber,
+          accountBalance: accountBalance,
         );
 
   @override
@@ -437,6 +442,7 @@ class _GuestImpl extends Guest {
     int? companyId,
     Object? company = _Undefined,
     int? rigNumber,
+    double? accountBalance,
   }) {
     return Guest(
       id: id is int? ? id : this.id,
@@ -452,75 +458,8 @@ class _GuestImpl extends Guest {
       companyId: companyId ?? this.companyId,
       company: company is _i2.Company? ? company : this.company?.copyWith(),
       rigNumber: rigNumber ?? this.rigNumber,
+      accountBalance: accountBalance ?? this.accountBalance,
     );
-  }
-}
-
-class GuestImplicit extends _GuestImpl {
-  GuestImplicit._({
-    int? id,
-    required String firstName,
-    required String lastName,
-    required String phone,
-    required String email,
-    required bool isInHouse,
-    required DateTime dateCreate,
-    DateTime? dateUpdate,
-    required _i2.RateType rateType,
-    required int staffId,
-    required int companyId,
-    _i2.Company? company,
-    required int rigNumber,
-    this.$_roomTransactionGuestsRoomTransactionId,
-  }) : super(
-          id: id,
-          firstName: firstName,
-          lastName: lastName,
-          phone: phone,
-          email: email,
-          isInHouse: isInHouse,
-          dateCreate: dateCreate,
-          dateUpdate: dateUpdate,
-          rateType: rateType,
-          staffId: staffId,
-          companyId: companyId,
-          company: company,
-          rigNumber: rigNumber,
-        );
-
-  factory GuestImplicit(
-    Guest guest, {
-    int? $_roomTransactionGuestsRoomTransactionId,
-  }) {
-    return GuestImplicit._(
-      id: guest.id,
-      firstName: guest.firstName,
-      lastName: guest.lastName,
-      phone: guest.phone,
-      email: guest.email,
-      isInHouse: guest.isInHouse,
-      dateCreate: guest.dateCreate,
-      dateUpdate: guest.dateUpdate,
-      rateType: guest.rateType,
-      staffId: guest.staffId,
-      companyId: guest.companyId,
-      company: guest.company,
-      rigNumber: guest.rigNumber,
-      $_roomTransactionGuestsRoomTransactionId:
-          $_roomTransactionGuestsRoomTransactionId,
-    );
-  }
-
-  int? $_roomTransactionGuestsRoomTransactionId;
-
-  @override
-  Map<String, dynamic> allToJson() {
-    var jsonMap = super.allToJson();
-    jsonMap.addAll({
-      '_roomTransactionGuestsRoomTransactionId':
-          $_roomTransactionGuestsRoomTransactionId
-    });
-    return jsonMap;
   }
 }
 
@@ -571,8 +510,8 @@ class GuestTable extends _i1.Table {
       'rigNumber',
       this,
     );
-    $_roomTransactionGuestsRoomTransactionId = _i1.ColumnInt(
-      '_roomTransactionGuestsRoomTransactionId',
+    accountBalance = _i1.ColumnDouble(
+      'accountBalance',
       this,
     );
   }
@@ -601,7 +540,7 @@ class GuestTable extends _i1.Table {
 
   late final _i1.ColumnInt rigNumber;
 
-  late final _i1.ColumnInt $_roomTransactionGuestsRoomTransactionId;
+  late final _i1.ColumnDouble accountBalance;
 
   _i2.CompanyTable get company {
     if (_company != null) return _company!;
@@ -630,7 +569,7 @@ class GuestTable extends _i1.Table {
         staffId,
         companyId,
         rigNumber,
-        $_roomTransactionGuestsRoomTransactionId,
+        accountBalance,
       ];
 
   @override

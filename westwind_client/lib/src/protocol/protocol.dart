@@ -33,12 +33,14 @@ import 'roomNumber.dart' as _i21;
 import 'roomStatus.dart' as _i22;
 import 'roomTransaction.dart' as _i23;
 import 'staff.dart' as _i24;
-import 'protocol.dart' as _i25;
-import 'package:westwind_client/src/protocol/guest.dart' as _i26;
-import 'package:westwind_client/src/protocol/rateTable.dart' as _i27;
-import 'package:westwind_client/src/protocol/reservation.dart' as _i28;
-import 'package:westwind_client/src/protocol/roomGuest.dart' as _i29;
-import 'package:serverpod_auth_client/module.dart' as _i30;
+import 'transactionType.dart' as _i25;
+import 'protocol.dart' as _i26;
+import 'package:westwind_client/src/protocol/guest.dart' as _i27;
+import 'package:westwind_client/src/protocol/rateTable.dart' as _i28;
+import 'package:westwind_client/src/protocol/reservation.dart' as _i29;
+import 'package:westwind_client/src/protocol/roomGuest.dart' as _i30;
+import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i31;
+import 'package:serverpod_auth_client/module.dart' as _i32;
 export 'company.dart';
 export 'errorType.dart';
 export 'example.dart';
@@ -62,6 +64,7 @@ export 'roomNumber.dart';
 export 'roomStatus.dart';
 export 'roomTransaction.dart';
 export 'staff.dart';
+export 'transactionType.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
@@ -151,6 +154,9 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i24.Staff) {
       return _i24.Staff.fromJson(data, this) as T;
     }
+    if (t == _i25.TransactionType) {
+      return _i25.TransactionType.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i2.Company?>()) {
       return (data != null ? _i2.Company.fromJson(data, this) : null) as T;
     }
@@ -224,38 +230,41 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i24.Staff?>()) {
       return (data != null ? _i24.Staff.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<List<_i25.Reservation>?>()) {
+    if (t == _i1.getType<_i25.TransactionType?>()) {
+      return (data != null ? _i25.TransactionType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<List<_i26.Reservation>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i25.Reservation>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i26.Reservation>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i25.Guest>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<_i25.Guest>(e)).toList()
-          : null) as dynamic;
-    }
-    if (t == List<_i26.Guest>) {
-      return (data as List).map((e) => deserialize<_i26.Guest>(e)).toList()
+    if (t == List<_i27.Guest>) {
+      return (data as List).map((e) => deserialize<_i27.Guest>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i27.RateTable>) {
-      return (data as List).map((e) => deserialize<_i27.RateTable>(e)).toList()
+    if (t == List<_i28.RateTable>) {
+      return (data as List).map((e) => deserialize<_i28.RateTable>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i28.Reservation>) {
+    if (t == List<_i29.Reservation>) {
       return (data as List)
-          .map((e) => deserialize<_i28.Reservation>(e))
+          .map((e) => deserialize<_i29.Reservation>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i29.RoomGuest>) {
-      return (data as List).map((e) => deserialize<_i29.RoomGuest>(e)).toList()
+    if (t == List<_i30.RoomGuest>) {
+      return (data as List).map((e) => deserialize<_i30.RoomGuest>(e)).toList()
           as dynamic;
     }
     if (t == List<int>) {
       return (data as List).map((e) => deserialize<int>(e)).toList() as dynamic;
     }
+    if (t == List<_i31.RoomTransaction>) {
+      return (data as List)
+          .map((e) => deserialize<_i31.RoomTransaction>(e))
+          .toList() as dynamic;
+    }
     try {
-      return _i30.Protocol().deserialize<T>(data, t);
+      return _i32.Protocol().deserialize<T>(data, t);
     } catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -263,7 +272,7 @@ class Protocol extends _i1.SerializationManager {
   @override
   String? getClassNameForObject(Object data) {
     String? className;
-    className = _i30.Protocol().getClassNameForObject(data);
+    className = _i32.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth.$className';
     }
@@ -336,6 +345,9 @@ class Protocol extends _i1.SerializationManager {
     if (data is _i24.Staff) {
       return 'Staff';
     }
+    if (data is _i25.TransactionType) {
+      return 'TransactionType';
+    }
     return super.getClassNameForObject(data);
   }
 
@@ -343,7 +355,7 @@ class Protocol extends _i1.SerializationManager {
   dynamic deserializeByClassName(Map<String, dynamic> data) {
     if (data['className'].startsWith('serverpod_auth.')) {
       data['className'] = data['className'].substring(15);
-      return _i30.Protocol().deserializeByClassName(data);
+      return _i32.Protocol().deserializeByClassName(data);
     }
     if (data['className'] == 'Company') {
       return deserialize<_i2.Company>(data['data']);
@@ -413,6 +425,9 @@ class Protocol extends _i1.SerializationManager {
     }
     if (data['className'] == 'Staff') {
       return deserialize<_i24.Staff>(data['data']);
+    }
+    if (data['className'] == 'TransactionType') {
+      return deserialize<_i25.TransactionType>(data['data']);
     }
     return super.deserializeByClassName(data);
   }
