@@ -132,6 +132,10 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
             context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
             context.pop();
             context.pop();
+          } else if (state is RoomGuestManageStateChargeSuccess) {
+            context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
+            context.pop();
+            context.pop();
           } else if (state is RoomGuestManageStateRetrieveSuccess) {
             debugPrint("RoomGuestManageState RetrieveSuccess ");
             idController.text = state.roomGuest.id!.toString();
@@ -151,10 +155,10 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
             rigNumberController.text =
                 state.roomGuest.guest!.rigNumber.toString();
 
-        //    final type = state.roomGuest.rateType;
-        //    final reason = state.roomGuest.rateReason;
+            //    final type = state.roomGuest.rateType;
+            //    final reason = state.roomGuest.rateReason;
             //    context.read<RoomGuestManageBloc>().add( CalculateRate(type: type, reason: reason) );
-          } 
+          }
         }, builder: (context, state) {
           if (state is RoomGuestManageStateLoading) {
             return const Loader();
@@ -167,8 +171,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                 key: formkey,
                 child: Column(
                   children: [
-
-                    //  
+                    //
 
                     FormBuilderTextField(
                       name: 'id',
@@ -185,8 +188,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                     //  const SizedBox(height: 10),
                     FormBuilderDateTimePicker(
                       name: 'stayDate',
-                      decoration:
-                          const InputDecoration(labelText: 'Stay Date'),
+                      decoration: const InputDecoration(labelText: 'Stay Date'),
                       initialValue: stayDate,
                       initialDate: DateTime.now().add(const Duration(days: 10)),
                       initialDatePickerMode: DatePickerMode.day,
@@ -280,7 +282,6 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                     ),
                     //        const SizedBox(height: 10),
 
-                    
                     FormBuilderTextField(
                       name: 'rate',
                       controller: rateController,
@@ -371,6 +372,17 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                             onPressed: () {
                               context
                                   .read<RoomGuestManageBloc>()
+                                  .add(ChargeRoomGuest(widget.roomGuestId!));
+                            },
+                            child: const Text("Charge")),
+                      ),
+                    if (isEditing)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              context
+                                  .read<RoomGuestManageBloc>()
                                   .add(DeleteRoomGuest(widget.roomGuestId!));
                             },
                             child: const Text("Delete")),
@@ -380,9 +392,8 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                             onPressed: () {
-                                          context.read<RoomGuestManageBloc>().add(
-                                             CalculateRateRoomGuest(
-                                                 widget.roomGuestId!));
+                              context.read<RoomGuestManageBloc>().add(
+                                  CalculateRateRoomGuest(widget.roomGuestId!));
                             },
                             child: const Text("Calculate Rate")),
                       ),

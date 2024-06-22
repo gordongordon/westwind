@@ -24,7 +24,9 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
     required this.tax1,
     required this.tax2,
     required this.tax3,
+    required this.total,
     required this.description,
+    required this.itemType,
   });
 
   factory RoomTransaction({
@@ -39,7 +41,9 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
     required double tax1,
     required double tax2,
     required double tax3,
+    required double total,
     required String description,
+    required _i2.ItemType itemType,
   }) = _RoomTransactionImpl;
 
   factory RoomTransaction.fromJson(
@@ -65,8 +69,12 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
       tax1: serializationManager.deserialize<double>(jsonSerialization['tax1']),
       tax2: serializationManager.deserialize<double>(jsonSerialization['tax2']),
       tax3: serializationManager.deserialize<double>(jsonSerialization['tax3']),
+      total:
+          serializationManager.deserialize<double>(jsonSerialization['total']),
       description: serializationManager
           .deserialize<String>(jsonSerialization['description']),
+      itemType: serializationManager
+          .deserialize<_i2.ItemType>(jsonSerialization['itemType']),
     );
   }
 
@@ -95,7 +103,11 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
 
   double tax3;
 
+  double total;
+
   String description;
+
+  _i2.ItemType itemType;
 
   RoomTransaction copyWith({
     int? id,
@@ -109,7 +121,9 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
     double? tax1,
     double? tax2,
     double? tax3,
+    double? total,
     String? description,
+    _i2.ItemType? itemType,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -125,7 +139,9 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
       'tax1': tax1,
       'tax2': tax2,
       'tax3': tax3,
+      'total': total,
       'description': description,
+      'itemType': itemType.toJson(),
     };
   }
 }
@@ -145,7 +161,9 @@ class _RoomTransactionImpl extends RoomTransaction {
     required double tax1,
     required double tax2,
     required double tax3,
+    required double total,
     required String description,
+    required _i2.ItemType itemType,
   }) : super._(
           id: id,
           guestId: guestId,
@@ -158,7 +176,9 @@ class _RoomTransactionImpl extends RoomTransaction {
           tax1: tax1,
           tax2: tax2,
           tax3: tax3,
+          total: total,
           description: description,
+          itemType: itemType,
         );
 
   @override
@@ -174,7 +194,9 @@ class _RoomTransactionImpl extends RoomTransaction {
     double? tax1,
     double? tax2,
     double? tax3,
+    double? total,
     String? description,
+    _i2.ItemType? itemType,
   }) {
     return RoomTransaction(
       id: id is int? ? id : this.id,
@@ -188,7 +210,9 @@ class _RoomTransactionImpl extends RoomTransaction {
       tax1: tax1 ?? this.tax1,
       tax2: tax2 ?? this.tax2,
       tax3: tax3 ?? this.tax3,
+      total: total ?? this.total,
       description: description ?? this.description,
+      itemType: itemType ?? this.itemType,
     );
   }
 }

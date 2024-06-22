@@ -9,5 +9,6 @@ fields :
    tax1   : double    
    tax2   : double
    tax3   : double 
+   total : double 
    description : String 
-
+   itemType : ItemType

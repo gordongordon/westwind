@@ -10,22 +10,37 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-enum TransactionType with _i1.SerializableEntity {
-  deposit,
-  pay,
-  charge,
-  refund;
+enum ItemType with _i1.SerializableEntity {
+  room,
+  food,
+  laundry,
+  vending,
+  atm,
+  pet,
+  demage,
+  deposite,
+  other;
 
-  static TransactionType? fromJson(String name) {
+  static ItemType? fromJson(String name) {
     switch (name) {
-      case 'deposit':
-        return deposit;
-      case 'pay':
-        return pay;
-      case 'charge':
-        return charge;
-      case 'refund':
-        return refund;
+      case 'room':
+        return room;
+      case 'food':
+        return food;
+      case 'laundry':
+        return laundry;
+      case 'vending':
+        return vending;
+      case 'atm':
+        return atm;
+      case 'pet':
+        return pet;
+      case 'demage':
+        return demage;
+      case 'deposite':
+        return deposite;
+      case 'other':
+        return other;
       default:
         return null;
     }

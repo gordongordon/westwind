@@ -1,12 +1,7 @@
 enum: TransactionType
 serialized: byName
 values:
-  - room
-  - food
-  - laundry
-  - vending
-  - atm
-  - pet
-  - demage
-  - deposite
-  - other
+  - deposit
+  - pay
+  - charge
+  - refund

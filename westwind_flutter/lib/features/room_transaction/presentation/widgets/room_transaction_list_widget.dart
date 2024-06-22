@@ -13,22 +13,27 @@ class RoomTransactionListWidget extends StatefulWidget {
   const RoomTransactionListWidget({super.key});
 
   @override
-  State<RoomTransactionListWidget> createState() => _roomGuestListWidgetState();
+  State<RoomTransactionListWidget> createState() =>
+      _roomTransactionListWidgetState();
 }
 
-class _roomGuestListWidgetState extends State<RoomTransactionListWidget> {
+class _roomTransactionListWidgetState extends State<RoomTransactionListWidget> {
   final List<PlutoColumn> columns = [];
 
   final List<PlutoRow> rows = [];
 
   final List<String> _transactionTypeOptions =
       TransactionType.values.map((e) => e.name).toList();
+        final List<String> _itemTypeOptions =
+     ItemType.values.map((e) => e.name).toList();
 
   @override
   void initState() {
     super.initState();
 
-    context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
+    context
+        .read<RoomTransactionListBloc>()
+        .add(FetchRoomTransactionsListEvent());
 
     //   final List<PlutoColumn> columns = <PlutoColumn>[
     columns.addAll(
@@ -197,6 +202,12 @@ class _roomGuestListWidgetState extends State<RoomTransactionListWidget> {
           type: PlutoColumnType.text(),
           width: 120,
         ),
+              PlutoColumn(
+          title: 'Item Type',
+          field: 'itemType',
+          type: PlutoColumnType.select(_itemTypeOptions),
+          width: 120,
+        ),
       ],
     );
   }
@@ -255,12 +266,14 @@ class _roomGuestListWidgetState extends State<RoomTransactionListWidget> {
           'id': PlutoCell(value: roomTransaction.id!),
           'roomId': PlutoCell(value: roomTransaction.roomId),
           'guestId': PlutoCell(value: roomTransaction.guestId),
+          'transactionType': PlutoCell(value: roomTransaction.transactionType),
           'amount': PlutoCell(value: roomTransaction.amount),
-          'transactionDate': PlutoCell(value: roomTransaction.transactionDay),
           'tax1': PlutoCell(value: roomTransaction.tax1),
           'tax2': PlutoCell(value: roomTransaction.tax2),
           'tax3': PlutoCell(value: roomTransaction.tax3),
+          'transactionDay': PlutoCell(value: roomTransaction.transactionDay),
           'description': PlutoCell(value: roomTransaction.description),
+          'itemType' :  PlutoCell(value: roomTransaction.itemType),
         },
       );
     }).toList();
@@ -287,8 +300,8 @@ class _roomGuestListWidgetState extends State<RoomTransactionListWidget> {
           }
 
           //  if (event.row.cells['isInHouse']!.value == false) {
-          //! todo 
-         // context.push(RoomTransactionEditPage.route(field!.value));
+          //! todo
+          // context.push(RoomTransactionEditPage.route(field!.value));
           //   }
         },
         configuration: PlutoGridConfiguration(
@@ -305,7 +318,6 @@ class _roomGuestListWidgetState extends State<RoomTransactionListWidget> {
             resolveDefaultColumnFilter: (column, resolver) {
               if (column.field == 'id') {
                 return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
-  
               } else if (column.field == 'transactionType') {
                 return resolver<ClassYouImplemented>() as PlutoFilterType;
               }

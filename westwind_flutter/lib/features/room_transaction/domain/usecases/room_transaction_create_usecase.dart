@@ -19,3 +19,4 @@ class CreateRoomTransactionParams {
   final RoomTransaction roomTransaction;
   const CreateRoomTransactionParams({required this.roomTransaction});
 }
+

@@ -34,6 +34,8 @@ final class RoomGuestManageStateCalculateRateSuccess extends RoomGuestManageStat
 
 final class RoomGuestManageStateDeleteSuccess extends RoomGuestManageState {}
 
+final class RoomGuestManageStateChargeSuccess extends RoomGuestManageState {}
+
 final class RoomGuestManageStateFailure extends RoomGuestManageState {
   final String message;
 

@@ -1,0 +1,147 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "room_transaction"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "room_transaction",
+        "dartName": "RoomTransaction",
+        "module": "westwind",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 2,
+            "isNullable": false,
+            "columnDefault": "nextval('room_transaction_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "guestId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "roomId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "transactionDay",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "transactionType",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:TransactionType"
+          },
+          {
+            "name": "amount",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "tax1",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "tax2",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "tax3",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "total",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "description",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "itemType",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:ItemType"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "room_transaction_fk_0",
+            "columns": [
+              "guestId"
+            ],
+            "referenceTable": "guest",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          },
+          {
+            "constraintName": "room_transaction_fk_1",
+            "columns": [
+              "roomId"
+            ],
+            "referenceTable": "room",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "room_transaction_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"room_transaction\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "room_transaction",
+      "columns": [
+        "total"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

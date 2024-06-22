@@ -20,8 +20,6 @@ import 'package:westwind_flutter/features/room_transaction/presentation/bloc/roo
 void main() async {
 
 
-
-
  // Bloc.observer = AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();

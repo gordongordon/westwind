@@ -25,7 +25,9 @@ abstract class RoomTransaction extends _i1.TableRow {
     required this.tax1,
     required this.tax2,
     required this.tax3,
+    required this.total,
     required this.description,
+    required this.itemType,
   }) : super(id);
 
   factory RoomTransaction({
@@ -40,7 +42,9 @@ abstract class RoomTransaction extends _i1.TableRow {
     required double tax1,
     required double tax2,
     required double tax3,
+    required double total,
     required String description,
+    required _i2.ItemType itemType,
   }) = _RoomTransactionImpl;
 
   factory RoomTransaction.fromJson(
@@ -66,8 +70,12 @@ abstract class RoomTransaction extends _i1.TableRow {
       tax1: serializationManager.deserialize<double>(jsonSerialization['tax1']),
       tax2: serializationManager.deserialize<double>(jsonSerialization['tax2']),
       tax3: serializationManager.deserialize<double>(jsonSerialization['tax3']),
+      total:
+          serializationManager.deserialize<double>(jsonSerialization['total']),
       description: serializationManager
           .deserialize<String>(jsonSerialization['description']),
+      itemType: serializationManager
+          .deserialize<_i2.ItemType>(jsonSerialization['itemType']),
     );
   }
 
@@ -95,7 +103,11 @@ abstract class RoomTransaction extends _i1.TableRow {
 
   double tax3;
 
+  double total;
+
   String description;
+
+  _i2.ItemType itemType;
 
   @override
   _i1.Table get table => t;
@@ -112,7 +124,9 @@ abstract class RoomTransaction extends _i1.TableRow {
     double? tax1,
     double? tax2,
     double? tax3,
+    double? total,
     String? description,
+    _i2.ItemType? itemType,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -128,7 +142,9 @@ abstract class RoomTransaction extends _i1.TableRow {
       'tax1': tax1,
       'tax2': tax2,
       'tax3': tax3,
+      'total': total,
       'description': description,
+      'itemType': itemType.toJson(),
     };
   }
 
@@ -145,7 +161,9 @@ abstract class RoomTransaction extends _i1.TableRow {
       'tax1': tax1,
       'tax2': tax2,
       'tax3': tax3,
+      'total': total,
       'description': description,
+      'itemType': itemType,
     };
   }
 
@@ -163,7 +181,9 @@ abstract class RoomTransaction extends _i1.TableRow {
       'tax1': tax1,
       'tax2': tax2,
       'tax3': tax3,
+      'total': total,
       'description': description,
+      'itemType': itemType.toJson(),
     };
   }
 
@@ -201,8 +221,14 @@ abstract class RoomTransaction extends _i1.TableRow {
       case 'tax3':
         tax3 = value;
         return;
+      case 'total':
+        total = value;
+        return;
       case 'description':
         description = value;
+        return;
+      case 'itemType':
+        itemType = value;
         return;
       default:
         throw UnimplementedError();
@@ -380,7 +406,9 @@ class _RoomTransactionImpl extends RoomTransaction {
     required double tax1,
     required double tax2,
     required double tax3,
+    required double total,
     required String description,
+    required _i2.ItemType itemType,
   }) : super._(
           id: id,
           guestId: guestId,
@@ -393,7 +421,9 @@ class _RoomTransactionImpl extends RoomTransaction {
           tax1: tax1,
           tax2: tax2,
           tax3: tax3,
+          total: total,
           description: description,
+          itemType: itemType,
         );
 
   @override
@@ -409,7 +439,9 @@ class _RoomTransactionImpl extends RoomTransaction {
     double? tax1,
     double? tax2,
     double? tax3,
+    double? total,
     String? description,
+    _i2.ItemType? itemType,
   }) {
     return RoomTransaction(
       id: id is int? ? id : this.id,
@@ -423,7 +455,9 @@ class _RoomTransactionImpl extends RoomTransaction {
       tax1: tax1 ?? this.tax1,
       tax2: tax2 ?? this.tax2,
       tax3: tax3 ?? this.tax3,
+      total: total ?? this.total,
       description: description ?? this.description,
+      itemType: itemType ?? this.itemType,
     );
   }
 }
@@ -464,9 +498,18 @@ class RoomTransactionTable extends _i1.Table {
       'tax3',
       this,
     );
+    total = _i1.ColumnDouble(
+      'total',
+      this,
+    );
     description = _i1.ColumnString(
       'description',
       this,
+    );
+    itemType = _i1.ColumnEnum(
+      'itemType',
+      this,
+      _i1.EnumSerialization.byName,
     );
   }
 
@@ -490,7 +533,11 @@ class RoomTransactionTable extends _i1.Table {
 
   late final _i1.ColumnDouble tax3;
 
+  late final _i1.ColumnDouble total;
+
   late final _i1.ColumnString description;
+
+  late final _i1.ColumnEnum<_i2.ItemType> itemType;
 
   _i2.GuestTable get guest {
     if (_guest != null) return _guest!;
@@ -529,7 +576,9 @@ class RoomTransactionTable extends _i1.Table {
         tax1,
         tax2,
         tax3,
+        total,
         description,
+        itemType,
       ];
 
   @override

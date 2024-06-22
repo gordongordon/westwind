@@ -1,0 +1,12 @@
+enum: ItemType
+serialized: byName
+values:
+  - room
+  - food
+  - laundry
+  - vending
+  - atm
+  - pet
+  - demage
+  - deposite
+  - other

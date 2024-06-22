@@ -14,6 +14,11 @@ class DeleteRoomGuest extends RoomGuestManageEvent {
   DeleteRoomGuest(this.id);
 }
 
+class ChargeRoomGuest extends RoomGuestManageEvent {
+  final int id;
+  ChargeRoomGuest(this.id);
+}
+
 //! May be by Reservetion Id only, because, have to create a reservationf irst.
 class CheckInRoomGuest extends RoomGuestManageEvent {
   final Reservation reservation;
