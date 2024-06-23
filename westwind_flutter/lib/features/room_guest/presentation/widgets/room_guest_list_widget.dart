@@ -74,13 +74,16 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
         PlutoColumn(
           title: 'Stay Date',
           field: 'stayDate',
-          type: PlutoColumnType.date(startDate: DateTime.now(), format:  'yyyy-MM-dd'),
+          type: PlutoColumnType.date(
+              startDate: DateTime.now(), format: 'yyyy-MM-dd'),
           width: 100,
         ),
         PlutoColumn(
           title: 'Guest Id',
           field: 'guestId',
-          type: PlutoColumnType.number(negative: false,),
+          type: PlutoColumnType.number(
+            negative: false,
+          ),
           width: 80,
         ),
         PlutoColumn(
@@ -96,11 +99,12 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
           width: 120,
         ),
         PlutoColumn(
-          title: 'Rate',
-          field: 'rate',
-          type: PlutoColumnType.number(negative: false, format: "#.##", applyFormatOnInit: true),
-          width: 70,
-                    footerRenderer: (rendererContext) {
+            title: 'Rate',
+            field: 'rate',
+            type: PlutoColumnType.number(
+                negative: false, format: "#.##", applyFormatOnInit: true),
+            width: 70,
+            footerRenderer: (rendererContext) {
               return PlutoAggregateColumnFooter(
                 formatAsCurrency: true,
                 rendererContext: rendererContext,
@@ -118,13 +122,19 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
                   ];
                 },
               );
-            }
-        ),
+            }),
         PlutoColumn(
           title: 'Res Id',
           field: 'reservationId',
           type: PlutoColumnType.number(),
           width: 120,
+        ),
+        PlutoColumn(
+          title: 'check In',
+          field: 'checkIn',
+          type: PlutoColumnType.date(),
+          width: 100,
+          readOnly: true,
         ),
         PlutoColumn(
           title: 'check Out',
@@ -151,15 +161,15 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
           width: 120,
         ),
         PlutoColumn(
-          title: 'Rig number',
-          field: 'rigNumber',
-          type: PlutoColumnType.number(),
-          width: 120,
-        ),
-        PlutoColumn(
           title: 'Company Name',
           field: 'companyName',
           type: PlutoColumnType.text(),
+          width: 120,
+        ),
+        PlutoColumn(
+          title: 'Balance',
+          field: 'balance',
+          type: PlutoColumnType.number(),
           width: 120,
         ),
       ],
@@ -215,6 +225,17 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
     // List<roomGuest> roomGuestSelected,
   ) {
     final List<PlutoRow> rows = roomGuests.map((roomGuest) {
+
+      // Compute Balance
+      final List<RoomTransaction>? transactions = roomGuest.roomTransactions;
+      double totalSum = 0;
+
+      if (transactions != null) {
+        for (RoomTransaction transaction in transactions) {
+          totalSum += transaction.total;
+        }
+      }
+
       return PlutoRow(
         cells: {
           'id': PlutoCell(value: roomGuest.id!),
@@ -225,12 +246,14 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
           'rateReason': PlutoCell(value: roomGuest.rateReason.toString()),
           'rate': PlutoCell(value: roomGuest.rate),
           'reservationId': PlutoCell(value: roomGuest.reservationId),
+          'checkIn': PlutoCell(value: roomGuest.checkInDate),
           'checkOut': PlutoCell(value: roomGuest.checkOutDate),
           'updateAt': PlutoCell(value: roomGuest.updateDate),
           'firstName': PlutoCell(value: roomGuest.guest!.firstName),
           'lastName': PlutoCell(value: roomGuest.guest!.lastName),
           'rigNumber': PlutoCell(value: roomGuest.guest!.rigNumber),
           'companyName': PlutoCell(value: roomGuest.guest!.company!.name),
+          'balance': PlutoCell(value: totalSum),
         },
       );
     }).toList();
@@ -345,7 +368,6 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
           },
         ),
       );
-
 }
 
 class ClassYouImplemented implements PlutoFilterType {

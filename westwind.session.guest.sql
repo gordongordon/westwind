@@ -2,9 +2,9 @@
 
 INSERT into guest ("id","firstName", "lastName", "email",  "phone", "isInHouse","dateCreate","dateUpdate","rateType","staffId","rigNumber","companyId", "accountBalance") 
 VALUES 
-(1,'john', 'wong', '1@gmail.com',      '00000000001',true, CURRENT_TIMESTAMP, '03/04/2014','ironhand',1,44,1,0),
+(1,'john', 'wong', '1@gmail.com',      '00000000001',false, CURRENT_TIMESTAMP, '03/04/2014','ironhand',1,44,1,0),
 (2,'may', 'foong', '2@gmail.com',      '00000000002',false, '03/03/2014', '03/04/2014','ironhand',1,44,1,0),
-(3,'who', 'chan', '3@gmail.com',       '00000000003',true, '03/03/2014', '03/04/2014','standard',1,44,1,0),
+(3,'who', 'chan', '3@gmail.com',       '00000000003',false, '03/03/2014', '03/04/2014','standard',1,44,1,0),
 (4,'devon', 'Mar', '4@gmail.com',      '00000000004',false, '03/03/2014', '03/04/2014','horizon',1,44,1,0),
 (5,'Jeff', 'Chan', '5@gmail.com',      '00000000005',false, '03/03/2014', '03/04/2014','horizon',1,5,1,0),
 (6,'tyler', 'woo', '6@gmail.com',      '00000000006',false, '03/03/2014', '03/04/2014','horizon',1,15,1,0),

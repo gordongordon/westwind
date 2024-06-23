@@ -40,14 +40,19 @@ import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservati
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/data/datasources/room_guest_datasource.dart';
 import 'package:westwind_flutter/features/room_guest/data/repositories/room_guest_repository.dart';
+import 'package:westwind_flutter/features/room_guest/domain/policies/room_guest_policy.dart';
 import 'package:westwind_flutter/features/room_guest/domain/repositories/room_guest_repository.dart';
+import 'package:westwind_flutter/features/room_guest/domain/services/room_guest_policy_service.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/calculate_rate_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/charge_and_extend_stay_day.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/charge_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/check_in_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/delete_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/save_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/extend_stay_day_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/undo_charge_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/data/datasources/room_transaction_datasource.dart';
@@ -429,12 +434,61 @@ void _initRoomGuest() {
   serverLocator.registerLazySingleton<ChargeRoomGuestUseCase>(
     () => ChargeRoomGuestUseCase(
       serverLocator<RoomGuestRepository>(),
-     //  serverLocator<RateTableRepository>(),
+      //  serverLocator<RateTableRepository>(),
       serverLocator<RoomTransactionRepository>(),
     ),
   );
 
+  serverLocator.registerLazySingleton<ExtendStayDayRoomGuestUseCase>(
+    () => ExtendStayDayRoomGuestUseCase(
+      serverLocator<RoomGuestRepository>(),
+    ),
+  );
+/*
+  serverLocator.registerLazySingleton<SaveRoomGuestUseCase>(
+    () => SaveRoomGuestUseCase(
+      serverLocator<RoomGuestRepository>(),
+    ),
+  );
+*/
+/*
+  serverLocator.registerLazySingleton<SaveRoomGuestUseCase>(
+    () => SaveRoomGuestUseCase(
+      serverLocator<RoomGuestRepository>(),
+    ),
+  );
+*/
+  serverLocator.registerLazySingleton<UndoChargeRoomGuestUseCase>(
+    () => UndoChargeRoomGuestUseCase(
+      serverLocator<RoomTransactionRepository>(),
+    ),
+  );
 
+  serverLocator.registerLazySingleton<ChargeAndExtendStayDayUseCase>(
+    () => ChargeAndExtendStayDayUseCase(
+      serverLocator<ChargeRoomGuestUseCase>(),
+      serverLocator<ExtendStayDayRoomGuestUseCase>(),
+      serverLocator<UndoChargeRoomGuestUseCase>(),
+      serverLocator<RoomGuestRepository>(),
+      serverLocator<RoomGuestPolicyService>(),
+    ),
+  );
+
+
+
+  serverLocator.registerLazySingleton<RoomGuestPolicy>(
+    () => RooGuestPolicyImpl(
+        //  serverLocator<RoomGuestRepository>(),
+        ),
+  );
+
+  // Policy Services
+  serverLocator.registerLazySingleton<RoomGuestPolicyService>(
+    () => RoomGuestPolicyService(
+      serverLocator<RoomGuestPolicy>(),
+      serverLocator<RoomGuestRepository>(),
+    ),
+  );
 
   // Bloc
   serverLocator.registerFactory<RoomGuestListBloc>(() => RoomGuestListBloc(
@@ -444,13 +498,12 @@ void _initRoomGuest() {
   serverLocator.registerFactory<RoomGuestManageBloc>(() => RoomGuestManageBloc(
         deleteRoomGuest: serverLocator<DeleteRoomGuestUseCase>(),
         retrieveRoomGuest: serverLocator<RetrieveRoomGuestUseCase>(),
-        //     saveRoomGuest: serverLocator<SaveRoomGuestUseCase>(),
-
-        //       retrieveGuest: serverLocator<RetrieveRoomGuestUseCase>(),
-  
         checkInRoomGuest: serverLocator<CheckInRoomGuestUseCase>(),
         calculateRateRoomGuest: serverLocator<CalculateRateRoomGuestUseCase>(),
-        chargeRoomGuest : serverLocator<ChargeRoomGuestUseCase>(),
+        chargeRoomGuest: serverLocator<ChargeRoomGuestUseCase>(),
+        extendStayDayRoomGuest: serverLocator<ExtendStayDayRoomGuestUseCase>(),
+        chargeAndExtendStayDayRoomGuest:serverLocator<ChargeAndExtendStayDayUseCase>(),
+        saveRoomGuest: serverLocator<SaveRoomGuestUseCase>(),
       ));
 }
 

@@ -9,14 +9,14 @@ import 'package:westwind_flutter/features/room_guest/domain/repositories/room_gu
 import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
 
 class ChargeRoomGuestUseCase
-    implements UseCase<List<RoomGuest>, ChargeRoomGuestParams> {
+    implements UseCase<RoomTransaction, ChargeRoomGuestParams> {
   final RoomGuestRepository roomGuestRepository;
   final RoomTransactionRepository roomTransactionRepository;
 
   ChargeRoomGuestUseCase(this.roomGuestRepository, this.roomTransactionRepository);
 
   @override
-  Future<Either<Failure, List<RoomGuest>>> call(
+  Future<Either<Failure, RoomTransaction>> call(
       ChargeRoomGuestParams params) async {
     // Get RoomGuest
     final rg = foldResult(await roomGuestRepository.retrieve(params.id));
@@ -26,6 +26,8 @@ class ChargeRoomGuestUseCase
     final roomTransaction = RoomTransaction(
         guestId: rg.guestId,
         roomId: rg.roomId,
+        roomGuestId: params.id,
+        stayDay: rg.stayDate,
         transactionDay: DateTime.now(),
         transactionType: TransactionType.charge,
         amount: rg.rate,
@@ -34,27 +36,16 @@ class ChargeRoomGuestUseCase
         tax3: 0,
         total: rg.rate + 5,
         description: rg.rateReason.toString(),
-        itemType: ItemType.room);
+        itemType: ItemType.room)
+        ;
 
     // Insert RoomTransaction
-    roomTransactionRepository.create(roomTransaction);
+    return roomTransactionRepository.create(roomTransaction);
+  }
 
-    // Move StayDate by one day.
 
-    rg.stayDate = rg.stayDate.add(Duration(days: 1));
-
-    // final List<RoomGuest> listOfRoomGuest = []
-    
-/**
-   * This method handles the logic of charging a guest. It retrieves the 
-   * specified room guest, creates a new room transaction, and then updates the
-   * stay date of the room guest. Finally, it returns the updated list of 
-   * room guests.
-   */
-
-   // roomGuestRepository.update(roomGuests: [rg]);
-
-    return roomGuestRepository.update(roomGuests: [rg]);
+  Future<Either<Failure, bool>> undo(ChargeRoomGuestParams params) async {
+    return await roomTransactionRepository.delete(params.id);
   }
 
   RoomGuest foldResult(Either<Failure, RoomGuest> input) {
@@ -66,7 +57,10 @@ class ChargeRoomGuestUseCase
 }
 
 class ChargeRoomGuestParams {
-  final int id;
+
+  //! id can be either roomGuest id or roomTransaction id, since implemented undo
+  final int id;  
+ // final int roomTransactioinId; 
 
   ChargeRoomGuestParams({required this.id});
 }

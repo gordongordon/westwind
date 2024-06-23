@@ -25,10 +25,10 @@ class ReservationEndpoint extends Endpoint {
 
   Future<Reservation> save(Session session, Reservation reservation) async {
     if (reservation.id != null) {
-      reservation.dateUpdate = DateTime.now();
+      reservation.dateUpdate = DateTime.now().toLocal();
       return await Reservation.db.updateRow(session, reservation);
     } else {
-      reservation.dateCreate = DateTime.now();
+      reservation.dateCreate = DateTime.now().toLocal();
       return Reservation.db.insertRow(session, reservation);
     }
   }
@@ -192,12 +192,15 @@ class ReservationEndpoint extends Endpoint {
       roomId: reservation.roomId,
       stayDate: reservation.checkInDate,
       guestId: reservation.guestId,
+   //   roomTransactions: null,
       rateType: reservation.rateType,
       rateReason: RateReason.single,
       rate: reservation.rate,
       reservationId: reservation.id!,
       roomStatus: RoomStatus.make,
+      checkInDate : DateTime.now(),
       checkOutDate: reservation.checkOutDate,
+      
     );
 
     return roomGuest;
@@ -250,6 +253,7 @@ class ReservationEndpoint extends Endpoint {
         rate: rate,
         reservationId: reservation.id!,
         roomStatus: RoomStatus.make,
+        checkInDate: DateTime.now(),
         checkOutDate: reservation.checkOutDate,
       );
 
@@ -292,6 +296,7 @@ class ReservationEndpoint extends Endpoint {
         rate: rateTable.rate,
         reservationId: reservation.id!,
         roomStatus: RoomStatus.make,
+        checkInDate:  DateTime.now(),
         checkOutDate: reservation.checkOutDate,
       );
 
@@ -388,6 +393,7 @@ class ReservationEndpoint extends Endpoint {
         rate: rateTable!.rate,
         reservationId: reservation.id!,
         roomStatus: RoomStatus.make,
+        checkInDate:  DateTime.now(),
         checkOutDate: reservation.checkOutDate,
       );
 
@@ -430,6 +436,7 @@ class ReservationEndpoint extends Endpoint {
         rate: rateTable.rate,
         reservationId: reservation.id!,
         roomStatus: RoomStatus.make,
+        checkInDate:  DateTime.now(),
         checkOutDate: reservation.checkOutDate,
       );
 

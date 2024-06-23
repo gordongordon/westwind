@@ -3,6 +3,8 @@ table : room_transaction
 fields :
    guest :  Guest? , relation 
    room  :  Room? , relation
+   roomGuest : RoomGuest? , relation(name=room_guest_transaction)
+   stayDay : DateTime?
    transactionDay  : DateTime
    transactionType : TransactionType
    amount : double 
@@ -12,3 +14,7 @@ fields :
    total : double 
    description : String 
    itemType : ItemType
+
+indexes:
+   room_transaction_unique_idx:
+      fields: guestId, transactionDay

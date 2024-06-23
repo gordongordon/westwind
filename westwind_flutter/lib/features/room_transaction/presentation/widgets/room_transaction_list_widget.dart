@@ -84,6 +84,14 @@ class _roomTransactionListWidgetState extends State<RoomTransactionListWidget> {
           ),
           width: 80,
         ),
+              PlutoColumn(
+          title: 'RoomGuest Id',
+          field: 'roomGuestId',
+          type: PlutoColumnType.number(
+            negative: false,
+          ),
+          width: 120,
+        ),
         PlutoColumn(
           title: 'Transaction Type',
           field: 'transactionType',
@@ -116,7 +124,7 @@ class _roomTransactionListWidgetState extends State<RoomTransactionListWidget> {
               );
             }),
         PlutoColumn(
-            title: 'Tax1',
+            title: 'GST',
             field: 'tax1',
             type: PlutoColumnType.number(
                 negative: false, format: "#.##", applyFormatOnInit: true),
@@ -141,7 +149,7 @@ class _roomTransactionListWidgetState extends State<RoomTransactionListWidget> {
               );
             }),
         PlutoColumn(
-            title: 'Tax2',
+            title: 'Levy',
             field: 'tax2',
             type: PlutoColumnType.number(
                 negative: false, format: "#.##", applyFormatOnInit: true),
@@ -190,6 +198,37 @@ class _roomTransactionListWidgetState extends State<RoomTransactionListWidget> {
                 },
               );
             }),
+                  PlutoColumn(
+            title: 'Total',
+            field: 'total',
+            type: PlutoColumnType.number(
+                negative: false, format: "#.##", applyFormatOnInit: true),
+            width: 70,
+            footerRenderer: (rendererContext) {
+              return PlutoAggregateColumnFooter(
+                formatAsCurrency: true,
+                rendererContext: rendererContext,
+                type: PlutoAggregateColumnType.sum,
+                format: '#',
+                alignment: Alignment.center,
+                titleSpanBuilder: (text) {
+                  return [
+                    const TextSpan(
+                      text: 'sum',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    const TextSpan(text: ' : '),
+                    TextSpan(text: text),
+                  ];
+                },
+              );
+            }),
+          PlutoColumn(
+          title: 'StayDay',
+          field: 'stayDay',
+          type: PlutoColumnType.date(),
+          width: 100,
+        ),
         PlutoColumn(
           title: 'Transaction Day',
           field: 'transactionDay',
@@ -266,11 +305,14 @@ class _roomTransactionListWidgetState extends State<RoomTransactionListWidget> {
           'id': PlutoCell(value: roomTransaction.id!),
           'roomId': PlutoCell(value: roomTransaction.roomId),
           'guestId': PlutoCell(value: roomTransaction.guestId),
+          'roomGuestId': PlutoCell(value: roomTransaction.roomGuestId),
+          'stayDay' : PlutoCell(value: roomTransaction.stayDay),
           'transactionType': PlutoCell(value: roomTransaction.transactionType),
           'amount': PlutoCell(value: roomTransaction.amount),
           'tax1': PlutoCell(value: roomTransaction.tax1),
           'tax2': PlutoCell(value: roomTransaction.tax2),
           'tax3': PlutoCell(value: roomTransaction.tax3),
+          'total': PlutoCell(value: roomTransaction.total),
           'transactionDay': PlutoCell(value: roomTransaction.transactionDay),
           'description': PlutoCell(value: roomTransaction.description),
           'itemType' :  PlutoCell(value: roomTransaction.itemType),

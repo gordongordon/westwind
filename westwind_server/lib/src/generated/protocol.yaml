@@ -35,9 +35,8 @@ reservation:
   - delete:
   - checkInReservationSecondVersion:
 roomGuest:
-  - createRoomGuest:
+  - saveRoomGuest:
   - insertGuestByReservation:
-  - createRoomGuestByReservation:
   - changeAllRateByRoomId:
   - changeAllRateReasonByRoomId:
   - findRoomGuest:
@@ -60,6 +59,7 @@ roomGuest:
   - checkOut:
   - updateGuestRate:
 roomTransaction:
+  - hasBeenRoomChargedToday:
   - list:
   - create:
   - retrieve:

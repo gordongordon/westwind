@@ -18,6 +18,9 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
     this.guest,
     required this.roomId,
     this.room,
+    required this.roomGuestId,
+    this.roomGuest,
+    this.stayDay,
     required this.transactionDay,
     required this.transactionType,
     required this.amount,
@@ -35,6 +38,9 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
     _i2.Guest? guest,
     required int roomId,
     _i2.Room? room,
+    required int roomGuestId,
+    _i2.RoomGuest? roomGuest,
+    DateTime? stayDay,
     required DateTime transactionDay,
     required _i2.TransactionType transactionType,
     required double amount,
@@ -60,6 +66,12 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
           serializationManager.deserialize<int>(jsonSerialization['roomId']),
       room: serializationManager
           .deserialize<_i2.Room?>(jsonSerialization['room']),
+      roomGuestId: serializationManager
+          .deserialize<int>(jsonSerialization['roomGuestId']),
+      roomGuest: serializationManager
+          .deserialize<_i2.RoomGuest?>(jsonSerialization['roomGuest']),
+      stayDay: serializationManager
+          .deserialize<DateTime?>(jsonSerialization['stayDay']),
       transactionDay: serializationManager
           .deserialize<DateTime>(jsonSerialization['transactionDay']),
       transactionType: serializationManager.deserialize<_i2.TransactionType>(
@@ -91,6 +103,12 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
 
   _i2.Room? room;
 
+  int roomGuestId;
+
+  _i2.RoomGuest? roomGuest;
+
+  DateTime? stayDay;
+
   DateTime transactionDay;
 
   _i2.TransactionType transactionType;
@@ -115,6 +133,9 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
     _i2.Guest? guest,
     int? roomId,
     _i2.Room? room,
+    int? roomGuestId,
+    _i2.RoomGuest? roomGuest,
+    DateTime? stayDay,
     DateTime? transactionDay,
     _i2.TransactionType? transactionType,
     double? amount,
@@ -133,6 +154,9 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
       if (guest != null) 'guest': guest?.toJson(),
       'roomId': roomId,
       if (room != null) 'room': room?.toJson(),
+      'roomGuestId': roomGuestId,
+      if (roomGuest != null) 'roomGuest': roomGuest?.toJson(),
+      if (stayDay != null) 'stayDay': stayDay?.toJson(),
       'transactionDay': transactionDay.toJson(),
       'transactionType': transactionType.toJson(),
       'amount': amount,
@@ -155,6 +179,9 @@ class _RoomTransactionImpl extends RoomTransaction {
     _i2.Guest? guest,
     required int roomId,
     _i2.Room? room,
+    required int roomGuestId,
+    _i2.RoomGuest? roomGuest,
+    DateTime? stayDay,
     required DateTime transactionDay,
     required _i2.TransactionType transactionType,
     required double amount,
@@ -170,6 +197,9 @@ class _RoomTransactionImpl extends RoomTransaction {
           guest: guest,
           roomId: roomId,
           room: room,
+          roomGuestId: roomGuestId,
+          roomGuest: roomGuest,
+          stayDay: stayDay,
           transactionDay: transactionDay,
           transactionType: transactionType,
           amount: amount,
@@ -188,6 +218,9 @@ class _RoomTransactionImpl extends RoomTransaction {
     Object? guest = _Undefined,
     int? roomId,
     Object? room = _Undefined,
+    int? roomGuestId,
+    Object? roomGuest = _Undefined,
+    Object? stayDay = _Undefined,
     DateTime? transactionDay,
     _i2.TransactionType? transactionType,
     double? amount,
@@ -204,6 +237,10 @@ class _RoomTransactionImpl extends RoomTransaction {
       guest: guest is _i2.Guest? ? guest : this.guest?.copyWith(),
       roomId: roomId ?? this.roomId,
       room: room is _i2.Room? ? room : this.room?.copyWith(),
+      roomGuestId: roomGuestId ?? this.roomGuestId,
+      roomGuest:
+          roomGuest is _i2.RoomGuest? ? roomGuest : this.roomGuest?.copyWith(),
+      stayDay: stayDay is DateTime? ? stayDay : this.stayDay,
       transactionDay: transactionDay ?? this.transactionDay,
       transactionType: transactionType ?? this.transactionType,
       amount: amount ?? this.amount,

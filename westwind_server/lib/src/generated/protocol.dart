@@ -931,6 +931,12 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'protocol:RoomStatus',
         ),
         _i2.ColumnDefinition(
+          name: 'checkInDate',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
           name: 'checkOutDate',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
           isNullable: false,
@@ -1108,6 +1114,18 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'int',
         ),
         _i2.ColumnDefinition(
+          name: 'roomGuestId',
+          columnType: _i2.ColumnType.integer,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'stayDay',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
           name: 'transactionDay',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
           isNullable: false,
@@ -1183,6 +1201,16 @@ class Protocol extends _i1.SerializationManagerServer {
           onDelete: _i2.ForeignKeyAction.noAction,
           matchType: null,
         ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'room_transaction_fk_2',
+          columns: ['roomGuestId'],
+          referenceTable: 'room_guest',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
       ],
       indexes: [
         _i2.IndexDefinition(
@@ -1197,7 +1225,24 @@ class Protocol extends _i1.SerializationManagerServer {
           type: 'btree',
           isUnique: true,
           isPrimary: true,
-        )
+        ),
+        _i2.IndexDefinition(
+          indexName: 'room_transaction_unique_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'guestId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'transactionDay',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
       ],
       managed: true,
     ),
@@ -1476,6 +1521,13 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<List<_i29.Reservation>?>()) {
       return (data != null
           ? (data as List).map((e) => deserialize<_i29.Reservation>(e)).toList()
+          : null) as dynamic;
+    }
+    if (t == _i1.getType<List<_i29.RoomTransaction>?>()) {
+      return (data != null
+          ? (data as List)
+              .map((e) => deserialize<_i29.RoomTransaction>(e))
+              .toList()
           : null) as dynamic;
     }
     if (t == List<_i30.Guest>) {

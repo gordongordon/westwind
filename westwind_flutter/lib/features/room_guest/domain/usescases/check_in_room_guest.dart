@@ -60,7 +60,9 @@ RoomGuest createRoomGuestObject(Reservation reservation, double rate, RateReason
       rate: rate,
       reservationId: reservation.id!,
       roomStatus: RoomStatus.change,
-      checkOutDate: reservation.checkOutDate);
+      checkInDate: DateTime.now(),
+      checkOutDate: reservation.checkOutDate
+      );
 }
 
 // New methods to handle errors and return the results of asynchronous operations

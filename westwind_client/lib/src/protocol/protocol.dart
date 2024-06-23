@@ -246,6 +246,13 @@ class Protocol extends _i1.SerializationManager {
           ? (data as List).map((e) => deserialize<_i27.Reservation>(e)).toList()
           : null) as dynamic;
     }
+    if (t == _i1.getType<List<_i27.RoomTransaction>?>()) {
+      return (data != null
+          ? (data as List)
+              .map((e) => deserialize<_i27.RoomTransaction>(e))
+              .toList()
+          : null) as dynamic;
+    }
     if (t == List<_i28.Guest>) {
       return (data as List).map((e) => deserialize<_i28.Guest>(e)).toList()
           as dynamic;

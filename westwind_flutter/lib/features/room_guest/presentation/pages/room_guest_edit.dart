@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
@@ -89,9 +90,11 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                     id: widget.roomGuestId,
                     guestId: int.parse(guestIdController.text),
                     roomId: int.parse(roomIdController.text),
-                    stayDate: formkey.currentState!.fields['stateDate']!.value,
+                    
+                    stayDate: formkey.currentState!.fields['stayDate']!.value,
                     updateDate:
                         formkey.currentState!.fields['updateDate']!.value,
+                    checkInDate: DateTime.now().getDateOnly(),
                     checkOutDate:
                         formkey.currentState!.fields['checkOutDate']!.value,
                     rateType: rateType,
@@ -104,9 +107,9 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                   // debugPrint(" after RoomGuest final ");
                   // debugPrint(RoomGuest.toString());
                   //! todo
-                  //context
-                  //    .read<RoomGuestManageBloc>()
-                  //    .add(SaveRoomGuest(RoomGuest: RoomGuest));
+                  context
+                      .read<RoomGuestManageBloc>()
+                      .add(SaveRoomGuest( roomGuest));
                 }
               },
               icon: Icon(Icons.done),
@@ -119,6 +122,8 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
             showSnackbar(context, state.message);
           } else if (state is RoomGuestManageStateSaveSuccess) {
             context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
+                        context.pop();
+            context.pop();
 
             if (isEditing) {
               //! May have problem
@@ -132,11 +137,21 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
             context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
             context.pop();
             context.pop();
-          } else if (state is RoomGuestManageStateChargeSuccess) {
+          } else if (state
+              is RoomGuestManageStateChargeAndExtendStayDaySuccess) {
             context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
             context.pop();
             context.pop();
           } else if (state is RoomGuestManageStateRetrieveSuccess) {
+
+            final roomRoomTransactions = state.roomGuest.roomTransactions;
+          
+            if ( roomRoomTransactions != null ) {
+               final roomGuestId = state.roomGuest.id; 
+               final length = roomRoomTransactions.length;
+               debugPrint( "RoomTransactions size = $length roomGuest id = $roomGuestId");
+            }
+
             debugPrint("RoomGuestManageState RetrieveSuccess ");
             idController.text = state.roomGuest.id!.toString();
             guestIdController.text = state.roomGuest.guestId.toString();
@@ -154,6 +169,9 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
             checkOutDate = state.roomGuest.checkOutDate;
             rigNumberController.text =
                 state.roomGuest.guest!.rigNumber.toString();
+
+            stayDate = state.roomGuest.stayDate;
+            // updatedDate = state.roomGuest.updateDate!;
 
             //    final type = state.roomGuest.rateType;
             //    final reason = state.roomGuest.rateReason;
@@ -370,11 +388,11 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                             onPressed: () {
-                              context
-                                  .read<RoomGuestManageBloc>()
-                                  .add(ChargeRoomGuest(widget.roomGuestId!));
+                              context.read<RoomGuestManageBloc>().add(
+                                  ChargeAndExtendStayDay(
+                                      id: widget.roomGuestId!));
                             },
-                            child: const Text("Charge")),
+                            child: const Text("Charge & Extend")),
                       ),
                     if (isEditing)
                       Padding(

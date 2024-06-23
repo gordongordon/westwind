@@ -4,10 +4,13 @@ import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/error/failure.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/calculate_rate_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/charge_and_extend_stay_day.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/charge_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/check_in_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/delete_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/extend_stay_day_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/save_room_guest.dart';
 
 part 'room_guest_manage_event.dart';
 part 'room_guest_manage_state.dart';
@@ -19,6 +22,9 @@ class RoomGuestManageBloc
   final CheckInRoomGuestUseCase checkInRoomGuest;
   final CalculateRateRoomGuestUseCase calculateRateRoomGuest;
   final ChargeRoomGuestUseCase chargeRoomGuest;
+  final ExtendStayDayRoomGuestUseCase extendStayDayRoomGuest;
+  final ChargeAndExtendStayDayUseCase chargeAndExtendStayDayRoomGuest;
+  final SaveRoomGuestUseCase saveRoomGuest;
 
   RoomGuestManageBloc({
     required this.deleteRoomGuest,
@@ -26,17 +32,69 @@ class RoomGuestManageBloc
     required this.retrieveRoomGuest,
     required this.calculateRateRoomGuest,
     required this.chargeRoomGuest,
+    required this.extendStayDayRoomGuest,
+    required this.chargeAndExtendStayDayRoomGuest,
+    required this.saveRoomGuest,
   }) : super(RoomGuestManageStateInitial()) {
     on<RoomGuestManageEvent>((event, emit) {
-      emit( RoomGuestManageStateLoading() );
+      emit(RoomGuestManageStateLoading());
     });
+
     on<DeleteRoomGuest>(_onDeleteRoomGuest);
     on<RetrieveRoomGuest>(_onRetrieveRoomGuest);
     on<CheckInRoomGuest>(_onCheckInRoomGuest);
     on<CalculateRateRoomGuest>(_onCalculateRateRoomGuest);
     on<ChargeRoomGuest>(_onChargeRoomGuest);
+    on<ExtendStayDayRoomGuest>(_onExtendStayDayRoomGuest);
+    on<ChargeAndExtendStayDay>(_onChargeAndExtendStay);
+    on<SaveRoomGuest>(_onSaveRoomGuest);
   }
-   
+
+  Future<void> _onSaveRoomGuest(
+    SaveRoomGuest event,
+    Emitter<RoomGuestManageState> emit,
+  ) async {
+    emit(RoomGuestManageStateLoading());
+    await Future.delayed(Duration(seconds: 1));
+
+    final result =
+        await saveRoomGuest(SaveRoomGuestParams(roomGuest: event.roomGuest));
+
+    result.fold(
+      (failure) => emit(RoomGuestManageStateFailure(failure.message)),
+      (roomGuest) => emit(RoomGuestManageStateSaveSuccess(roomGuest)),
+    );
+
+    return;
+  }
+
+  Future<void> _onChargeAndExtendStay(
+    ChargeAndExtendStayDay event,
+    Emitter<RoomGuestManageState> emit,
+  ) async {
+    emit(RoomGuestManageStateLoading());
+    await Future.delayed(Duration(seconds: 1));
+    final result = await chargeAndExtendStayDayRoomGuest(
+        ChargeAndExtendStayDayParams(roomGuestId: event.id));
+
+    result.fold((failure) => emit(RoomGuestManageStateFailure(failure.message)),
+        (_) => emit(RoomGuestManageStateChargeAndExtendStayDaySuccess()));
+  }
+
+  Future<void> _onExtendStayDayRoomGuest(
+    ExtendStayDayRoomGuest event,
+    Emitter<RoomGuestManageState> emit,
+  ) async {
+    final result = await extendStayDayRoomGuest(
+        ExtendStayDayRoomGuestParams(id: event.id));
+
+    result.fold(
+      (failure) => emit(RoomGuestManageStateFailure(failure.message)),
+      (_) => emit(RoomGuestManageStateExtendStayDaySuccess()),
+    );
+
+    return;
+  }
 
   Future<void> _onChargeRoomGuest(
     ChargeRoomGuest event,
@@ -51,8 +109,6 @@ class RoomGuestManageBloc
 
     return;
   }
-
-
 
   Future<void> _onDeleteRoomGuest(
     DeleteRoomGuest event,
@@ -98,13 +154,12 @@ class RoomGuestManageBloc
     return;
   }
 
-
   Future<void> _onCalculateRateRoomGuest(
     CalculateRateRoomGuest event,
     Emitter<RoomGuestManageState> emit,
   ) async {
     final result = await calculateRateRoomGuest(
-        CalculateRateRoomGuestParams( id: event.id ));
+        CalculateRateRoomGuestParams(id: event.id));
 
     result.fold(
       (failure) => emit(RoomGuestManageStateFailure(failure.message)),

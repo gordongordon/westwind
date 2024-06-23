@@ -1,35 +1,62 @@
 import 'package:serverpod/serverpod.dart';
+import 'package:westwind_server/src/generated/itemType.dart';
+import 'package:westwind_server/src/generated/protocol.dart';
 import 'package:westwind_server/src/generated/roomTransaction.dart';
 
-
 class RoomTransactionEndpoint extends Endpoint {
+  Future<bool> hasBeenRoomChargedToday(Session session, int guestId) async {
+    //  final today = DateTime.now();
+
+    // if find all room charge by given GuestId
+    final transactionHistory = await RoomTransaction.db.find(session,
+        where: (item) =>
+            item.guestId.equals(guestId) & item.itemType.equals(ItemType.room));
+
+    return transactionHistory.any((transaction) {
+      DateTime today = DateTime.now();
+      return transaction.transactionDay.year == today.year &&
+          transaction.transactionDay.month == today.month &&
+          transaction.transactionDay.day == today.day;
+    });
+  }
 
   Future<List<RoomTransaction>> list(Session session) async {
-    return RoomTransaction.db.find(session);
+    return await RoomTransaction.db.find(session);
   }
 
   Future<RoomTransaction> create(Session session, RoomTransaction rt) async {
-    return RoomTransaction.db.insertRow(session, rt );
+
+    
+  //  var roomTransaction = await RoomTransaction.db.insertRow(session, rt);
+  //  var roomGuest = await RoomGuest.db.findById(session, roomTransaction.roomGuestId );
+
+
+  //  await RoomGuest.db.attachRow.roomTransactions(session, roomGuest!, roomTransaction );
+
+ //   return roomTransaction;
+
+
+       return await RoomTransaction.db.insertRow(session, rt);
   }
 
-  Future<RoomTransaction?> retrieve(Session session, int id ) async {
-     return await RoomTransaction.db.findFirstRow(session, 
-      where : (item) => item.id.equals( id),
+  Future<RoomTransaction?> retrieve(Session session, int id) async {
+    return await RoomTransaction.db.findFirstRow(
+      session,
+      where: (item) => item.id.equals(id),
     );
   }
 
   Future<bool> delete(Session session, int id) async {
-
-    final rt = await RoomTransaction.db.findFirstRow(session, 
-      where : (item) => item.id.equals( id),
+    final rt = await RoomTransaction.db.findFirstRow(
+      session,
+      where: (item) => item.id.equals(id),
     );
-
 
     if (rt == null) {
       return false;
     }
 
-    final result = await RoomTransaction.db.deleteRow(session,  rt );
+    final result = await RoomTransaction.db.deleteRow(session, rt);
 
     if (result == id) {
       return true;
@@ -37,7 +64,4 @@ class RoomTransactionEndpoint extends Endpoint {
 
     return false;
   }
-
-
 }
-

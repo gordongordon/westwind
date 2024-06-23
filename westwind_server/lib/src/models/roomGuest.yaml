@@ -4,13 +4,16 @@ fields:
   room : Room?, relation
   stayDate     : DateTime
   guest        : Guest? , relation
+  roomTransactions : List<RoomTransaction>?, relation(name=room_guest_transaction)
   rateType     : RateType
   rateReason   : RateReason
   rate         : double
   reservation  : Reservation?, relation
   roomStatus   : RoomStatus
+  checkInDate  : DateTime
   checkOutDate : DateTime
   updateDate   : DateTime?
+
   
 indexes: 
    room_guest_index_idx: 

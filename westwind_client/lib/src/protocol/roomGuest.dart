@@ -19,12 +19,14 @@ abstract class RoomGuest extends _i1.SerializableEntity {
     required this.stayDate,
     required this.guestId,
     this.guest,
+    this.roomTransactions,
     required this.rateType,
     required this.rateReason,
     required this.rate,
     required this.reservationId,
     this.reservation,
     required this.roomStatus,
+    required this.checkInDate,
     required this.checkOutDate,
     this.updateDate,
   });
@@ -36,12 +38,14 @@ abstract class RoomGuest extends _i1.SerializableEntity {
     required DateTime stayDate,
     required int guestId,
     _i2.Guest? guest,
+    List<_i2.RoomTransaction>? roomTransactions,
     required _i2.RateType rateType,
     required _i2.RateReason rateReason,
     required double rate,
     required int reservationId,
     _i2.Reservation? reservation,
     required _i2.RoomStatus roomStatus,
+    required DateTime checkInDate,
     required DateTime checkOutDate,
     DateTime? updateDate,
   }) = _RoomGuestImpl;
@@ -62,6 +66,9 @@ abstract class RoomGuest extends _i1.SerializableEntity {
           serializationManager.deserialize<int>(jsonSerialization['guestId']),
       guest: serializationManager
           .deserialize<_i2.Guest?>(jsonSerialization['guest']),
+      roomTransactions:
+          serializationManager.deserialize<List<_i2.RoomTransaction>?>(
+              jsonSerialization['roomTransactions']),
       rateType: serializationManager
           .deserialize<_i2.RateType>(jsonSerialization['rateType']),
       rateReason: serializationManager
@@ -73,6 +80,8 @@ abstract class RoomGuest extends _i1.SerializableEntity {
           .deserialize<_i2.Reservation?>(jsonSerialization['reservation']),
       roomStatus: serializationManager
           .deserialize<_i2.RoomStatus>(jsonSerialization['roomStatus']),
+      checkInDate: serializationManager
+          .deserialize<DateTime>(jsonSerialization['checkInDate']),
       checkOutDate: serializationManager
           .deserialize<DateTime>(jsonSerialization['checkOutDate']),
       updateDate: serializationManager
@@ -95,6 +104,8 @@ abstract class RoomGuest extends _i1.SerializableEntity {
 
   _i2.Guest? guest;
 
+  List<_i2.RoomTransaction>? roomTransactions;
+
   _i2.RateType rateType;
 
   _i2.RateReason rateReason;
@@ -107,6 +118,8 @@ abstract class RoomGuest extends _i1.SerializableEntity {
 
   _i2.RoomStatus roomStatus;
 
+  DateTime checkInDate;
+
   DateTime checkOutDate;
 
   DateTime? updateDate;
@@ -118,12 +131,14 @@ abstract class RoomGuest extends _i1.SerializableEntity {
     DateTime? stayDate,
     int? guestId,
     _i2.Guest? guest,
+    List<_i2.RoomTransaction>? roomTransactions,
     _i2.RateType? rateType,
     _i2.RateReason? rateReason,
     double? rate,
     int? reservationId,
     _i2.Reservation? reservation,
     _i2.RoomStatus? roomStatus,
+    DateTime? checkInDate,
     DateTime? checkOutDate,
     DateTime? updateDate,
   });
@@ -136,12 +151,16 @@ abstract class RoomGuest extends _i1.SerializableEntity {
       'stayDate': stayDate.toJson(),
       'guestId': guestId,
       if (guest != null) 'guest': guest?.toJson(),
+      if (roomTransactions != null)
+        'roomTransactions':
+            roomTransactions?.toJson(valueToJson: (v) => v.toJson()),
       'rateType': rateType.toJson(),
       'rateReason': rateReason.toJson(),
       'rate': rate,
       'reservationId': reservationId,
       if (reservation != null) 'reservation': reservation?.toJson(),
       'roomStatus': roomStatus.toJson(),
+      'checkInDate': checkInDate.toJson(),
       'checkOutDate': checkOutDate.toJson(),
       if (updateDate != null) 'updateDate': updateDate?.toJson(),
     };
@@ -158,12 +177,14 @@ class _RoomGuestImpl extends RoomGuest {
     required DateTime stayDate,
     required int guestId,
     _i2.Guest? guest,
+    List<_i2.RoomTransaction>? roomTransactions,
     required _i2.RateType rateType,
     required _i2.RateReason rateReason,
     required double rate,
     required int reservationId,
     _i2.Reservation? reservation,
     required _i2.RoomStatus roomStatus,
+    required DateTime checkInDate,
     required DateTime checkOutDate,
     DateTime? updateDate,
   }) : super._(
@@ -173,12 +194,14 @@ class _RoomGuestImpl extends RoomGuest {
           stayDate: stayDate,
           guestId: guestId,
           guest: guest,
+          roomTransactions: roomTransactions,
           rateType: rateType,
           rateReason: rateReason,
           rate: rate,
           reservationId: reservationId,
           reservation: reservation,
           roomStatus: roomStatus,
+          checkInDate: checkInDate,
           checkOutDate: checkOutDate,
           updateDate: updateDate,
         );
@@ -191,12 +214,14 @@ class _RoomGuestImpl extends RoomGuest {
     DateTime? stayDate,
     int? guestId,
     Object? guest = _Undefined,
+    Object? roomTransactions = _Undefined,
     _i2.RateType? rateType,
     _i2.RateReason? rateReason,
     double? rate,
     int? reservationId,
     Object? reservation = _Undefined,
     _i2.RoomStatus? roomStatus,
+    DateTime? checkInDate,
     DateTime? checkOutDate,
     Object? updateDate = _Undefined,
   }) {
@@ -207,6 +232,9 @@ class _RoomGuestImpl extends RoomGuest {
       stayDate: stayDate ?? this.stayDate,
       guestId: guestId ?? this.guestId,
       guest: guest is _i2.Guest? ? guest : this.guest?.copyWith(),
+      roomTransactions: roomTransactions is List<_i2.RoomTransaction>?
+          ? roomTransactions
+          : this.roomTransactions?.clone(),
       rateType: rateType ?? this.rateType,
       rateReason: rateReason ?? this.rateReason,
       rate: rate ?? this.rate,
@@ -215,6 +243,7 @@ class _RoomGuestImpl extends RoomGuest {
           ? reservation
           : this.reservation?.copyWith(),
       roomStatus: roomStatus ?? this.roomStatus,
+      checkInDate: checkInDate ?? this.checkInDate,
       checkOutDate: checkOutDate ?? this.checkOutDate,
       updateDate: updateDate is DateTime? ? updateDate : this.updateDate,
     );

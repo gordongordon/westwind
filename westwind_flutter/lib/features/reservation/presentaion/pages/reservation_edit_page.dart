@@ -48,10 +48,10 @@ class _GuetEditPageState extends State<ReservationEditPage> {
 
 
 
-  var dateCreate = DateTime.now();
-  var dateUpdate = DateTime.now();
-  var checkInDate = DateTime.now();
-  var checkOutDate = DateTime.now();
+  var dateCreate = DateTime.now().toLocal();
+  var dateUpdate = DateTime.now().toLocal();
+  var checkInDate = DateTime.now().toLocal();
+  var checkOutDate = DateTime.now().toLocal();
 
   // bool isInHouse = false;
 
@@ -99,10 +99,12 @@ class _GuetEditPageState extends State<ReservationEditPage> {
           actions: [
             IconButton(
               onPressed: () {
+                print( "hello onPress ");
                 formkey.currentState?.saveAndValidate();
                 debugPrint(formkey.currentState!.validate().toString());
                 if (formkey.currentState!.validate()) {
-                  //    debugPrint( " here");
+                      debugPrint( " here");
+                      print( "hellow");
                   final RateType rateType = RateType.values
                       .byName(formkey.currentState!.fields['rateType']!.value);
 
@@ -133,11 +135,10 @@ class _GuetEditPageState extends State<ReservationEditPage> {
                   );
 
                   // debugPrint(" after Reservation final ");
-                 // debugPrint(reservation.toString());
+                  debugPrint(reservation.toString());
                   context
                       .read<ReservationManageBloc>()
                       .add(SaveReservation(reservation: reservation));
-
                 }
               },
               icon: Icon(Icons.done),

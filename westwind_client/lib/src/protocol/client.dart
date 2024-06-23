@@ -288,10 +288,10 @@ class EndpointRoomGuest extends _i1.EndpointRef {
   @override
   String get name => 'roomGuest';
 
-  _i2.Future<_i8.RoomGuest> createRoomGuest(_i8.RoomGuest res) =>
+  _i2.Future<_i8.RoomGuest> saveRoomGuest(_i8.RoomGuest res) =>
       caller.callServerEndpoint<_i8.RoomGuest>(
         'roomGuest',
-        'createRoomGuest',
+        'saveRoomGuest',
         {'res': res},
       );
 
@@ -304,21 +304,6 @@ class EndpointRoomGuest extends _i1.EndpointRef {
         'insertGuestByReservation',
         {
           'checkInGuest': checkInGuest,
-          'reservation': reservation,
-        },
-      );
-
-  _i2.Future<_i8.RoomGuest> createRoomGuestByReservation(
-    _i8.RoomGuest checkInGuest,
-    List<_i8.RoomGuest> roommates,
-    _i7.Reservation reservation,
-  ) =>
-      caller.callServerEndpoint<_i8.RoomGuest>(
-        'roomGuest',
-        'createRoomGuestByReservation',
-        {
-          'checkInGuest': checkInGuest,
-          'roommates': roommates,
           'reservation': reservation,
         },
       );
@@ -505,6 +490,13 @@ class EndpointRoomTransaction extends _i1.EndpointRef {
 
   @override
   String get name => 'roomTransaction';
+
+  _i2.Future<bool> hasBeenRoomChargedToday(int guestId) =>
+      caller.callServerEndpoint<bool>(
+        'roomTransaction',
+        'hasBeenRoomChargedToday',
+        {'guestId': guestId},
+      );
 
   _i2.Future<List<_i9.RoomTransaction>> list() =>
       caller.callServerEndpoint<List<_i9.RoomTransaction>>(

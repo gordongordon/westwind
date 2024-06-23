@@ -17,7 +17,11 @@ class RoomGuestEndpoint extends Endpoint {
   // supported. The `session` object provides access to the database, logging,
   // passwords, and information about the request being made to the server.
 
-  Future<RoomGuest> createRoomGuest(Session session, RoomGuest res) async {
+  Future<RoomGuest> saveRoomGuest(Session session, RoomGuest res) async {
+    if ( res.id != null) {
+      res.updateDate = DateTime.now().toLocal();
+      return await RoomGuest.db.updateRow(session, res);
+    }
     return await RoomGuest.db.insertRow(session, res);
   }
 
@@ -47,7 +51,7 @@ class RoomGuestEndpoint extends Endpoint {
   }
 
 
-
+/*
   Future<RoomGuest> createRoomGuestByReservation(
       Session session,
       RoomGuest checkInGuest,
@@ -72,6 +76,7 @@ class RoomGuestEndpoint extends Endpoint {
     }
     return result;
   }
+*/
 
   Future<List<RoomGuest>> changeAllRateByRoomId(
       Session session, int id, double rate) async {
@@ -139,6 +144,7 @@ class RoomGuestEndpoint extends Endpoint {
           guest: Guest.include(company: Company.include()),
           room: Room.include(),
           reservation: Reservation.include(),
+          roomTransactions: RoomTransaction.includeList(),
         ));
   }
 
@@ -226,6 +232,7 @@ class RoomGuestEndpoint extends Endpoint {
             include: RoomGuest.include(
           guest: Guest.include(),
           room: Room.include(),
+                    roomTransactions: RoomTransaction.includeList(),
         ));
   }
 

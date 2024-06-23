@@ -633,8 +633,8 @@ class Endpoints extends _i1.EndpointDispatch {
       name: 'roomGuest',
       endpoint: endpoints['roomGuest']!,
       methodConnectors: {
-        'createRoomGuest': _i1.MethodConnector(
-          name: 'createRoomGuest',
+        'saveRoomGuest': _i1.MethodConnector(
+          name: 'saveRoomGuest',
           params: {
             'res': _i1.ParameterDescription(
               name: 'res',
@@ -646,7 +646,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['roomGuest'] as _i6.RoomGuestEndpoint).createRoomGuest(
+              (endpoints['roomGuest'] as _i6.RoomGuestEndpoint).saveRoomGuest(
             session,
             params['res'],
           ),
@@ -673,37 +673,6 @@ class Endpoints extends _i1.EndpointDispatch {
                   .insertGuestByReservation(
             session,
             params['checkInGuest'],
-            params['reservation'],
-          ),
-        ),
-        'createRoomGuestByReservation': _i1.MethodConnector(
-          name: 'createRoomGuestByReservation',
-          params: {
-            'checkInGuest': _i1.ParameterDescription(
-              name: 'checkInGuest',
-              type: _i1.getType<_i13.RoomGuest>(),
-              nullable: false,
-            ),
-            'roommates': _i1.ParameterDescription(
-              name: 'roommates',
-              type: _i1.getType<List<_i13.RoomGuest>>(),
-              nullable: false,
-            ),
-            'reservation': _i1.ParameterDescription(
-              name: 'reservation',
-              type: _i1.getType<_i12.Reservation>(),
-              nullable: false,
-            ),
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['roomGuest'] as _i6.RoomGuestEndpoint)
-                  .createRoomGuestByReservation(
-            session,
-            params['checkInGuest'],
-            params['roommates'],
             params['reservation'],
           ),
         ),
@@ -1109,6 +1078,25 @@ class Endpoints extends _i1.EndpointDispatch {
       name: 'roomTransaction',
       endpoint: endpoints['roomTransaction']!,
       methodConnectors: {
+        'hasBeenRoomChargedToday': _i1.MethodConnector(
+          name: 'hasBeenRoomChargedToday',
+          params: {
+            'guestId': _i1.ParameterDescription(
+              name: 'guestId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomTransaction'] as _i7.RoomTransactionEndpoint)
+                  .hasBeenRoomChargedToday(
+            session,
+            params['guestId'],
+          ),
+        ),
         'list': _i1.MethodConnector(
           name: 'list',
           params: {},
