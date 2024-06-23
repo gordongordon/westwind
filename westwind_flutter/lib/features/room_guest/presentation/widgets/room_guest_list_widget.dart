@@ -46,7 +46,7 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
             // checkReadOnly: true,
             enableDropToResize: true,
             readOnly: true,
-            width: 70,
+            width: 50,
             footerRenderer: (rendererContext) {
               return PlutoAggregateColumnFooter(
                 rendererContext: rendererContext,
@@ -69,13 +69,13 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
           title: 'Room Id',
           field: 'roomId',
           type: PlutoColumnType.number(),
-          width: 120,
+          width: 100,
         ),
         PlutoColumn(
           title: 'Stay Date',
           field: 'stayDate',
           type: PlutoColumnType.date(
-              startDate: DateTime.now(), format: 'yyyy-MM-dd'),
+              startDate: DateTime.now(), format: 'MM-dd'),
           width: 100,
         ),
         PlutoColumn(
@@ -124,54 +124,77 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
               );
             }),
         PlutoColumn(
-          title: 'Res Id',
+          title: 'ResId',
           field: 'reservationId',
           type: PlutoColumnType.number(),
-          width: 120,
+          width: 80,
         ),
         PlutoColumn(
-          title: 'check In',
+          title: 'C/I',
           field: 'checkIn',
-          type: PlutoColumnType.date(),
-          width: 100,
+       //   type: PlutoColumnType.date(),
+            type: PlutoColumnType.date(
+              startDate: DateTime.now(), format: 'MM-dd'),
+          width: 80,
           readOnly: true,
         ),
         PlutoColumn(
-          title: 'check Out',
+          title: 'C/O',
           field: 'checkOut',
-          type: PlutoColumnType.date(),
-          width: 100,
+              type: PlutoColumnType.date(
+              startDate: DateTime.now(), format: 'MM-dd'),
+          width: 80,
         ),
         PlutoColumn(
           title: 'Update At',
           field: 'updateAt',
-          type: PlutoColumnType.date(),
+          type: PlutoColumnType.date(
+              startDate: DateTime.now(), format: 'MM-dd'),
           width: 100,
         ),
         PlutoColumn(
-          title: 'First Name',
+          title: 'First',
           field: 'firstName',
           type: PlutoColumnType.text(),
-          width: 120,
+          width: 80,
         ),
         PlutoColumn(
-          title: 'Last Name',
+          title: 'Last',
           field: 'lastName',
           type: PlutoColumnType.text(),
-          width: 120,
+          width: 80,
         ),
         PlutoColumn(
-          title: 'Company Name',
+          title: 'Company',
           field: 'companyName',
           type: PlutoColumnType.text(),
-          width: 120,
+          width: 80,
         ),
-        PlutoColumn(
-          title: 'Balance',
-          field: 'balance',
-          type: PlutoColumnType.number(),
-          width: 120,
-        ),
+     PlutoColumn(
+            title: 'Balance',
+            field: 'balance',
+            type: PlutoColumnType.number(
+                negative: false, format: "#.##", applyFormatOnInit: true),
+            width: 70,
+            footerRenderer: (rendererContext) {
+              return PlutoAggregateColumnFooter(
+                formatAsCurrency: true,
+                rendererContext: rendererContext,
+                type: PlutoAggregateColumnType.sum,
+                format: '#',
+                alignment: Alignment.center,
+                titleSpanBuilder: (text) {
+                  return [
+                    const TextSpan(
+                      text: 'sum',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    const TextSpan(text: ' : '),
+                    TextSpan(text: text),
+                  ];
+                },
+              );
+            }),
       ],
     );
   }
@@ -200,8 +223,8 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
             return Column(
               children: [
                 Expanded(child: buildDataTable(context, roomGuests)),
-                buildSubmit(context, roomGuestSelected),
-                buildCancelReseration(context, roomGuestSelected),
+           //     buildSubmit(context, roomGuestSelected),
+           //     buildCancelReseration(context, roomGuestSelected),
                 //    buildSubmit(context, RoomGuestSelected, ref),
               ],
             );

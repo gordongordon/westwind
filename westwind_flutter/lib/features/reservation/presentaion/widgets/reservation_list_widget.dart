@@ -291,8 +291,8 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
             return Column(
               children: [
                 Expanded(child: buildDataTable(context, reservations)),
-                buildSubmit(context, reservationSelected),
-                buildCancelReseration(context, reservationSelected),
+         //       buildSubmit(context, reservationSelected),
+         //       buildCancelReseration(context, reservationSelected),
                 //    buildSubmit(context, ReservationSelected, ref),
               ],
             );

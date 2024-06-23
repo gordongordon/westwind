@@ -14,7 +14,9 @@ enum TransactionType with _i1.SerializableEntity {
   deposit,
   pay,
   charge,
-  refund;
+  refund,
+  adjustDebit,
+  adjustCredit;
 
   static TransactionType? fromJson(String name) {
     switch (name) {
@@ -26,6 +28,10 @@ enum TransactionType with _i1.SerializableEntity {
         return charge;
       case 'refund':
         return refund;
+      case 'adjustDebit':
+        return adjustDebit;
+      case 'adjustCredit':
+        return adjustCredit;
       default:
         return null;
     }

@@ -19,20 +19,20 @@ class RoomTransactionListStateFailure extends RoomTransactionListState {
   RoomTransactionListStateFailure({required this.message});
 }
 
-class RoomTransactionListStateDeleted extends RoomTransactionListState {
+class RoomTransactionListStateDeletedSuccess extends RoomTransactionListState {
   final int id;
 
-  RoomTransactionListStateDeleted({required this.id});
+  RoomTransactionListStateDeletedSuccess({required this.id});
 }
 
-class RoomTransactionListStateRetrieved extends RoomTransactionListState {
+class RoomTransactionListStateRetrievedSuccess extends RoomTransactionListState {
   final RoomTransaction roomTransaction;
 
-  RoomTransactionListStateRetrieved({required this.roomTransaction});
+  RoomTransactionListStateRetrievedSuccess({required this.roomTransaction});
 }
 
-class RoomTransactionListStateCreated extends RoomTransactionListState {
+class RoomTransactionListStateCreatedSuccess extends RoomTransactionListState {
   final RoomTransaction roomTransaction;
 
-  RoomTransactionListStateCreated({required this.roomTransaction});
+  RoomTransactionListStateCreatedSuccess({required this.roomTransaction});
 }

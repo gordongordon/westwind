@@ -48,7 +48,7 @@ class RoomTransactionListBloc
     result.fold(
         (l) => emit(RoomTransactionListStateFailure(message: l.message)), (r) {
       if (r) {
-        emit(RoomTransactionListStateDeleted(id: event.id));
+        emit(RoomTransactionListStateDeletedSuccess(id: event.id));
       } else {
         // emit(RoomTransactionStateFailure( Failure( "Failed to delete room transaction" ) ));
       }
@@ -62,7 +62,7 @@ class RoomTransactionListBloc
         .call(RetrieveRoomTransactionParams(id: event.id));
     result.fold(
         (l) => emit(RoomTransactionListStateFailure(message: l.message)), (r) {
-      emit(RoomTransactionListStateRetrieved(roomTransaction: r));
+      emit(RoomTransactionListStateRetrievedSuccess(roomTransaction: r));
     });
   }
 
@@ -73,7 +73,7 @@ class RoomTransactionListBloc
         CreateRoomTransactionParams(roomTransaction: event.roomTransaction));
     result.fold(
         (l) => emit(RoomTransactionListStateFailure(message: l.message)), (r) {
-      emit(RoomTransactionListStateCreated(roomTransaction: r));
+      emit(RoomTransactionListStateCreatedSuccess(roomTransaction: r));
     });
   }
 }

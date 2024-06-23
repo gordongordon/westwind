@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_flutter/features/app_user/presentation/widgets/app_user_dropdown.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_edit_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/widgets/room_transaction_list_widget.dart';
 
 
@@ -21,7 +22,7 @@ class RoomTransactionListPage extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(onPressed: () {
-           context.push(RoomGuestEditPage.routeNew());   
+           context.push(RoomTransactionEditPage.routeNew());   
       },child: const Icon( Icons.add),),
       body: const RoomTransactionListWidget(),
     );

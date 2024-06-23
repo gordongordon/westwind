@@ -2,6 +2,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/error/failure.dart';
+import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/features/room_guest/domain/policies/room_guest_policy.dart';
 import 'package:westwind_flutter/features/room_guest/domain/repositories/room_guest_repository.dart';
 
@@ -23,10 +24,10 @@ class RoomGuestPolicyService {
 
     if ( !result )  {
 
-      final stayDay = roomGuest.stayDate;
-      final today = DateTime.now().toLocal();
+      final stayDay = roomGuest.stayDate.getDateOnly().day;
+      final today = DateTime.now().toLocal().getDateOnly().day;
 
-      return Left(  Failure( " Guest cannot be charged at this time, because Stay Day $stayDay is not $today " ) );
+      return Left(  Failure( "You can only charge when Stay Day $stayDay less then Today $today " ) );
     }
      
     return Right( result );

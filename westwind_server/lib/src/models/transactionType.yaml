@@ -5,3 +5,5 @@ values:
   - pay
   - charge
   - refund
+  - adjustDebit
+  - adjustCredit

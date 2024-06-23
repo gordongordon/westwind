@@ -51,7 +51,7 @@ class _roomTransactionListWidgetState extends State<RoomTransactionListWidget> {
             // checkReadOnly: true,
             enableDropToResize: true,
             readOnly: true,
-            width: 70,
+            width: 50,
             footerRenderer: (rendererContext) {
               return PlutoAggregateColumnFooter(
                 rendererContext: rendererContext,
@@ -226,13 +226,15 @@ class _roomTransactionListWidgetState extends State<RoomTransactionListWidget> {
           PlutoColumn(
           title: 'StayDay',
           field: 'stayDay',
-          type: PlutoColumnType.date(),
+          type: PlutoColumnType.date(
+              startDate: DateTime.now(), format: 'MM-dd'),
           width: 100,
         ),
         PlutoColumn(
           title: 'Transaction Day',
           field: 'transactionDay',
-          type: PlutoColumnType.date(),
+          type: PlutoColumnType.date(
+              startDate: DateTime.now(), format: 'MM-dd'),
           width: 100,
         ),
         PlutoColumn(
@@ -270,13 +272,13 @@ class _roomTransactionListWidgetState extends State<RoomTransactionListWidget> {
             return const Loader();
           case RoomTransactionListStateLoaded():
             final roomTransactions = state.roomTransactions;
-            final roomTransactionSelected = roomTransactions;
+         //   final roomTransactionSelected = roomTransactions;
 
             return Column(
               children: [
                 Expanded(child: buildDataTable(context, roomTransactions)),
-                buildSubmit(context, roomTransactionSelected),
-                buildCancelReseration(context, roomTransactionSelected),
+         //       buildSubmit(context, roomTransactionSelected),
+         //       buildCancelReseration(context, roomTransactionSelected),
                 //    buildSubmit(context, RoomGuestSelected, ref),
               ],
             );
