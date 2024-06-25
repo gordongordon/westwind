@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -16,67 +15,48 @@ class ReservationEditPage extends StatefulWidget {
       "/reservations/edit/${reservationId ?? ':id'}";
   static String routeNew() => "/reservations/new";
 
-
   const ReservationEditPage({super.key, this.reservationId});
 
   @override
-  State<ReservationEditPage> createState() => _GuetEditPageState();
+  State<ReservationEditPage> createState() => _ReservationEditPageState();
 }
 
-class _GuetEditPageState extends State<ReservationEditPage> {
-  final formkey = GlobalKey<FormBuilderState>();
+class _ReservationEditPageState extends State<ReservationEditPage> {
+  final formKey = GlobalKey<FormBuilderState>();
+  final TextEditingController idController = TextEditingController(text: "0");
+  final TextEditingController roomIdController = TextEditingController();
+  final TextEditingController guestIdController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController rateTypeController =
+      TextEditingController(text: RateType.standard.toString());
+  final TextEditingController rigNumberController = TextEditingController();
+  final TextEditingController rateController = TextEditingController();
+  final TextEditingController rateReasonController =
+      TextEditingController(text: RateReason.single.toString());
 
-  late TextEditingController idController;
+  DateTime dateCreate = DateTime.now();
+  DateTime dateUpdate = DateTime.now();
+  DateTime checkInDate = DateTime.now();
+  DateTime checkOutDate = DateTime.now();
 
-
-  final roomNumberController = TextEditingController();
-  final roomIdController = TextEditingController();
-  final guestIdController = TextEditingController();
-
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final phoneController = TextEditingController();
-  final rateTypeController = TextEditingController(text: RateType.standard.toString());
-  final dateCreateController = TextEditingController();
-//  final idController = TextEditingController(text: "0");
-  final rigNumberController = TextEditingController();
   bool isCheckedIn = false;
   bool isCanceled = false;
   bool isNightShift = false;
-  final rateController = TextEditingController();
-  final rateReasonController = TextEditingController(text: RateReason.single.toString());
-
-
-
-  var dateCreate = DateTime.now().toLocal();
-  var dateUpdate = DateTime.now().toLocal();
-  var checkInDate = DateTime.now().toLocal();
-  var checkOutDate = DateTime.now().toLocal();
-
-  // bool isInHouse = false;
 
   final List<String> _rateTypeOptions =
       RateType.values.map((e) => e.name).toList();
   final List<String> _rateReasonOptions =
       RateReason.values.map((e) => e.name).toList();
 
-  bool _genderHasError = false;
-
-  void _onChanged(dynamic val) => debugPrint(val.toString());
-
-  bool get isEditing {
-    return widget.reservationId != null && widget.reservationId! > 0;
-  }
+  bool get isEditing =>
+      widget.reservationId != null && widget.reservationId! > 0;
 
   @override
   void initState() {
     super.initState();
-
-    idController = TextEditingController( text : widget.reservationId.toString() );
-
-    if (isEditing ) {
-      print("isEditing ");
-      print(widget.reservationId);
+    if (isEditing) {
       context
           .read<ReservationManageBloc>()
           .add(RetrieveReservation(id: widget.reservationId!));
@@ -84,419 +64,358 @@ class _GuetEditPageState extends State<ReservationEditPage> {
   }
 
   @override
-  void dispose() {
-    idController.dispose();
-    // Dispose other controllers...
-    super.dispose();
-  }
-
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Reservation Edit Page ${widget.reservationId}"),
-          actions: [
-            IconButton(
-              onPressed: () {
-                print( "hello onPress ");
-                formkey.currentState?.saveAndValidate();
-                debugPrint(formkey.currentState!.validate().toString());
-                if (formkey.currentState!.validate()) {
-                      debugPrint( " here");
-                      print( "hellow");
-                  final RateType rateType = RateType.values
-                      .byName(formkey.currentState!.fields['rateType']!.value);
+      appBar: AppBar(
+        title: Text(isEditing ? "Edit Reservation" : "New Reservation"),
+        actions: [
+          IconButton(
+            onPressed: _saveReservation,
+            icon: Icon(Icons.save),
+            tooltip: 'Save Reservation',
+          ),
+        ],
+      ),
+      body: BlocConsumer<ReservationManageBloc, ReservationManageState>(
+        listener: _blocListener,
+        builder: (context, state) {
+          if (state is ReservationManageStateLoading) {
+            return const Loader();
+          }
+          return _buildForm();
+        },
+      ),
+    );
+  }
 
-                  final RateReason rateReason = RateReason.values.byName(
-                      formkey.currentState!.fields['rateReason']!.value);
+  onChangedPhone(value) {
+    if (formKey.currentState!.fields['phone']!.valueIsValid) {
+      if (value != null) {
+        context
+            .read<ReservationManageBloc>()
+            .add(RetrieveGuestByPhoneForReservation(phone: value.trim()));
+      }
+    }
+  }
 
-                  final reservation = Reservation(
-                    id: widget.reservationId,
-                    guestId: int.parse(guestIdController.text),
-                    roomId: int.parse(roomIdController.text),
-                    isCheckedIn:
-                        formkey.currentState!.fields['isCheckedIn']!.value,
-                    isCanceled:
-                        formkey.currentState!.fields['isCanceled']!.value,
-                    isNightShift:
-                        formkey.currentState!.fields['isNightShift']!.value,
-                    dateCreate:
-                        formkey.currentState!.fields['dateCreate']!.value,
-                    dateUpdate:
-                        formkey.currentState!.fields['dateUpdate']!.value,
-                    checkInDate:
-                        formkey.currentState!.fields['checkInDate']!.value,
-                    checkOutDate:
-                        formkey.currentState!.fields['checkOutDate']!.value,
-                    rateType: rateType,
-                    rate: double.parse(rateController.text),
-                    rateReason: rateReason,
-                  );
-
-                  // debugPrint(" after Reservation final ");
-                  debugPrint(reservation.toString());
-                  context
-                      .read<ReservationManageBloc>()
-                      .add(SaveReservation(reservation: reservation));
-                }
-              },
-              icon: Icon(Icons.done),
-            ),
-          ],
+  Widget _buildForm() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: FormBuilder(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildGuestInfoSection(),
+              _buildReservationInfoSection(),
+              _buildRateInfoSection(),
+              _buildAdditionalInfoSection(),
+              if (isEditing) _buildActionButtons(),
+            ],
+          ),
         ),
-        body: BlocConsumer<ReservationManageBloc, ReservationManageState>(
-          listener: (context, state) {
+      ),
+    );
+  }
 
+  Widget _buildGuestInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Guest Information',
+            style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildTextField('id', 'ID', idController, null, enabled: false),
+        _buildTextField('lastName', 'Last Name',  lastNameController, null),
+        _buildTextField('firstName', 'First Name', firstNameController, null ),
+        _buildTextFieldPhone('phone', 'Phone', phoneController, onChangedPhone,
+            keyboardType: TextInputType.phone),
+        _buildTextField('guestId', 'Guest ID', guestIdController, null,
+            keyboardType: TextInputType.number),
+        _buildTextField('rigNumber', 'Rig Number', rigNumberController, null,
+            keyboardType: TextInputType.number),
+      ],
+    );
+  }
 
-            if (state is ReservationManageStateFailure) {
-              showSnackbar(context, state.message);
-            } else if (state is ReservationManageStateSaveSuccess) {
-              context.read<ReservationListBloc>().add(FetchReservationsEvent());
-         
-              if (isEditing) {
-                //! May have problem
-                context
-                    .read<ReservationManageBloc>()
-                    .add(RetrieveReservation(id: widget.reservationId!));
-              }
+  Widget _buildReservationInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+        Text('Reservation Information',
+            style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildDateTimePicker('checkInDate', 'Check In Date',
+            initialValue: checkInDate),
+        _buildDateTimePicker('checkOutDate', 'Check Out Date',
+            initialValue: checkOutDate),
+        _buildTextField('roomId', 'Room ID', roomIdController,null,
+            keyboardType: TextInputType.number),
+        FormBuilderSwitch(
+          name: 'isCheckedIn',
+          title: const Text('Is Checked In'),
+          initialValue: isCheckedIn,
+          onChanged: (val) => setState(() => isCheckedIn = val ?? false),
+        ),
+        FormBuilderSwitch(
+          name: 'isCanceled',
+          title: const Text('Is Canceled'),
+          initialValue: isCanceled,
+          onChanged: (val) => setState(() => isCanceled = val ?? false),
+        ),
+        FormBuilderSwitch(
+          name: 'isNightShift',
+          title: const Text('Is Night Shift'),
+          initialValue: isNightShift,
+          onChanged: (val) => setState(() => isNightShift = val ?? false),
+        ),
+      ],
+    );
+  }
 
-              context.pop();
-            } else if (state is ReservationManageStateDeleteSuccess) {
-              context.read<ReservationListBloc>().add(FetchReservationsEvent());
-              context.pop();
-              context.pop();
-            } else if (state is ReservationManageStateRetrieveSuccess) {
-              debugPrint("ReservationManageState RetrieveSuccess ");
-              idController.text = state.reservation.id!.toString();
-              guestIdController.text = state.reservation.guestId.toString();
-              roomIdController.text = state.reservation.roomId.toString();
-              rateController.text = state.reservation.rate.toString();
-              rateReasonController.text =
-                  state.reservation.rateReason.toString();
-              firstNameController.text = state.reservation.guest!.firstName;
-              lastNameController.text = state.reservation.guest!.lastName;
-              phoneController.text = state.reservation.guest!.phone;
-              rateTypeController.text = state.reservation.rateType.toString();
-              isCheckedIn = state.reservation.isCheckedIn;
-              isCanceled = state.reservation.isCanceled;
-              isNightShift = state.reservation.isNightShift;
-              dateCreate = state.reservation.dateCreate;
-              dateUpdate = state.reservation.dateUpdate!;
-              checkInDate = state.reservation.checkInDate;
-              checkOutDate = state.reservation.checkOutDate;
-              rigNumberController.text =
-                  state.reservation.guest!.rigNumber.toString();
+  Widget _buildRateInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+        Text('Rate Information',
+            style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildDropdown('rateType', 'Rate Type', _rateTypeOptions,
+            initialValue: rateTypeController.text),
+        _buildDropdown('rateReason', 'Rate Reason', _rateReasonOptions,
+            initialValue: rateReasonController.text),
+        _buildTextField('rate', 'Rate', rateController,null,
+            keyboardType: TextInputType.number),
+      ],
+    );
+  }
+
+  Widget _buildAdditionalInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+        Text('Additional Information',
+            style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildDateTimePicker('dateCreate', 'Date Created',
+            initialValue: dateCreate, enabled: false),
+        _buildDateTimePicker('dateUpdate', 'Date Updated',
+            initialValue: dateUpdate, enabled: false),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Column(
+      children: [
+        const SizedBox(height: 24),
+        _buildButton(
+            'Check In',
+            () => context
+                .read<ReservationManageBloc>()
+                .add(CheckInReservation(id: widget.reservationId!))),
+        const SizedBox(height: 16),
+        _buildButton(
+            'Delete',
+            () => context
+                .read<ReservationManageBloc>()
+                .add(DeleteReservation(id: widget.reservationId!)),
+            color: Colors.red),
+      ],
+    );
+  }
+
+  Widget _buildTextFieldPhone(String name, String label,
+      TextEditingController controller, void Function(String?)? onChanged,
+      {bool enabled = true, TextInputType keyboardType = TextInputType.text}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        onChanged: onChanged,
+        validator:
+            FormBuilderValidators.compose([
               
-              final type = state.reservation.rateType;
-              final reason = state.reservation.rateReason;
-              context.read<ReservationManageBloc>().add(CalculateRate(type: type, reason: reason));
-
-            } else if (state is ReservationManageStateRetrieveGuestSuccess) {
-              firstNameController.text = state.guest.firstName;
-              lastNameController.text = state.guest.lastName;
-              phoneController.text = state.guest.phone;
-              rigNumberController.text = state.guest.rigNumber.toString();
-              rateTypeController.text = state.guest.rateType.toString();
-            
-
-              //! Update Rate 
-              // Reason default is Single
-              final type = state.guest.rateType;
-              const reason = RateReason.share;
-
-              context.read<ReservationManageBloc>().add(CalculateRate(type: type, reason: reason));
-              //  rateController.text = state.guest.rrate.toString();
-            } else if (state
-                is ReservationManageStateRetrieveGuestByPhoneSuccess) {
-              guestIdController.text = state.guest.id.toString();
-              firstNameController.text = state.guest.firstName;
-              lastNameController.text = state.guest.lastName;
-              phoneController.text = state.guest.phone;
-              rigNumberController.text = state.guest.rigNumber.toString();
-              rateTypeController.text = state.guest.rateType.toString();
-            } else if (state is ReservationManageStateCheckInSuccess) {
-              context.read<ReservationListBloc>().add(FetchReservationsEvent());
-              context.pop();
-            } else if ( state is ReservationManageStateCalculateRateSuccess ) {
-              rateController.text = state.rate.toString();
-            }
-          },
-          builder: (context, state) {
-            if (state is ReservationManageStateLoading) {
-              return const Loader();
-            }
-
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: FormBuilder(
-                  key: formkey,
-                  child: Column(
-                    children: [
-                                          
-
-                      FormBuilderTextField(
-                        name: 'id',
-                        enabled: false,
-                        //  readOnly: true,
-                        controller: idController,
-                        keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(labelText: 'ID'),
-                   //     validator: FormBuilderValidators.compose([
-                   //       FormBuilderValidators.required(),
-                   //       FormBuilderValidators.numeric(),
-                   //     ]),
-                      ),
-                      //  const SizedBox(height: 10),
-                      FormBuilderDateTimePicker(
-                        name: 'checkInDate',
-                        decoration:
-                            const InputDecoration(labelText: 'Check In Date'),
-                        initialValue: checkInDate,
-                        initialDate:
-                            DateTime.now().add(const Duration(days: 10)),
-                        initialDatePickerMode: DatePickerMode.day,
-                        timePickerInitialEntryMode: TimePickerEntryMode.input,
-                        initialEntryMode: DatePickerEntryMode.calendarOnly,
-                        inputType: InputType.date,
-                        lastDate: DateTime.now().add(Duration(days: 365)),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                        ]),
-                      ),
-                      //   const SizedBox(height: 10),
-                      FormBuilderDateTimePicker(
-                        name: 'checkOutDate',
-                        initialValue: checkOutDate,
-                        decoration:
-                            const InputDecoration(labelText: 'Check Out Date'),
-                        initialDatePickerMode: DatePickerMode.day,
-                        timePickerInitialEntryMode: TimePickerEntryMode.input,
-                        initialEntryMode: DatePickerEntryMode.calendarOnly,
-                        inputType: InputType.date,
-                      ),
-                      //     const SizedBox(height: 10),
-                      FormBuilderTextField(
-                        name: 'lastName',
-                        // enabled: false,
-                        controller: lastNameController,
-                        decoration:
-                            const InputDecoration(labelText: 'Last Name'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                        ]),
-                      ),
-                      FormBuilderTextField(
-                        name: 'firstName',
-                        controller: firstNameController,
-                        decoration:
-                            const InputDecoration(labelText: 'First Name'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                        ]),
-                      ),
-                      const SizedBox(height: 10),
-                      FormBuilderTextField(
-                        name: 'phone',
-                        maxLength: 11,
-                        controller: phoneController,
-                        keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(labelText: 'Phone'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
+                 FormBuilderValidators.required(),
                           FormBuilderValidators.maxLength(11),
                           FormBuilderValidators.numeric(),
                           FormBuilderValidators.equalLength(11),
-                          //     FormBuilderValidators.minWordsCount(10,
-                          //        allowEmpty: false, errorText: 'e.g. 17805425375'),
-                        ]),
-                        onChanged: (value) {
-                          if (formkey
-                              .currentState!.fields['phone']!.valueIsValid) {
-                            if (value != null) {
-                              context.read<ReservationManageBloc>().add(
-                                  RetrieveGuestByPhoneForReservation(
-                                      phone: value.trim()));
-                            }
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      FormBuilderDropdown<String>(
-                        name: 'rateReason',
-                        initialValue: rateReasonController.text,
-                        decoration: InputDecoration(
-                          labelText: 'RateReason',
-                          suffix: _genderHasError
-                              ? const Icon(Icons.error)
-                              : const Icon(Icons.check),
-                          hintText: 'Select RateReason',
-                        ),
-                        validator: FormBuilderValidators.compose(
-                            [FormBuilderValidators.required()]),
-                        items: _rateReasonOptions
-                            .map((rateType) => DropdownMenuItem(
-                                  alignment: AlignmentDirectional.center,
-                                  value: rateType,
-                                  child: Text(rateType),
-                                ))
-                            .toList(),
-                        onChanged: (val) {
-                          formkey.currentState?.fields['rateReason']?.save();
-                          //    newRate = ref.read(rateTableProvider( RateTable(rateType: rateType, rateReason: rateReason, rate: 0.00 )  ));
-                        },
-                        valueTransformer: (val) => val?.toString(),
-                      ),
-                      //        const SizedBox(height: 10),
+              
+              ]),
+      ),
+    );
+  }
 
-                      FormBuilderTextField(
-                        name: 'rate',
-                        controller: rateController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(labelText: 'rate'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                        ]),
-                      ),
-                      FormBuilderTextField(
-                          name: 'guestId',
-                          controller: guestIdController,
-                          decoration:
-                              const InputDecoration(labelText: 'guestId'),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(),
-                            FormBuilderValidators.numeric(),
-                          ]),
-                          onChanged: (value) {
-                            if (value != null) {
-                              context.read<ReservationManageBloc>().add(
-                                  RetrieveGuestForReservation(
-                                      id: int.parse(value)));
-                            }
-                          }),
-                      FormBuilderTextField(
-                        name: 'roomId',
-                        controller: roomIdController,
-                        decoration: const InputDecoration(labelText: 'roomId'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.numeric(),
-                        ]),
-                      ),
-                      FormBuilderTextField(
-                        name: 'rigNumber',
-                        controller: rigNumberController,
-                        keyboardType: TextInputType.phone,
-                        decoration:
-                            const InputDecoration(labelText: 'rigNumber'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                        ]),
-                      ),
-                      const SizedBox(height: 10),
-                      FormBuilderDropdown<String>(
-                        name: 'rateType',
-                        initialValue: rateTypeController.text,
-                        decoration: InputDecoration(
-                          labelText: 'RateType',
-                          suffix: _genderHasError
-                              ? const Icon(Icons.error)
-                              : const Icon(Icons.check),
-                          hintText: 'Select RateType',
-                        ),
-                        validator: FormBuilderValidators.compose(
-                            [FormBuilderValidators.required()]),
-                        items: _rateTypeOptions
-                            .map((rateType) => DropdownMenuItem(
-                                  alignment: AlignmentDirectional.center,
-                                  value: rateType,
-                                  child: Text(rateType),
-                                ))
-                            .toList(),
-                        onChanged: (val) {
-                          formkey.currentState!.fields['rateType']?.save();
-                        },
-                        valueTransformer: (val) => val?.toString(),
-                      ),
-                      const SizedBox(height: 10),
-                      FormBuilderSwitch(
-                        title: const Text('Is it check In?'),
-                        initialValue: isCheckedIn,
-                        name: 'isCheckedIn',
-                        onChanged: _onChanged,
-                      ),
-                      FormBuilderSwitch(
-                        title: const Text('Is it cancel?'),
-                        initialValue: isCanceled,
-                        name: 'isCanceled',
-                        onChanged: _onChanged,
-                      ),
-                      FormBuilderSwitch(
-                        title: const Text('Is it night shift?'),
-                        initialValue: isNightShift,
-                        name: 'isNightShift',
-                        onChanged: _onChanged,
-                      ),
-                      const SizedBox(height: 10),
-                      FormBuilderDateTimePicker(
-                        name: 'dateCreate',
-                        enabled: false,
-                        decoration:
-                            const InputDecoration(labelText: 'Date Created'),
-                        initialValue: dateCreate,
-                        initialDatePickerMode: DatePickerMode.day,
-                        timePickerInitialEntryMode: TimePickerEntryMode.input,
-                        initialEntryMode: DatePickerEntryMode.calendarOnly,
-                        inputType: InputType.date,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                        ]),
-                      ),
-                      const SizedBox(height: 10),
-                      FormBuilderDateTimePicker(
-                        name: 'dateUpdate',
-                        enabled: false,
-                        decoration:
-                            const InputDecoration(labelText: 'Date Updated'),
-                        initialValue: dateUpdate,
+  Widget _buildTextField(String name, String label,
+      TextEditingController controller, void Function(String?)? onChanged,
+      {bool enabled = true, TextInputType keyboardType = TextInputType.text}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        onChanged: onChanged,
+        validator:
+            FormBuilderValidators.compose([FormBuilderValidators.required()]),
+      ),
+    );
+  }
 
-                        initialDatePickerMode: DatePickerMode.day,
-                        timePickerInitialEntryMode: TimePickerEntryMode.input,
-                        initialEntryMode: DatePickerEntryMode.calendarOnly,
-                        inputType: InputType.date,
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                        ]),
-                      ),
-                      if (isEditing)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                              onPressed: () {
-                                context.read<ReservationManageBloc>().add(
-                                    DeleteReservation(
-                                        id: widget.reservationId!));
-                              },
-                              child: const Text("Delete")),
-                        ),
-                      if (isEditing)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                              onPressed: () {
-                                context.read<ReservationManageBloc>().add(
-                                    CheckInReservation(
-                                        id: widget.reservationId!));
-                              },
-                              child: const Text("CheckIn")),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        ));
+  Widget _buildDateTimePicker(String name, String label,
+      {required DateTime initialValue, bool enabled = true}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderDateTimePicker(
+        name: name,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        initialValue: initialValue,
+        inputType: InputType.date,
+        validator:
+            FormBuilderValidators.compose([FormBuilderValidators.required()]),
+      ),
+    );
+  }
+
+  Widget _buildDropdown(String name, String label, List<String> options,
+      {required String initialValue}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderDropdown<String>(
+        name: name,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        initialValue: initialValue,
+        items: options
+            .map((option) =>
+                DropdownMenuItem(value: option, child: Text(option)))
+            .toList(),
+        validator:
+            FormBuilderValidators.compose([FormBuilderValidators.required()]),
+      ),
+    );
+  }
+
+  Widget _buildButton(String text, VoidCallback onPressed,
+      {Color color = Colors.blue}) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(text),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        minimumSize: Size(double.infinity, 50),
+      ),
+    );
+  }
+
+  void _saveReservation() {
+    if (formKey.currentState?.saveAndValidate() ?? false) {
+      final reservation = Reservation(
+        id: widget.reservationId,
+        guestId: int.parse(guestIdController.text),
+        roomId: int.parse(roomIdController.text),
+        isCheckedIn: formKey.currentState!.fields['isCheckedIn']!.value,
+        isCanceled: formKey.currentState!.fields['isCanceled']!.value,
+        isNightShift: formKey.currentState!.fields['isNightShift']!.value,
+        dateCreate: formKey.currentState!.fields['dateCreate']!.value,
+        dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
+        checkInDate: formKey.currentState!.fields['checkInDate']!.value,
+        checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
+        rateType: RateType.values
+            .byName(formKey.currentState!.fields['rateType']!.value),
+        rate: double.parse(rateController.text),
+        rateReason: RateReason.values
+            .byName(formKey.currentState!.fields['rateReason']!.value),
+      );
+
+      context
+          .read<ReservationManageBloc>()
+          .add(SaveReservation(reservation: reservation));
+    }
+  }
+
+  void _blocListener(BuildContext context, ReservationManageState state) {
+    if (state is ReservationManageStateFailure) {
+      showSnackbar(context, state.message);
+    } else if (state is ReservationManageStateSaveSuccess ||
+        state is ReservationManageStateDeleteSuccess ||
+        state is ReservationManageStateCheckInSuccess) {
+      context.read<ReservationListBloc>().add(FetchReservationsEvent());
+      context.pop();
+    } else if (state is ReservationManageStateRetrieveSuccess) {
+      _populateFields(state.reservation);
+    } else if (state is ReservationManageStateRetrieveGuestSuccess) {
+      _populateGuestFields(state.guest);
+    } else if (state is ReservationManageStateRetrieveGuestByPhoneSuccess) {
+      guestIdController.text = state.guest.id.toString();
+      firstNameController.text = state.guest.firstName;
+      lastNameController.text = state.guest.lastName;
+      phoneController.text = state.guest.phone;
+      rigNumberController.text = state.guest.rigNumber.toString();
+      rateTypeController.text = state.guest.rateType.toString();
+    }
+  }
+
+  void _populateFields(Reservation reservation) {
+    idController.text = reservation.id!.toString();
+    guestIdController.text = reservation.guestId.toString();
+    roomIdController.text = reservation.roomId.toString();
+    rateController.text = reservation.rate.toString();
+    rateReasonController.text = reservation.rateReason.toString();
+    rateTypeController.text = reservation.rateType.toString();
+    firstNameController.text = reservation.guest!.firstName;
+    lastNameController.text = reservation.guest!.lastName;
+    phoneController.text = reservation.guest!.phone;
+    rigNumberController.text = reservation.guest!.rigNumber.toString();
+
+    setState(() {
+      checkInDate = reservation.checkInDate;
+      checkOutDate = reservation.checkOutDate;
+      isCheckedIn = reservation.isCheckedIn;
+      isCanceled = reservation.isCanceled;
+      isNightShift = reservation.isNightShift;
+      dateCreate = reservation.dateCreate;
+      dateUpdate = reservation.dateUpdate!;
+    });
+
+    formKey.currentState?.patchValue({
+      'rateType': reservation.rateType.name,
+      'rateReason': reservation.rateReason.name,
+    });
+  }
+
+  void _populateGuestFields(Guest guest) {
+    guestIdController.text = guest.id.toString();
+    firstNameController.text = guest.firstName;
+    lastNameController.text = guest.lastName;
+    phoneController.text = guest.phone;
+    rigNumberController.text = guest.rigNumber.toString();
+    rateTypeController.text = guest.rateType.toString();
+
+    formKey.currentState?.patchValue({
+      'rateType': guest.rateType.name,
+    });
   }
 }

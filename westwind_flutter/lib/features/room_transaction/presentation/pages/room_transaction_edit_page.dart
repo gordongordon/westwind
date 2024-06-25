@@ -18,413 +18,259 @@ class RoomTransactionEditPage extends StatefulWidget {
   const RoomTransactionEditPage({super.key, this.roomTransactionId});
 
   @override
-  State<RoomTransactionEditPage> createState() =>
-      _RoomTransactionEditPageState();
+  State<RoomTransactionEditPage> createState() => _RoomTransactionEditPageState();
 }
 
 class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
-  final formkey = GlobalKey<FormBuilderState>();
+  final formKey = GlobalKey<FormBuilderState>();
+  final TextEditingController idController = TextEditingController(text: "0");
+  final TextEditingController roomIdController = TextEditingController();
+  final TextEditingController guestIdController = TextEditingController();
+  final TextEditingController roomGuestIdController = TextEditingController();
+  final TextEditingController transactionTypeController = TextEditingController();
+  final TextEditingController itemTypeController = TextEditingController();
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController tax1Controller = TextEditingController();
+  final TextEditingController tax2Controller = TextEditingController();
+  final TextEditingController tax3Controller = TextEditingController();
+  final TextEditingController totalController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
-  final idController = TextEditingController(text: "0");
-  final roomIdController = TextEditingController();
-  final guestIdController = TextEditingController();
-  final roomGuestIdController = TextEditingController();
-  var stayDay = DateTime.now();
-  var transactionDay = DateTime.now();
+  DateTime stayDay = DateTime.now();
+  DateTime transactionDay = DateTime.now();
 
-  final transactionTypeController = TextEditingController();
-  final itemTypeController = TextEditingController();
-  final amountController = TextEditingController();
-  final tax1Controller = TextEditingController();
-  final tax2Controller = TextEditingController();
-  final tax3Controller = TextEditingController();
-  final totalController = TextEditingController();
+  final List<String> _transactionTypeOptions = TransactionType.values.map((e) => e.name).toList();
+  final List<String> _itemTypeOptions = ItemType.values.map((e) => e.name).toList();
 
-  final descriptionController = TextEditingController();
-
-  // bool isInHouse = false;
-
-  final List<String> _transactionTypeOptions =
-      TransactionType.values.map((e) => e.name).toList();
-
-  final List<String> _itemTypeOptions =
-      ItemType.values.map((e) => e.name).toList();
-
-  bool _genderHasError = false;
-
-  void _onChanged(dynamic val) => debugPrint(val.toString());
-
-  bool get isEditing {
-    return widget.roomTransactionId != null && widget.roomTransactionId! > 0;
-  }
+  bool get isEditing => widget.roomTransactionId != null && widget.roomTransactionId! > 0;
 
   @override
   void initState() {
     super.initState();
-
     if (isEditing) {
-      print("isEditing ");
-      print(widget.roomTransactionId);
-      context
-          .read<RoomTransactionListBloc>()
-          .add(RetrieveRoomTransactionListEvent(id: widget.roomTransactionId!));
+      context.read<RoomTransactionListBloc>().add(RetrieveRoomTransactionListEvent(id: widget.roomTransactionId!));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("RoomTransaction Edit Page ${widget.roomTransactionId}"),
-          actions: [
-            IconButton(
-              onPressed: () {
-                formkey.currentState?.saveAndValidate();
-                debugPrint(formkey.currentState!.validate().toString());
-                if (formkey.currentState!.validate()) {
-                  //    debugPrint( " here");
-                  final TransactionType transactionType = TransactionType.values
-                      .byName(formkey
-                          .currentState!.fields['transactionType']!.value);
-
-                  final ItemType itemType = ItemType.values
-                      .byName(formkey.currentState!.fields['itemType']!.value);
-
-                  final roomTransaction = RoomTransaction(
-                      id: widget.roomTransactionId,
-                      guestId: int.parse(guestIdController.text),
-                      roomId: int.parse(roomIdController.text),
-                      roomGuestId: int.parse(roomGuestIdController.text),
-                      stayDay: formkey.currentState!.fields['stayDay']!.value,
-                      transactionDay: DateTime.now(),
-                      transactionType: transactionType,
-                      amount: double.parse(amountController.text),
-                      tax1: double.parse(tax1Controller.text),
-                      tax2: double.parse(tax2Controller.text),
-                      tax3: double.parse(tax3Controller.text),
-                      total: double.parse(totalController.text),
-                      description: descriptionController.text,
-                      itemType: itemType);
-
-                  // debugPrint(" after RoomGuest final ");
-                  // debugPrint(roomTransaction.toString());
-                  //! todo
-                  context.read<RoomTransactionListBloc>().add(
-                      CreateRoomTransactionListEvent(
-                          roomTransaction: roomTransaction));
-                }
-              },
-              icon: Icon(Icons.save),
-            ),
-          ],
-        ),
-        body: BlocConsumer<RoomTransactionListBloc, RoomTransactionListState>(
-            listener: (context, state) {
-          if (state is RoomTransactionListStateFailure) {
-            showSnackbar(context, state.message);
-          } else if (state is RoomTransactionListStateCreatedSuccess) {
-            context
-                .read<RoomTransactionListBloc>()
-                .add(FetchRoomTransactionsListEvent());
-            context.pop();
-
-          //  context.pop();
-           /*
-            if (isEditing) {
-              //! May have problem
-              context.read<RoomTransactionListBloc>().add(jeffery)
-                  RetrieveRoomTransactionListEvent(
-                      id: widget.roomTransactionId!));
-            }
-            */
-            
-
-           // context.pop();
-          } else if (state is RoomTransactionListStateDeletedSuccess) {
-            context.read<RoomTransactionListBloc>().add(FetchRoomTransactionsListEvent());
-            context.pop();
-          //  context.pop();
-          } else if (state is RoomTransactionListStateRetrievedSuccess) {
-            /*
-            final roomRoomTransactions = state.roomTransactionroomTransactions;
-
-            if (roomRoomTransactions != null) {
-              final roomGuestId = state.roomTransaction.id;
-              final length = roomRoomTransactions.length;
-              debugPrint(
-                  "RoomTransactions size = $length roomGuest id = $roomGuestId");
-            }
-            */
-
-            debugPrint("RoomTransactionListState RetrieveSuccess ");
-
-            idController.text = state.roomTransaction.id!.toString();
-            guestIdController.text = state.roomTransaction.guestId.toString();
-            roomGuestIdController.text =
-                state.roomTransaction.roomGuestId.toString();
-            roomIdController.text = state.roomTransaction.roomId.toString();
-
-            amountController.text = state.roomTransaction.amount.toString();
-            tax1Controller.text = state.roomTransaction.tax1.toString();
-            tax2Controller.text = state.roomTransaction.tax2.toString();
-            tax3Controller.text = state.roomTransaction.tax3.toString();
-            totalController.text = state.roomTransaction.total.toString();
-            final transactionTypeText =
-                state.roomTransaction.transactionType.toString();
-
-            debugPrint("transactionType $transactionTypeText");
-            //  totalController.text = "99";
-            //   Controller.text = state.roomTransaction..toString();
-            transactionTypeController.text =
-                state.roomTransaction.transactionType.toString();
-            itemTypeController.text = state.roomTransaction.itemType.toString();
-            //itemTypeController.text = "room";
-            transactionDay = state.roomTransaction.transactionDay.toLocal();
-            stayDay = state.roomTransaction.stayDay!;
-            descriptionController.text = state.roomTransaction.description;
-
-            // updatedDate = state.roomTransaction.updateDate!;
-
-            //    final type = state.roomTransaction.rateType;
-            //    final reason = state.roomTransaction.rateReason;
-            //    context.read<RoomGuestManageBloc>().add( CalculateRate(type: type, reason: reason) );
-          }
-        }, builder: (context, state) {
+      appBar: AppBar(
+        title: Text(isEditing ? "Edit Room Transaction" : "New Room Transaction"),
+        actions: [
+          IconButton(
+            onPressed: _saveRoomTransaction,
+            icon: Icon(Icons.save),
+            tooltip: 'Save Room Transaction',
+          ),
+        ],
+      ),
+      body: BlocConsumer<RoomTransactionListBloc, RoomTransactionListState>(
+        listener: _blocListener,
+        builder: (context, state) {
           if (state is RoomTransactionListStateLoading) {
             return const Loader();
           }
+          return _buildForm();
+        },
+      ),
+    );
+  }
 
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: FormBuilder(
-                key: formkey,
-                child: Column(
-                  children: [
-                    //
+  Widget _buildForm() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: FormBuilder(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTransactionDetailsSection(),
+              _buildFinancialDetailsSection(),
+              _buildAdditionalInfoSection(),
+              if (isEditing) _buildActionButtons(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-                    FormBuilderTextField(
-                      name: 'id',
-                      enabled: false,
-                      //  readOnly: true,
-                      controller: idController,
-                      keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(labelText: 'ID'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                        FormBuilderValidators.numeric(),
-                      ]),
-                    ),
-                    //  const SizedBox(height: 10),
-                    FormBuilderDateTimePicker(
-                      name: 'stayDay',
-                      decoration: const InputDecoration(labelText: 'Stay Day'),
-                      initialValue: stayDay,
-                      initialDate: DateTime.now().add(const Duration(days: 10)),
-                      initialDatePickerMode: DatePickerMode.day,
-                      timePickerInitialEntryMode: TimePickerEntryMode.input,
-                      initialEntryMode: DatePickerEntryMode.calendarOnly,
-                      inputType: InputType.date,
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    //   const SizedBox(height: 10),
-                    FormBuilderDateTimePicker(
-                      name: 'transactionDay',
-                      initialValue: transactionDay,
-                      decoration:
-                          const InputDecoration(labelText: 'Transaction Date'),
-                      initialDatePickerMode: DatePickerMode.day,
-                      timePickerInitialEntryMode: TimePickerEntryMode.input,
-                      initialEntryMode: DatePickerEntryMode.calendarOnly,
-                      inputType: InputType.date,
-                    ),
-                    //     const SizedBox(height: 10),
-                    const SizedBox(height: 10),
-                    FormBuilderTextField(
-                        name: 'Room Id',
-                        maxLength: 11,
-                        controller: roomIdController,
-                        keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(labelText: 'Room Id'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
+  Widget _buildTransactionDetailsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Transaction Details', style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildTextField('id', 'Transaction ID', idController, enabled: false),
+        _buildDateTimePicker('stayDay', 'Stay Day', initialValue: stayDay),
+        _buildDateTimePicker('transactionDay', 'Transaction Day', initialValue: transactionDay),
+        _buildTextField('roomId', 'Room ID', roomIdController),
+        _buildTextField('guestId', 'Guest ID', guestIdController),
+        _buildDropdown('transactionType', 'Transaction Type', _transactionTypeOptions, initialValue: transactionTypeController.text),
+      ],
+    );
+  }
 
-                          //     FormBuilderValidators.minWordsCount(10,
-                          //        allowEmpty: false, errorText: 'e.g. 17805425375'),
-                        ])),
-                    const SizedBox(height: 10),
-                    FormBuilderTextField(
-                      name: 'Guest Id',
-                      maxLength: 11,
-                      controller: guestIdController,
-                      keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(labelText: 'Guest Id'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
+  Widget _buildFinancialDetailsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+        Text('Financial Details', style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildTextField('amount', 'Amount', amountController, keyboardType: TextInputType.number),
+        _buildTextField('tax1', 'GST', tax1Controller, keyboardType: TextInputType.number),
+        _buildTextField('tax2', 'Levy', tax2Controller, keyboardType: TextInputType.number),
+        _buildTextField('tax3', 'Additional Tax', tax3Controller, keyboardType: TextInputType.number),
+        _buildTextField('total', 'Total', totalController, keyboardType: TextInputType.number),
+      ],
+    );
+  }
 
-                        //     FormBuilderValidators.minWordsCount(10,
-                        //        allowEmpty: false, errorText: 'e.g. 17805425375'),
-                      ]),
-                      //    const SizedBox(height: 10),
-                    ),
-                    const SizedBox(height: 10),
-                    FormBuilderDropdown<String>(
-                      name: 'transactionType',
-                      initialValue: transactionTypeController.text,
-                      //            initialValue: "pay",
-                      decoration: InputDecoration(
-                        labelText: 'TransactionType',
-                        suffix: _genderHasError
-                            ? const Icon(Icons.error)
-                            : const Icon(Icons.check),
-                        hintText: 'Select Transaction Type',
-                      ),
-                      validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required()]),
-                      items: _transactionTypeOptions
-                          .map((transactonType) => DropdownMenuItem(
-                                alignment: AlignmentDirectional.center,
-                                value: transactonType,
-                                child: Text(transactonType),
-                              ))
-                          .toList(),
-                      onChanged: (val) {
-                        formkey.currentState?.fields['transactionType']?.save();
-                        //    newRate = ref.read(rateTableProvider( RateTable(rateType: rateType, rateReason: rateReason, rate: 0.00 )  ));
-                      },
-                      valueTransformer: (val) => val?.toString(),
-                    ),
-                    //        const SizedBox(height: 10),
+  Widget _buildAdditionalInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+        Text('Additional Information', style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildTextField('roomGuestId', 'Room Guest ID', roomGuestIdController),
+        _buildDropdown('itemType', 'Item Type', _itemTypeOptions, initialValue: itemTypeController.text),
+        _buildTextField('description', 'Description', descriptionController, maxLines: 3),
+      ],
+    );
+  }
 
-                    FormBuilderTextField(
-                      name: 'amount',
-                      controller: amountController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'amount'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    FormBuilderTextField(
-                      name: 'tax1',
-                      controller: tax1Controller,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'GST'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    FormBuilderTextField(
-                      name: 'tax2',
-                      controller: tax2Controller,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'Levy'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
+  Widget _buildActionButtons() {
+    return Column(
+      children: [
+        const SizedBox(height: 24),
+        _buildButton('Delete Transaction', () => context.read<RoomTransactionListBloc>().add(DeleteRoomTransactionListEvent(id: widget.roomTransactionId!))),
+        const SizedBox(height: 16),
+        _buildButton('Charge & Extend Stay', () => context.read<RoomGuestManageBloc>().add(ChargeAndExtendStayDay(id: widget.roomTransactionId!))),
+      ],
+    );
+  }
 
-                    FormBuilderTextField(
-                      name: 'tax3',
-                      controller: tax3Controller,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'tax3'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
+  Widget _buildTextField(String name, String label, TextEditingController controller, {bool enabled = true, TextInputType keyboardType = TextInputType.text, int maxLines = 1}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        enabled: enabled,
+        keyboardType: keyboardType,
+        maxLines: maxLines,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+      ),
+    );
+  }
 
-                    FormBuilderTextField(
-                      name: 'total',
-                      controller: totalController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'total'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    FormBuilderTextField(
-                        name: 'roomGuestId',
-                        controller: roomGuestIdController,
-                        decoration:
-                            const InputDecoration(labelText: 'roomGuestId'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.numeric(),
-                        ]),
-                        onChanged: (value) {
-                          if (value != null) {
-                            //     context.read<RoomGuestManageBloc>().add(
-                            //        RetrieveGuestForRoomGuest(
-                            //           id: int.parse(value)));
-                          }
-                        }),
+  Widget _buildDateTimePicker(String name, String label, {required DateTime initialValue}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderDateTimePicker(
+        name: name,
+        initialValue: initialValue,
+        inputType: InputType.date,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+      ),
+    );
+  }
 
-                    const SizedBox(height: 10),
-                    FormBuilderDropdown<String>(
-                      name: 'itemType',
-                      initialValue: itemTypeController.text,
-                      decoration: InputDecoration(
-                        labelText: 'ItemType',
-                        suffix: _genderHasError
-                            ? const Icon(Icons.error)
-                            : const Icon(Icons.check),
-                        hintText: 'Select Item Type',
-                      ),
-                      validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required()]),
-                      items: _itemTypeOptions
-                          .map((itemType) => DropdownMenuItem(
-                                alignment: AlignmentDirectional.center,
-                                value: itemType,
-                                child: Text(itemType),
-                              ))
-                          .toList(),
-                      onChanged: (val) {
-                        formkey.currentState!.fields['itemType']?.save();
-                      },
-                      valueTransformer: (val) => val?.toString(),
-                    ),
-                    if (isEditing)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              context
-                                   .read<RoomTransactionListBloc>()
-                                  .add(DeleteRoomTransactionListEvent(id: widget.roomTransactionId!));
-                            },
-                            child: const Text("Delete")),
-                      ),
-                    if (isEditing)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              context.read<RoomGuestManageBloc>().add(
-                                  ChargeAndExtendStayDay(
-                                      id: widget.roomTransactionId!));
-                            },
-                            child: const Text("Charge & Extend")),
-                      ),
+  Widget _buildDropdown(String name, String label, List<String> options, {required String initialValue}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderDropdown<String>(
+        name: name,
+        initialValue: initialValue,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+        items: options.map((option) => DropdownMenuItem(value: option, child: Text(option))).toList(),
+      ),
+    );
+  }
 
-                    if (isEditing)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              //   context.read<RoomTransactionListBloc>().add(
-                              //      CalculateRateRoomGuest(widget.roomTransactionId!));
-                            },
-                            child: const Text("Calculate Rate")),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }));
+  Widget _buildButton(String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(text),
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(double.infinity, 50),
+      ),
+    );
+  }
+
+  void _saveRoomTransaction() {
+    if (formKey.currentState!.saveAndValidate()) {
+      final transactionType = TransactionType.values.byName(formKey.currentState!.fields['transactionType']!.value);
+      final itemType = ItemType.values.byName(formKey.currentState!.fields['itemType']!.value);
+
+      final roomTransaction = RoomTransaction(
+        id: widget.roomTransactionId,
+        guestId: int.parse(guestIdController.text),
+        roomId: int.parse(roomIdController.text),
+        roomGuestId: int.parse(roomGuestIdController.text),
+        stayDay: formKey.currentState!.fields['stayDay']!.value,
+        transactionDay: formKey.currentState!.fields['transactionDay']!.value,
+        transactionType: transactionType,
+        amount: double.parse(amountController.text),
+        tax1: double.parse(tax1Controller.text),
+        tax2: double.parse(tax2Controller.text),
+        tax3: double.parse(tax3Controller.text),
+        total: double.parse(totalController.text),
+        description: descriptionController.text,
+        itemType: itemType,
+      );
+
+      context.read<RoomTransactionListBloc>().add(CreateRoomTransactionListEvent(roomTransaction: roomTransaction));
+    }
+  }
+
+  void _blocListener(BuildContext context, RoomTransactionListState state) {
+    if (state is RoomTransactionListStateFailure) {
+      showSnackbar(context, state.message);
+    } else if (state is RoomTransactionListStateCreatedSuccess ||
+               state is RoomTransactionListStateDeletedSuccess) {
+      context.read<RoomTransactionListBloc>().add(FetchRoomTransactionsListEvent());
+      context.pop();
+    } else if (state is RoomTransactionListStateRetrievedSuccess) {
+      _populateFields(state.roomTransaction);
+    }
+  }
+
+  void _populateFields(RoomTransaction transaction) {
+    idController.text = transaction.id.toString();
+    guestIdController.text = transaction.guestId.toString();
+    roomGuestIdController.text = transaction.roomGuestId.toString();
+    roomIdController.text = transaction.roomId.toString();
+    amountController.text = transaction.amount.toString();
+    tax1Controller.text = transaction.tax1.toString();
+    tax2Controller.text = transaction.tax2.toString();
+    tax3Controller.text = transaction.tax3.toString();
+    totalController.text = transaction.total.toString();
+    transactionTypeController.text = transaction.transactionType.toString();
+    itemTypeController.text = transaction.itemType.toString();
+    transactionDay = transaction.transactionDay.toLocal();
+    stayDay = transaction.stayDay!;
+    descriptionController.text = transaction.description;
+    
+    formKey.currentState?.patchValue({
+      'transactionType': transaction.transactionType.name,
+      'itemType': transaction.itemType.name,
+    });
   }
 }

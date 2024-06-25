@@ -23,418 +23,275 @@ class RoomGuestEditPage extends StatefulWidget {
 }
 
 class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
-  final formkey = GlobalKey<FormBuilderState>();
-  final roomIdController = TextEditingController();
-  final guestIdController = TextEditingController();
+  final formKey = GlobalKey<FormBuilderState>();
+  final TextEditingController idController = TextEditingController(text: "0");
+  final TextEditingController roomIdController = TextEditingController();
+  final TextEditingController guestIdController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController rateTypeController = TextEditingController();
+  final TextEditingController rigNumberController = TextEditingController();
+  final TextEditingController rateController = TextEditingController();
+  final TextEditingController rateReasonController = TextEditingController();
+  final TextEditingController reservationIdController = TextEditingController();
 
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final rateTypeController = TextEditingController();
-  final idController = TextEditingController(text: "0");
-  final rigNumberController = TextEditingController();
-  final rateController = TextEditingController();
-  final rateReasonController = TextEditingController();
-  final reservationIdController = TextEditingController();
-
-  var stayDate = DateTime.now();
-  var updatedDate = DateTime.now();
-  var checkOutDate = DateTime.now();
+  DateTime stayDate = DateTime.now();
+  DateTime updatedDate = DateTime.now();
+  DateTime checkOutDate = DateTime.now();
   bool isCheckOut = false;
 
-  // bool isInHouse = false;
+  final List<String> _rateTypeOptions = RateType.values.map((e) => e.name).toList();
+  final List<String> _rateReasonOptions = RateReason.values.map((e) => e.name).toList();
 
-  final List<String> _rateTypeOptions =
-      RateType.values.map((e) => e.name).toList();
-  final List<String> _rateReasonOptions =
-      RateReason.values.map((e) => e.name).toList();
-
-  bool _genderHasError = false;
-
-  void _onChanged(dynamic val) => debugPrint(val.toString());
-
-  bool get isEditing {
-    return widget.roomGuestId != null && widget.roomGuestId! > 0;
-  }
+  bool get isEditing => widget.roomGuestId != null && widget.roomGuestId! > 0;
 
   @override
   void initState() {
     super.initState();
-
     if (isEditing) {
-      print("isEditing ");
-      print(widget.roomGuestId);
-      context
-          .read<RoomGuestManageBloc>()
-          .add(RetrieveRoomGuest(widget.roomGuestId!));
+      context.read<RoomGuestManageBloc>().add(RetrieveRoomGuest(widget.roomGuestId!));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("RoomGuest Edit Page ${widget.roomGuestId}"),
-          actions: [
-            IconButton(
-              onPressed: () {
-                formkey.currentState?.saveAndValidate();
-                debugPrint(formkey.currentState!.validate().toString());
-                if (formkey.currentState!.validate()) {
-                  //    debugPrint( " here");
-                  final RateType rateType = RateType.values
-                      .byName(formkey.currentState!.fields['rateType']!.value);
-
-                  final RateReason rateReason = RateReason.values.byName(
-                      formkey.currentState!.fields['rateReason']!.value);
-
-                  final roomGuest = RoomGuest(
-                    id: widget.roomGuestId,
-                    guestId: int.parse(guestIdController.text),
-                    roomId: int.parse(roomIdController.text),
-                    stayDate: formkey.currentState!.fields['stayDate']!.value,
-                    updateDate:
-                        formkey.currentState!.fields['updateDate']!.value,
-                    checkInDate: DateTime.now().getDateOnly(),
-                    checkOutDate:
-                        formkey.currentState!.fields['checkOutDate']!.value,
-                    rateType: rateType,
-                    rate: double.parse(rateController.text),
-                    rateReason: rateReason,
-                    roomStatus: RoomStatus.change,
-                    reservationId: int.parse(reservationIdController.text),
-                    isCheckOut: isCheckOut,
-                  );
-
-                  // debugPrint(" after RoomGuest final ");
-                  // debugPrint(RoomGuest.toString());
-                  //! todo
-                  context
-                      .read<RoomGuestManageBloc>()
-                      .add(SaveRoomGuest(roomGuest));
-                }
-              },
-              icon: Icon(Icons.done),
-            ),
-          ],
-        ),
-        body: BlocConsumer<RoomGuestManageBloc, RoomGuestManageState>(
-            listener: (context, state) {
-          if (state is RoomGuestManageStateFailure) {
-            showSnackbar(context, state.message);
-          } else if (state is RoomGuestManageStateSaveSuccess) {
-            context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
-            //      context.pop();
-            context.pop();
-            /*
-            if (isEditing) {
-              //! May have problem
-              context
-                  .read<RoomGuestManageBloc>()
-                  .add(RetrieveRoomGuest(widget.roomGuestId!));
-            }
-*/
-            //  context.pop();
-          } else if ( state is RoomGuestManageStateCalculateRateSuccess ) {
-            context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
-            context.pop();
-          //  context.pop();
-          }
-          
-          else if (state is RoomGuestManageStateDeleteSuccess) {
-            context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
-            context.pop();
-         //   context.pop();
-          } else if (state
-              is RoomGuestManageStateChargeAndExtendStayDaySuccess) {
-            context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
-            context.pop();
-          //  context.pop();
-          } else if (state is RoomGuestManageStateRetrieveSuccess) {
-            final roomRoomTransactions = state.roomGuest.roomTransactions;
-
-            if (roomRoomTransactions != null) {
-              final roomGuestId = state.roomGuest.id;
-              final length = roomRoomTransactions.length;
-              debugPrint(
-                  "RoomTransactions size = $length roomGuest id = $roomGuestId");
-            }
-
-            debugPrint("RoomGuestManageState RetrieveSuccess ");
-            idController.text = state.roomGuest.id!.toString();
-            guestIdController.text = state.roomGuest.guestId.toString();
-            roomIdController.text = state.roomGuest.roomId.toString();
-            rateController.text = state.roomGuest.rate.toString();
-
-            rateReasonController.text = state.roomGuest.rateReason.toString();
-            rateTypeController.text = state.roomGuest.rateType.toString();
-
-            firstNameController.text = state.roomGuest.guest!.firstName;
-            lastNameController.text = state.roomGuest.guest!.lastName;
-            reservationIdController.text =
-                state.roomGuest.reservationId.toString();
-
-            checkOutDate = state.roomGuest.checkOutDate;
-            rigNumberController.text =
-                state.roomGuest.guest!.rigNumber.toString();
-
-            stayDate = state.roomGuest.stayDate;
-            isCheckOut = state.roomGuest.isCheckOut;
-            // updatedDate = state.roomGuest.updateDate!;
-
-            //    final type = state.roomGuest.rateType;
-            //    final reason = state.roomGuest.rateReason;
-            //    context.read<RoomGuestManageBloc>().add( CalculateRate(type: type, reason: reason) );
-          }
-        }, builder: (context, state) {
+      appBar: AppBar(
+        title: Text(isEditing ? "Edit Room Guest" : "New Room Guest"),
+        actions: [
+          IconButton(
+            onPressed: _saveRoomGuest,
+            icon: Icon(Icons.save),
+            tooltip: 'Save Room Guest',
+          ),
+        ],
+      ),
+      body: BlocConsumer<RoomGuestManageBloc, RoomGuestManageState>(
+        listener: _blocListener,
+        builder: (context, state) {
           if (state is RoomGuestManageStateLoading) {
             return const Loader();
           }
+          return _buildForm();
+        },
+      ),
+    );
+  }
 
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: FormBuilder(
-                key: formkey,
-                child: Column(
-                  children: [
-                    //
+  Widget _buildForm() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: FormBuilder(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildGuestInfoSection(),
+              _buildStayInfoSection(),
+              _buildRateInfoSection(),
+              _buildAdditionalInfoSection(),
+              if (isEditing) _buildActionButtons(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-                    FormBuilderTextField(
-                      name: 'id',
-                      enabled: false,
-                      //  readOnly: true,
-                      controller: idController,
-                      keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(labelText: 'ID'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                        FormBuilderValidators.numeric(),
-                      ]),
-                    ),
-                    //  const SizedBox(height: 10),
-                    FormBuilderDateTimePicker(
-                      name: 'stayDate',
-                      decoration: const InputDecoration(labelText: 'Stay Date'),
-                      initialValue: stayDate,
-                      initialDate: DateTime.now().add(const Duration(days: 10)),
-                      initialDatePickerMode: DatePickerMode.day,
-                      timePickerInitialEntryMode: TimePickerEntryMode.input,
-                      initialEntryMode: DatePickerEntryMode.calendarOnly,
-                      inputType: InputType.date,
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    //   const SizedBox(height: 10),
-                    FormBuilderDateTimePicker(
-                      name: 'checkOutDate',
-                      initialValue: checkOutDate,
-                      decoration:
-                          const InputDecoration(labelText: 'Check Out Date'),
-                      initialDatePickerMode: DatePickerMode.day,
-                      timePickerInitialEntryMode: TimePickerEntryMode.input,
-                      initialEntryMode: DatePickerEntryMode.calendarOnly,
-                      inputType: InputType.date,
-                    ),
-                    //     const SizedBox(height: 10),
-                    FormBuilderTextField(
-                      name: 'lastName',
-                      // enabled: false,
-                      controller: lastNameController,
-                      decoration: const InputDecoration(labelText: 'Last Name'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    FormBuilderTextField(
-                      name: 'firstName',
-                      controller: firstNameController,
-                      decoration:
-                          const InputDecoration(labelText: 'First Name'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    const SizedBox(height: 10),
-                    FormBuilderSwitch(
-                      title: const Text('Is Check Out'),
-                      initialValue: isCheckOut,
-                      name: 'isCheckOut',
-                      onChanged: _onChanged,
-                    ),
-                    const SizedBox(height: 10),
-                    FormBuilderTextField(
-                      name: 'Reservation Id',
-                      maxLength: 11,
-                      controller: reservationIdController,
-                      keyboardType: TextInputType.phone,
-                      decoration:
-                          const InputDecoration(labelText: 'Reservation ID'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
+  Widget _buildGuestInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Guest Information', style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildTextField('id', 'ID', idController, enabled: false),
+        _buildTextField('lastName', 'Last Name', lastNameController),
+        _buildTextField('firstName', 'First Name', firstNameController),
+        _buildTextField('guestId', 'Guest ID', guestIdController, keyboardType: TextInputType.number),
+        _buildTextField('rigNumber', 'Rig Number', rigNumberController, keyboardType: TextInputType.number),
+      ],
+    );
+  }
 
-                        //     FormBuilderValidators.minWordsCount(10,
-                        //        allowEmpty: false, errorText: 'e.g. 17805425375'),
-                      ]),
-                      onChanged: (value) {
-                        if (formkey
-                            .currentState!.fields['phone']!.valueIsValid) {
-                          if (value != null) {
-                            //  context.read<RoomGuestManageBloc>().add(
-                            //     RetrieveGuestByPhoneForRoomGuest(
-                            //         phone: value.trim()));
-                          }
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    FormBuilderDropdown<String>(
-                      name: 'rateReason',
-                      initialValue: rateReasonController.text,
-                      decoration: InputDecoration(
-                        labelText: 'RateReason',
-                        suffix: _genderHasError
-                            ? const Icon(Icons.error)
-                            : const Icon(Icons.check),
-                        hintText: 'Select RateReason',
-                      ),
-                      validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required()]),
-                      items: _rateReasonOptions
-                          .map((rateType) => DropdownMenuItem(
-                                alignment: AlignmentDirectional.center,
-                                value: rateType,
-                                child: Text(rateType),
-                              ))
-                          .toList(),
-                      onChanged: (val) {
-                        formkey.currentState?.fields['rateReason']?.save();
-                        //    newRate = ref.read(rateTableProvider( RateTable(rateType: rateType, rateReason: rateReason, rate: 0.00 )  ));
-                      },
-                      valueTransformer: (val) => val?.toString(),
-                    ),
-                    //        const SizedBox(height: 10),
+  Widget _buildStayInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+        Text('Stay Information', style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildDateTimePicker('stayDate', 'Stay Date', initialValue: stayDate),
+        _buildDateTimePicker('checkOutDate', 'Check Out Date', initialValue: checkOutDate),
+        _buildTextField('roomId', 'Room ID', roomIdController, keyboardType: TextInputType.number),
+        _buildTextField('reservationId', 'Reservation ID', reservationIdController, keyboardType: TextInputType.number),
+        FormBuilderSwitch(
+          name: 'isCheckOut',
+          title: const Text('Is Check Out'),
+          initialValue: isCheckOut,
+          onChanged: (val) => setState(() => isCheckOut = val ?? false),
+        ),
+      ],
+    );
+  }
 
-                    FormBuilderTextField(
-                      name: 'rate',
-                      controller: rateController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'rate'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    FormBuilderTextField(
-                        name: 'guestId',
-                        controller: guestIdController,
-                        decoration: const InputDecoration(labelText: 'guestId'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.numeric(),
-                        ]),
-                        onChanged: (value) {
-                          if (value != null) {
-                            //     context.read<RoomGuestManageBloc>().add(
-                            //        RetrieveGuestForRoomGuest(
-                            //           id: int.parse(value)));
-                          }
-                        }),
-                    FormBuilderTextField(
-                      name: 'roomId',
-                      controller: roomIdController,
-                      decoration: const InputDecoration(labelText: 'roomId'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                        FormBuilderValidators.numeric(),
-                      ]),
-                    ),
-                    FormBuilderTextField(
-                      name: 'rigNumber',
-                      controller: rigNumberController,
-                      keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(labelText: 'rigNumber'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    const SizedBox(height: 10),
-                    FormBuilderDropdown<String>(
-                      name: 'rateType',
-                      initialValue: rateTypeController.text,
-                      decoration: InputDecoration(
-                        labelText: 'RateType',
-                        suffix: _genderHasError
-                            ? const Icon(Icons.error)
-                            : const Icon(Icons.check),
-                        hintText: 'Select RateType',
-                      ),
-                      validator: FormBuilderValidators.compose(
-                          [FormBuilderValidators.required()]),
-                      items: _rateTypeOptions
-                          .map((rateType) => DropdownMenuItem(
-                                alignment: AlignmentDirectional.center,
-                                value: rateType,
-                                child: Text(rateType),
-                              ))
-                          .toList(),
-                      onChanged: (val) {
-                        formkey.currentState!.fields['rateType']?.save();
-                      },
-                      valueTransformer: (val) => val?.toString(),
-                    ),
+  Widget _buildRateInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+        Text('Rate Information', style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildDropdown('rateType', 'Rate Type', _rateTypeOptions, initialValue: rateTypeController.text),
+        _buildDropdown('rateReason', 'Rate Reason', _rateReasonOptions, initialValue: rateReasonController.text),
+        _buildTextField('rate', 'Rate', rateController, keyboardType: TextInputType.number),
+      ],
+    );
+  }
 
-                    const SizedBox(height: 10),
-                    FormBuilderDateTimePicker(
-                      name: 'updateDate',
-                      enabled: false,
-                      decoration:
-                          const InputDecoration(labelText: 'Update Date'),
-                      initialValue: updatedDate,
-                      initialDatePickerMode: DatePickerMode.day,
-                      timePickerInitialEntryMode: TimePickerEntryMode.input,
-                      initialEntryMode: DatePickerEntryMode.calendarOnly,
-                      inputType: InputType.date,
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
-                      ]),
-                    ),
-                    if (isEditing)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              context.read<RoomGuestManageBloc>().add(
-                                  ChargeAndExtendStayDay(
-                                      id: widget.roomGuestId!));
-                            },
-                            child: const Text("Charge & Extend")),
-                      ),
-                    if (isEditing)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              context.read<RoomGuestManageBloc>().add(
-                                  CalculateRateRoomGuest(widget.roomGuestId!));
-                            },
-                            child: const Text("Calculate Rate")),
-                      ),
-                    if (isEditing)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              context
-                                  .read<RoomGuestManageBloc>()
-                                  .add(DeleteRoomGuest(widget.roomGuestId!));
-                            },
-                            child: const Text("Delete")),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }));
+  Widget _buildAdditionalInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+        Text('Additional Information', style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildDateTimePicker('updateDate', 'Update Date', initialValue: updatedDate, enabled: false),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Column(
+      children: [
+        const SizedBox(height: 24),
+        _buildButton('Charge & Extend', () => context.read<RoomGuestManageBloc>().add(ChargeAndExtendStayDay(id: widget.roomGuestId!))),
+        const SizedBox(height: 16),
+        _buildButton('Calculate Rate', () => context.read<RoomGuestManageBloc>().add(CalculateRateRoomGuest(widget.roomGuestId!))),
+        const SizedBox(height: 16),
+        _buildButton('Delete', () => context.read<RoomGuestManageBloc>().add(DeleteRoomGuest(widget.roomGuestId!)), color: Colors.red),
+      ],
+    );
+  }
+
+  Widget _buildTextField(String name, String label, TextEditingController controller, {bool enabled = true, TextInputType keyboardType = TextInputType.text}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+      ),
+    );
+  }
+
+  Widget _buildDateTimePicker(String name, String label, {required DateTime initialValue, bool enabled = true}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderDateTimePicker(
+        name: name,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        initialValue: initialValue,
+        inputType: InputType.date,
+        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+      ),
+    );
+  }
+
+  Widget _buildDropdown(String name, String label, List<String> options, {required String initialValue}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderDropdown<String>(
+        name: name,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        initialValue: initialValue,
+        items: options.map((option) => DropdownMenuItem(value: option, child: Text(option))).toList(),
+        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+      ),
+    );
+  }
+
+  Widget _buildButton(String text, VoidCallback onPressed, {Color color = Colors.blue}) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(text),
+      style: ElevatedButton.styleFrom(
+        backgroundColor:  color,
+        minimumSize: Size(double.infinity, 50),
+      ),
+    );
+  }
+
+  void _saveRoomGuest() {
+    if (formKey.currentState?.saveAndValidate() ?? false) {
+      final roomGuest = RoomGuest(
+        id: widget.roomGuestId,
+        guestId: int.parse(guestIdController.text),
+        roomId: int.parse(roomIdController.text),
+        stayDate: formKey.currentState!.fields['stayDate']!.value,
+        updateDate: formKey.currentState!.fields['updateDate']!.value,
+        checkInDate: DateTime.now().getDateOnly(),
+        checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
+        rateType: RateType.values.byName(formKey.currentState!.fields['rateType']!.value),
+        rate: double.parse(rateController.text),
+        rateReason: RateReason.values.byName(formKey.currentState!.fields['rateReason']!.value),
+        roomStatus: RoomStatus.change,
+        reservationId: int.parse(reservationIdController.text),
+        isCheckOut: isCheckOut,
+      );
+
+      context.read<RoomGuestManageBloc>().add(SaveRoomGuest(roomGuest));
+    }
+  }
+
+  void _blocListener(BuildContext context, RoomGuestManageState state) {
+    if (state is RoomGuestManageStateFailure) {
+      showSnackbar(context, state.message);
+    } else if (state is RoomGuestManageStateSaveSuccess ||
+               state is RoomGuestManageStateCalculateRateSuccess ||
+               state is RoomGuestManageStateDeleteSuccess ||
+               state is RoomGuestManageStateChargeAndExtendStayDaySuccess) {
+      context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
+      context.pop();
+    } else if (state is RoomGuestManageStateRetrieveSuccess) {
+      _populateFields(state.roomGuest);
+    }
+  }
+
+  void _populateFields(RoomGuest roomGuest) {
+    idController.text = roomGuest.id!.toString();
+    guestIdController.text = roomGuest.guestId.toString();
+    roomIdController.text = roomGuest.roomId.toString();
+    rateController.text = roomGuest.rate.toString();
+    rateReasonController.text = roomGuest.rateReason.toString();
+    rateTypeController.text = roomGuest.rateType.toString();
+    firstNameController.text = roomGuest.guest!.firstName;
+    lastNameController.text = roomGuest.guest!.lastName;
+    reservationIdController.text = roomGuest.reservationId.toString();
+    rigNumberController.text = roomGuest.guest!.rigNumber.toString();
+
+    setState(() {
+      checkOutDate = roomGuest.checkOutDate;
+      stayDate = roomGuest.stayDate;
+      isCheckOut = roomGuest.isCheckOut;
+    });
+
+    formKey.currentState?.patchValue({
+      'rateType': roomGuest.rateType.name,
+      'rateReason': roomGuest.rateReason.name,
+    });
   }
 }
