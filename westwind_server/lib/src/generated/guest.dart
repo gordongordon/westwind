@@ -28,6 +28,7 @@ abstract class Guest extends _i1.TableRow {
     this.company,
     required this.rigNumber,
     required this.accountBalance,
+    this.roomGuets,
   }) : super(id);
 
   factory Guest({
@@ -45,6 +46,7 @@ abstract class Guest extends _i1.TableRow {
     _i2.Company? company,
     required int rigNumber,
     required double accountBalance,
+    List<_i2.RoomGuest>? roomGuets,
   }) = _GuestImpl;
 
   factory Guest.fromJson(
@@ -79,6 +81,8 @@ abstract class Guest extends _i1.TableRow {
           serializationManager.deserialize<int>(jsonSerialization['rigNumber']),
       accountBalance: serializationManager
           .deserialize<double>(jsonSerialization['accountBalance']),
+      roomGuets: serializationManager
+          .deserialize<List<_i2.RoomGuest>?>(jsonSerialization['roomGuets']),
     );
   }
 
@@ -112,6 +116,8 @@ abstract class Guest extends _i1.TableRow {
 
   double accountBalance;
 
+  List<_i2.RoomGuest>? roomGuets;
+
   @override
   _i1.Table get table => t;
 
@@ -130,6 +136,7 @@ abstract class Guest extends _i1.TableRow {
     _i2.Company? company,
     int? rigNumber,
     double? accountBalance,
+    List<_i2.RoomGuest>? roomGuets,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -148,6 +155,8 @@ abstract class Guest extends _i1.TableRow {
       if (company != null) 'company': company?.toJson(),
       'rigNumber': rigNumber,
       'accountBalance': accountBalance,
+      if (roomGuets != null)
+        'roomGuets': roomGuets?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -188,6 +197,8 @@ abstract class Guest extends _i1.TableRow {
       if (company != null) 'company': company?.allToJson(),
       'rigNumber': rigNumber,
       'accountBalance': accountBalance,
+      if (roomGuets != null)
+        'roomGuets': roomGuets?.toJson(valueToJson: (v) => v.allToJson()),
     };
   }
 
@@ -367,8 +378,14 @@ abstract class Guest extends _i1.TableRow {
     );
   }
 
-  static GuestInclude include({_i2.CompanyInclude? company}) {
-    return GuestInclude._(company: company);
+  static GuestInclude include({
+    _i2.CompanyInclude? company,
+    _i2.RoomGuestIncludeList? roomGuets,
+  }) {
+    return GuestInclude._(
+      company: company,
+      roomGuets: roomGuets,
+    );
   }
 
   static GuestIncludeList includeList({
@@ -410,6 +427,7 @@ class _GuestImpl extends Guest {
     _i2.Company? company,
     required int rigNumber,
     required double accountBalance,
+    List<_i2.RoomGuest>? roomGuets,
   }) : super._(
           id: id,
           firstName: firstName,
@@ -425,6 +443,7 @@ class _GuestImpl extends Guest {
           company: company,
           rigNumber: rigNumber,
           accountBalance: accountBalance,
+          roomGuets: roomGuets,
         );
 
   @override
@@ -443,6 +462,7 @@ class _GuestImpl extends Guest {
     Object? company = _Undefined,
     int? rigNumber,
     double? accountBalance,
+    Object? roomGuets = _Undefined,
   }) {
     return Guest(
       id: id is int? ? id : this.id,
@@ -459,6 +479,9 @@ class _GuestImpl extends Guest {
       company: company is _i2.Company? ? company : this.company?.copyWith(),
       rigNumber: rigNumber ?? this.rigNumber,
       accountBalance: accountBalance ?? this.accountBalance,
+      roomGuets: roomGuets is List<_i2.RoomGuest>?
+          ? roomGuets
+          : this.roomGuets?.clone(),
     );
   }
 }
@@ -542,6 +565,10 @@ class GuestTable extends _i1.Table {
 
   late final _i1.ColumnDouble accountBalance;
 
+  _i2.RoomGuestTable? ___roomGuets;
+
+  _i1.ManyRelation<_i2.RoomGuestTable>? _roomGuets;
+
   _i2.CompanyTable get company {
     if (_company != null) return _company!;
     _company = _i1.createRelationTable(
@@ -553,6 +580,37 @@ class GuestTable extends _i1.Table {
           _i2.CompanyTable(tableRelation: foreignTableRelation),
     );
     return _company!;
+  }
+
+  _i2.RoomGuestTable get __roomGuets {
+    if (___roomGuets != null) return ___roomGuets!;
+    ___roomGuets = _i1.createRelationTable(
+      relationFieldName: '__roomGuets',
+      field: Guest.t.id,
+      foreignField: _i2.RoomGuest.t.guestId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.RoomGuestTable(tableRelation: foreignTableRelation),
+    );
+    return ___roomGuets!;
+  }
+
+  _i1.ManyRelation<_i2.RoomGuestTable> get roomGuets {
+    if (_roomGuets != null) return _roomGuets!;
+    var relationTable = _i1.createRelationTable(
+      relationFieldName: 'roomGuets',
+      field: Guest.t.id,
+      foreignField: _i2.RoomGuest.t.guestId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.RoomGuestTable(tableRelation: foreignTableRelation),
+    );
+    _roomGuets = _i1.ManyRelation<_i2.RoomGuestTable>(
+      tableWithRelations: relationTable,
+      table: _i2.RoomGuestTable(
+          tableRelation: relationTable.tableRelation!.lastRelation),
+    );
+    return _roomGuets!;
   }
 
   @override
@@ -577,6 +635,9 @@ class GuestTable extends _i1.Table {
     if (relationField == 'company') {
       return company;
     }
+    if (relationField == 'roomGuets') {
+      return __roomGuets;
+    }
     return null;
   }
 }
@@ -585,14 +646,23 @@ class GuestTable extends _i1.Table {
 GuestTable tGuest = GuestTable();
 
 class GuestInclude extends _i1.IncludeObject {
-  GuestInclude._({_i2.CompanyInclude? company}) {
+  GuestInclude._({
+    _i2.CompanyInclude? company,
+    _i2.RoomGuestIncludeList? roomGuets,
+  }) {
     _company = company;
+    _roomGuets = roomGuets;
   }
 
   _i2.CompanyInclude? _company;
 
+  _i2.RoomGuestIncludeList? _roomGuets;
+
   @override
-  Map<String, _i1.Include?> get includes => {'company': _company};
+  Map<String, _i1.Include?> get includes => {
+        'company': _company,
+        'roomGuets': _roomGuets,
+      };
 
   @override
   _i1.Table get table => Guest.t;
@@ -621,7 +691,13 @@ class GuestIncludeList extends _i1.IncludeList {
 class GuestRepository {
   const GuestRepository._();
 
+  final attach = const GuestAttachRepository._();
+
   final attachRow = const GuestAttachRowRepository._();
+
+  final detach = const GuestDetachRepository._();
+
+  final detachRow = const GuestDetachRowRepository._();
 
   Future<List<Guest>> find(
     _i1.Session session, {
@@ -775,6 +851,30 @@ class GuestRepository {
   }
 }
 
+class GuestAttachRepository {
+  const GuestAttachRepository._();
+
+  Future<void> roomGuets(
+    _i1.Session session,
+    Guest guest,
+    List<_i2.RoomGuest> roomGuest,
+  ) async {
+    if (roomGuest.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('roomGuest.id');
+    }
+    if (guest.id == null) {
+      throw ArgumentError.notNull('guest.id');
+    }
+
+    var $roomGuest =
+        roomGuest.map((e) => e.copyWith(guestId: guest.id)).toList();
+    await session.dbNext.update<_i2.RoomGuest>(
+      $roomGuest,
+      columns: [_i2.RoomGuest.t.guestId],
+    );
+  }
+}
+
 class GuestAttachRowRepository {
   const GuestAttachRowRepository._();
 
@@ -794,6 +894,63 @@ class GuestAttachRowRepository {
     await session.dbNext.updateRow<Guest>(
       $guest,
       columns: [Guest.t.companyId],
+    );
+  }
+
+  Future<void> roomGuets(
+    _i1.Session session,
+    Guest guest,
+    _i2.RoomGuest roomGuest,
+  ) async {
+    if (roomGuest.id == null) {
+      throw ArgumentError.notNull('roomGuest.id');
+    }
+    if (guest.id == null) {
+      throw ArgumentError.notNull('guest.id');
+    }
+
+    var $roomGuest = roomGuest.copyWith(guestId: guest.id);
+    await session.dbNext.updateRow<_i2.RoomGuest>(
+      $roomGuest,
+      columns: [_i2.RoomGuest.t.guestId],
+    );
+  }
+}
+
+class GuestDetachRepository {
+  const GuestDetachRepository._();
+
+  Future<void> roomGuets(
+    _i1.Session session,
+    List<_i2.RoomGuest> roomGuest,
+  ) async {
+    if (roomGuest.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('roomGuest.id');
+    }
+
+    var $roomGuest = roomGuest.map((e) => e.copyWith(guestId: null)).toList();
+    await session.dbNext.update<_i2.RoomGuest>(
+      $roomGuest,
+      columns: [_i2.RoomGuest.t.guestId],
+    );
+  }
+}
+
+class GuestDetachRowRepository {
+  const GuestDetachRowRepository._();
+
+  Future<void> roomGuets(
+    _i1.Session session,
+    _i2.RoomGuest roomGuest,
+  ) async {
+    if (roomGuest.id == null) {
+      throw ArgumentError.notNull('roomGuest.id');
+    }
+
+    var $roomGuest = roomGuest.copyWith(guestId: null);
+    await session.dbNext.updateRow<_i2.RoomGuest>(
+      $roomGuest,
+      columns: [_i2.RoomGuest.t.guestId],
     );
   }
 }

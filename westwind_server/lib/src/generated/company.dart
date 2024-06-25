@@ -9,6 +9,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import 'protocol.dart' as _i2;
 import 'package:serverpod_serialization/serverpod_serialization.dart';
 
 abstract class Company extends _i1.TableRow {
@@ -21,6 +22,7 @@ abstract class Company extends _i1.TableRow {
     required this.dateCreate,
     this.dateUpdate,
     required this.byStaffId,
+    this.guests,
   }) : super(id);
 
   factory Company({
@@ -32,6 +34,7 @@ abstract class Company extends _i1.TableRow {
     required DateTime dateCreate,
     DateTime? dateUpdate,
     required int byStaffId,
+    List<_i2.Guest>? guests,
   }) = _CompanyImpl;
 
   factory Company.fromJson(
@@ -53,6 +56,8 @@ abstract class Company extends _i1.TableRow {
           .deserialize<DateTime?>(jsonSerialization['dateUpdate']),
       byStaffId:
           serializationManager.deserialize<int>(jsonSerialization['byStaffId']),
+      guests: serializationManager
+          .deserialize<List<_i2.Guest>?>(jsonSerialization['guests']),
     );
   }
 
@@ -74,6 +79,8 @@ abstract class Company extends _i1.TableRow {
 
   int byStaffId;
 
+  List<_i2.Guest>? guests;
+
   @override
   _i1.Table get table => t;
 
@@ -86,6 +93,7 @@ abstract class Company extends _i1.TableRow {
     DateTime? dateCreate,
     DateTime? dateUpdate,
     int? byStaffId,
+    List<_i2.Guest>? guests,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -98,6 +106,8 @@ abstract class Company extends _i1.TableRow {
       'dateCreate': dateCreate.toJson(),
       if (dateUpdate != null) 'dateUpdate': dateUpdate?.toJson(),
       'byStaffId': byStaffId,
+      if (guests != null)
+        'guests': guests?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -127,6 +137,8 @@ abstract class Company extends _i1.TableRow {
       'dateCreate': dateCreate.toJson(),
       if (dateUpdate != null) 'dateUpdate': dateUpdate?.toJson(),
       'byStaffId': byStaffId,
+      if (guests != null)
+        'guests': guests?.toJson(valueToJson: (v) => v.allToJson()),
     };
   }
 
@@ -177,6 +189,7 @@ abstract class Company extends _i1.TableRow {
     bool orderDescending = false,
     bool useCache = true,
     _i1.Transaction? transaction,
+    CompanyInclude? include,
   }) async {
     return session.db.find<Company>(
       where: where != null ? where(Company.t) : null,
@@ -187,6 +200,7 @@ abstract class Company extends _i1.TableRow {
       orderDescending: orderDescending,
       useCache: useCache,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -199,6 +213,7 @@ abstract class Company extends _i1.TableRow {
     bool orderDescending = false,
     bool useCache = true,
     _i1.Transaction? transaction,
+    CompanyInclude? include,
   }) async {
     return session.db.findSingleRow<Company>(
       where: where != null ? where(Company.t) : null,
@@ -207,15 +222,20 @@ abstract class Company extends _i1.TableRow {
       orderDescending: orderDescending,
       useCache: useCache,
       transaction: transaction,
+      include: include,
     );
   }
 
   @Deprecated('Will be removed in 2.0.0. Use: db.findById instead.')
   static Future<Company?> findById(
     _i1.Session session,
-    int id,
-  ) async {
-    return session.db.findById<Company>(id);
+    int id, {
+    CompanyInclude? include,
+  }) async {
+    return session.db.findById<Company>(
+      id,
+      include: include,
+    );
   }
 
   @Deprecated('Will be removed in 2.0.0. Use: db.deleteWhere instead.')
@@ -283,8 +303,8 @@ abstract class Company extends _i1.TableRow {
     );
   }
 
-  static CompanyInclude include() {
-    return CompanyInclude._();
+  static CompanyInclude include({_i2.GuestIncludeList? guests}) {
+    return CompanyInclude._(guests: guests);
   }
 
   static CompanyIncludeList includeList({
@@ -320,6 +340,7 @@ class _CompanyImpl extends Company {
     required DateTime dateCreate,
     DateTime? dateUpdate,
     required int byStaffId,
+    List<_i2.Guest>? guests,
   }) : super._(
           id: id,
           name: name,
@@ -329,6 +350,7 @@ class _CompanyImpl extends Company {
           dateCreate: dateCreate,
           dateUpdate: dateUpdate,
           byStaffId: byStaffId,
+          guests: guests,
         );
 
   @override
@@ -341,6 +363,7 @@ class _CompanyImpl extends Company {
     DateTime? dateCreate,
     Object? dateUpdate = _Undefined,
     int? byStaffId,
+    Object? guests = _Undefined,
   }) {
     return Company(
       id: id is int? ? id : this.id,
@@ -351,6 +374,7 @@ class _CompanyImpl extends Company {
       dateCreate: dateCreate ?? this.dateCreate,
       dateUpdate: dateUpdate is DateTime? ? dateUpdate : this.dateUpdate,
       byStaffId: byStaffId ?? this.byStaffId,
+      guests: guests is List<_i2.Guest>? ? guests : this.guests?.clone(),
     );
   }
 }
@@ -401,6 +425,41 @@ class CompanyTable extends _i1.Table {
 
   late final _i1.ColumnInt byStaffId;
 
+  _i2.GuestTable? ___guests;
+
+  _i1.ManyRelation<_i2.GuestTable>? _guests;
+
+  _i2.GuestTable get __guests {
+    if (___guests != null) return ___guests!;
+    ___guests = _i1.createRelationTable(
+      relationFieldName: '__guests',
+      field: Company.t.id,
+      foreignField: _i2.Guest.t.companyId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.GuestTable(tableRelation: foreignTableRelation),
+    );
+    return ___guests!;
+  }
+
+  _i1.ManyRelation<_i2.GuestTable> get guests {
+    if (_guests != null) return _guests!;
+    var relationTable = _i1.createRelationTable(
+      relationFieldName: 'guests',
+      field: Company.t.id,
+      foreignField: _i2.Guest.t.companyId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.GuestTable(tableRelation: foreignTableRelation),
+    );
+    _guests = _i1.ManyRelation<_i2.GuestTable>(
+      tableWithRelations: relationTable,
+      table: _i2.GuestTable(
+          tableRelation: relationTable.tableRelation!.lastRelation),
+    );
+    return _guests!;
+  }
+
   @override
   List<_i1.Column> get columns => [
         id,
@@ -412,16 +471,28 @@ class CompanyTable extends _i1.Table {
         dateUpdate,
         byStaffId,
       ];
+
+  @override
+  _i1.Table? getRelationTable(String relationField) {
+    if (relationField == 'guests') {
+      return __guests;
+    }
+    return null;
+  }
 }
 
 @Deprecated('Use CompanyTable.t instead.')
 CompanyTable tCompany = CompanyTable();
 
 class CompanyInclude extends _i1.IncludeObject {
-  CompanyInclude._();
+  CompanyInclude._({_i2.GuestIncludeList? guests}) {
+    _guests = guests;
+  }
+
+  _i2.GuestIncludeList? _guests;
 
   @override
-  Map<String, _i1.Include?> get includes => {};
+  Map<String, _i1.Include?> get includes => {'guests': _guests};
 
   @override
   _i1.Table get table => Company.t;
@@ -450,6 +521,14 @@ class CompanyIncludeList extends _i1.IncludeList {
 class CompanyRepository {
   const CompanyRepository._();
 
+  final attach = const CompanyAttachRepository._();
+
+  final attachRow = const CompanyAttachRowRepository._();
+
+  final detach = const CompanyDetachRepository._();
+
+  final detachRow = const CompanyDetachRowRepository._();
+
   Future<List<Company>> find(
     _i1.Session session, {
     _i1.WhereExpressionBuilder<CompanyTable>? where,
@@ -459,6 +538,7 @@ class CompanyRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<CompanyTable>? orderByList,
     _i1.Transaction? transaction,
+    CompanyInclude? include,
   }) async {
     return session.dbNext.find<Company>(
       where: where?.call(Company.t),
@@ -468,6 +548,7 @@ class CompanyRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -479,6 +560,7 @@ class CompanyRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<CompanyTable>? orderByList,
     _i1.Transaction? transaction,
+    CompanyInclude? include,
   }) async {
     return session.dbNext.findFirstRow<Company>(
       where: where?.call(Company.t),
@@ -487,6 +569,7 @@ class CompanyRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -494,10 +577,12 @@ class CompanyRepository {
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
+    CompanyInclude? include,
   }) async {
     return session.dbNext.findById<Company>(
       id,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -592,6 +677,90 @@ class CompanyRepository {
       where: where?.call(Company.t),
       limit: limit,
       transaction: transaction,
+    );
+  }
+}
+
+class CompanyAttachRepository {
+  const CompanyAttachRepository._();
+
+  Future<void> guests(
+    _i1.Session session,
+    Company company,
+    List<_i2.Guest> guest,
+  ) async {
+    if (guest.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('guest.id');
+    }
+    if (company.id == null) {
+      throw ArgumentError.notNull('company.id');
+    }
+
+    var $guest = guest.map((e) => e.copyWith(companyId: company.id)).toList();
+    await session.dbNext.update<_i2.Guest>(
+      $guest,
+      columns: [_i2.Guest.t.companyId],
+    );
+  }
+}
+
+class CompanyAttachRowRepository {
+  const CompanyAttachRowRepository._();
+
+  Future<void> guests(
+    _i1.Session session,
+    Company company,
+    _i2.Guest guest,
+  ) async {
+    if (guest.id == null) {
+      throw ArgumentError.notNull('guest.id');
+    }
+    if (company.id == null) {
+      throw ArgumentError.notNull('company.id');
+    }
+
+    var $guest = guest.copyWith(companyId: company.id);
+    await session.dbNext.updateRow<_i2.Guest>(
+      $guest,
+      columns: [_i2.Guest.t.companyId],
+    );
+  }
+}
+
+class CompanyDetachRepository {
+  const CompanyDetachRepository._();
+
+  Future<void> guests(
+    _i1.Session session,
+    List<_i2.Guest> guest,
+  ) async {
+    if (guest.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('guest.id');
+    }
+
+    var $guest = guest.map((e) => e.copyWith(companyId: null)).toList();
+    await session.dbNext.update<_i2.Guest>(
+      $guest,
+      columns: [_i2.Guest.t.companyId],
+    );
+  }
+}
+
+class CompanyDetachRowRepository {
+  const CompanyDetachRowRepository._();
+
+  Future<void> guests(
+    _i1.Session session,
+    _i2.Guest guest,
+  ) async {
+    if (guest.id == null) {
+      throw ArgumentError.notNull('guest.id');
+    }
+
+    var $guest = guest.copyWith(companyId: null);
+    await session.dbNext.updateRow<_i2.Guest>(
+      $guest,
+      columns: [_i2.Guest.t.companyId],
     );
   }
 }

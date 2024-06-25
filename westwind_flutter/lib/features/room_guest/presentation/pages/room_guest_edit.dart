@@ -39,6 +39,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   var stayDate = DateTime.now();
   var updatedDate = DateTime.now();
   var checkOutDate = DateTime.now();
+  bool isCheckOut = false;
 
   // bool isInHouse = false;
 
@@ -90,7 +91,6 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                     id: widget.roomGuestId,
                     guestId: int.parse(guestIdController.text),
                     roomId: int.parse(roomIdController.text),
-                    
                     stayDate: formkey.currentState!.fields['stayDate']!.value,
                     updateDate:
                         formkey.currentState!.fields['updateDate']!.value,
@@ -102,6 +102,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                     rateReason: rateReason,
                     roomStatus: RoomStatus.change,
                     reservationId: int.parse(reservationIdController.text),
+                    isCheckOut: isCheckOut,
                   );
 
                   // debugPrint(" after RoomGuest final ");
@@ -109,7 +110,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                   //! todo
                   context
                       .read<RoomGuestManageBloc>()
-                      .add(SaveRoomGuest( roomGuest));
+                      .add(SaveRoomGuest(roomGuest));
                 }
               },
               icon: Icon(Icons.done),
@@ -122,34 +123,40 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
             showSnackbar(context, state.message);
           } else if (state is RoomGuestManageStateSaveSuccess) {
             context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
-                        context.pop();
+            //      context.pop();
             context.pop();
-
+            /*
             if (isEditing) {
               //! May have problem
               context
                   .read<RoomGuestManageBloc>()
                   .add(RetrieveRoomGuest(widget.roomGuestId!));
             }
-
-            context.pop();
-          } else if (state is RoomGuestManageStateDeleteSuccess) {
+*/
+            //  context.pop();
+          } else if ( state is RoomGuestManageStateCalculateRateSuccess ) {
             context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
             context.pop();
+          //  context.pop();
+          }
+          
+          else if (state is RoomGuestManageStateDeleteSuccess) {
+            context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
             context.pop();
+         //   context.pop();
           } else if (state
               is RoomGuestManageStateChargeAndExtendStayDaySuccess) {
             context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
             context.pop();
-            context.pop();
+          //  context.pop();
           } else if (state is RoomGuestManageStateRetrieveSuccess) {
-
             final roomRoomTransactions = state.roomGuest.roomTransactions;
-          
-            if ( roomRoomTransactions != null ) {
-               final roomGuestId = state.roomGuest.id; 
-               final length = roomRoomTransactions.length;
-               debugPrint( "RoomTransactions size = $length roomGuest id = $roomGuestId");
+
+            if (roomRoomTransactions != null) {
+              final roomGuestId = state.roomGuest.id;
+              final length = roomRoomTransactions.length;
+              debugPrint(
+                  "RoomTransactions size = $length roomGuest id = $roomGuestId");
             }
 
             debugPrint("RoomGuestManageState RetrieveSuccess ");
@@ -171,6 +178,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                 state.roomGuest.guest!.rigNumber.toString();
 
             stayDate = state.roomGuest.stayDate;
+            isCheckOut = state.roomGuest.isCheckOut;
             // updatedDate = state.roomGuest.updateDate!;
 
             //    final type = state.roomGuest.rateType;
@@ -246,6 +254,13 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
                       ]),
+                    ),
+                    const SizedBox(height: 10),
+                    FormBuilderSwitch(
+                      title: const Text('Is Check Out'),
+                      initialValue: isCheckOut,
+                      name: 'isCheckOut',
+                      onChanged: _onChanged,
                     ),
                     const SizedBox(height: 10),
                     FormBuilderTextField(
@@ -399,21 +414,21 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                             onPressed: () {
-                              context
-                                  .read<RoomGuestManageBloc>()
-                                  .add(DeleteRoomGuest(widget.roomGuestId!));
+                              context.read<RoomGuestManageBloc>().add(
+                                  CalculateRateRoomGuest(widget.roomGuestId!));
                             },
-                            child: const Text("Delete")),
+                            child: const Text("Calculate Rate")),
                       ),
                     if (isEditing)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                             onPressed: () {
-                              context.read<RoomGuestManageBloc>().add(
-                                  CalculateRateRoomGuest(widget.roomGuestId!));
+                              context
+                                  .read<RoomGuestManageBloc>()
+                                  .add(DeleteRoomGuest(widget.roomGuestId!));
                             },
-                            child: const Text("Calculate Rate")),
+                            child: const Text("Delete")),
                       ),
                   ],
                 ),

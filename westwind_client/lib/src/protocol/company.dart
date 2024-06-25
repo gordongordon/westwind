@@ -9,6 +9,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import 'protocol.dart' as _i2;
 
 abstract class Company extends _i1.SerializableEntity {
   Company._({
@@ -20,6 +21,7 @@ abstract class Company extends _i1.SerializableEntity {
     required this.dateCreate,
     this.dateUpdate,
     required this.byStaffId,
+    this.guests,
   });
 
   factory Company({
@@ -31,6 +33,7 @@ abstract class Company extends _i1.SerializableEntity {
     required DateTime dateCreate,
     DateTime? dateUpdate,
     required int byStaffId,
+    List<_i2.Guest>? guests,
   }) = _CompanyImpl;
 
   factory Company.fromJson(
@@ -52,6 +55,8 @@ abstract class Company extends _i1.SerializableEntity {
           .deserialize<DateTime?>(jsonSerialization['dateUpdate']),
       byStaffId:
           serializationManager.deserialize<int>(jsonSerialization['byStaffId']),
+      guests: serializationManager
+          .deserialize<List<_i2.Guest>?>(jsonSerialization['guests']),
     );
   }
 
@@ -74,6 +79,8 @@ abstract class Company extends _i1.SerializableEntity {
 
   int byStaffId;
 
+  List<_i2.Guest>? guests;
+
   Company copyWith({
     int? id,
     String? name,
@@ -83,6 +90,7 @@ abstract class Company extends _i1.SerializableEntity {
     DateTime? dateCreate,
     DateTime? dateUpdate,
     int? byStaffId,
+    List<_i2.Guest>? guests,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -95,6 +103,8 @@ abstract class Company extends _i1.SerializableEntity {
       'dateCreate': dateCreate.toJson(),
       if (dateUpdate != null) 'dateUpdate': dateUpdate?.toJson(),
       'byStaffId': byStaffId,
+      if (guests != null)
+        'guests': guests?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 }
@@ -111,6 +121,7 @@ class _CompanyImpl extends Company {
     required DateTime dateCreate,
     DateTime? dateUpdate,
     required int byStaffId,
+    List<_i2.Guest>? guests,
   }) : super._(
           id: id,
           name: name,
@@ -120,6 +131,7 @@ class _CompanyImpl extends Company {
           dateCreate: dateCreate,
           dateUpdate: dateUpdate,
           byStaffId: byStaffId,
+          guests: guests,
         );
 
   @override
@@ -132,6 +144,7 @@ class _CompanyImpl extends Company {
     DateTime? dateCreate,
     Object? dateUpdate = _Undefined,
     int? byStaffId,
+    Object? guests = _Undefined,
   }) {
     return Company(
       id: id is int? ? id : this.id,
@@ -142,6 +155,7 @@ class _CompanyImpl extends Company {
       dateCreate: dateCreate ?? this.dateCreate,
       dateUpdate: dateUpdate is DateTime? ? dateUpdate : this.dateUpdate,
       byStaffId: byStaffId ?? this.byStaffId,
+      guests: guests is List<_i2.Guest>? ? guests : this.guests?.clone(),
     );
   }
 }

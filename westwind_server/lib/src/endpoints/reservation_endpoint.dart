@@ -1,3 +1,4 @@
+import 'package:westwind_server/src/core/MyExtension.dart';
 import 'package:westwind_server/src/endpoints/rate_Table_endpoint.dart';
 import 'package:westwind_server/src/endpoints/room_guest_endpoint.dart';
 import 'package:westwind_server/src/generated/protocol.dart';
@@ -29,6 +30,8 @@ class ReservationEndpoint extends Endpoint {
       return await Reservation.db.updateRow(session, reservation);
     } else {
       reservation.dateCreate = DateTime.now().toLocal();
+      reservation.checkInDate.getDateOnly();
+      reservation.checkOutDate.getDateOnly();
       return Reservation.db.insertRow(session, reservation);
     }
   }
@@ -45,6 +48,9 @@ class ReservationEndpoint extends Endpoint {
     if (rateTable != null) {
       res.rate = rateTable.rate;
     }
+
+       res.checkInDate.getDateOnly();
+      res.checkOutDate.getDateOnly();
     // Null check
 
     return await Reservation.db.insertRow(session, res);
@@ -172,6 +178,8 @@ class ReservationEndpoint extends Endpoint {
           errorType: ErrorType.NotFound);
     }
 
+    reservation.checkInDate = DateTime.now().getDateOnly();
+
     final roomGuest = createRoomGuest(reservation);
 
     reservation.isCheckedIn = true;
@@ -200,7 +208,7 @@ class ReservationEndpoint extends Endpoint {
       roomStatus: RoomStatus.make,
       checkInDate : DateTime.now(),
       checkOutDate: reservation.checkOutDate,
-      
+      isCheckOut : false,
     );
 
     return roomGuest;
@@ -216,6 +224,7 @@ class ReservationEndpoint extends Endpoint {
   //   Check In Reservation
   //   update all rateReason and rate
   //
+  /* 
   Future<bool> checkInReservation(Session session,
       {required int reservationId}) async {
     // get the reservation to be checked in
@@ -255,6 +264,7 @@ class ReservationEndpoint extends Endpoint {
         roomStatus: RoomStatus.make,
         checkInDate: DateTime.now(),
         checkOutDate: reservation.checkOutDate,
+        isCheckOut: false,
       );
 
       result = await session.dbNext.transaction((transaction) async {
@@ -298,6 +308,7 @@ class ReservationEndpoint extends Endpoint {
         roomStatus: RoomStatus.make,
         checkInDate:  DateTime.now(),
         checkOutDate: reservation.checkOutDate,
+        isCheckOut : false,
       );
 
       result = await session.dbNext.transaction((transaction) async {
@@ -322,6 +333,8 @@ class ReservationEndpoint extends Endpoint {
     return result;
   }
 
+  */
+
   Future<bool> delete(Session session, int id) async {
     final reservation = await Reservation.db.findById(session, id);
 
@@ -337,7 +350,9 @@ class ReservationEndpoint extends Endpoint {
 
     return false;
   }
+  
 
+/*
   Future<bool> checkInReservationSecondVersion(Session session,
       {required int reservationId}) async {
     // get the reservation to be checked in
@@ -395,6 +410,7 @@ class ReservationEndpoint extends Endpoint {
         roomStatus: RoomStatus.make,
         checkInDate:  DateTime.now(),
         checkOutDate: reservation.checkOutDate,
+        isCheckOut : false,
       );
 
       result = await session.dbNext.transaction((transaction) async {
@@ -438,6 +454,7 @@ class ReservationEndpoint extends Endpoint {
         roomStatus: RoomStatus.make,
         checkInDate:  DateTime.now(),
         checkOutDate: reservation.checkOutDate,
+        isCheckOut : false,
       );
 
       result = await session.dbNext.transaction((transaction) async {
@@ -461,4 +478,5 @@ class ReservationEndpoint extends Endpoint {
 
     return result;
   }
+  */
 }

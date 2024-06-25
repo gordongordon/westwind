@@ -1,0 +1,28 @@
+{
+  "actions": [
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "room_transaction",
+        "schema": "public",
+        "addColumns": [
+          {
+            "name": "updateDate",
+            "columnType": 4,
+            "isNullable": true,
+            "dartType": "DateTime?"
+          }
+        ],
+        "deleteColumns": [],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [],
+        "deleteForeignKeys": [],
+        "warnings": []
+      }
+    }
+  ],
+  "warnings": [],
+  "migrationApiVersion": 1
+}

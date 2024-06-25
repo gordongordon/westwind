@@ -259,25 +259,10 @@ class EndpointReservation extends _i1.EndpointRef {
         {'reservationId': reservationId},
       );
 
-  _i2.Future<bool> checkInReservation({required int reservationId}) =>
-      caller.callServerEndpoint<bool>(
-        'reservation',
-        'checkInReservation',
-        {'reservationId': reservationId},
-      );
-
   _i2.Future<bool> delete(int id) => caller.callServerEndpoint<bool>(
         'reservation',
         'delete',
         {'id': id},
-      );
-
-  _i2.Future<bool> checkInReservationSecondVersion(
-          {required int reservationId}) =>
-      caller.callServerEndpoint<bool>(
-        'reservation',
-        'checkInReservationSecondVersion',
-        {'reservationId': reservationId},
       );
 }
 
@@ -360,6 +345,37 @@ class EndpointRoomGuest extends _i1.EndpointRef {
       caller.callServerEndpoint<List<_i8.RoomGuest>>(
         'roomGuest',
         'findRoomGuestByRoomId',
+        {'id': id},
+      );
+
+  _i2.Future<List<_i8.RoomGuest>> retrieveRoommatesSameStayDayWithOutGoHomeById(
+          {required int id}) =>
+      caller.callServerEndpoint<List<_i8.RoomGuest>>(
+        'roomGuest',
+        'retrieveRoommatesSameStayDayWithOutGoHomeById',
+        {'id': id},
+      );
+
+  _i2.Future<List<_i8.RoomGuest>> updateRateSameStayDayByReasonAndId(
+    int id,
+    _i6.RateReason reason,
+    double rate,
+  ) =>
+      caller.callServerEndpoint<List<_i8.RoomGuest>>(
+        'roomGuest',
+        'updateRateSameStayDayByReasonAndId',
+        {
+          'id': id,
+          'reason': reason,
+          'rate': rate,
+        },
+      );
+
+  _i2.Future<List<_i8.RoomGuest>> retrieveRoommatesSameStayDayById(
+          {required int id}) =>
+      caller.callServerEndpoint<List<_i8.RoomGuest>>(
+        'roomGuest',
+        'retrieveRoommatesSameStayDayById',
         {'id': id},
       );
 
@@ -505,10 +521,10 @@ class EndpointRoomTransaction extends _i1.EndpointRef {
         {},
       );
 
-  _i2.Future<_i9.RoomTransaction> create(_i9.RoomTransaction rt) =>
+  _i2.Future<_i9.RoomTransaction> saveRoomTransaciton(_i9.RoomTransaction rt) =>
       caller.callServerEndpoint<_i9.RoomTransaction>(
         'roomTransaction',
-        'create',
+        'saveRoomTransaciton',
         {'rt': rt},
       );
 

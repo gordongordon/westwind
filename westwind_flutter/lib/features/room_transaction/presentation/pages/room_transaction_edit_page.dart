@@ -4,10 +4,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
-import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
-import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_list_bloc.dart';
 
@@ -31,7 +29,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
   final roomIdController = TextEditingController();
   final guestIdController = TextEditingController();
   final roomGuestIdController = TextEditingController();
-  var stayDate = DateTime.now();
+  var stayDay = DateTime.now();
   var transactionDay = DateTime.now();
 
   final transactionTypeController = TextEditingController();
@@ -68,8 +66,8 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
       print("isEditing ");
       print(widget.roomTransactionId);
       context
-          .read<RoomGuestManageBloc>()
-          .add(RetrieveRoomGuest(widget.roomTransactionId!));
+          .read<RoomTransactionListBloc>()
+          .add(RetrieveRoomTransactionListEvent(id: widget.roomTransactionId!));
     }
   }
 
@@ -91,14 +89,15 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
 
                   final ItemType itemType = ItemType.values
                       .byName(formkey.currentState!.fields['itemType']!.value);
+
                   final roomTransaction = RoomTransaction(
                       id: widget.roomTransactionId,
                       guestId: int.parse(guestIdController.text),
                       roomId: int.parse(roomIdController.text),
                       roomGuestId: int.parse(roomGuestIdController.text),
-                      stayDay: stayDate,
+                      stayDay: formkey.currentState!.fields['stayDay']!.value,
                       transactionDay: DateTime.now(),
-                      transactionType: TransactionType.charge,
+                      transactionType: transactionType,
                       amount: double.parse(amountController.text),
                       tax1: double.parse(tax1Controller.text),
                       tax2: double.parse(tax2Controller.text),
@@ -115,7 +114,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                           roomTransaction: roomTransaction));
                 }
               },
-              icon: Icon(Icons.done),
+              icon: Icon(Icons.save),
             ),
           ],
         ),
@@ -128,20 +127,23 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                 .read<RoomTransactionListBloc>()
                 .add(FetchRoomTransactionsListEvent());
             context.pop();
-            context.pop();
 
+          //  context.pop();
+           /*
             if (isEditing) {
               //! May have problem
-              context.read<RoomTransactionListBloc>().add(
+              context.read<RoomTransactionListBloc>().add(jeffery)
                   RetrieveRoomTransactionListEvent(
                       id: widget.roomTransactionId!));
             }
+            */
+            
 
-            context.pop();
+           // context.pop();
           } else if (state is RoomTransactionListStateDeletedSuccess) {
-            context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
+            context.read<RoomTransactionListBloc>().add(FetchRoomTransactionsListEvent());
             context.pop();
-            context.pop();
+          //  context.pop();
           } else if (state is RoomTransactionListStateRetrievedSuccess) {
             /*
             final roomRoomTransactions = state.roomTransactionroomTransactions;
@@ -154,10 +156,12 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
             }
             */
 
-            debugPrint("RoomTransactionManageState RetrieveSuccess ");
+            debugPrint("RoomTransactionListState RetrieveSuccess ");
 
             idController.text = state.roomTransaction.id!.toString();
             guestIdController.text = state.roomTransaction.guestId.toString();
+            roomGuestIdController.text =
+                state.roomTransaction.roomGuestId.toString();
             roomIdController.text = state.roomTransaction.roomId.toString();
 
             amountController.text = state.roomTransaction.amount.toString();
@@ -165,14 +169,18 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
             tax2Controller.text = state.roomTransaction.tax2.toString();
             tax3Controller.text = state.roomTransaction.tax3.toString();
             totalController.text = state.roomTransaction.total.toString();
+            final transactionTypeText =
+                state.roomTransaction.transactionType.toString();
 
+            debugPrint("transactionType $transactionTypeText");
+            //  totalController.text = "99";
             //   Controller.text = state.roomTransaction..toString();
             transactionTypeController.text =
                 state.roomTransaction.transactionType.toString();
             itemTypeController.text = state.roomTransaction.itemType.toString();
-
+            //itemTypeController.text = "room";
             transactionDay = state.roomTransaction.transactionDay.toLocal();
-            stayDate = state.roomTransaction.stayDay!;
+            stayDay = state.roomTransaction.stayDay!;
             descriptionController.text = state.roomTransaction.description;
 
             // updatedDate = state.roomTransaction.updateDate!;
@@ -182,7 +190,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
             //    context.read<RoomGuestManageBloc>().add( CalculateRate(type: type, reason: reason) );
           }
         }, builder: (context, state) {
-          if (state is RoomGuestManageStateLoading) {
+          if (state is RoomTransactionListStateLoading) {
             return const Loader();
           }
 
@@ -209,9 +217,9 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                     ),
                     //  const SizedBox(height: 10),
                     FormBuilderDateTimePicker(
-                      name: 'stayDate',
-                      decoration: const InputDecoration(labelText: 'Stay Date'),
-                      initialValue: stayDate,
+                      name: 'stayDay',
+                      decoration: const InputDecoration(labelText: 'Stay Day'),
+                      initialValue: stayDay,
                       initialDate: DateTime.now().add(const Duration(days: 10)),
                       initialDatePickerMode: DatePickerMode.day,
                       timePickerInitialEntryMode: TimePickerEntryMode.input,
@@ -233,41 +241,39 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                       inputType: InputType.date,
                     ),
                     //     const SizedBox(height: 10),
-                      const SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     FormBuilderTextField(
-                      name: 'Room Id',
-                      maxLength: 11,
-                      controller: roomIdController,
-                      keyboardType: TextInputType.phone,
-                      decoration:
-                          const InputDecoration(labelText: 'Room Id'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
+                        name: 'Room Id',
+                        maxLength: 11,
+                        controller: roomIdController,
+                        keyboardType: TextInputType.phone,
+                        decoration: const InputDecoration(labelText: 'Room Id'),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
 
-                        //     FormBuilderValidators.minWordsCount(10,
-                        //        allowEmpty: false, errorText: 'e.g. 17805425375'),
-                      ])),
+                          //     FormBuilderValidators.minWordsCount(10,
+                          //        allowEmpty: false, errorText: 'e.g. 17805425375'),
+                        ])),
                     const SizedBox(height: 10),
                     FormBuilderTextField(
                       name: 'Guest Id',
                       maxLength: 11,
                       controller: guestIdController,
                       keyboardType: TextInputType.phone,
-                      decoration:
-                          const InputDecoration(labelText: 'Guest Id'),
+                      decoration: const InputDecoration(labelText: 'Guest Id'),
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
 
                         //     FormBuilderValidators.minWordsCount(10,
                         //        allowEmpty: false, errorText: 'e.g. 17805425375'),
                       ]),
-                    //    const SizedBox(height: 10),
-  
+                      //    const SizedBox(height: 10),
                     ),
                     const SizedBox(height: 10),
                     FormBuilderDropdown<String>(
                       name: 'transactionType',
                       initialValue: transactionTypeController.text,
+                      //            initialValue: "pay",
                       decoration: InputDecoration(
                         labelText: 'TransactionType',
                         suffix: _genderHasError
@@ -278,14 +284,14 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                       validator: FormBuilderValidators.compose(
                           [FormBuilderValidators.required()]),
                       items: _transactionTypeOptions
-                          .map((rateType) => DropdownMenuItem(
+                          .map((transactonType) => DropdownMenuItem(
                                 alignment: AlignmentDirectional.center,
-                                value: rateType,
-                                child: Text(rateType),
+                                value: transactonType,
+                                child: Text(transactonType),
                               ))
                           .toList(),
                       onChanged: (val) {
-                        formkey.currentState?.fields['trannsactionType']?.save();
+                        formkey.currentState?.fields['transactionType']?.save();
                         //    newRate = ref.read(rateTableProvider( RateTable(rateType: rateType, rateReason: rateReason, rate: 0.00 )  ));
                       },
                       valueTransformer: (val) => val?.toString(),
@@ -301,26 +307,26 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                         FormBuilderValidators.required(),
                       ]),
                     ),
-                                     FormBuilderTextField(
+                    FormBuilderTextField(
                       name: 'tax1',
-                                            controller: tax1Controller,
+                      controller: tax1Controller,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'tax1'),
+                      decoration: const InputDecoration(labelText: 'GST'),
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
                       ]),
-                    ),                
-                       FormBuilderTextField(
+                    ),
+                    FormBuilderTextField(
                       name: 'tax2',
                       controller: tax2Controller,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(labelText: 'tax2'),
+                      decoration: const InputDecoration(labelText: 'Levy'),
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
                       ]),
-                    ),                  
-                    
-                     FormBuilderTextField(
+                    ),
+
+                    FormBuilderTextField(
                       name: 'tax3',
                       controller: tax3Controller,
                       keyboardType: TextInputType.number,
@@ -328,9 +334,9 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
                       ]),
-                     ),
+                    ),
 
-                                           FormBuilderTextField(
+                    FormBuilderTextField(
                       name: 'total',
                       controller: totalController,
                       keyboardType: TextInputType.number,
@@ -338,11 +344,12 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(),
                       ]),
-                    ),     
+                    ),
                     FormBuilderTextField(
                         name: 'roomGuestId',
-                        controller: guestIdController,
-                        decoration: const InputDecoration(labelText: 'roomGuestId'),
+                        controller: roomGuestIdController,
+                        decoration:
+                            const InputDecoration(labelText: 'roomGuestId'),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.numeric(),
@@ -354,8 +361,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                             //           id: int.parse(value)));
                           }
                         }),
-                 
-      
+
                     const SizedBox(height: 10),
                     FormBuilderDropdown<String>(
                       name: 'itemType',
@@ -365,15 +371,15 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                         suffix: _genderHasError
                             ? const Icon(Icons.error)
                             : const Icon(Icons.check),
-                        hintText: 'Select ItemType',
+                        hintText: 'Select Item Type',
                       ),
                       validator: FormBuilderValidators.compose(
                           [FormBuilderValidators.required()]),
                       items: _itemTypeOptions
-                          .map((rateType) => DropdownMenuItem(
+                          .map((itemType) => DropdownMenuItem(
                                 alignment: AlignmentDirectional.center,
-                                value: rateType,
-                                child: Text(rateType),
+                                value: itemType,
+                                child: Text(itemType),
                               ))
                           .toList(),
                       onChanged: (val) {
@@ -381,8 +387,17 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                       },
                       valueTransformer: (val) => val?.toString(),
                     ),
-
-                   
+                    if (isEditing)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              context
+                                   .read<RoomTransactionListBloc>()
+                                  .add(DeleteRoomTransactionListEvent(id: widget.roomTransactionId!));
+                            },
+                            child: const Text("Delete")),
+                      ),
                     if (isEditing)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -394,24 +409,14 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
                             },
                             child: const Text("Charge & Extend")),
                       ),
+
                     if (isEditing)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                             onPressed: () {
-                            //  context
-                             //     .read<RoomTransactionListBloc>()
-                              //    .add(DeleteRoomGuest(widget.roomTransactionId!));
-                            },
-                            child: const Text("Delete")),
-                      ),
-                    if (isEditing)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                            onPressed: () {
-                           //   context.read<RoomTransactionListBloc>().add(
-                            //      CalculateRateRoomGuest(widget.roomTransactionId!));
+                              //   context.read<RoomTransactionListBloc>().add(
+                              //      CalculateRateRoomGuest(widget.roomTransactionId!));
                             },
                             child: const Text("Calculate Rate")),
                       ),

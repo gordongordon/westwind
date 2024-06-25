@@ -241,6 +241,16 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i26.TransactionType?>()) {
       return (data != null ? _i26.TransactionType.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<List<_i27.Guest>?>()) {
+      return (data != null
+          ? (data as List).map((e) => deserialize<_i27.Guest>(e)).toList()
+          : null) as dynamic;
+    }
+    if (t == _i1.getType<List<_i27.RoomGuest>?>()) {
+      return (data != null
+          ? (data as List).map((e) => deserialize<_i27.RoomGuest>(e)).toList()
+          : null) as dynamic;
+    }
     if (t == _i1.getType<List<_i27.Reservation>?>()) {
       return (data != null
           ? (data as List).map((e) => deserialize<_i27.Reservation>(e)).toList()

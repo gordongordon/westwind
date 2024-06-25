@@ -195,6 +195,34 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
                 },
               );
             }),
+           PlutoColumn(
+          title: 'isCheckOut',
+          field: 'isCheckOut',
+          type: PlutoColumnType.select(<bool>[true, false]),
+          width: 120,
+          renderer: (rendererContext) {
+            Color textColor = Colors.black;
+
+            if (rendererContext.cell.value == true) {
+              textColor = Colors.red;
+            } else if (rendererContext.cell.value == false) {
+              textColor = Colors.green;
+            }
+
+            return Icon(
+              Icons.single_bed,
+              color: textColor,
+            );
+            /*
+            return Text(
+              rendererContext.cell.value.toString(),
+              style: TextStyle(
+                color: textColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ); */
+          },
+        ),
       ],
     );
   }
@@ -277,6 +305,7 @@ class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
           'rigNumber': PlutoCell(value: roomGuest.guest!.rigNumber),
           'companyName': PlutoCell(value: roomGuest.guest!.company!.name),
           'balance': PlutoCell(value: totalSum),
+          'isCheckOut' :  PlutoCell(value: roomGuest.isCheckOut),
         },
       );
     }).toList();

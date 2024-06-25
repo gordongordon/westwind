@@ -31,9 +31,7 @@ reservation:
   - getAllReservationsByDay:
   - getTodayReservations:
   - checkIn:
-  - checkInReservation:
   - delete:
-  - checkInReservationSecondVersion:
 roomGuest:
   - saveRoomGuest:
   - insertGuestByReservation:
@@ -43,6 +41,9 @@ roomGuest:
   - updateRoomGuest:
   - updateRoomGuests:
   - findRoomGuestByRoomId:
+  - retrieveRoommatesSameStayDayWithOutGoHomeById:
+  - updateRateSameStayDayByReasonAndId:
+  - retrieveRoommatesSameStayDayById:
   - getAllRoomGuest:
   - getAllRoomGuestByDay:
   - getTodayRoomGuest:
@@ -61,6 +62,6 @@ roomGuest:
 roomTransaction:
   - hasBeenRoomChargedToday:
   - list:
-  - create:
+  - saveRoomTransaciton:
   - retrieve:
   - delete:

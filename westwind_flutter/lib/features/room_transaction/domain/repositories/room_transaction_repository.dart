@@ -6,6 +6,6 @@ abstract class RoomTransactionRepository {
   Future<Either<Failure, List<RoomTransaction>>> list();
   Future<Either<Failure, bool>> delete(int id);
   Future<Either<Failure, RoomTransaction>> retrieve(int id);
-  Future<Either<Failure, RoomTransaction>> create(RoomTransaction roomTransaction);
+  Future<Either<Failure, RoomTransaction>> save(RoomTransaction roomTransaction);
 }
  

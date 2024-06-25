@@ -27,6 +27,7 @@ abstract class Guest extends _i1.SerializableEntity {
     this.company,
     required this.rigNumber,
     required this.accountBalance,
+    this.roomGuets,
   });
 
   factory Guest({
@@ -44,6 +45,7 @@ abstract class Guest extends _i1.SerializableEntity {
     _i2.Company? company,
     required int rigNumber,
     required double accountBalance,
+    List<_i2.RoomGuest>? roomGuets,
   }) = _GuestImpl;
 
   factory Guest.fromJson(
@@ -78,6 +80,8 @@ abstract class Guest extends _i1.SerializableEntity {
           serializationManager.deserialize<int>(jsonSerialization['rigNumber']),
       accountBalance: serializationManager
           .deserialize<double>(jsonSerialization['accountBalance']),
+      roomGuets: serializationManager
+          .deserialize<List<_i2.RoomGuest>?>(jsonSerialization['roomGuets']),
     );
   }
 
@@ -112,6 +116,8 @@ abstract class Guest extends _i1.SerializableEntity {
 
   double accountBalance;
 
+  List<_i2.RoomGuest>? roomGuets;
+
   Guest copyWith({
     int? id,
     String? firstName,
@@ -127,6 +133,7 @@ abstract class Guest extends _i1.SerializableEntity {
     _i2.Company? company,
     int? rigNumber,
     double? accountBalance,
+    List<_i2.RoomGuest>? roomGuets,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -145,6 +152,8 @@ abstract class Guest extends _i1.SerializableEntity {
       if (company != null) 'company': company?.toJson(),
       'rigNumber': rigNumber,
       'accountBalance': accountBalance,
+      if (roomGuets != null)
+        'roomGuets': roomGuets?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 }
@@ -167,6 +176,7 @@ class _GuestImpl extends Guest {
     _i2.Company? company,
     required int rigNumber,
     required double accountBalance,
+    List<_i2.RoomGuest>? roomGuets,
   }) : super._(
           id: id,
           firstName: firstName,
@@ -182,6 +192,7 @@ class _GuestImpl extends Guest {
           company: company,
           rigNumber: rigNumber,
           accountBalance: accountBalance,
+          roomGuets: roomGuets,
         );
 
   @override
@@ -200,6 +211,7 @@ class _GuestImpl extends Guest {
     Object? company = _Undefined,
     int? rigNumber,
     double? accountBalance,
+    Object? roomGuets = _Undefined,
   }) {
     return Guest(
       id: id is int? ? id : this.id,
@@ -216,6 +228,9 @@ class _GuestImpl extends Guest {
       company: company is _i2.Company? ? company : this.company?.copyWith(),
       rigNumber: rigNumber ?? this.rigNumber,
       accountBalance: accountBalance ?? this.accountBalance,
+      roomGuets: roomGuets is List<_i2.RoomGuest>?
+          ? roomGuets
+          : this.roomGuets?.clone(),
     );
   }
 }

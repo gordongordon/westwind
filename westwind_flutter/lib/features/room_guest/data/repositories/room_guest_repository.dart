@@ -92,4 +92,31 @@ class RoomGuestRepositoryImpl implements RoomGuestRepository {
       return Left(Failure(e.message));
     }
   }
+  
+  @override
+  Future<Either<Failure, List<RoomGuest>>> retrieveRoommatesSameStayDayById(int roomGuestId) async {
+    try {
+      return Right(await roomGuestDatasource.retrieveRoommatesSameStayDayById(roomGuestId));
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, List<RoomGuest>>> retrieveRoommatesSameStayDayWithOutGoHomeById(int roomGuestId) async {
+    try {
+      return Right(await roomGuestDatasource.retrieveRoommatesSameStayDayWithOutGoHomeById( roomGuestId ) );
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, List<RoomGuest>>> updateRateSameStayDayByReasonAndId(int roomGuestId, RateReason reason, double rate) async {
+    try {
+      return Right(await roomGuestDatasource.updateRateSameStayDayByReasonAndId( roomGuestId, reason,rate)  );
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    }
+  }
 }

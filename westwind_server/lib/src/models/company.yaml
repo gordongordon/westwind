@@ -9,6 +9,7 @@ fields :
       dateCreate : DateTime
       dateUpdate : DateTime?
       byStaffId :  int 
+      guests : List<Guest>?, relation(name=company_guests)
 indexes:
    company_index_idx: 
        fields: phone

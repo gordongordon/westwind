@@ -11,7 +11,7 @@ class CreateRoomTransactionUseCase implements UseCase<RoomTransaction, CreateRoo
 
   @override
   Future<Either<Failure, RoomTransaction>> call(CreateRoomTransactionParams params) async {
-    return await _repository.create(params.roomTransaction);
+    return await _repository.save(params.roomTransaction);
   }
 }
 

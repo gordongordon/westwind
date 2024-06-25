@@ -61,7 +61,8 @@ RoomGuest createRoomGuestObject(Reservation reservation, double rate, RateReason
       reservationId: reservation.id!,
       roomStatus: RoomStatus.change,
       checkInDate: DateTime.now(),
-      checkOutDate: reservation.checkOutDate
+      checkOutDate: reservation.checkOutDate,
+      isCheckOut: false,
       );
 }
 

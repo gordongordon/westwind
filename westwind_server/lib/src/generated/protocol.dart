@@ -284,12 +284,8 @@ class Protocol extends _i1.SerializationManagerServer {
           elements: [
             _i2.IndexElementDefinition(
               type: _i2.IndexElementDefinitionType.column,
-              definition: 'email',
-            ),
-            _i2.IndexElementDefinition(
-              type: _i2.IndexElementDefinitionType.column,
               definition: 'phone',
-            ),
+            )
           ],
           type: 'btree',
           isUnique: true,
@@ -948,6 +944,12 @@ class Protocol extends _i1.SerializationManagerServer {
           isNullable: true,
           dartType: 'DateTime?',
         ),
+        _i2.ColumnDefinition(
+          name: 'isCheckOut',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
       ],
       foreignKeys: [
         _i2.ForeignKeyDefinition(
@@ -1136,6 +1138,12 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.text,
           isNullable: false,
           dartType: 'protocol:TransactionType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updateDate',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
         ),
         _i2.ColumnDefinition(
           name: 'amount',
@@ -1517,6 +1525,16 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (t == _i1.getType<_i28.TransactionType?>()) {
       return (data != null ? _i28.TransactionType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<List<_i29.Guest>?>()) {
+      return (data != null
+          ? (data as List).map((e) => deserialize<_i29.Guest>(e)).toList()
+          : null) as dynamic;
+    }
+    if (t == _i1.getType<List<_i29.RoomGuest>?>()) {
+      return (data != null
+          ? (data as List).map((e) => deserialize<_i29.RoomGuest>(e)).toList()
+          : null) as dynamic;
     }
     if (t == _i1.getType<List<_i29.Reservation>?>()) {
       return (data != null

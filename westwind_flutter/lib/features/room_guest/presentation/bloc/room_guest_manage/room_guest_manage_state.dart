@@ -27,9 +27,9 @@ final class RoomGuestManageStateCheckInSuccess extends RoomGuestManageState {
 
 final class RoomGuestManageStateCalculateRateSuccess
     extends RoomGuestManageState {
-  final RoomGuest roomGuest;
+  final List<RoomGuest> roomGuests;
 
-  RoomGuestManageStateCalculateRateSuccess(this.roomGuest);
+  RoomGuestManageStateCalculateRateSuccess(this.roomGuests);
 }
 
 final class RoomGuestManageStateDeleteSuccess extends RoomGuestManageState {}

@@ -158,12 +158,15 @@ class RoomGuestManageBloc
     CalculateRateRoomGuest event,
     Emitter<RoomGuestManageState> emit,
   ) async {
+    emit(RoomGuestManageStateLoading());
+    await Future.delayed(Duration(seconds: 1));
+
     final result = await calculateRateRoomGuest(
         CalculateRateRoomGuestParams(id: event.id));
 
     result.fold(
       (failure) => emit(RoomGuestManageStateFailure(failure.message)),
-      (_) => emit(RoomGuestManageStateDeleteSuccess()),
+      (roomGuests) => emit(RoomGuestManageStateCalculateRateSuccess(roomGuests)),
     );
 
     return;

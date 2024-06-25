@@ -5,7 +5,7 @@ abstract class RoomTransactionDatasource {
   Future<List<RoomTransaction>> list();
   Future<RoomTransaction> retrieve(int id);
   Future<bool> delete(int id);
-  Future<RoomTransaction> create(RoomTransaction roomTransaction);
+  Future<RoomTransaction> save(RoomTransaction roomTransaction);
 }
 
 class RoomTransactionDatasourceImpl implements RoomTransactionDatasource {
@@ -53,9 +53,9 @@ class RoomTransactionDatasourceImpl implements RoomTransactionDatasource {
   }
 
   @override
-  Future<RoomTransaction> create(RoomTransaction roomTransaction) async {
+  Future<RoomTransaction> save(RoomTransaction roomTransaction) async {
     try { 
-      final result = await _client.roomTransaction.create(roomTransaction);
+      final result = await _client.roomTransaction.saveRoomTransaciton(roomTransaction);
 
       if (result.id == null)  {
         throw ServerException("Room Transaction can't be created");

@@ -38,9 +38,9 @@ class RoomTransactionRepositoryImp implements RoomTransactionRepository {
   }
 
   @override
-  Future<Either<Failure, RoomTransaction>> create(RoomTransaction roomTransaction) async {
+  Future<Either<Failure, RoomTransaction>> save(RoomTransaction roomTransaction) async {
     try {
-      return right(await _datasource.create(roomTransaction));
+      return right(await _datasource.save(roomTransaction));
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }

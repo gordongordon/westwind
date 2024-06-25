@@ -85,12 +85,16 @@ class AppRouter {
         ),
         GoRoute(
           path: RoomTransactionListPage.route(),
-          builder: (context, state) => RoomTransactionListPage(),
+          builder: (context, _) => const RoomTransactionListPage(),
         ),
         GoRoute(
           path: RoomTransactionEditPage.routeNew(),
+          builder: (context, _) => RoomTransactionEditPage(),
+        ),
+        GoRoute(
+          path: RoomTransactionEditPage.route(),
           builder: (context, state) => RoomTransactionEditPage(
-                    roomTransactionId: int.parse(state.pathParameters['id'] ?? '0'),
+            roomTransactionId: int.parse(state.pathParameters['id'] ?? '0'),
           ),
         ),
       ],

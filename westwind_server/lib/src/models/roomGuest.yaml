@@ -3,7 +3,7 @@ table : room_guest
 fields: 
   room : Room?, relation
   stayDate     : DateTime
-  guest        : Guest? , relation
+  guest        : Guest? , relation(name=guest_room_guest)
   roomTransactions : List<RoomTransaction>?, relation(name=room_guest_transaction)
   rateType     : RateType
   rateReason   : RateReason
@@ -13,6 +13,7 @@ fields:
   checkInDate  : DateTime
   checkOutDate : DateTime
   updateDate   : DateTime?
+  isCheckOut   : bool
 
   
 indexes: 

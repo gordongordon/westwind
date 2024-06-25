@@ -24,7 +24,16 @@ class RoomTransactionEndpoint extends Endpoint {
     return await RoomTransaction.db.find(session);
   }
 
-  Future<RoomTransaction> create(Session session, RoomTransaction rt) async {
+
+ Future<RoomTransaction> saveRoomTransaciton(Session session, RoomTransaction rt) async {
+    if ( rt.id != null) {
+      rt.updateDate = DateTime.now().toLocal();
+      return await RoomTransaction.db.updateRow(session, rt);
+    }
+    return await RoomTransaction.db.insertRow(session, rt);
+  }
+
+/*  Future<RoomTransaction> save(Session session, RoomTransaction rt) async {
 
     
   //  var roomTransaction = await RoomTransaction.db.insertRow(session, rt);
@@ -38,7 +47,7 @@ class RoomTransactionEndpoint extends Endpoint {
 
        return await RoomTransaction.db.insertRow(session, rt);
   }
-
+ */
   Future<RoomTransaction?> retrieve(Session session, int id) async {
     return await RoomTransaction.db.findFirstRow(
       session,

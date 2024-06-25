@@ -23,6 +23,7 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
     this.stayDay,
     required this.transactionDay,
     required this.transactionType,
+    this.updateDate,
     required this.amount,
     required this.tax1,
     required this.tax2,
@@ -43,6 +44,7 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
     DateTime? stayDay,
     required DateTime transactionDay,
     required _i2.TransactionType transactionType,
+    DateTime? updateDate,
     required double amount,
     required double tax1,
     required double tax2,
@@ -76,6 +78,8 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
           .deserialize<DateTime>(jsonSerialization['transactionDay']),
       transactionType: serializationManager.deserialize<_i2.TransactionType>(
           jsonSerialization['transactionType']),
+      updateDate: serializationManager
+          .deserialize<DateTime?>(jsonSerialization['updateDate']),
       amount:
           serializationManager.deserialize<double>(jsonSerialization['amount']),
       tax1: serializationManager.deserialize<double>(jsonSerialization['tax1']),
@@ -113,6 +117,8 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
 
   _i2.TransactionType transactionType;
 
+  DateTime? updateDate;
+
   double amount;
 
   double tax1;
@@ -138,6 +144,7 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
     DateTime? stayDay,
     DateTime? transactionDay,
     _i2.TransactionType? transactionType,
+    DateTime? updateDate,
     double? amount,
     double? tax1,
     double? tax2,
@@ -159,6 +166,7 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
       if (stayDay != null) 'stayDay': stayDay?.toJson(),
       'transactionDay': transactionDay.toJson(),
       'transactionType': transactionType.toJson(),
+      if (updateDate != null) 'updateDate': updateDate?.toJson(),
       'amount': amount,
       'tax1': tax1,
       'tax2': tax2,
@@ -184,6 +192,7 @@ class _RoomTransactionImpl extends RoomTransaction {
     DateTime? stayDay,
     required DateTime transactionDay,
     required _i2.TransactionType transactionType,
+    DateTime? updateDate,
     required double amount,
     required double tax1,
     required double tax2,
@@ -202,6 +211,7 @@ class _RoomTransactionImpl extends RoomTransaction {
           stayDay: stayDay,
           transactionDay: transactionDay,
           transactionType: transactionType,
+          updateDate: updateDate,
           amount: amount,
           tax1: tax1,
           tax2: tax2,
@@ -223,6 +233,7 @@ class _RoomTransactionImpl extends RoomTransaction {
     Object? stayDay = _Undefined,
     DateTime? transactionDay,
     _i2.TransactionType? transactionType,
+    Object? updateDate = _Undefined,
     double? amount,
     double? tax1,
     double? tax2,
@@ -243,6 +254,7 @@ class _RoomTransactionImpl extends RoomTransaction {
       stayDay: stayDay is DateTime? ? stayDay : this.stayDay,
       transactionDay: transactionDay ?? this.transactionDay,
       transactionType: transactionType ?? this.transactionType,
+      updateDate: updateDate is DateTime? ? updateDate : this.updateDate,
       amount: amount ?? this.amount,
       tax1: tax1 ?? this.tax1,
       tax2: tax2 ?? this.tax2,

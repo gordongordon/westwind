@@ -8,6 +8,7 @@ import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_list_bloc.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_edit_page.dart';
 
 class RoomTransactionListWidget extends StatefulWidget {
   const RoomTransactionListWidget({super.key});
@@ -345,7 +346,7 @@ class _roomTransactionListWidgetState extends State<RoomTransactionListWidget> {
 
           //  if (event.row.cells['isInHouse']!.value == false) {
           //! todo
-          // context.push(RoomTransactionEditPage.route(field!.value));
+          context.push(RoomTransactionEditPage.route(field!.value));
           //   }
         },
         configuration: PlutoGridConfiguration(

@@ -10,11 +10,13 @@ fields:
       dateUpdate : DateTime?
       rateType : RateType
       staffId  :  int
-      company : Company?, relation 
+      company : Company?,relation(name=company_guests)
       rigNumber : int
       accountBalance : double 
+      roomGuets : List<RoomGuest>?, relation(name=guest_room_guest)
+
 indexes:
    guest_index_idx: 
-       fields: email, phone
+       fields: phone
        unique: true
 # add fileds of Phone ## base on someone may search by phone

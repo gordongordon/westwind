@@ -22,6 +22,8 @@ class RoomGuestEndpoint extends Endpoint {
       res.updateDate = DateTime.now().toLocal();
       return await RoomGuest.db.updateRow(session, res);
     }
+
+    
     return await RoomGuest.db.insertRow(session, res);
   }
 
@@ -126,8 +128,7 @@ class RoomGuestEndpoint extends Endpoint {
 
   }
 
-
-  Future<List<RoomGuest>> findRoomGuestByRoomId(Session session,
+  Future<List<RoomGuest>> findRoomGuestByRoomId   (Session session,
       {required int id}) async {
     return await RoomGuest.db.find(session,
         where: (roomGuest) => roomGuest.roomId.equals(id),
@@ -137,9 +138,111 @@ class RoomGuestEndpoint extends Endpoint {
         ));
   }
 
+
+  Future<List<RoomGuest>> retrieveRoommatesSameStayDayWithOutGoHomeById(Session session,
+      {required int id}) async {
+  
+    
+    final roomGuest = await RoomGuest.db.findById(session, id);
+
+  //  int roomId = 0;
+        print( "retrieveRoommatesSameStayDaybyId $roomGuest");
+    if ( roomGuest == null || roomGuest.id == null ) {
+        print( "retrieveRoommatesSameStayDaybyId return []");
+        return [];
+    }
+
+    final roomId = roomGuest.roomId; 
+    final roomGuestId = roomGuest.id;
+    final stayDay = roomGuest.stayDate;
+
+    final result = await RoomGuest.db.find(session,
+        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDate.equals(stayDay) & roomGuest.rateReason.notEquals(RateReason.gohome),
+        include: RoomGuest.include(
+          guest: Guest.include(),
+          room: Room.include(),
+        ));
+     
+   final size = result.length;
+   print( "retrieveRoommatesSameStayDaybyId size $size");
+    return result;
+  }
+
+
+  Future<List<RoomGuest>> updateRateSameStayDayByReasonAndId(Session session, int id, RateReason reason, double rate) async {
+    
+        final roomGuest = await RoomGuest.db.findById(session, id);
+
+  //  int roomId = 0;
+        print( "updateRateSameStayDayByReasonAndId $roomGuest");
+    if ( roomGuest == null || roomGuest.id == null ) {
+        print( "updateRateSameStayDayByReasonAndId return []");
+        return [];
+    }
+
+    final roomId = roomGuest.roomId; 
+    final roomGuestId = roomGuest.id;
+    final stayDay = roomGuest.stayDate;
+
+    final roommates = await RoomGuest.db.find(session,
+        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDate.equals(stayDay) & roomGuest.rateReason.equals(reason),
+        include: RoomGuest.include(
+          guest: Guest.include(),
+          room: Room.include(),
+        ));
+     
+  
+   final result =  roommates.map((roomGuest) => roomGuest..rate = 0).toList();
+
+   final size = roommates.length;
+   print( "updateRateSameStayDayByReasonAndId size $size");
+
+    RoomGuest.db.update(session, result);
+    return result;
+  }  
+
+
+
+  Future<List<RoomGuest>> retrieveRoommatesSameStayDayById(Session session,
+      {required int id}) async {
+  
+    
+    final roomGuest = await RoomGuest.db.findById(session, id);
+
+  //  int roomId = 0;
+        print( "retrieveRoommatesSameStayDaybyId $roomGuest");
+    if ( roomGuest == null || roomGuest.id == null ) {
+        print( "retrieveRoommatesSameStayDaybyId return []");
+        return [];
+    }
+
+    final roomId = roomGuest.roomId; 
+    final roomGuestId = roomGuest.id;
+    final stayDay = roomGuest.stayDate;
+
+    final result = await RoomGuest.db.find(session,
+        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDate.equals(stayDay),
+        include: RoomGuest.include(
+          guest: Guest.include(),
+          room: Room.include(),
+        ));
+     
+   final size = result.length;
+   print( "retrieveRoommatesSameStayDaybyId size $size");
+    return result;
+  }
+
+
+
   Future<List<RoomGuest>> getAllRoomGuest(Session session) async {
     return await RoomGuest.db.find(session,
-        orderBy: (t) => t.roomId,
+        //orderBy: (t) => t.roomId,
+        orderByList: (t) => [
+          Order( column: t.roomId, orderDescending : true),
+          Order( column: t.stayDate, orderDescending: false),
+          Order( column: t.checkOutDate, orderDescending: false),
+          Order( column: t.guest.lastName, orderDescending: false),
+        ],
         include: RoomGuest.include(
           guest: Guest.include(company: Company.include()),
           room: Room.include(),

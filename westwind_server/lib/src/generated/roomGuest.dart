@@ -30,6 +30,7 @@ abstract class RoomGuest extends _i1.TableRow {
     required this.checkInDate,
     required this.checkOutDate,
     this.updateDate,
+    required this.isCheckOut,
   }) : super(id);
 
   factory RoomGuest({
@@ -49,6 +50,7 @@ abstract class RoomGuest extends _i1.TableRow {
     required DateTime checkInDate,
     required DateTime checkOutDate,
     DateTime? updateDate,
+    required bool isCheckOut,
   }) = _RoomGuestImpl;
 
   factory RoomGuest.fromJson(
@@ -87,6 +89,8 @@ abstract class RoomGuest extends _i1.TableRow {
           .deserialize<DateTime>(jsonSerialization['checkOutDate']),
       updateDate: serializationManager
           .deserialize<DateTime?>(jsonSerialization['updateDate']),
+      isCheckOut: serializationManager
+          .deserialize<bool>(jsonSerialization['isCheckOut']),
     );
   }
 
@@ -124,6 +128,8 @@ abstract class RoomGuest extends _i1.TableRow {
 
   DateTime? updateDate;
 
+  bool isCheckOut;
+
   @override
   _i1.Table get table => t;
 
@@ -144,6 +150,7 @@ abstract class RoomGuest extends _i1.TableRow {
     DateTime? checkInDate,
     DateTime? checkOutDate,
     DateTime? updateDate,
+    bool? isCheckOut,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -166,6 +173,7 @@ abstract class RoomGuest extends _i1.TableRow {
       'checkInDate': checkInDate.toJson(),
       'checkOutDate': checkOutDate.toJson(),
       if (updateDate != null) 'updateDate': updateDate?.toJson(),
+      'isCheckOut': isCheckOut,
     };
   }
 
@@ -185,6 +193,7 @@ abstract class RoomGuest extends _i1.TableRow {
       'checkInDate': checkInDate,
       'checkOutDate': checkOutDate,
       'updateDate': updateDate,
+      'isCheckOut': isCheckOut,
     };
   }
 
@@ -209,6 +218,7 @@ abstract class RoomGuest extends _i1.TableRow {
       'checkInDate': checkInDate.toJson(),
       'checkOutDate': checkOutDate.toJson(),
       if (updateDate != null) 'updateDate': updateDate?.toJson(),
+      'isCheckOut': isCheckOut,
     };
   }
 
@@ -254,6 +264,9 @@ abstract class RoomGuest extends _i1.TableRow {
         return;
       case 'updateDate':
         updateDate = value;
+        return;
+      case 'isCheckOut':
+        isCheckOut = value;
         return;
       default:
         throw UnimplementedError();
@@ -440,6 +453,7 @@ class _RoomGuestImpl extends RoomGuest {
     required DateTime checkInDate,
     required DateTime checkOutDate,
     DateTime? updateDate,
+    required bool isCheckOut,
   }) : super._(
           id: id,
           roomId: roomId,
@@ -457,6 +471,7 @@ class _RoomGuestImpl extends RoomGuest {
           checkInDate: checkInDate,
           checkOutDate: checkOutDate,
           updateDate: updateDate,
+          isCheckOut: isCheckOut,
         );
 
   @override
@@ -477,6 +492,7 @@ class _RoomGuestImpl extends RoomGuest {
     DateTime? checkInDate,
     DateTime? checkOutDate,
     Object? updateDate = _Undefined,
+    bool? isCheckOut,
   }) {
     return RoomGuest(
       id: id is int? ? id : this.id,
@@ -499,6 +515,7 @@ class _RoomGuestImpl extends RoomGuest {
       checkInDate: checkInDate ?? this.checkInDate,
       checkOutDate: checkOutDate ?? this.checkOutDate,
       updateDate: updateDate is DateTime? ? updateDate : this.updateDate,
+      isCheckOut: isCheckOut ?? this.isCheckOut,
     );
   }
 }
@@ -552,6 +569,10 @@ class RoomGuestTable extends _i1.Table {
       'updateDate',
       this,
     );
+    isCheckOut = _i1.ColumnBool(
+      'isCheckOut',
+      this,
+    );
   }
 
   late final _i1.ColumnInt roomId;
@@ -585,6 +606,8 @@ class RoomGuestTable extends _i1.Table {
   late final _i1.ColumnDateTime checkOutDate;
 
   late final _i1.ColumnDateTime updateDate;
+
+  late final _i1.ColumnBool isCheckOut;
 
   _i2.RoomTable get room {
     if (_room != null) return _room!;
@@ -670,6 +693,7 @@ class RoomGuestTable extends _i1.Table {
         checkInDate,
         checkOutDate,
         updateDate,
+        isCheckOut,
       ];
 
   @override

@@ -1,0 +1,182 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "room_guest"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "room_guest",
+        "dartName": "RoomGuest",
+        "module": "westwind",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 2,
+            "isNullable": false,
+            "columnDefault": "nextval('room_guest_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "roomId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "stayDate",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "guestId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "rateType",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:RateType"
+          },
+          {
+            "name": "rateReason",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:RateReason"
+          },
+          {
+            "name": "rate",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "reservationId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "roomStatus",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:RoomStatus"
+          },
+          {
+            "name": "checkInDate",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "checkOutDate",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "updateDate",
+            "columnType": 4,
+            "isNullable": true,
+            "dartType": "DateTime?"
+          },
+          {
+            "name": "isCheckOut",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "room_guest_fk_0",
+            "columns": [
+              "roomId"
+            ],
+            "referenceTable": "room",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          },
+          {
+            "constraintName": "room_guest_fk_1",
+            "columns": [
+              "guestId"
+            ],
+            "referenceTable": "guest",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          },
+          {
+            "constraintName": "room_guest_fk_2",
+            "columns": [
+              "reservationId"
+            ],
+            "referenceTable": "reservation",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "room_guest_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "room_guest_index_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "roomId"
+              },
+              {
+                "type": 0,
+                "definition": "guestId"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"room_guest\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "room_guest",
+      "columns": [
+        "isCheckOut"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

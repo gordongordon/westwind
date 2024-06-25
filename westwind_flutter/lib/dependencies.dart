@@ -48,6 +48,7 @@ import 'package:westwind_flutter/features/room_guest/domain/usescases/charge_and
 import 'package:westwind_flutter/features/room_guest/domain/usescases/charge_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/check_in_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/delete_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/go_home_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/save_room_guest.dart';
@@ -428,6 +429,7 @@ void _initRoomGuest() {
     () => CalculateRateRoomGuestUseCase(
       serverLocator<RoomGuestRepository>(),
       serverLocator<RateTableRepository>(),
+      serverLocator<GoHomeRoomGuestUseCase>(),
     ),
   );
 
@@ -461,6 +463,14 @@ void _initRoomGuest() {
   serverLocator.registerLazySingleton<UndoChargeRoomGuestUseCase>(
     () => UndoChargeRoomGuestUseCase(
       serverLocator<RoomTransactionRepository>(),
+    ),
+  );
+
+
+    serverLocator.registerLazySingleton<GoHomeRoomGuestUseCase>(
+    () => GoHomeRoomGuestUseCase(
+      serverLocator<RoomGuestRepository>(),
+      serverLocator<RateTableRepository>(),
     ),
   );
 

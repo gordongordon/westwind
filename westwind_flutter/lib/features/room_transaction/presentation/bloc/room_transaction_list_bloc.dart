@@ -33,6 +33,8 @@ class RoomTransactionListBloc
   Future<void> _onFetchRoomTransactions(RoomTransactionListEvent event,
       Emitter<RoomTransactionListState> emit) async {
     emit(RoomTransactionListStateLoading());
+
+
     final result = await listRoomTransactions.call(NoParams());
     result.fold(
         (l) => emit(RoomTransactionListStateFailure(message: l.message)), (r) {
@@ -43,6 +45,8 @@ class RoomTransactionListBloc
   void _onDeleteRoomTransaction(DeleteRoomTransactionListEvent event,
       Emitter<RoomTransactionListState> emit) async {
     emit(RoomTransactionListStateLoading());
+   await Future.delayed(Duration(seconds: 1));
+
     final result = await deleteRoomTransaction
         .call(DeleteRoomTransactionParams(id: event.id));
     result.fold(
@@ -58,6 +62,8 @@ class RoomTransactionListBloc
   void _onRetrieveRoomTransaction(RetrieveRoomTransactionListEvent event,
       Emitter<RoomTransactionListState> emit) async {
     emit(RoomTransactionListStateLoading());
+   await Future.delayed(Duration(seconds: 1));
+
     final result = await retrieveRoomTransaction
         .call(RetrieveRoomTransactionParams(id: event.id));
     result.fold(
@@ -69,8 +75,11 @@ class RoomTransactionListBloc
   void _onCreateRoomTransaction(CreateRoomTransactionListEvent event,
       Emitter<RoomTransactionListState> emit) async {
     emit(RoomTransactionListStateLoading());
+       await Future.delayed(Duration(seconds: 1));
+
     final result = await createRoomTransaction.call(
         CreateRoomTransactionParams(roomTransaction: event.roomTransaction));
+        
     result.fold(
         (l) => emit(RoomTransactionListStateFailure(message: l.message)), (r) {
       emit(RoomTransactionListStateCreatedSuccess(roomTransaction: r));
