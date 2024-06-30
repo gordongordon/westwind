@@ -1,19 +1,21 @@
+// lib/features/room_calendar/presentation/widgets/room_calendar_widget.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/any.dart';
-// import 'package:westwind_flutter/features/reservation/presentaion/widgets/reservation_cell_widget.dart';
 
-class RoomCalendar extends StatefulWidget {
-  const RoomCalendar({super.key});
+
+class RoomCalendarWidget extends StatefulWidget {
+  const RoomCalendarWidget({Key? key}) : super(key: key);
 
   @override
-  State<RoomCalendar> createState() => _RoomCalendarState();
+  State<RoomCalendarWidget> createState() => _RoomCalendarWidgetState();
 }
 
-class _RoomCalendarState extends State<RoomCalendar> {
+class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
   @override
   void initState() {
     super.initState();
@@ -23,17 +25,7 @@ class _RoomCalendarState extends State<RoomCalendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Westwind Motor Inn'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () =>
-                context.read<RoomCalendarBloc>().add(FetchReservations()),
-            tooltip: 'Fetch latest reservations',
-          ),
-        ],
-      ),
+      appBar: _buildAppBar(),
       body: BlocBuilder<RoomCalendarBloc, RoomCalendarState>(
         builder: (context, state) {
           if (state is RoomCalendarLoading) {
@@ -43,9 +35,9 @@ class _RoomCalendarState extends State<RoomCalendar> {
           } else if (state is RoomCalendarLoaded) {
             return Column(
               children: [
-                _buildTopBar(context, state),
-                const _LegendWidget(),
-                Expanded(child: _CalendarGridWidget(state: state)),
+                _TopBarWidget(state: state),
+                const LegendWidget(),
+                Expanded(child: CalendarGridWidget(state: state)),
               ],
             );
           }
@@ -55,7 +47,27 @@ class _RoomCalendarState extends State<RoomCalendar> {
     );
   }
 
-  Widget _buildTopBar(BuildContext context, RoomCalendarLoaded state) {
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: const Text('Westwind Motor Inn'),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: () => context.read<RoomCalendarBloc>().add(FetchReservations()),
+          tooltip: 'Fetch latest reservations',
+        ),
+      ],
+    );
+  }
+}
+
+class _TopBarWidget extends StatelessWidget {
+  final RoomCalendarLoaded state;
+
+  const _TopBarWidget({Key? key, required this.state}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       color: Colors.lightBlue[100],
       padding: const EdgeInsets.all(8.0),
@@ -71,14 +83,12 @@ class _RoomCalendarState extends State<RoomCalendar> {
             children: [
               IconButton(
                 icon: const Icon(Icons.navigate_before),
-                onPressed: () =>
-                    _changeStartDate(context, state, -state.daysToShow),
+                onPressed: () => _changeStartDate(context, -state.daysToShow),
                 tooltip: 'Previous week',
               ),
               IconButton(
                 icon: const Icon(Icons.navigate_next),
-                onPressed: () =>
-                    _changeStartDate(context, state, state.daysToShow),
+                onPressed: () => _changeStartDate(context, state.daysToShow),
                 tooltip: 'Next week',
               ),
               const SizedBox(width: 20),
@@ -99,16 +109,15 @@ class _RoomCalendarState extends State<RoomCalendar> {
     );
   }
 
-  void _changeStartDate(
-      BuildContext context, RoomCalendarLoaded state, int daysToAdd) {
+  void _changeStartDate(BuildContext context, int daysToAdd) {
     context
         .read<RoomCalendarBloc>()
         .add(ChangeStartDate(state.startDate.add(Duration(days: daysToAdd))));
   }
 }
 
-class _LegendWidget extends StatelessWidget {
-  const _LegendWidget({Key? key}) : super(key: key);
+class LegendWidget extends StatelessWidget {
+  const LegendWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -143,22 +152,22 @@ class _LegendItem extends StatelessWidget {
   }
 }
 
-class _CalendarGridWidget extends StatelessWidget {
+class CalendarGridWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
-  const _CalendarGridWidget({Key? key, required this.state}) : super(key: key);
+  const CalendarGridWidget({Key? key, required this.state}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _DateHeaderWidget(state: state),
+        DateHeaderWidget(state: state),
         Expanded(
           child: ListView.builder(
             itemCount: state.roomNumbers.length,
             itemBuilder: (context, index) {
               final roomNumber = state.roomNumbers[index];
-              return _RoomRowWidget(
+              return RoomRowWidget(
                 state: state,
                 roomNumber: roomNumber,
                 isEvenRow: index % 2 == 0,
@@ -171,10 +180,10 @@ class _CalendarGridWidget extends StatelessWidget {
   }
 }
 
-class _DateHeaderWidget extends StatelessWidget {
+class DateHeaderWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
-  const _DateHeaderWidget({Key? key, required this.state}) : super(key: key);
+  const DateHeaderWidget({Key? key, required this.state}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -201,12 +210,12 @@ class _DateHeaderWidget extends StatelessWidget {
   }
 }
 
-class _RoomRowWidget extends StatelessWidget {
+class RoomRowWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
   final String roomNumber;
   final bool isEvenRow;
 
-  const _RoomRowWidget({
+  const RoomRowWidget({
     Key? key,
     required this.state,
     required this.roomNumber,
@@ -230,9 +239,8 @@ class _RoomRowWidget extends StatelessWidget {
           ),
           ...List.generate(state.daysToShow, (index) {
             final date = state.startDate.add(Duration(days: index));
-            final reservationsForDate =
-                _findReservationsForDate(reservationsForRoom, date);
-            return _ReservationCellWidget(
+            final reservationsForDate = _findReservationsForDate(reservationsForRoom, date);
+            return ReservationCellWidget(
               reservations: reservationsForDate,
               date: date,
               roomNumber: roomNumber,
@@ -243,8 +251,7 @@ class _RoomRowWidget extends StatelessWidget {
     );
   }
 
-  List<Reservation> _findReservationsForDate(
-      List<Reservation> reservations, DateTime date) {
+  List<Reservation> _findReservationsForDate(List<Reservation> reservations, DateTime date) {
     return reservations
         .where((r) =>
             date.isAtSameMomentAs(r.checkInDate) ||
@@ -253,15 +260,12 @@ class _RoomRowWidget extends StatelessWidget {
   }
 }
 
-
-
-// _ReservationCellWidget
-class _ReservationCellWidget extends StatefulWidget {
+class ReservationCellWidget extends StatefulWidget {
   final List<Reservation> reservations;
   final DateTime date;
   final String roomNumber;
 
-  const _ReservationCellWidget({
+  const ReservationCellWidget({
     Key? key,
     required this.reservations,
     required this.date,
@@ -269,10 +273,10 @@ class _ReservationCellWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ReservationCellWidgetState createState() => _ReservationCellWidgetState();
+  ReservationCellWidgetState createState() => ReservationCellWidgetState();
 }
 
-class _ReservationCellWidgetState extends State<_ReservationCellWidget> {
+class ReservationCellWidgetState extends State<ReservationCellWidget> {
   bool isExpanded = false;
   bool isHovering = false;
 
@@ -290,8 +294,7 @@ class _ReservationCellWidgetState extends State<_ReservationCellWidget> {
         if (widget.reservations.isEmpty) {
           cellContent = _buildEmptyCell(context);
         } else if (widget.reservations.length == 1) {
-          cellContent =
-              _buildSingleReservationCell(context, widget.reservations.first);
+          cellContent = _buildSingleReservationCell(context, widget.reservations.first);
         } else {
           cellContent = _buildMultiReservationCell(context);
         }
@@ -307,7 +310,7 @@ class _ReservationCellWidgetState extends State<_ReservationCellWidget> {
                   color: Colors.yellow.withOpacity(0.3),
                   border: Border.all(color: Colors.orange, width: 2),
                 ),
-                child: Center(
+                child: const Center(
                   child: Icon(Icons.add, color: Colors.orange),
                 ),
               ),
@@ -331,8 +334,7 @@ class _ReservationCellWidgetState extends State<_ReservationCellWidget> {
     );
   }
 
-  Widget _buildSingleReservationCell(
-      BuildContext context, Reservation reservation) {
+  Widget _buildSingleReservationCell(BuildContext context, Reservation reservation) {
     return Draggable<Reservation>(
       data: reservation,
       feedback: _buildDragFeedback(context, reservation),
@@ -390,7 +392,7 @@ class _ReservationCellWidgetState extends State<_ReservationCellWidget> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Icon(Icons.drag_handle, size: 16, color: Colors.white),
+                  const Icon(Icons.drag_handle, size: 16, color: Colors.white),
                 ],
               ),
             ),
@@ -414,8 +416,7 @@ class _ReservationCellWidgetState extends State<_ReservationCellWidget> {
     );
   }
 
-  Widget _buildReservationContent(
-      BuildContext context, Reservation reservation) {
+  Widget _buildReservationContent(BuildContext context, Reservation reservation) {
     final String displayText =
         '${reservation.guest?.firstName ?? ''} ${reservation.guest?.lastName ?? ''}'
             .trim();
@@ -452,17 +453,17 @@ class _ReservationCellWidgetState extends State<_ReservationCellWidget> {
     );
   }
 
-void _handleDrop(BuildContext context, Reservation droppedReservation) {
-  setState(() => isHovering = false);
+  void _handleDrop(BuildContext context, Reservation droppedReservation) {
+    setState(() => isHovering = false);
 
-  if (droppedReservation.roomId.toString() != widget.roomNumber || droppedReservation.checkInDate != widget.date) {
-    context.read<RoomCalendarBloc>().add(MoveReservation(
-      reservation: droppedReservation,
-      newRoomNumber: widget.roomNumber,
-      newStartDate: widget.date,
-    ));
+    if (droppedReservation.roomId.toString() != widget.roomNumber || droppedReservation.checkInDate != widget.date) {
+      context.read<RoomCalendarBloc>().add(MoveReservation(
+        reservation: droppedReservation,
+        newRoomNumber: widget.roomNumber,
+        newStartDate: widget.date,
+      ));
+    }
   }
-}
 
   Color _getReservationColor(Reservation reservation) {
     if (reservation.isCheckedIn) return Colors.blue;
@@ -475,20 +476,16 @@ void _handleDrop(BuildContext context, Reservation droppedReservation) {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Reservation Details'),
+          title: const Text('Reservation Details'),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                  'Guest: ${reservation.guest?.firstName} ${reservation.guest?.lastName}'),
-              Text(
-                  'Check-in: ${reservation.checkInDate.day}/${reservation.checkInDate.month}/${reservation.checkInDate.year}'),
-              Text(
-                  'Check-out: ${reservation.checkOutDate.day}/${reservation.checkOutDate.month}/${reservation.checkOutDate.year}'),
+              Text('Guest: ${reservation.guest?.firstName} ${reservation.guest?.lastName}'),
+              Text('Check-in: ${reservation.checkInDate.day}/${reservation.checkInDate.month}/${reservation.checkInDate.year}'),
+              Text('Check-out: ${reservation.checkOutDate.day}/${reservation.checkOutDate.month}/${reservation.checkOutDate.year}'),
               Text('Room: ${reservation.roomId}'),
-              Text(
-                  'Status: ${reservation.isCheckedIn ? 'Checked In' : 'Not Checked In'}'),
+              Text('Status: ${reservation.isCheckedIn ? 'Checked In' : 'Not Checked In'}'),
             ],
           ),
           actions: <Widget>[

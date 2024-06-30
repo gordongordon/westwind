@@ -26,7 +26,7 @@ class ReservationCalendarPage extends StatelessWidget {
       },child: const Icon( Icons.add),),
     //   body: const ReservationListWidgets(),
   //  body: const ReservationListWidget(),
-    body: const RoomCalendar(),
+    body: const RoomCalendarWidget(),
     );
     
   }
