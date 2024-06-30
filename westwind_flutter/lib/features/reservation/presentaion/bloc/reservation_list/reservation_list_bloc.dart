@@ -25,7 +25,7 @@ class ReservationListBloc
   Future<void> _onFetchReservations(
       FetchReservationsEvent event, Emitter<ReservationListState> emit) async {
     emit(ReservationListStateLoading());
-       await Future.delayed(Duration(seconds: 1));
+    //   await Future.delayed(Duration(seconds: 1));
     final result = await listReservations(NoParams());
 
     result.fold(

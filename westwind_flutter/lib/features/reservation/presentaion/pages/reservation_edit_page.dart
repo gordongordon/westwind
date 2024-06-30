@@ -32,14 +32,15 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
   final TextEditingController rateTypeController =
       TextEditingController(text: RateType.standard.toString());
   final TextEditingController rigNumberController = TextEditingController();
-  final TextEditingController rateController = TextEditingController( text : "86" );
+  final TextEditingController rateController =
+      TextEditingController(text: "86");
   final TextEditingController rateReasonController =
       TextEditingController(text: RateReason.single.toString());
 
   DateTime dateCreate = DateTime.now();
   DateTime dateUpdate = DateTime.now();
   DateTime checkInDate = DateTime.now();
-  DateTime checkOutDate = DateTime.now().add(Duration( days: 1 ));
+  DateTime checkOutDate = DateTime.now().add(Duration(days: 1));
 
   bool isCheckedIn = false;
   bool isCanceled = false;

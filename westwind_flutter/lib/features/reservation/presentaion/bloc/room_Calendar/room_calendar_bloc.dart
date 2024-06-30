@@ -72,7 +72,7 @@ class AddReservationToCell extends RoomCalendarEvent {
 
 abstract class RoomCalendarState extends Equatable {
   const RoomCalendarState();
-  
+
   @override
   List<Object?> get props => [];
 }
@@ -91,7 +91,7 @@ class RoomCalendarError extends RoomCalendarState {
 }
 
 class RoomCalendarLoaded extends RoomCalendarState {
-  final List<String> roomTypes;
+  //final List<String> roomTypes;
   final List<String> roomNumbers;
   final DateTime startDate;
   final int daysToShow;
@@ -99,7 +99,7 @@ class RoomCalendarLoaded extends RoomCalendarState {
   final Map<String, List<Reservation>> reservationsByRoom;
 
   const RoomCalendarLoaded({
-    required this.roomTypes,
+    //   required this.roomTypes,
     required this.roomNumbers,
     required this.startDate,
     required this.daysToShow,
@@ -109,16 +109,16 @@ class RoomCalendarLoaded extends RoomCalendarState {
 
   @override
   List<Object?> get props => [
-    roomTypes,
-    roomNumbers,
-    startDate,
-    daysToShow,
-    reservations,
-    reservationsByRoom,
-  ];
+        //   roomTypes,
+        roomNumbers,
+        startDate,
+        daysToShow,
+        reservations,
+        reservationsByRoom,
+      ];
 
   RoomCalendarLoaded copyWith({
-    List<String>? roomTypes,
+    // List<String>? roomTypes,
     List<String>? roomNumbers,
     DateTime? startDate,
     int? daysToShow,
@@ -126,7 +126,7 @@ class RoomCalendarLoaded extends RoomCalendarState {
     Map<String, List<Reservation>>? reservationsByRoom,
   }) {
     return RoomCalendarLoaded(
-      roomTypes: roomTypes ?? this.roomTypes,
+      //     roomTypes: roomTypes ?? this.roomTypes,
       roomNumbers: roomNumbers ?? this.roomNumbers,
       startDate: startDate ?? this.startDate,
       daysToShow: daysToShow ?? this.daysToShow,
@@ -139,7 +139,10 @@ class RoomCalendarLoaded extends RoomCalendarState {
 class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   final ReservationRepository reservationRepository;
 
-  RoomCalendarBloc({required this.reservationRepository, required ReservationManageBloc reservationManageBloc}) : super(RoomCalendarInitial()) {
+  RoomCalendarBloc(
+      {required this.reservationRepository,
+      required ReservationManageBloc reservationManageBloc})
+      : super(RoomCalendarInitial()) {
     on<InitializeCalendar>(_onInitializeCalendar);
     on<FetchReservations>(_onFetchReservations);
     on<ChangeStartDate>(_onChangeStartDate);
@@ -148,14 +151,16 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     on<AddReservationToCell>(_onAddReservationToCell);
   }
 
-  void _onInitializeCalendar(InitializeCalendar event, Emitter<RoomCalendarState> emit) async {
-    final List<String> roomTypes = ['Deluxe', 'Suite'];
-    final List<String> roomNumbers = List.generate(67, (index) => (101 + index).toString());
+  void _onInitializeCalendar(
+      InitializeCalendar event, Emitter<RoomCalendarState> emit) async {
+    //   final List<String> roomTypes = ['Deluxe', 'Suite'];
+    final List<String> roomNumbers =
+        List.generate(67, (index) => (101 + index).toString());
     final DateTime startDate = DateTime.now();
     final int daysToShow = 7;
-    
+
     emit(RoomCalendarLoaded(
-      roomTypes: roomTypes,
+      //     roomTypes: roomTypes,
       roomNumbers: roomNumbers,
       startDate: startDate,
       daysToShow: daysToShow,
@@ -166,7 +171,8 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     add(FetchReservations());
   }
 
-  void _onFetchReservations(FetchReservations event, Emitter<RoomCalendarState> emit) async {
+  void _onFetchReservations(
+      FetchReservations event, Emitter<RoomCalendarState> emit) async {
     emit(RoomCalendarLoading());
 
     try {
@@ -177,14 +183,14 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
           final Map<String, List<Reservation>> reservationsByRoom = {};
           for (var reservation in reservations) {
             final roomId = reservation.roomId.toString();
-if (!reservationsByRoom.containsKey(roomId)) {
+            if (!reservationsByRoom.containsKey(roomId)) {
               reservationsByRoom[roomId] = [];
             }
             reservationsByRoom[roomId]!.add(reservation);
           }
 
           emit(RoomCalendarLoaded(
-            roomTypes: ['Deluxe', 'Suite'],
+            //  roomTypes: ['Deluxe', 'Suite'],
             roomNumbers: List.generate(67, (index) => (101 + index).toString()),
             startDate: DateTime.now(),
             daysToShow: 7,
@@ -194,30 +200,35 @@ if (!reservationsByRoom.containsKey(roomId)) {
         },
       );
     } catch (e) {
-      emit(RoomCalendarError(message: 'Failed to fetch reservations: ${e.toString()}'));
+      emit(RoomCalendarError(
+          message: 'Failed to fetch reservations: ${e.toString()}'));
     }
   }
 
-  void _onChangeStartDate(ChangeStartDate event, Emitter<RoomCalendarState> emit) {
+  void _onChangeStartDate(
+      ChangeStartDate event, Emitter<RoomCalendarState> emit) {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       emit(currentState.copyWith(startDate: event.newStartDate));
     }
   }
 
-  void _onChangeDaysToShow(ChangeDaysToShow event, Emitter<RoomCalendarState> emit) {
+  void _onChangeDaysToShow(
+      ChangeDaysToShow event, Emitter<RoomCalendarState> emit) {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       emit(currentState.copyWith(daysToShow: event.newDaysToShow));
     }
   }
 
-     Future<void> _onMoveReservation(MoveReservation event, Emitter<RoomCalendarState> emit) async {
+  Future<void> _onMoveReservation(
+      MoveReservation event, Emitter<RoomCalendarState> emit) async {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
 
       // Calculate the duration of the original reservation
-      final originalDuration = event.reservation.checkOutDate.difference(event.reservation.checkInDate);
+      final originalDuration = event.reservation.checkOutDate
+          .difference(event.reservation.checkInDate);
 
       // Create the updated reservation
       final updatedReservation = event.reservation.copyWith(
@@ -229,17 +240,21 @@ if (!reservationsByRoom.containsKey(roomId)) {
       // Save the updated reservation to the repository
       final saveResult = await reservationRepository.save(updatedReservation);
 
-      await saveResult.fold(
+      saveResult.fold(
         (failure) {
-          emit(RoomCalendarError(message: "Failed to move reservation: ${failure.message}"));
+          emit(RoomCalendarError(
+              message: "Failed to move reservation: ${failure.message}"));
         },
         (savedReservation) {
-          final updatedReservations = List<Reservation>.from(currentState.reservations);
-          final updatedReservationsByRoom = Map<String, List<Reservation>>.from(currentState.reservationsByRoom);
+          final updatedReservations =
+              List<Reservation>.from(currentState.reservations);
+          final updatedReservationsByRoom = Map<String, List<Reservation>>.from(
+              currentState.reservationsByRoom);
 
           // Remove the reservation from its old room
           final oldRoomId = event.reservation.roomId.toString();
-          updatedReservationsByRoom[oldRoomId]?.removeWhere((r) => r.id == savedReservation.id);
+          updatedReservationsByRoom[oldRoomId]
+              ?.removeWhere((r) => r.id == savedReservation.id);
           if (updatedReservationsByRoom[oldRoomId]?.isEmpty ?? false) {
             updatedReservationsByRoom.remove(oldRoomId);
           }
@@ -251,7 +266,8 @@ if (!reservationsByRoom.containsKey(roomId)) {
           updatedReservationsByRoom[event.newRoomNumber]!.add(savedReservation);
 
           // Update the reservation in the main list
-          final index = updatedReservations.indexWhere((r) => r.id == savedReservation.id);
+          final index = updatedReservations
+              .indexWhere((r) => r.id == savedReservation.id);
           if (index != -1) {
             updatedReservations[index] = savedReservation;
           } else {
@@ -270,10 +286,11 @@ if (!reservationsByRoom.containsKey(roomId)) {
     }
   }
 
-  Future<void> _onAddReservationToCell(AddReservationToCell event, Emitter<RoomCalendarState> emit) async {
+  Future<void> _onAddReservationToCell(
+      AddReservationToCell event, Emitter<RoomCalendarState> emit) async {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
-      
+
       // Update the reservation
       final updatedReservation = event.reservation.copyWith(
         roomId: int.parse(event.roomNumber),
@@ -283,16 +300,20 @@ if (!reservationsByRoom.containsKey(roomId)) {
       // Save the updated reservation to the repository
       final saveResult = await reservationRepository.save(updatedReservation);
 
-      await saveResult.fold(
+      saveResult.fold(
         (failure) {
-          emit(RoomCalendarError(message: "Failed to save reservation: ${failure.message}"));
+          emit(RoomCalendarError(
+              message: "Failed to save reservation: ${failure.message}"));
         },
         (savedReservation) {
-          final updatedReservations = List<Reservation>.from(currentState.reservations);
-          final updatedReservationsByRoom = Map<String, List<Reservation>>.from(currentState.reservationsByRoom);
+          final updatedReservations =
+              List<Reservation>.from(currentState.reservations);
+          final updatedReservationsByRoom = Map<String, List<Reservation>>.from(
+              currentState.reservationsByRoom);
 
           // Check if the reservation already exists in the list (by ID)
-          final existingIndex = updatedReservations.indexWhere((r) => r.id == savedReservation.id);
+          final existingIndex = updatedReservations
+              .indexWhere((r) => r.id == savedReservation.id);
           if (existingIndex != -1) {
             // If it exists, update it
             updatedReservations[existingIndex] = savedReservation;
@@ -306,7 +327,8 @@ if (!reservationsByRoom.containsKey(roomId)) {
             updatedReservationsByRoom[event.roomNumber] = [];
           }
           final roomReservations = updatedReservationsByRoom[event.roomNumber]!;
-          final roomExistingIndex = roomReservations.indexWhere((r) => r.id == savedReservation.id);
+          final roomExistingIndex =
+              roomReservations.indexWhere((r) => r.id == savedReservation.id);
           if (roomExistingIndex != -1) {
             roomReservations[roomExistingIndex] = savedReservation;
           } else {
@@ -324,14 +346,17 @@ if (!reservationsByRoom.containsKey(roomId)) {
       );
     }
   }
-
-  bool _isOverlapping(Reservation newReservation, String roomNumber, DateTime date, RoomCalendarLoaded state) {
+/*
+  bool _isOverlapping(Reservation newReservation, String roomNumber,
+      DateTime date, RoomCalendarLoaded state) {
     final existingReservations = state.reservationsByRoom[roomNumber] ?? [];
-    
+
     return existingReservations.any((existingReservation) {
       // Allow multiple reservations on the same day, but prevent exact duplicates
       return newReservation.checkInDate == existingReservation.checkInDate &&
-             newReservation.checkOutDate == existingReservation.checkOutDate;
+          newReservation.checkOutDate == existingReservation.checkOutDate;
     });
   }
+  */
 }
+

@@ -26,6 +26,16 @@ class ReservationEndpoint extends Endpoint {
 
   Future<Reservation> save(Session session, Reservation reservation) async {
     if (reservation.id != null) {
+     // if ( reservation.isCheckedIn ) {
+         // check day can't change
+       //  final result = await Reservation.db.findById(session, reservation.id! );
+       //  if ( result!= null ) {
+       //       final diffDay = reservation.checkOutDate.day - reservation.checkInDate.day;
+       //       reservation.checkInDate = result.checkInDate;
+       //       reservation.checkOutDate = result.checkInDate
+       //  }
+      //}
+
       reservation.dateUpdate = DateTime.now().toLocal();
       return await Reservation.db.updateRow(session, reservation);
     } else {
