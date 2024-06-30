@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
@@ -50,6 +49,15 @@ class MoveReservation extends RoomCalendarEvent {
   List<Object> get props => [reservation, newRoomNumber, newStartDate];
 }
 
+class StartDraggingReservation extends RoomCalendarEvent {
+  final Reservation reservation;
+
+  const StartDraggingReservation({required this.reservation});
+
+  @override
+  List<Object> get props => [reservation];
+}
+
 // States
 abstract class RoomCalendarState extends Equatable {
   const RoomCalendarState();
@@ -78,6 +86,7 @@ class RoomCalendarLoaded extends RoomCalendarState {
   final int daysToShow;
   final List<Reservation> reservations;
   final Map<String, List<Reservation>> reservationsByRoom;
+  final Reservation? draggingReservation;
 
   const RoomCalendarLoaded({
     required this.roomTypes,
@@ -86,6 +95,7 @@ class RoomCalendarLoaded extends RoomCalendarState {
     required this.daysToShow,
     required this.reservations,
     required this.reservationsByRoom,
+    this.draggingReservation,
   });
 
   @override
@@ -96,6 +106,7 @@ class RoomCalendarLoaded extends RoomCalendarState {
     daysToShow,
     reservations,
     reservationsByRoom,
+    draggingReservation,
   ];
 
   RoomCalendarLoaded copyWith({
@@ -105,6 +116,7 @@ class RoomCalendarLoaded extends RoomCalendarState {
     int? daysToShow,
     List<Reservation>? reservations,
     Map<String, List<Reservation>>? reservationsByRoom,
+    Reservation? draggingReservation,
   }) {
     return RoomCalendarLoaded(
       roomTypes: roomTypes ?? this.roomTypes,
@@ -113,6 +125,7 @@ class RoomCalendarLoaded extends RoomCalendarState {
       daysToShow: daysToShow ?? this.daysToShow,
       reservations: reservations ?? this.reservations,
       reservationsByRoom: reservationsByRoom ?? this.reservationsByRoom,
+      draggingReservation: draggingReservation ?? this.draggingReservation,
     );
   }
 }
@@ -131,6 +144,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     on<ChangeStartDate>(_onChangeStartDate);
     on<ChangeDaysToShow>(_onChangeDaysToShow);
     on<MoveReservation>(_onMoveReservation);
+    on<StartDraggingReservation>(_onStartDraggingReservation);
   }
 
   void _onInitializeCalendar(InitializeCalendar event, Emitter<RoomCalendarState> emit) async {
@@ -161,28 +175,21 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (reservations) {
           final Map<String, List<Reservation>> reservationsByRoom = {};
           for (var reservation in reservations) {
-            if (!reservationsByRoom.containsKey(reservation.roomId.toString())) {
-              reservationsByRoom[reservation.roomId.toString()] = [];
+            final roomId = reservation.roomId.toString();
+            if (!reservationsByRoom.containsKey(roomId)) {
+              reservationsByRoom[roomId] = [];
             }
-            reservationsByRoom[reservation.roomId.toString()]!.add(reservation);
+            reservationsByRoom[roomId]!.add(reservation);
           }
 
-          if (state is RoomCalendarLoaded) {
-            final loadedState = state as RoomCalendarLoaded;
-            emit(loadedState.copyWith(
-              reservations: reservations,
-              reservationsByRoom: reservationsByRoom,
-            ));
-          } else {
-            emit(RoomCalendarLoaded(
-              roomTypes: ['Deluxe', 'Suite'],
-              roomNumbers: List.generate(67, (index) => (101 + index).toString()),
-              startDate: DateTime.now(),
-              daysToShow: 7,
-              reservations: reservations,
-              reservationsByRoom: reservationsByRoom,
-            ));
-          }
+          emit(RoomCalendarLoaded(
+            roomTypes: ['Deluxe', 'Suite'],
+            roomNumbers: List.generate(67, (index) => (101 + index).toString()),
+            startDate: DateTime.now(),
+            daysToShow: 7,
+            reservations: reservations,
+            reservationsByRoom: reservationsByRoom,
+          ));
         },
       );
     } catch (e) {
@@ -204,46 +211,51 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     }
   }
 
-void _onMoveReservation(MoveReservation event, Emitter<RoomCalendarState> emit) async {
-  if (state is RoomCalendarLoaded) {
-    final currentState = state as RoomCalendarLoaded;
-    
-    // Check for overlaps
-    if (isOverlapping(event.reservation, event.newRoomNumber, event.newStartDate)) {
-      emit(RoomCalendarError(message: "Cannot move reservation. It overlaps with an existing reservation."));
-      return;
-    }
+  void _onMoveReservation(MoveReservation event, Emitter<RoomCalendarState> emit) async {
+    if (state is RoomCalendarLoaded) {
+      final currentState = state as RoomCalendarLoaded;
+      
+      // Check for overlaps
+      if (_isOverlapping(event.reservation, event.newRoomNumber, event.newStartDate, currentState)) {
+        emit(RoomCalendarError(message: "Cannot move reservation. It overlaps with an existing reservation."));
+        emit(currentState); // Revert to the previous state
+        return;
+      }
 
-    final existingReservation = currentState.reservations.firstWhere(
-      (r) => r.id == event.reservation.id,
-      orElse: () => event.reservation,
-    );
+      final existingReservation = currentState.reservations.firstWhere(
+        (r) => r.id == event.reservation.id,
+        orElse: () => event.reservation,
+      );
 
-    final guest = existingReservation.guest ?? event.reservation.guest;
+      final guest = existingReservation.guest ?? event.reservation.guest;
 
-    final duration = existingReservation.checkOutDate.difference(existingReservation.checkInDate);
-    final updatedReservation = existingReservation.copyWith(
-      roomId: int.parse(event.newRoomNumber),
-      checkInDate: event.newStartDate,
-      checkOutDate: event.newStartDate.add(duration),
-      guest: guest,
-    );
+      final duration = existingReservation.checkOutDate.difference(existingReservation.checkInDate);
+      final updatedReservation = existingReservation.copyWith(
+        roomId: int.parse(event.newRoomNumber),
+        checkInDate: event.newStartDate,
+        checkOutDate: event.newStartDate.add(duration),
+        guest: guest,
+      );
 
       // Use ReservationManageBloc to save the updated reservation
       reservationManageBloc.add(SaveReservation(reservation: updatedReservation));
 
       // Listen for the result of the save operation
-      await for (final state in reservationManageBloc.stream) {
-        if (state is ReservationManageStateSaveSuccess) {
+      await for (final manageState in reservationManageBloc.stream) {
+        if (manageState is ReservationManageStateSaveSuccess) {
           // Ensure the saved reservation has the guest information
-          final savedReservation = state.reservation.copyWith(guest: guest);
+          final savedReservation = manageState.reservation.copyWith(guest: guest);
           
           // Update was successful, update local state
           final updatedReservations = List<Reservation>.from(currentState.reservations);
           final updatedReservationsByRoom = Map<String, List<Reservation>>.from(currentState.reservationsByRoom);
 
           // Remove the reservation from its current room
-          updatedReservationsByRoom[existingReservation.roomId.toString()]?.removeWhere((r) => r.id == updatedReservation.id);
+          final oldRoomId = existingReservation.roomId.toString();
+          updatedReservationsByRoom[oldRoomId]?.removeWhere((r) => r.id == updatedReservation.id);
+          if (updatedReservationsByRoom[oldRoomId]?.isEmpty ?? false) {
+            updatedReservationsByRoom.remove(oldRoomId);
+          }
 
           // Add the updated reservation to the new room
           if (!updatedReservationsByRoom.containsKey(event.newRoomNumber)) {
@@ -262,22 +274,29 @@ void _onMoveReservation(MoveReservation event, Emitter<RoomCalendarState> emit) 
           emit(currentState.copyWith(
             reservations: updatedReservations,
             reservationsByRoom: updatedReservationsByRoom,
+            draggingReservation: null, // Clear the dragging reservation
           ));
 
           break;
-        } else if (state is ReservationManageStateFailure) {
+        } else if (manageState is ReservationManageStateFailure) {
           // Handle failure
-          emit(RoomCalendarError(message: state.message));
+          emit(RoomCalendarError(message: manageState.message));
+          emit(currentState.copyWith(draggingReservation: null)); // Clear the dragging reservation
           break;
         }
       }
     }
   }
 
-bool isOverlapping(Reservation movedReservation, String newRoomNumber, DateTime newStartDate) {
-  if (state is RoomCalendarLoaded) {
-    final currentState = state as RoomCalendarLoaded;
-    final reservationsInRoom = currentState.reservationsByRoom[newRoomNumber] ?? [];
+  void _onStartDraggingReservation(StartDraggingReservation event, Emitter<RoomCalendarState> emit) {
+    if (state is RoomCalendarLoaded) {
+      final currentState = state as RoomCalendarLoaded;
+      emit(currentState.copyWith(draggingReservation: event.reservation));
+    }
+  }
+
+  bool _isOverlapping(Reservation movedReservation, String newRoomNumber, DateTime newStartDate, RoomCalendarLoaded state) {
+    final reservationsInRoom = state.reservationsByRoom[newRoomNumber] ?? [];
     
     final newEndDate = newStartDate.add(movedReservation.checkOutDate.difference(movedReservation.checkInDate));
 
@@ -287,6 +306,4 @@ bool isOverlapping(Reservation movedReservation, String newRoomNumber, DateTime 
           newEndDate.isAfter(existingReservation.checkInDate));
     });
   }
-  return false;
-}
 }

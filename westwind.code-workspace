@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"sqltools.connections": [
+			{
+				"previewLimit": 50,
+				"server": "localhost",
+				"port": 8090,
+				"driver": "PostgreSQL",
+				"name": "westwind",
+				"database": "westwind",
+				"username": "postgres",
+				"password": "8lozzN3S344jkh5UlLJ7eQ358zh_EFfT"
+			}
+		]
+	}
+}
