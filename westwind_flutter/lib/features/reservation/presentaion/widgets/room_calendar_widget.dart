@@ -260,6 +260,8 @@ class RoomRowWidget extends StatelessWidget {
   }
 }
 
+
+
 class ReservationCellWidget extends StatefulWidget {
   final List<Reservation> reservations;
   final DateTime date;
@@ -283,11 +285,11 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   @override
   Widget build(BuildContext context) {
     return DragTarget<Reservation>(
-      onWillAcceptWithDetails: (details) {
+      onWillAccept: (data) {
         setState(() => isHovering = true);
-        return true;
+        return true; // Accept all drops, we'll handle the logic in onAccept
       },
-      onAcceptWithDetails: (details) => _handleDrop(context, details.data),
+      onAccept: (data) => _handleDrop(context, data),
       onLeave: (_) => setState(() => isHovering = false),
       builder: (context, candidateData, rejectedData) {
         Widget cellContent;
@@ -302,7 +304,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         return Stack(
           children: [
             cellContent,
-            if (isHovering && widget.reservations.isNotEmpty)
+            if (isHovering)
               Container(
                 width: 110,
                 height: 30,
@@ -339,6 +341,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
       data: reservation,
       feedback: _buildDragFeedback(context, reservation),
       childWhenDragging: _buildEmptyCell(context),
+      axis: reservation.isCheckedIn ? Axis.vertical : null,
       child: GestureDetector(
         onTap: () => _showReservationDetails(context, reservation),
         onDoubleTap: () => _openReservationEditPage(context, reservation),
@@ -377,6 +380,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         return Draggable<Reservation>(
           data: reservation,
           feedback: _buildDragFeedback(context, reservation),
+          axis: reservation.isCheckedIn ? Axis.vertical : null,
           child: GestureDetector(
             onTap: () => _showReservationDetails(context, reservation),
             onDoubleTap: () => _openReservationEditPage(context, reservation),
@@ -456,13 +460,46 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   void _handleDrop(BuildContext context, Reservation droppedReservation) {
     setState(() => isHovering = false);
 
-    if (droppedReservation.roomId.toString() != widget.roomNumber || droppedReservation.checkInDate != widget.date) {
+    // Debug logging
+    print('Dropped Reservation: Room ${droppedReservation.roomId}, Date ${droppedReservation.checkInDate}');
+    print('Target Cell: Room ${widget.roomNumber}, Date ${widget.date}');
+    print('Is Checked In: ${droppedReservation.isCheckedIn}');
+
+    // Check if the move is valid
+    bool isRoomChange = droppedReservation.roomId.toString() != widget.roomNumber;
+    bool isDateChange = !_isSameDate(droppedReservation.checkInDate, widget.date);
+
+    print('Is Room Change: $isRoomChange');
+    print('Is Date Change: $isDateChange');
+
+    bool isValidMove = isRoomChange || (!droppedReservation.isCheckedIn && isDateChange);
+
+    if (isValidMove) {
       context.read<RoomCalendarBloc>().add(MoveReservation(
         reservation: droppedReservation,
         newRoomNumber: widget.roomNumber,
         newStartDate: widget.date,
       ));
+      print('Valid move: Dispatching MoveReservation event');
+    } else {
+      String errorMessage = "Invalid move";
+      if (droppedReservation.isCheckedIn && isDateChange) {
+        errorMessage = "Cannot change check-in date for a checked-in reservation";
+      } else if (!isRoomChange && !isDateChange) {
+        errorMessage = "No changes detected";
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      print('Invalid move: $errorMessage');
     }
+  }
+
+  bool _isSameDate(DateTime date1, DateTime date2) {
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
   }
 
   Color _getReservationColor(Reservation reservation) {

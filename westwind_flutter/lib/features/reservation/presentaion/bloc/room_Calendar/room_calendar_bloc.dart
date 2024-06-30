@@ -1,11 +1,8 @@
-// lib/features/room_calendar/presentation/bloc/room_calendar_bloc.dart
-
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
-
 
 part 'room_calendar_event.dart';
 part 'room_calendar_state.dart';
@@ -81,8 +78,25 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   Future<void> _onMoveReservation(MoveReservation event, Emitter<RoomCalendarState> emit) async {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
+      
+      print('MoveReservation event received:');
+      print('Reservation ID: ${event.reservation.id}');
+      print('New Room Number: ${event.newRoomNumber}');
+      print('New Start Date: ${event.newStartDate}');
+      print('Is Checked In: ${event.reservation.isCheckedIn}');
+
+      // Validate the move
+      if (event.reservation.isCheckedIn && !_isSameDate(event.reservation.checkInDate, event.newStartDate)) {
+        emit(RoomCalendarError(message: "Cannot change check-in date for a checked-in reservation"));
+        return;
+      }
+
       final updatedReservation = _updateReservationForMove(event.reservation, event.newRoomNumber, event.newStartDate);
       
+      print('Updated Reservation:');
+      print('New Room ID: ${updatedReservation.roomId}');
+      print('New Check-in Date: ${updatedReservation.checkInDate}');
+
       final saveResult = await reservationRepository.save(updatedReservation);
 
       saveResult.fold(
@@ -90,7 +104,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) {
           final updatedState = _updateStateAfterReservationMove(currentState, event.reservation, savedReservation);
           emit(updatedState);
-          add(FetchReservations());
+          print('Reservation moved successfully');
         },
       );
     }
@@ -108,7 +122,6 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) {
           final updatedState = _updateStateAfterReservationAdd(currentState, savedReservation);
           emit(updatedState);
-          add(FetchReservations());
         },
       );
     }
@@ -127,12 +140,20 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   }
 
   Reservation _updateReservationForMove(Reservation reservation, String newRoomNumber, DateTime newStartDate) {
-    final originalDuration = reservation.checkOutDate.difference(reservation.checkInDate);
-    return reservation.copyWith(
-      roomId: int.parse(newRoomNumber),
-      checkInDate: newStartDate,
-      checkOutDate: newStartDate.add(originalDuration),
-    );
+    if (reservation.isCheckedIn) {
+      // For checked-in reservations, only update the room
+      return reservation.copyWith(
+        roomId: int.parse(newRoomNumber),
+      );
+    } else {
+      // For non-checked-in reservations, update both room and dates
+      final originalDuration = reservation.checkOutDate.difference(reservation.checkInDate);
+      return reservation.copyWith(
+        roomId: int.parse(newRoomNumber),
+        checkInDate: newStartDate,
+        checkOutDate: newStartDate.add(originalDuration),
+      );
+    }
   }
 
   RoomCalendarLoaded _updateStateAfterReservationMove(
@@ -210,5 +231,9 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       reservations: updatedReservations,
       reservationsByRoom: updatedReservationsByRoom,
     );
+  }
+
+  bool _isSameDate(DateTime date1, DateTime date2) {
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
   }
 }
