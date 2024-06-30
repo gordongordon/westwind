@@ -148,7 +148,7 @@ void _initRoomTransaction() {
     
     () => RoomCalendarBloc(
       reservationRepository: serverLocator<ReservationRepository>(),
-      reservationManageBloc: serverLocator<ReservationManageBloc>()
+     //s reservationManageBloc: serverLocator<ReservationManageBloc>()
       
     )
   );
