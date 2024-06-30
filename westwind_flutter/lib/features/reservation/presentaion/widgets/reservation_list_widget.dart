@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -18,436 +17,241 @@ class ReservationListWidget extends StatefulWidget {
 
 class _ReservationListWidgetState extends State<ReservationListWidget> {
   final List<PlutoColumn> columns = [];
-
   final List<PlutoRow> rows = [];
   final List<String> _rateTypeOptions =
       RateType.values.map((e) => e.name).toList();
   final List<String> _rateReasonOptions =
       RateReason.values.map((e) => e.name).toList();
+  late final PlutoGridStateManager stateManager;
+
+   
 
   @override
   void initState() {
     super.initState();
-
     context.read<ReservationListBloc>().add(FetchReservationsEvent());
-
-    //   final List<PlutoColumn> columns = <PlutoColumn>[
-    columns.addAll(
-      [
-        PlutoColumn(
-            title: 'Id',
-            field: 'id',
-            type: PlutoColumnType.number(),
-            titlePadding: const EdgeInsets.all(8),
-            textAlign: PlutoColumnTextAlign.start,
-            // titleTextAlign: PlutoColumnTextAlign.end,
-            //   enableRowChecked: true,
-
-            //   frozen: PlutoColumnFrozen.start,
-            // checkReadOnly: true,
-            enableDropToResize: true,
-            readOnly: true,
-            width: 70,
-            footerRenderer: (rendererContext) {
-              return PlutoAggregateColumnFooter(
-                rendererContext: rendererContext,
-                type: PlutoAggregateColumnType.count,
-                format: '#',
-                alignment: Alignment.center,
-                titleSpanBuilder: (text) {
-                  return [
-                    const TextSpan(
-                      text: '# of',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    const TextSpan(text: ' : '),
-                    TextSpan(text: text),
-                  ];
-                },
-              );
-            }),
-        PlutoColumn(
-          title: 'Check In',
-          field: 'checkIn',
-          type: PlutoColumnType.date(),
-          width: 100,
-        ),
-        PlutoColumn(
-          title: 'check Out',
-          field: 'checkOut',
-          type: PlutoColumnType.date(),
-          width: 100,
-        ),
-        PlutoColumn(
-          title: 'Note',
-          field: 'note',
-          type: PlutoColumnType.text(),
-          width: 60,
-        ),
-        PlutoColumn(
-          title: 'Create At',
-          field: 'createAt',
-          type: PlutoColumnType.date(),
-          width: 100,
-        ),
-        PlutoColumn(
-          title: 'Update At',
-          field: 'updateAt',
-          type: PlutoColumnType.date(),
-          width: 100,
-        ),
-        PlutoColumn(
-          title: 'Guest Id',
-          field: 'guestId',
-          type: PlutoColumnType.number(),
-          width: 80,
-        ),
-        PlutoColumn(
-          title: 'Rate Type',
-          field: 'rateType',
-          type: PlutoColumnType.select(_rateTypeOptions),
-          width: 120,
-        ),
-        PlutoColumn(
-          title: 'Rate Reason',
-          field: 'rateReason',
-          type: PlutoColumnType.select(_rateReasonOptions),
-          width: 120,
-        ),
-        PlutoColumn(
-          title: 'Rate',
-          field: 'rate',
-          type: PlutoColumnType.number(),
-          width: 70,
-        ),
-        PlutoColumn(
-          title: 'is Check In',
-          field: 'isCheckIn',
-          type: PlutoColumnType.select(<bool>[true, false]),
-          width: 120,
-          renderer: (rendererContext) {
-            Color textColor = Colors.black;
-
-            if (rendererContext.cell.value == true) {
-              textColor = Colors.red;
-            } else if (rendererContext.cell.value == false) {
-              textColor = Colors.green;
-            }
-
-            return Icon(
-              Icons.single_bed,
-              color: textColor,
-            );
-            /*
-            return Text(
-              rendererContext.cell.value.toString(),
-              style: TextStyle(
-                color: textColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ); */
-          },
-        ),
-        PlutoColumn(
-          title: 'Is Canceled',
-          field: 'isCanceled',
-          type: PlutoColumnType.select(<bool>[true, false]),
-          width: 120,
-          renderer: (rendererContext) {
-            Color textColor = Colors.black;
-
-            if (rendererContext.cell.value == true) {
-              textColor = Colors.red;
-            } else if (rendererContext.cell.value == false) {
-              textColor = Colors.green;
-            }
-
-            //      return Icon(
-            //        Icons.single_bed,
-            //        color: textColor,
-            //     );
-
-            return Text(
-              rendererContext.cell.value.toString(),
-              style: TextStyle(
-                color: textColor,
-                fontWeight: FontWeight.bold,
-              ),
-            );
-          },
-        ),
-        PlutoColumn(
-          title: 'Is Night Shift',
-          field: 'isNightShift',
-          type: PlutoColumnType.select(<bool>[true, false]),
-          width: 120,
-          renderer: (rendererContext) {
-            Color textColor = Colors.black;
-
-            if (rendererContext.cell.value == true) {
-              textColor = Colors.red;
-            } else if (rendererContext.cell.value == false) {
-              textColor = Colors.green;
-            }
-
-            //      return Icon(
-            //        Icons.single_bed,
-            //        color: textColor,
-            //     );
-
-            return Text(
-              rendererContext.cell.value.toString(),
-              style: TextStyle(
-                color: textColor,
-                fontWeight: FontWeight.bold,
-              ),
-            );
-          },
-        ),
-        PlutoColumn(
-          title: 'Room Id',
-          field: 'roomId',
-          type: PlutoColumnType.number(),
-          width: 120,
-        ),
-        PlutoColumn(
-          title: 'First Name',
-          field: 'firstName',
-          type: PlutoColumnType.text(),
-          width: 100,
-          titleSpan: const TextSpan(
-            text: 'First Name',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-            ),
-
-
-          renderer: (rendererContext) {
-            Color textColor = Colors.black;
-
-            return Text(
-              rendererContext.cell.value.toString(),
-              style: TextStyle(
-                color: textColor,
-             //   fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            );
-          },
-        ),
-        PlutoColumn(
-          title: 'Last Name',
-          field: 'lastName',
-          type: PlutoColumnType.text(),
-          width: 100,
-                  titleSpan: const TextSpan(
-            text: 'Last Name',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-            ),
-            renderer: (rendererContext) {
-            Color textColor = Colors.black;
-
-            return Text(
-              rendererContext.cell.value.toString(),
-              style: TextStyle(
-                color: textColor,
-             //   fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            );
-          },
-        ),
-      ],
-    );
+    _initColumns();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  void _initColumns() {
+    columns.addAll([
+      _buildIdColumn(),
+      _buildNumberColumn('Room Id', 'roomId'),
+      _buildNameColumn('First Name', 'firstName'),
+      _buildNameColumn('Last Name', 'lastName'),
+      _buildDateColumn('Check In', 'checkIn'),
+      _buildDateColumn('Check Out', 'checkOut'),
+      _buildBooleanColumn('Is Night Shift', 'isNightShift'),
+      _buildSelectColumn('Rate Type', 'rateType', _rateTypeOptions),
+      _buildSelectColumn('Rate Reason', 'rateReason', _rateReasonOptions),
+      _buildNumberColumn('Rate', 'rate', width: 70),
+      _buildTextColumn('Note', 'note', width: 60),
+      _buildBooleanColumn('Is Check In', 'isCheckIn', icon: Icons.single_bed),
+      _buildBooleanColumn('Is Canceled', 'isCanceled'),
+      _buildDateColumn('Create At', 'createAt'),
+      _buildDateColumn('Update At', 'updateAt'),
+      _buildNumberColumn('Guest Id', 'guestId', width: 80),
+    ]);
   }
-
-  late final PlutoGridStateManager stateManager;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ReservationListBloc, ReservationListState>(
       builder: (context, state) {
-        // debugPrint("building SB");
-        switch (state) {
-          case ReservationListStateInitial():
-            return const SizedBox.shrink();
-          case ReservationListStateLoading():
-            return const Loader();
-          case ReservationListStateLoaded():
-            final reservations = state.reservations;
-            final reservationSelected = reservations;
-            return Column(
-              children: [
-                Expanded(child: buildDataTable(context, reservations)),
-         //       buildSubmit(context, reservationSelected),
-         //       buildCancelReseration(context, reservationSelected),
-                //    buildSubmit(context, ReservationSelected, ref),
-              ],
-            );
-          case ReservationListStateFailure():
-            return Center(
-              child: Text(state.message),
-            );
-          default:
-            return Placeholder();
+        if (state is ReservationListStateInitial) {
+          return const SizedBox.shrink();
+        } else if (state is ReservationListStateLoading) {
+          return const Loader();
+        } else if (state is ReservationListStateLoaded) {
+          return _buildDataTable(context, state.reservations);
+        } else if (state is ReservationListStateFailure) {
+          return Center(child: Text(state.message));
         }
+        return const Placeholder();
       },
     );
   }
 
-  // final List<String> _rateTypeOptions =
-  //   RateType.values.map((e) => e.name).toList();
-
-  Widget buildDataTable(
-    BuildContext context,
-    List<Reservation> reservations,
-    // List<reservation> reservationSelected,
-  ) {
-    final List<PlutoRow> rows = reservations.map((reservation) {
-      return PlutoRow(
-        cells: {
-          'id': PlutoCell(value: reservation.id!),
-          'checkIn': PlutoCell(value: reservation.checkInDate),
-          'checkOut': PlutoCell(value: reservation.checkOutDate),
-          'note': PlutoCell(value: reservation.note),
-          'createAt': PlutoCell(value: reservation.dateCreate),
-          'updateAt': PlutoCell(value: reservation.dateUpdate),
-          'guestId': PlutoCell(value: reservation.guestId),
-          'rateType': PlutoCell(value: reservation.rateType.toString()),
-          'rateReason': PlutoCell(value: reservation.rateReason.toString()),
-          'rate': PlutoCell(value: reservation.rate),
-          'isCheckIn': PlutoCell(value: reservation.isCheckedIn),
-          'isCanceled': PlutoCell(value: reservation.isCanceled),
-          'isNightShift': PlutoCell(value: reservation.isNightShift),
-          'roomId': PlutoCell(value: reservation.roomId),
-          'firstName': PlutoCell(value: reservation.guest!.firstName),
-          'lastName': PlutoCell(value: reservation.guest!.lastName),
-        },
-      );
-    }).toList();
+  Widget _buildDataTable(BuildContext context, List<Reservation> reservations) {
+    final rows =
+        reservations.map((reservation) => _createRow(reservation)).toList();
 
     return PlutoGrid(
-        columns: columns,
-        rows: rows,
-        //     onChanged: (PlutoGridOnChangedEvent event) {
-        //    print(event);
-        //     },
-        onLoaded: (PlutoGridOnLoadedEvent event) {
-          event.stateManager.setShowColumnFilter(true);
-          stateManager = event.stateManager;
-        },
-        onRowDoubleTap: (event) {
-          //    if (event.rowIdx == null) {
-          //     showSnackbar(context, 'Row Index cannot be found!');
-          //  }
-          debugPrint('onSelected');
-          final field = event.row.cells['id'];
-
-          if (field == null) {
-            showSnackbar(context, 'Cell id cannot be found!');
-          }
-
-          //  if (event.row.cells['isInHouse']!.value == false) {
-          context.push(ReservationEditPage.route(field!.value));
-          //   }
-        },
-        configuration: PlutoGridConfiguration(
-          /// If columnFilterConfig is not set, the default setting is applied.
-          ///
-          /// Return the value returned by resolveDefaultColumnFilter through the resolver function.
-          /// Prevents errors returning filters that are not in the filters list.
-          columnFilter: PlutoGridColumnFilterConfig(
-            filters: const [
-              ...FilterHelper.defaultFilters,
-              // custom filter
-              ClassYouImplemented(),
-            ],
-            resolveDefaultColumnFilter: (column, resolver) {
-              if (column.field == 'id') {
-                return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
-              } else if (column.field == 'firstName') {
-                return resolver<PlutoFilterTypeGreaterThan>()
-                    as PlutoFilterType;
-              } else if (column.field == 'createAt') {
-                return resolver<PlutoFilterTypeLessThan>() as PlutoFilterType;
-              } else if (column.field == 'rateType') {
-                return resolver<ClassYouImplemented>() as PlutoFilterType;
-              }
-
-              return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
-            },
-          ),
-        ));
+      columns: columns,
+      rows: rows,
+      onLoaded: (PlutoGridOnLoadedEvent event) {
+        event.stateManager.setShowColumnFilter(true);
+        stateManager = event.stateManager;
+      },
+      onRowDoubleTap: _handleRowDoubleTap,
+      configuration: PlutoGridConfiguration(
+        columnFilter: _buildColumnFilterConfig(),
+      ),
+    );
   }
 
-  Widget buildSubmit(
-    BuildContext context,
-    List<Reservation> reservationSelected,
-  ) =>
-      Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(12),
-        color: Colors.black,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: StadiumBorder(),
-            minimumSize: Size.fromHeight(40),
-          ),
-          child: Text('Select ${reservationSelected.length} to Check In'),
-          onPressed: () {
-            //    final id = ReservationSelected.map((Reservation) => Reservation.id).join(', ');
+  PlutoRow _createRow(Reservation reservation) {
+    
+    return PlutoRow(
+      cells: {
+        'id': PlutoCell(value: reservation.id!),
+        'checkIn': PlutoCell(value: reservation.checkInDate),
+        'checkOut': PlutoCell(value: reservation.checkOutDate),
+        'note': PlutoCell(value: reservation.note),
+        'createAt': PlutoCell(value: reservation.dateCreate),
+        'updateAt': PlutoCell(value: reservation.dateUpdate),
+        'guestId': PlutoCell(value: reservation.guestId),
+        'rateType': PlutoCell(value: reservation.rateType.toString()),
+        'rateReason': PlutoCell(value: reservation.rateReason.toString()),
+        'rate': PlutoCell(value: reservation.rate),
+        'isCheckIn': PlutoCell(value: reservation.isCheckedIn),
+        'isCanceled': PlutoCell(value: reservation.isCanceled),
+        'isNightShift': PlutoCell(value: reservation.isNightShift),
+        'roomId': PlutoCell(value: reservation.roomId),
+        'firstName': PlutoCell(value: reservation.guest!.firstName),
+        'lastName': PlutoCell(value: reservation.guest!.lastName),
+      },
+    );
+  }
 
-// context.read<ReservationListBloc>().add( SelectReservationEvent( Reservation: ReservationSelected.first ) );
+  void _handleRowDoubleTap(PlutoGridOnRowDoubleTapEvent event) {
+    final field = event.row.cells['id'];
+    if (field == null) {
+      showSnackbar(context, 'Cell id cannot be found!');
+    } else {
+      context.push(ReservationEditPage.route(field.value));
+    }
+  }
 
-            reservationSelected.forEach((element) {
-              //  ref.read(ReservationProvider(0).notifier).checkIn(element, element.id!);
-              // context.read<ReservationListBloc>().add( ReservationListStateSelected(Reservations));
-            });
+  PlutoGridColumnFilterConfig _buildColumnFilterConfig() {
+    return PlutoGridColumnFilterConfig(
+      filters: const [...FilterHelper.defaultFilters, ClassYouImplemented()],
+      resolveDefaultColumnFilter: (column, resolver) {
+        if (column.field == 'id') {
+          return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
+        } else if (column.field == 'firstName') {
+          return resolver<PlutoFilterTypeGreaterThan>() as PlutoFilterType;
+        } else if (column.field == 'createAt') {
+          return resolver<PlutoFilterTypeLessThan>() as PlutoFilterType;
+        } else if (column.field == 'rateType') {
+          return resolver<ClassYouImplemented>() as PlutoFilterType;
+        }
+        return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
+      },
+    );
+  }
 
-            //  Utils.showSnackBar(context, 'Selected Reservation: $id ');
+  // Helper methods to create columns
+  PlutoColumn _buildIdColumn() {
+    return PlutoColumn(
+      title: 'Id',
+      field: 'id',
+      type: PlutoColumnType.number(),
+      width: 70,
+      enableDropToResize: true,
+      readOnly: true,
+      titlePadding: const EdgeInsets.all(8),
+      textAlign: PlutoColumnTextAlign.start,
+      footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.count,
+          format: '#',
+          alignment: Alignment.center,
+          titleSpanBuilder: (text) {
+            return [
+              const TextSpan(text: '# of', style: TextStyle(color: Colors.red)),
+              const TextSpan(text: ' : '),
+              TextSpan(text: text),
+            ];
           },
-        ),
-      );
-  Widget buildCancelReseration(
-    BuildContext context,
-    List<Reservation> ReservationSelected,
-  ) =>
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(12),
-        color: Colors.black,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
-            minimumSize: const Size.fromHeight(40),
-          ),
-          child: Text('Select ${ReservationSelected.length} to Cancel'),
-          onPressed: () {
-            //          final id = ReservationSelected.map((Reservation) => Reservation.id).join(', ');
+        );
+      },
+    );
+  }
 
-            ReservationSelected.forEach((element) {
-              //       ref
-              //          .read(ReservationProvider(0).notifier)
-              //         .ReservationClient
-              //        .cancelReservation(id: element.id!);
-            });
+  PlutoColumn _buildDateColumn(String title, String field) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.date(),
+      width: 100,
+    );
+  }
 
-            //  Utils.showSnackBar(context, 'Selected Reservation: $id ');
-          },
+  PlutoColumn _buildTextColumn(String title, String field,
+      {double width = 100}) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.text(),
+      width: width,
+    );
+  }
+
+  PlutoColumn _buildNumberColumn(String title, String field,
+      {double width = 120}) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.number(),
+      width: width,
+    );
+  }
+
+  PlutoColumn _buildSelectColumn(
+      String title, String field, List<String> options) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.select(options),
+      width: 120,
+    );
+  }
+
+  PlutoColumn _buildBooleanColumn(String title, String field,
+      {IconData? icon}) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.select(<bool>[true, false]),
+      width: 120,
+      renderer: (rendererContext) {
+        Color textColor =
+            rendererContext.cell.value ? Colors.red : Colors.green;
+        if (icon != null) {
+          return Icon(icon, color: textColor);
+        }
+        return Text(
+          rendererContext.cell.value.toString(),
+          style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+        );
+      },
+    );
+  }
+
+  PlutoColumn _buildNameColumn(String title, String field) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.text(),
+      width: 100,
+      titleSpan: TextSpan(
+        text: title,
+        style: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          fontSize: 12,
         ),
-      );
+      ),
+      renderer: (rendererContext) {
+        return Text(
+          rendererContext.cell.value.toString(),
+          style: const TextStyle(color: Colors.black, fontSize: 12),
+        );
+      },
+    );
+  }
 }
 
 class ClassYouImplemented implements PlutoFilterType {
@@ -461,7 +265,6 @@ class ClassYouImplemented implements PlutoFilterType {
         required PlutoColumn? column,
       }) {
         var keys = search!.split(',').map((e) => e.toUpperCase()).toList();
-
         return keys.contains(base!.toUpperCase());
       };
 

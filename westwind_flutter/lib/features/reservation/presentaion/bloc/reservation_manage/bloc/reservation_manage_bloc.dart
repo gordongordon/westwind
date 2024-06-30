@@ -51,7 +51,7 @@ class ReservationManageBloc
   Future<void> _onRetrieveReservation(
       RetrieveReservation event, Emitter<ReservationManageState> emit) async {
     emit(ReservationManageStateLoading());
-    await Future.delayed(Duration(seconds: 1));
+   // await Future.delayed(Duration(seconds: 1));
     final result =
         await retrieveReservation(RetrieveReservationParams(id: event.id));
 
@@ -64,7 +64,7 @@ class ReservationManageBloc
   Future<void> _onSaveReservation(
       SaveReservation event, Emitter<ReservationManageState> emit) async {
     emit(ReservationManageStateLoading());
-    await Future.delayed(Duration(seconds: 1));
+   // await Future.delayed(Duration(seconds: 1));
     final result = await saveReservation(
         SaveReservationParams(reservation: event.reservation));
 
@@ -77,7 +77,7 @@ class ReservationManageBloc
   Future<void> _onDeleteReservation(
       DeleteReservation event, Emitter<ReservationManageState> emit) async {
     emit(ReservationManageStateLoading());
-    await Future.delayed(Duration(seconds: 1));
+  //  await Future.delayed(Duration(seconds: 1));
     final result =
         await deleteReservation(DeleteReservationParams(id: event.id));
 
@@ -90,7 +90,7 @@ class ReservationManageBloc
   Future<void> _onRetrieveGuestForReservation(RetrieveGuestForReservation event,
       Emitter<ReservationManageState> emit) async {
     emit(ReservationManageStateLoading());
-    await Future.delayed(Duration(seconds: 1));
+  //  await Future.delayed(Duration(seconds: 1));
     final result = await retrieveGuest(RetrieveGuestParams(id: event.id));
 
     result.fold(
@@ -103,7 +103,7 @@ class ReservationManageBloc
       RetrieveGuestByPhoneForReservation event,
       Emitter<ReservationManageState> emit) async {
     emit(ReservationManageStateLoading());
-    await Future.delayed(Duration(seconds: 1));
+  //  await Future.delayed(Duration(seconds: 1));
     final result = await retrieveGuestByPhone(
         RetrieveGuestByPhoneParams(phone: event.phone));
 
@@ -116,7 +116,7 @@ class ReservationManageBloc
   Future<void> _onCheckInReservation(
       CheckInReservation event, Emitter<ReservationManageState> emit) async {
     emit(ReservationManageStateLoading());
-    await Future.delayed(Duration(seconds: 1));
+ //   await Future.delayed(Duration(seconds: 1));
 
     final result =
         await checkInReservation(CheckInReservationParams(id: event.id));
@@ -131,7 +131,7 @@ class ReservationManageBloc
   Future<void> _onCalculateRate(
       CalculateRate event, Emitter<ReservationManageState> emit) async {
     emit(ReservationManageStateLoading());
-    await Future.delayed(Duration(seconds: 1));
+  //  await Future.delayed(Duration(seconds: 1));
 
     final result = await getRate(
         RateTableGetRateParams(type: event.type, reason: event.reason));

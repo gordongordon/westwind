@@ -32,14 +32,14 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
   final TextEditingController rateTypeController =
       TextEditingController(text: RateType.standard.toString());
   final TextEditingController rigNumberController = TextEditingController();
-  final TextEditingController rateController = TextEditingController();
+  final TextEditingController rateController = TextEditingController( text : "86" );
   final TextEditingController rateReasonController =
       TextEditingController(text: RateReason.single.toString());
 
   DateTime dateCreate = DateTime.now();
   DateTime dateUpdate = DateTime.now();
   DateTime checkInDate = DateTime.now();
-  DateTime checkOutDate = DateTime.now();
+  DateTime checkOutDate = DateTime.now().add(Duration( days: 1 ));
 
   bool isCheckedIn = false;
   bool isCanceled = false;
@@ -88,6 +88,14 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
     );
   }
 
+  onChangedGuestId(value) {
+    if (value != null) {
+      context
+          .read<ReservationManageBloc>()
+          .add(RetrieveGuestForReservation(id: int.parse(value)));
+    }
+  }
+
   onChangedPhone(value) {
     if (formKey.currentState!.fields['phone']!.valueIsValid) {
       if (value != null) {
@@ -127,11 +135,12 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('id', 'ID', idController, null, enabled: false),
-        _buildTextField('lastName', 'Last Name',  lastNameController, null),
-        _buildTextField('firstName', 'First Name', firstNameController, null ),
+        _buildTextField('lastName', 'Last Name', lastNameController, null),
+        _buildTextField('firstName', 'First Name', firstNameController, null),
         _buildTextFieldPhone('phone', 'Phone', phoneController, onChangedPhone,
             keyboardType: TextInputType.phone),
-        _buildTextField('guestId', 'Guest ID', guestIdController, null,
+        _buildTextField(
+            'guestId', 'Guest ID', guestIdController, onChangedGuestId,
             keyboardType: TextInputType.number),
         _buildTextField('rigNumber', 'Rig Number', rigNumberController, null,
             keyboardType: TextInputType.number),
@@ -151,7 +160,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             initialValue: checkInDate),
         _buildDateTimePicker('checkOutDate', 'Check Out Date',
             initialValue: checkOutDate),
-        _buildTextField('roomId', 'Room ID', roomIdController,null,
+        _buildTextField('roomId', 'Room ID', roomIdController, null,
             keyboardType: TextInputType.number),
         FormBuilderSwitch(
           name: 'isCheckedIn',
@@ -187,7 +196,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             initialValue: rateTypeController.text),
         _buildDropdown('rateReason', 'Rate Reason', _rateReasonOptions,
             initialValue: rateReasonController.text),
-        _buildTextField('rate', 'Rate', rateController,null,
+        _buildTextField('rate', 'Rate', rateController, null,
             keyboardType: TextInputType.number),
       ],
     );
@@ -229,6 +238,29 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
     );
   }
 
+  Widget _buildTextFieldGuestId(String name, String label,
+      TextEditingController controller, void Function(String?)? onChanged,
+      {bool enabled = true, TextInputType keyboardType = TextInputType.text}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        onChanged: onChanged,
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(),
+          FormBuilderValidators.numeric(),
+        ]),
+      ),
+    );
+  }
+
   Widget _buildTextFieldPhone(String name, String label,
       TextEditingController controller, void Function(String?)? onChanged,
       {bool enabled = true, TextInputType keyboardType = TextInputType.text}) {
@@ -244,15 +276,12 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
         ),
         keyboardType: keyboardType,
         onChanged: onChanged,
-        validator:
-            FormBuilderValidators.compose([
-              
-                 FormBuilderValidators.required(),
-                          FormBuilderValidators.maxLength(11),
-                          FormBuilderValidators.numeric(),
-                          FormBuilderValidators.equalLength(11),
-              
-              ]),
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(),
+          FormBuilderValidators.maxLength(11),
+          FormBuilderValidators.numeric(),
+          FormBuilderValidators.equalLength(11),
+        ]),
       ),
     );
   }
@@ -369,12 +398,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
     } else if (state is ReservationManageStateRetrieveGuestSuccess) {
       _populateGuestFields(state.guest);
     } else if (state is ReservationManageStateRetrieveGuestByPhoneSuccess) {
-      guestIdController.text = state.guest.id.toString();
-      firstNameController.text = state.guest.firstName;
-      lastNameController.text = state.guest.lastName;
-      phoneController.text = state.guest.phone;
-      rigNumberController.text = state.guest.rigNumber.toString();
-      rateTypeController.text = state.guest.rateType.toString();
+      _populateGuestFields(state.guest);
     }
   }
 

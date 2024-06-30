@@ -8,10 +8,12 @@ import 'package:westwind_flutter/features/dashboard/screens/main_screen.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_detail_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_edit_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_calendar_page.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_edit_page.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_list_page.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_create_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_edit_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_list_page.dart';
 
@@ -59,6 +61,10 @@ class AppRouter {
           path: ReservationListPage.route(),
           builder: (context, _) => const ReservationListPage(),
         ),
+              GoRoute(
+          path: ReservationListPage.route(),
+          builder: (context, _) => const ReservationCalendarPage(),
+        ),
         GoRoute(
           path: ReservationEditPage.routeNew(),
           builder: (context, _) => ReservationEditPage(),
@@ -94,6 +100,12 @@ class AppRouter {
         GoRoute(
           path: RoomTransactionEditPage.route(),
           builder: (context, state) => RoomTransactionEditPage(
+            roomTransactionId: int.parse(state.pathParameters['id'] ?? '0'),
+          ),
+        ),
+        GoRoute(
+          path: RoomTransactionCreatePage.route(),
+          builder: (context, state) => RoomTransactionCreatePage(
             roomTransactionId: int.parse(state.pathParameters['id'] ?? '0'),
           ),
         ),

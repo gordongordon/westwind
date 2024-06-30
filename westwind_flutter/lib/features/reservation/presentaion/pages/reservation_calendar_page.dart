@@ -6,17 +6,17 @@ import 'package:westwind_flutter/features/reservation/presentaion/pages/reservat
 import 'package:westwind_flutter/features/reservation/presentaion/widgets/reservation_list_widget.dart';
 
 
-class ReservationListPage extends StatelessWidget {
-  static String route() => "/reservations";
+class ReservationCalendarPage extends StatelessWidget {
+  static String route() => "/reservationCalendar";
 
-  const ReservationListPage({super.key});
+  const ReservationCalendarPage({super.key});
 
   @override
   Widget build(BuildContext context) {
    //  final auth = serverLocator<Client>().modules.auth;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Reservation"),
+        title: const Text("Reservation Calendar"),
         actions: const [
             AppUserDropdown(),
         ],
@@ -25,8 +25,8 @@ class ReservationListPage extends StatelessWidget {
            context.push(ReservationEditPage.routeNew());   
       },child: const Icon( Icons.add),),
     //   body: const ReservationListWidgets(),
-    body: const ReservationListWidget(),
-  //  body: const RoomCalendar(),
+  //  body: const ReservationListWidget(),
+    body: const RoomCalendar(),
     );
     
   }

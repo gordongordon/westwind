@@ -38,6 +38,8 @@ import 'package:westwind_flutter/features/reservation/domain/usecases/retrieve_r
 import 'package:westwind_flutter/features/reservation/domain/usecases/save_reservation.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/widgets/room_calendar_widget.dart';
 import 'package:westwind_flutter/features/room_guest/data/datasources/room_guest_datasource.dart';
 import 'package:westwind_flutter/features/room_guest/data/repositories/room_guest_repository.dart';
 import 'package:westwind_flutter/features/room_guest/domain/policies/room_guest_policy.dart';
@@ -140,6 +142,15 @@ void _initRoomTransaction() {
     () => CreateRoomTransactionUseCase(
       serverLocator<RoomTransactionRepository>(),
     ),
+  );
+
+  serverLocator.registerFactory<RoomCalendarBloc>(
+    
+    () => RoomCalendarBloc(
+      reservationRepository: serverLocator<ReservationRepository>(),
+      reservationManageBloc: serverLocator<ReservationManageBloc>()
+      
+    )
   );
 
   // bloc

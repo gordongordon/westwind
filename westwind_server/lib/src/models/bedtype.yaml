@@ -1,0 +1,11 @@
+enum: BedType
+serialized: byName
+values:
+ - d
+ - q
+ - k
+ - qq
+ - dd
+ - dq
+ - qd
+

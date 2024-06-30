@@ -1,2 +1,3 @@
-DELETE FROM room_guest;
-DELETE FROM reservation;
+delete from room_transaction;
+delete from room_guest;
+delete from reservation;

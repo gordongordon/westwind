@@ -8,8 +8,17 @@ fields :
     isAvailable  : bool 
     isSmoke      : bool
     bedType      : String
-    isBigTV      : bool
+    numOfBeds    : int
     isNewAC      : bool
     isNewBed     : bool
+    numOfMicrowave : int
+    isNewRefergrator : bool
     isBigRefergrator : bool
+    isBigTV      : bool
+    isNewTV      : bool     
+    numOfTableLamp : int
+    isNewTableLamp : bool
+    numOfStandLamp : int
+    isNewStandLamp : bool
     note : String?
+

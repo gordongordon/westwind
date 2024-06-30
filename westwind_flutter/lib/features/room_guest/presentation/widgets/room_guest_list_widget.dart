@@ -7,419 +7,295 @@ import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_create_page.dart';
 
 class RoomGuestListWidget extends StatefulWidget {
   const RoomGuestListWidget({super.key});
 
   @override
-  State<RoomGuestListWidget> createState() => _roomGuestListWidgetState();
+  State<RoomGuestListWidget> createState() => _RoomGuestListWidgetState();
 }
 
-class _roomGuestListWidgetState extends State<RoomGuestListWidget> {
+class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
   final List<PlutoColumn> columns = [];
-
   final List<PlutoRow> rows = [];
   final List<String> _rateTypeOptions =
       RateType.values.map((e) => e.name).toList();
   final List<String> _rateReasonOptions =
       RateReason.values.map((e) => e.name).toList();
+  late final PlutoGridStateManager stateManager;
 
   @override
   void initState() {
     super.initState();
-
     context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
-
-    //   final List<PlutoColumn> columns = <PlutoColumn>[
-    columns.addAll(
-      [
-        PlutoColumn(
-            title: 'Id',
-            field: 'id',
-            type: PlutoColumnType.number(),
-            titlePadding: const EdgeInsets.all(8),
-            textAlign: PlutoColumnTextAlign.start,
-            // titleTextAlign: PlutoColumnTextAlign.end,
-            //   enableRowChecked: true,
-
-            //   frozen: PlutoColumnFrozen.start,
-            // checkReadOnly: true,
-            enableDropToResize: true,
-            readOnly: true,
-            width: 50,
-            footerRenderer: (rendererContext) {
-              return PlutoAggregateColumnFooter(
-                rendererContext: rendererContext,
-                type: PlutoAggregateColumnType.count,
-                format: '#',
-                alignment: Alignment.center,
-                titleSpanBuilder: (text) {
-                  return [
-                    const TextSpan(
-                      text: '# of',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    const TextSpan(text: ' : '),
-                    TextSpan(text: text),
-                  ];
-                },
-              );
-            }),
-        PlutoColumn(
-          title: 'Room Id',
-          field: 'roomId',
-          type: PlutoColumnType.number(),
-          width: 100,
-        ),
-        PlutoColumn(
-          title: 'Stay Date',
-          field: 'stayDate',
-          type: PlutoColumnType.date(
-              startDate: DateTime.now(), format: 'MM-dd'),
-          width: 100,
-        ),
-        PlutoColumn(
-          title: 'Guest Id',
-          field: 'guestId',
-          type: PlutoColumnType.number(
-            negative: false,
-          ),
-          width: 80,
-        ),
-        PlutoColumn(
-          title: 'Rate Type',
-          field: 'rateType',
-          type: PlutoColumnType.select(_rateTypeOptions),
-          width: 120,
-        ),
-        PlutoColumn(
-          title: 'Rate Reason',
-          field: 'rateReason',
-          type: PlutoColumnType.select(_rateReasonOptions),
-          width: 120,
-        ),
-        PlutoColumn(
-            title: 'Rate',
-            field: 'rate',
-            type: PlutoColumnType.number(
-                negative: false, format: "#.##", applyFormatOnInit: true),
-            width: 70,
-            footerRenderer: (rendererContext) {
-              return PlutoAggregateColumnFooter(
-                formatAsCurrency: true,
-                rendererContext: rendererContext,
-                type: PlutoAggregateColumnType.sum,
-                format: '#',
-                alignment: Alignment.center,
-                titleSpanBuilder: (text) {
-                  return [
-                    const TextSpan(
-                      text: 'sum',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    const TextSpan(text: ' : '),
-                    TextSpan(text: text),
-                  ];
-                },
-              );
-            }),
-        PlutoColumn(
-          title: 'ResId',
-          field: 'reservationId',
-          type: PlutoColumnType.number(),
-          width: 80,
-        ),
-        PlutoColumn(
-          title: 'C/I',
-          field: 'checkIn',
-       //   type: PlutoColumnType.date(),
-            type: PlutoColumnType.date(
-              startDate: DateTime.now(), format: 'MM-dd'),
-          width: 80,
-          readOnly: true,
-        ),
-        PlutoColumn(
-          title: 'C/O',
-          field: 'checkOut',
-              type: PlutoColumnType.date(
-              startDate: DateTime.now(), format: 'MM-dd'),
-          width: 80,
-        ),
-        PlutoColumn(
-          title: 'Update At',
-          field: 'updateAt',
-          type: PlutoColumnType.date(
-              startDate: DateTime.now(), format: 'MM-dd'),
-          width: 100,
-        ),
-        PlutoColumn(
-          title: 'First',
-          field: 'firstName',
-          type: PlutoColumnType.text(),
-          width: 80,
-        ),
-        PlutoColumn(
-          title: 'Last',
-          field: 'lastName',
-          type: PlutoColumnType.text(),
-          width: 80,
-        ),
-        PlutoColumn(
-          title: 'Company',
-          field: 'companyName',
-          type: PlutoColumnType.text(),
-          width: 80,
-        ),
-     PlutoColumn(
-            title: 'Balance',
-            field: 'balance',
-            type: PlutoColumnType.number(
-                negative: false, format: "#.##", applyFormatOnInit: true),
-            width: 70,
-            footerRenderer: (rendererContext) {
-              return PlutoAggregateColumnFooter(
-                formatAsCurrency: true,
-                rendererContext: rendererContext,
-                type: PlutoAggregateColumnType.sum,
-                format: '#',
-                alignment: Alignment.center,
-                titleSpanBuilder: (text) {
-                  return [
-                    const TextSpan(
-                      text: 'sum',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    const TextSpan(text: ' : '),
-                    TextSpan(text: text),
-                  ];
-                },
-              );
-            }),
-           PlutoColumn(
-          title: 'isCheckOut',
-          field: 'isCheckOut',
-          type: PlutoColumnType.select(<bool>[true, false]),
-          width: 120,
-          renderer: (rendererContext) {
-            Color textColor = Colors.black;
-
-            if (rendererContext.cell.value == true) {
-              textColor = Colors.red;
-            } else if (rendererContext.cell.value == false) {
-              textColor = Colors.green;
-            }
-
-            return Icon(
-              Icons.single_bed,
-              color: textColor,
-            );
-            /*
-            return Text(
-              rendererContext.cell.value.toString(),
-              style: TextStyle(
-                color: textColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ); */
-          },
-        ),
-      ],
-    );
+    _initColumns();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  void _initColumns() {
+    columns.addAll([
+      _buildIdColumn(),
+      _buildNumberColumn('Room Id', 'roomId'),
+      _buildNameColumn('First', 'firstName'),
+      _buildNameColumn('Last', 'lastName'),
+      _buildDateColumn('Stay Date', 'stayDate'),
+      _buildDateColumn('C/I', 'checkIn', width: 80),
+      _buildDateColumn('C/O', 'checkOut', width: 80),
+      _buildSelectColumn('Rate Type', 'rateType', _rateTypeOptions),
+      _buildSelectColumn('Rate Reason', 'rateReason', _rateReasonOptions),
+      _buildRateColumn(),
+      _buildTextColumn('Company', 'companyName'),
+      _buildBalanceColumn(),
+      _buildNumberColumn('ResId', 'reservationId', width: 80),
+      _buildDateColumn('Update At', 'updateAt'),
+      _buildNumberColumn('Guest Id', 'guestId', width: 80),
+    ]);
   }
-
-  late final PlutoGridStateManager stateManager;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RoomGuestListBloc, RoomGuestListState>(
       builder: (context, state) {
         debugPrint("building RoomGuest List");
-        switch (state) {
-          case RoomGuestListStateInitial():
-            return const SizedBox.shrink();
-          case RoomGuestListStateLoading():
-            return const Loader();
-          case RoomGuestListStateLoaded():
-            final roomGuests = state.roomGuests;
-            final roomGuestSelected = roomGuests;
-
-            return Column(
-              children: [
-                Expanded(child: buildDataTable(context, roomGuests)),
-           //     buildSubmit(context, roomGuestSelected),
-           //     buildCancelReseration(context, roomGuestSelected),
-                //    buildSubmit(context, RoomGuestSelected, ref),
-              ],
-            );
-          case RoomGuestListStateFailure():
-            return Center(
-              child: Text(state.message),
-            );
-          default:
-            return Placeholder();
+        if (state is RoomGuestListStateInitial) {
+          return const SizedBox.shrink();
+        } else if (state is RoomGuestListStateLoading) {
+          return const Loader();
+        } else if (state is RoomGuestListStateLoaded) {
+          return _buildDataTable(context, state.roomGuests);
+        } else if (state is RoomGuestListStateFailure) {
+          return Center(child: Text(state.message));
         }
+        return const Placeholder();
       },
     );
   }
 
-  // final List<String> _rateTypeOptions =
-  //   RateType.values.map((e) => e.name).toList();
-
-  Widget buildDataTable(
-    BuildContext context,
-    List<RoomGuest> roomGuests,
-    // List<roomGuest> roomGuestSelected,
-  ) {
-    final List<PlutoRow> rows = roomGuests.map((roomGuest) {
-
-      // Compute Balance
-      final List<RoomTransaction>? transactions = roomGuest.roomTransactions;
-      double totalSum = 0;
-
-      if (transactions != null) {
-        for (RoomTransaction transaction in transactions) {
-          totalSum += transaction.total;
-        }
-      }
-
-      return PlutoRow(
-        cells: {
-          'id': PlutoCell(value: roomGuest.id!),
-          'roomId': PlutoCell(value: roomGuest.roomId),
-          'stayDate': PlutoCell(value: roomGuest.stayDate),
-          'guestId': PlutoCell(value: roomGuest.guestId),
-          'rateType': PlutoCell(value: roomGuest.rateType.toString()),
-          'rateReason': PlutoCell(value: roomGuest.rateReason.toString()),
-          'rate': PlutoCell(value: roomGuest.rate),
-          'reservationId': PlutoCell(value: roomGuest.reservationId),
-          'checkIn': PlutoCell(value: roomGuest.checkInDate),
-          'checkOut': PlutoCell(value: roomGuest.checkOutDate),
-          'updateAt': PlutoCell(value: roomGuest.updateDate),
-          'firstName': PlutoCell(value: roomGuest.guest!.firstName),
-          'lastName': PlutoCell(value: roomGuest.guest!.lastName),
-          'rigNumber': PlutoCell(value: roomGuest.guest!.rigNumber),
-          'companyName': PlutoCell(value: roomGuest.guest!.company!.name),
-          'balance': PlutoCell(value: totalSum),
-          'isCheckOut' :  PlutoCell(value: roomGuest.isCheckOut),
-        },
-      );
-    }).toList();
+  Widget _buildDataTable(BuildContext context, List<RoomGuest> roomGuests) {
+    final rows = roomGuests.map((roomGuest) => _createRow(roomGuest)).toList();
 
     return PlutoGrid(
-        columns: columns,
-        rows: rows,
-        //     onChanged: (PlutoGridOnChangedEvent event) {
-        //    print(event);
-        //     },
-        onLoaded: (PlutoGridOnLoadedEvent event) {
-          event.stateManager.setShowColumnFilter(true);
-          stateManager = event.stateManager;
-        },
-        onRowDoubleTap: (event) {
-          //    if (event.rowIdx == null) {
-          //     showSnackbar(context, 'Row Index cannot be found!');
-          //  }
-          debugPrint('onSelected');
-          final field = event.row.cells['id'];
-
-          if (field == null) {
-            showSnackbar(context, 'Cell id cannot be found!');
-          }
-
-          //  if (event.row.cells['isInHouse']!.value == false) {
-          context.push(RoomGuestEditPage.route(field!.value));
-          //   }
-        },
-        configuration: PlutoGridConfiguration(
-          /// If columnFilterConfig is not set, the default setting is applied.
-          ///
-          /// Return the value returned by resolveDefaultColumnFilter through the resolver function.
-          /// Prevents errors returning filters that are not in the filters list.
-          columnFilter: PlutoGridColumnFilterConfig(
-            filters: const [
-              ...FilterHelper.defaultFilters,
-              // custom filter
-              ClassYouImplemented(),
-            ],
-            resolveDefaultColumnFilter: (column, resolver) {
-              if (column.field == 'id') {
-                return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
-              } else if (column.field == 'firstName') {
-                return resolver<PlutoFilterTypeGreaterThan>()
-                    as PlutoFilterType;
-              } else if (column.field == 'createAt') {
-                return resolver<PlutoFilterTypeLessThan>() as PlutoFilterType;
-              } else if (column.field == 'rateType') {
-                return resolver<ClassYouImplemented>() as PlutoFilterType;
-              }
-
-              return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
-            },
-          ),
-        ));
+      columns: columns,
+      rows: rows,
+      onLoaded: (PlutoGridOnLoadedEvent event) {
+        event.stateManager.setShowColumnFilter(true);
+        stateManager = event.stateManager;
+      },
+      onSelected: _handleRowSelected,
+      onRowDoubleTap: _handleRowDoubleTap,
+      configuration: PlutoGridConfiguration(
+        columnFilter: _buildColumnFilterConfig(),
+      ),
+    );
   }
 
-  Widget buildSubmit(
-    BuildContext context,
-    List<RoomGuest> roomGuestSelected,
-  ) =>
-      Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(12),
-        color: Colors.black,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: StadiumBorder(),
-            minimumSize: Size.fromHeight(40),
-          ),
-          child: Text('Select ${roomGuestSelected.length} to Check In'),
-          onPressed: () {
-            //    final id = roomGuestSelected.map((roomGuest) => roomGuest.id).join(', ');
+  PlutoRow _createRow(RoomGuest roomGuest) {
+    // Compute Balance
+    final List<RoomTransaction>? transactions = roomGuest.roomTransactions;
+    double totalSum = 0;
 
-// context.read<roomGuestListBloc>().add( SelectroomGuestEvent( roomGuest: roomGuestSelected.first ) );
+    if (transactions != null) {
+      for (RoomTransaction transaction in transactions) {
+        totalSum += transaction.total;
+      }
+    }
 
-            roomGuestSelected.forEach((element) {
-              //  ref.read(roomGuestProvider(0).notifier).checkIn(element, element.id!);
-              // context.read<roomGuestListBloc>().add( roomGuestListStateSelected(roomGuests));
-            });
+    return PlutoRow(
+      cells: {
+        'id': PlutoCell(value: roomGuest.id!),
+        'roomId': PlutoCell(value: roomGuest.roomId),
+        'stayDate': PlutoCell(value: roomGuest.stayDate),
+        'guestId': PlutoCell(value: roomGuest.guestId),
+        'rateType': PlutoCell(value: roomGuest.rateType.toString()),
+        'rateReason': PlutoCell(value: roomGuest.rateReason.toString()),
+        'rate': PlutoCell(value: roomGuest.rate),
+        'reservationId': PlutoCell(value: roomGuest.reservationId),
+        'checkIn': PlutoCell(value: roomGuest.checkInDate),
+        'checkOut': PlutoCell(value: roomGuest.checkOutDate),
+        'updateAt': PlutoCell(value: roomGuest.updateDate),
+        'firstName': PlutoCell(value: roomGuest.guest!.firstName),
+        'lastName': PlutoCell(value: roomGuest.guest!.lastName),
+        'companyName': PlutoCell(value: roomGuest.guest!.company!.name),
+        'balance': PlutoCell(value: totalSum),
+        'isCheckOut': PlutoCell(value: roomGuest.isCheckOut),
+      },
+    );
+  }
 
-            //  Utils.showSnackBar(context, 'Selected roomGuest: $id ');
+  void _handleRowSelected(PlutoGridOnSelectedEvent event) {
+    context.push(RoomTransactionCreatePage.route(1));
+  }
+
+  void _handleRowDoubleTap(PlutoGridOnRowDoubleTapEvent event) {
+    final field = event.row.cells['id'];
+    if (field == null) {
+      showSnackbar(context, 'Cell id cannot be found!');
+    } else {
+      context.push(RoomGuestEditPage.route(field.value));
+    }
+  }
+
+  PlutoGridColumnFilterConfig _buildColumnFilterConfig() {
+    return PlutoGridColumnFilterConfig(
+      filters: const [...FilterHelper.defaultFilters, ClassYouImplemented()],
+      resolveDefaultColumnFilter: (column, resolver) {
+        if (column.field == 'id') {
+          return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
+        } else if (column.field == 'firstName') {
+          return resolver<PlutoFilterTypeGreaterThan>() as PlutoFilterType;
+        } else if (column.field == 'createAt') {
+          return resolver<PlutoFilterTypeLessThan>() as PlutoFilterType;
+        } else if (column.field == 'rateType') {
+          return resolver<ClassYouImplemented>() as PlutoFilterType;
+        }
+        return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
+      },
+    );
+  }
+
+  // Helper methods to create columns
+  PlutoColumn _buildIdColumn() {
+    return PlutoColumn(
+      title: 'Id',
+      field: 'id',
+      type: PlutoColumnType.number(),
+      width: 50,
+      enableDropToResize: true,
+      readOnly: true,
+      titlePadding: const EdgeInsets.all(8),
+      textAlign: PlutoColumnTextAlign.start,
+      footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.count,
+          format: '#',
+          alignment: Alignment.center,
+          titleSpanBuilder: (text) {
+            return [
+              const TextSpan(text: '# of', style: TextStyle(color: Colors.red)),
+              const TextSpan(text: ' : '),
+              TextSpan(text: text),
+            ];
           },
-        ),
-      );
-  Widget buildCancelReseration(
-    BuildContext context,
-    List<RoomGuest> roomGuestSelected,
-  ) =>
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(12),
-        color: Colors.black,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
-            minimumSize: const Size.fromHeight(40),
-          ),
-          child: Text('Select ${roomGuestSelected.length} to Cancel'),
-          onPressed: () {
-            //          final id = roomGuestSelected.map((roomGuest) => roomGuest.id).join(', ');
+        );
+      },
+    );
+  }
 
-            roomGuestSelected.forEach((element) {
-              //       ref
-              //          .read(roomGuestProvider(0).notifier)
-              //         .roomGuestClient
-              //        .cancelroomGuest(id: element.id!);
-            });
+  PlutoColumn _buildDateColumn(String title, String field,
+      {double width = 100}) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.date(startDate: DateTime.now(), format: 'MM-dd'),
+      width: width,
+    );
+  }
 
-            //  Utils.showSnackBar(context, 'Selected roomGuest: $id ');
+  PlutoColumn _buildTextColumn(String title, String field,
+      {double width = 80}) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.text(),
+      width: width,
+    );
+  }
+
+  PlutoColumn _buildNumberColumn(String title, String field,
+      {double width = 100}) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.number(negative: false),
+      width: width,
+    );
+  }
+
+  PlutoColumn _buildSelectColumn(
+      String title, String field, List<String> options) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.select(options),
+      width: 120,
+    );
+  }
+
+  PlutoColumn _buildRateColumn() {
+    return PlutoColumn(
+      title: 'Rate',
+      field: 'rate',
+      type: PlutoColumnType.number(
+          negative: false, format: "#.##", applyFormatOnInit: true),
+      width: 70,
+      footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          formatAsCurrency: true,
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.sum,
+          format: '#',
+          alignment: Alignment.center,
+          titleSpanBuilder: (text) {
+            return [
+              const TextSpan(text: 'sum', style: TextStyle(color: Colors.red)),
+              const TextSpan(text: ' : '),
+              TextSpan(text: text),
+            ];
           },
-        ),
-      );
+        );
+      },
+    );
+  }
+
+  PlutoColumn _buildBalanceColumn() {
+    return PlutoColumn(
+      title: 'Balance',
+      field: 'balance',
+      type: PlutoColumnType.number(
+          negative: false, format: "#.##", applyFormatOnInit: true),
+      width: 70,
+      footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          formatAsCurrency: true,
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.sum,
+          format: '#',
+          alignment: Alignment.center,
+          titleSpanBuilder: (text) {
+            return [
+              const TextSpan(text: 'sum', style: TextStyle(color: Colors.red)),
+              const TextSpan(text: ' : '),
+              TextSpan(text: text),
+            ];
+          },
+        );
+      },
+    );
+  }
+
+  PlutoColumn _buildCheckOutColumn() {
+    return PlutoColumn(
+      title: 'isCheckOut',
+      field: 'isCheckOut',
+      type: PlutoColumnType.select(<bool>[true, false]),
+      width: 120,
+      renderer: (rendererContext) {
+        Color textColor =
+            rendererContext.cell.value ? Colors.red : Colors.green;
+        return Icon(Icons.single_bed, color: textColor);
+      },
+    );
+  }
+
+  PlutoColumn _buildNameColumn(String title, String field) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.text(),
+      width: 80,
+    );
+  }
 }
 
 class ClassYouImplemented implements PlutoFilterType {
@@ -433,7 +309,6 @@ class ClassYouImplemented implements PlutoFilterType {
         required PlutoColumn? column,
       }) {
         var keys = search!.split(',').map((e) => e.toUpperCase()).toList();
-
         return keys.contains(base!.toUpperCase());
       };
 
