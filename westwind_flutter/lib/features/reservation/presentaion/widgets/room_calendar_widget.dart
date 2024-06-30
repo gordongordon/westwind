@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
-import 'package:westwind_flutter/features/reservation/presentaion/widgets/room_row_widget.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/pages/any.dart';
 
 class RoomCalendar extends StatefulWidget {
   const RoomCalendar({Key? key}) : super(key: key);
@@ -144,7 +146,7 @@ class _CalendarGridWidget extends StatelessWidget {
             itemCount: state.roomNumbers.length,
             itemBuilder: (context, index) {
               final roomNumber = state.roomNumbers[index];
-              return RoomRowWidget(
+              return _RoomRowWidget(
                 state: state,
                 roomNumber: roomNumber,
                 isEvenRow: index % 2 == 0,
@@ -235,12 +237,6 @@ class _RoomRowWidget extends StatelessWidget {
   }
 }
 
-  List<Reservation> _findReservationsForDate(List<Reservation> reservations, DateTime date) {
-    return reservations.where((r) => 
-      date.isAtSameMomentAs(r.checkInDate) || 
-      (date.isAfter(r.checkInDate) && date.isBefore(r.checkOutDate))
-    ).toList();
-  }
 
 class _ReservationCellWidget extends StatefulWidget {
   final List<Reservation> reservations;
