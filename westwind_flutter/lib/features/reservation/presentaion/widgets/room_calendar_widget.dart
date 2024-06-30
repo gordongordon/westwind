@@ -108,6 +108,7 @@ class _LegendWidget extends StatelessWidget {
           _LegendItem('Reserved', Colors.green),
           _LegendItem('Checked In', Colors.blue),
           _LegendItem('Cancelled', Colors.grey),
+          _LegendItem('Multiple Reservations', Colors.purple),
         ],
       ),
     );
@@ -216,9 +217,9 @@ class _RoomRowWidget extends StatelessWidget {
           ),
           ...List.generate(state.daysToShow, (index) {
             final date = state.startDate.add(Duration(days: index));
-            final reservation = _findReservationForDate(reservationsForRoom, date);
+            final reservationsForDate = _findReservationsForDate(reservationsForRoom, date);
             return _ReservationCellWidget(
-              reservation: reservation,
+              reservations: reservationsForDate,
               date: date,
               roomNumber: roomNumber,
             );
@@ -228,35 +229,22 @@ class _RoomRowWidget extends StatelessWidget {
     );
   }
 
-  Reservation _findReservationForDate(List<Reservation> reservations, DateTime date) {
-    return reservations.firstWhere(
-      (r) => date.isAtSameMomentAs(r.checkInDate) || (date.isAfter(r.checkInDate) && date.isBefore(r.checkOutDate)),
-      orElse: () => Reservation(
-        id: 0,
-        checkInDate: date,
-        checkOutDate: date,
-        guestId: 0,
-        roomId: int.tryParse(roomNumber) ?? 0,
-        rateType: RateType.standard,
-        rateReason: RateReason.single,
-        rate: 0,
-        isCheckedIn: false,
-        isCanceled: false,
-        isNightShift: false,
-        dateCreate: DateTime.now(),
-      ),
-    );
+  List<Reservation> _findReservationsForDate(List<Reservation> reservations, DateTime date) {
+    return reservations.where((r) => 
+      date.isAtSameMomentAs(r.checkInDate) || 
+      (date.isAfter(r.checkInDate) && date.isBefore(r.checkOutDate))
+    ).toList();
   }
 }
 
 class _ReservationCellWidget extends StatelessWidget {
-  final Reservation reservation;
+  final List<Reservation> reservations;
   final DateTime date;
   final String roomNumber;
 
   const _ReservationCellWidget({
     Key? key,
-    required this.reservation,
+    required this.reservations,
     required this.date,
     required this.roomNumber,
   }) : super(key: key);
@@ -267,89 +255,98 @@ class _ReservationCellWidget extends StatelessWidget {
       onWillAcceptWithDetails: (details) => _onWillAccept(context, details),
       onAcceptWithDetails: (details) => _onAccept(context, details),
       builder: (context, candidateData, rejectedData) {
-        return Stack(
-          children: [
-            Draggable<Reservation>(
-              data: reservation,
-              feedback: _buildReservationContent(context, reservation, date),
-              childWhenDragging: Container(
-                width: 110,
-                height: 30,
-                color: Colors.grey.withOpacity(0.5),
-              ),
-              child: _buildReservationContent(context, reservation, date),
+        return GestureDetector(
+          onTap: () => _handleCellTap(context),
+          child: Container(
+            width: 110,
+            height: 30,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              color: _getCellBackgroundColor(),
             ),
-          ],
+            child: _buildCellContent(context),
+          ),
         );
       },
     );
   }
 
-  bool _onWillAccept(BuildContext context, DragTargetDetails<Reservation> details) {
-    final droppedReservation = details.data;
-    return droppedReservation.roomId.toString() != roomNumber ||
-        !context.read<RoomCalendarBloc>().isOverlapping(droppedReservation, reservation, date);
+  Widget _buildCellContent(BuildContext context) {
+    if (reservations.isEmpty) {
+      return Center(child: Text(''));
+    } else if (reservations.length == 1) {
+      return _buildSingleReservationContent(context, reservations.first);
+    } else {
+      return _buildMultipleReservationsContent(context);
+    }
   }
 
-  void _onAccept(BuildContext context, DragTargetDetails<Reservation> details) {
-    final droppedReservation = details.data;
-    context.read<RoomCalendarBloc>().add(MoveReservation(
-      reservation: droppedReservation,
-      newRoomNumber: roomNumber,
-      newStartDate: date,
-    ));
-  }
-
-  Widget _buildReservationContent(BuildContext context, Reservation reservation, DateTime date) {
-    final bool isEmptyReservation = reservation.id == 0;
-    final String displayText = isEmptyReservation
-        ? ''
-        : '${reservation.guest?.firstName ?? ''} ${reservation.guest?.lastName ?? ''}'.trim();
-
-    return GestureDetector(
-      onTap: () => _handleReservationTap(context, reservation),
-      onDoubleTap: isEmptyReservation ? null : () => _openReservationEditPage(context, reservation),
-      child: Container(
-        width: 110,
-        height: 30,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          color: isEmptyReservation ? Colors.white : _getReservationColor(reservation),
-        ),
-        child: Center(
-          child: Text(
-            displayText,
-            style: TextStyle(
-              color: isEmptyReservation ? Colors.black : Colors.white,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
+  Widget _buildSingleReservationContent(BuildContext context, Reservation reservation) {
+    return Draggable<Reservation>(
+      data: reservation,
+      feedback: _buildReservationFeedback(reservation),
+      childWhenDragging: Container(color: Colors.grey.withOpacity(0.5)),
+      child: Center(
+        child: Text(
+          '${reservation.guest?.firstName ?? ''} ${reservation.guest?.lastName ?? ''}'.trim(),
+          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
   }
 
+  Widget _buildMultipleReservationsContent(BuildContext context) {
+    return Center(
+      child: Text(
+        '${reservations.length} reservations',
+        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  Widget _buildReservationFeedback(Reservation reservation) {
+    return Container(
+      width: 110,
+      height: 30,
+      decoration: BoxDecoration(
+        color: _getReservationColor(reservation),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Center(
+        child: Text(
+          '${reservation.guest?.firstName ?? ''} ${reservation.guest?.lastName ?? ''}'.trim(),
+          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    );
+  }
+
+  Color _getCellBackgroundColor() {
+    if (reservations.isEmpty) return Colors.white;
+    if (reservations.length == 1) return _getReservationColor(reservations.first);
+    return Colors.purple; // Indicate multiple reservations
+  }
+
   Color _getReservationColor(Reservation reservation) {
-    if (reservation.id == 0) return Colors.white;
     if (reservation.isCheckedIn) return Colors.blue;
     if (reservation.isCanceled) return Colors.grey;
     return Colors.green;
   }
 
-  void _handleReservationTap(BuildContext context, Reservation reservation) {
-    if (reservation.id == 0) {
+   void _handleCellTap(BuildContext context) {
+    if (reservations.isEmpty) {
       _openNewReservationPage(context);
+    } else if (reservations.length == 1) {
+      _showReservationDetails(context, reservations.first);
     } else {
-      _showReservationDetails(context, reservation);
+      _showMultipleReservationsDialog(context);
     }
-  }
-
-  void _showReservationDetails(BuildContext context, Reservation reservation) {
-    // Implementation of showing reservation details (e.g., in a dialog)
   }
 
   void _openReservationEditPage(BuildContext context, Reservation reservation) {
@@ -360,5 +357,90 @@ class _ReservationCellWidget extends StatelessWidget {
 
   void _openNewReservationPage(BuildContext context) {
     context.push(ReservationEditPage.routeNew());
+  }
+
+  void _showReservationDetails(BuildContext context, Reservation reservation) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Reservation Details'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Guest: ${reservation.guest?.firstName} ${reservation.guest?.lastName}'),
+              Text('Check-in: ${reservation.checkInDate.toString().split(' ')[0]}'),
+              Text('Check-out: ${reservation.checkOutDate.toString().split(' ')[0]}'),
+              Text('Status: ${reservation.isCheckedIn ? 'Checked In' : (reservation.isCanceled ? 'Canceled' : 'Reserved')}'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Edit'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _openReservationEditPage(context, reservation);
+              },
+            ),
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showMultipleReservationsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Reservations for ${date.day}/${date.month}'),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: reservations.length,
+              itemBuilder: (BuildContext context, int index) {
+                final reservation = reservations[index];
+                return ListTile(
+                  title: Text('${reservation.guest?.firstName} ${reservation.guest?.lastName}'),
+                  subtitle: Text('Check-in: ${reservation.checkInDate.toString().split(' ')[0]}'),
+                  onTap: () => _openReservationEditPage(context, reservation),
+                );
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  bool _onWillAccept(BuildContext context, DragTargetDetails<Reservation> details) {
+    final droppedReservation = details.data;
+    // Allow dropping if it's a different room or a different date
+    return droppedReservation.roomId.toString() != roomNumber || droppedReservation.checkInDate != date;
+  }
+
+  void _onAccept(BuildContext context, DragTargetDetails<Reservation> details) {
+    final droppedReservation = details.data;
+    context.read<RoomCalendarBloc>().add(MoveReservation(
+      reservation: droppedReservation,
+      newRoomNumber: roomNumber,
+      newStartDate: date,
+    ));
   }
 }

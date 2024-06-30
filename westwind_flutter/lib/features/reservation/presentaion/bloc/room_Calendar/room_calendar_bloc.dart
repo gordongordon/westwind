@@ -205,25 +205,29 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   }
 
 void _onMoveReservation(MoveReservation event, Emitter<RoomCalendarState> emit) async {
-    if (state is RoomCalendarLoaded) {
-      final currentState = state as RoomCalendarLoaded;
-      
-      // Find the existing reservation in the current state
-      final existingReservation = currentState.reservations.firstWhere(
-        (r) => r.id == event.reservation.id,
-        orElse: () => event.reservation,
-      );
+  if (state is RoomCalendarLoaded) {
+    final currentState = state as RoomCalendarLoaded;
+    
+    // Check for overlaps
+    if (isOverlapping(event.reservation, event.newRoomNumber, event.newStartDate)) {
+      emit(RoomCalendarError(message: "Cannot move reservation. It overlaps with an existing reservation."));
+      return;
+    }
 
-      // Ensure we have the guest information
-      final guest = existingReservation.guest ?? event.reservation.guest;
+    final existingReservation = currentState.reservations.firstWhere(
+      (r) => r.id == event.reservation.id,
+      orElse: () => event.reservation,
+    );
 
-      // Update the reservation while preserving the guest information
-      final updatedReservation = existingReservation.copyWith(
-        roomId: int.parse(event.newRoomNumber),
-        checkInDate: event.newStartDate,
-        checkOutDate: event.newStartDate.add(existingReservation.checkOutDate.difference(existingReservation.checkInDate)),
-        guest: guest, // Explicitly set the guest
-      );
+    final guest = existingReservation.guest ?? event.reservation.guest;
+
+    final duration = existingReservation.checkOutDate.difference(existingReservation.checkInDate);
+    final updatedReservation = existingReservation.copyWith(
+      roomId: int.parse(event.newRoomNumber),
+      checkInDate: event.newStartDate,
+      checkOutDate: event.newStartDate.add(duration),
+      guest: guest,
+    );
 
       // Use ReservationManageBloc to save the updated reservation
       reservationManageBloc.add(SaveReservation(reservation: updatedReservation));
@@ -270,10 +274,19 @@ void _onMoveReservation(MoveReservation event, Emitter<RoomCalendarState> emit) 
     }
   }
 
-  bool isOverlapping(Reservation droppedReservation, Reservation existingReservation, DateTime dropDate) {
-    final droppedStartDate = dropDate;
-    final droppedEndDate = droppedStartDate.add(droppedReservation.checkOutDate.difference(droppedReservation.checkInDate));
-    return (droppedStartDate.isBefore(existingReservation.checkOutDate) &&
-        droppedEndDate.isAfter(existingReservation.checkInDate));
+bool isOverlapping(Reservation movedReservation, String newRoomNumber, DateTime newStartDate) {
+  if (state is RoomCalendarLoaded) {
+    final currentState = state as RoomCalendarLoaded;
+    final reservationsInRoom = currentState.reservationsByRoom[newRoomNumber] ?? [];
+    
+    final newEndDate = newStartDate.add(movedReservation.checkOutDate.difference(movedReservation.checkInDate));
+
+    return reservationsInRoom.any((existingReservation) {
+      if (existingReservation.id == movedReservation.id) return false; // Don't compare with itself
+      return (newStartDate.isBefore(existingReservation.checkOutDate) &&
+          newEndDate.isAfter(existingReservation.checkInDate));
+    });
   }
+  return false;
+}
 }
