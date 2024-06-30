@@ -22,10 +22,18 @@ abstract class Room extends _i1.TableRow {
     required this.isAvailable,
     required this.isSmoke,
     required this.bedType,
-    required this.isBigTV,
+    required this.numOfBeds,
     required this.isNewAC,
     required this.isNewBed,
+    required this.numOfMicrowave,
+    required this.isNewRefergrator,
     required this.isBigRefergrator,
+    required this.isBigTV,
+    required this.isNewTV,
+    required this.numOfTableLamp,
+    required this.isNewTableLamp,
+    required this.numOfStandLamp,
+    required this.isNewStandLamp,
     this.note,
   }) : super(id);
 
@@ -37,11 +45,19 @@ abstract class Room extends _i1.TableRow {
     required _i2.RoomStatus roomStatus,
     required bool isAvailable,
     required bool isSmoke,
-    required String bedType,
-    required bool isBigTV,
+    required _i2.BedType bedType,
+    required int numOfBeds,
     required bool isNewAC,
     required bool isNewBed,
+    required int numOfMicrowave,
+    required bool isNewRefergrator,
     required bool isBigRefergrator,
+    required bool isBigTV,
+    required bool isNewTV,
+    required int numOfTableLamp,
+    required bool isNewTableLamp,
+    required int numOfStandLamp,
+    required bool isNewStandLamp,
     String? note,
   }) = _RoomImpl;
 
@@ -64,15 +80,31 @@ abstract class Room extends _i1.TableRow {
       isSmoke:
           serializationManager.deserialize<bool>(jsonSerialization['isSmoke']),
       bedType: serializationManager
-          .deserialize<String>(jsonSerialization['bedType']),
-      isBigTV:
-          serializationManager.deserialize<bool>(jsonSerialization['isBigTV']),
+          .deserialize<_i2.BedType>(jsonSerialization['bedType']),
+      numOfBeds:
+          serializationManager.deserialize<int>(jsonSerialization['numOfBeds']),
       isNewAC:
           serializationManager.deserialize<bool>(jsonSerialization['isNewAC']),
       isNewBed:
           serializationManager.deserialize<bool>(jsonSerialization['isNewBed']),
+      numOfMicrowave: serializationManager
+          .deserialize<int>(jsonSerialization['numOfMicrowave']),
+      isNewRefergrator: serializationManager
+          .deserialize<bool>(jsonSerialization['isNewRefergrator']),
       isBigRefergrator: serializationManager
           .deserialize<bool>(jsonSerialization['isBigRefergrator']),
+      isBigTV:
+          serializationManager.deserialize<bool>(jsonSerialization['isBigTV']),
+      isNewTV:
+          serializationManager.deserialize<bool>(jsonSerialization['isNewTV']),
+      numOfTableLamp: serializationManager
+          .deserialize<int>(jsonSerialization['numOfTableLamp']),
+      isNewTableLamp: serializationManager
+          .deserialize<bool>(jsonSerialization['isNewTableLamp']),
+      numOfStandLamp: serializationManager
+          .deserialize<int>(jsonSerialization['numOfStandLamp']),
+      isNewStandLamp: serializationManager
+          .deserialize<bool>(jsonSerialization['isNewStandLamp']),
       note:
           serializationManager.deserialize<String?>(jsonSerialization['note']),
     );
@@ -94,15 +126,31 @@ abstract class Room extends _i1.TableRow {
 
   bool isSmoke;
 
-  String bedType;
+  _i2.BedType bedType;
 
-  bool isBigTV;
+  int numOfBeds;
 
   bool isNewAC;
 
   bool isNewBed;
 
+  int numOfMicrowave;
+
+  bool isNewRefergrator;
+
   bool isBigRefergrator;
+
+  bool isBigTV;
+
+  bool isNewTV;
+
+  int numOfTableLamp;
+
+  bool isNewTableLamp;
+
+  int numOfStandLamp;
+
+  bool isNewStandLamp;
 
   String? note;
 
@@ -117,11 +165,19 @@ abstract class Room extends _i1.TableRow {
     _i2.RoomStatus? roomStatus,
     bool? isAvailable,
     bool? isSmoke,
-    String? bedType,
-    bool? isBigTV,
+    _i2.BedType? bedType,
+    int? numOfBeds,
     bool? isNewAC,
     bool? isNewBed,
+    int? numOfMicrowave,
+    bool? isNewRefergrator,
     bool? isBigRefergrator,
+    bool? isBigTV,
+    bool? isNewTV,
+    int? numOfTableLamp,
+    bool? isNewTableLamp,
+    int? numOfStandLamp,
+    bool? isNewStandLamp,
     String? note,
   });
   @override
@@ -135,11 +191,19 @@ abstract class Room extends _i1.TableRow {
       'roomStatus': roomStatus.toJson(),
       'isAvailable': isAvailable,
       'isSmoke': isSmoke,
-      'bedType': bedType,
-      'isBigTV': isBigTV,
+      'bedType': bedType.toJson(),
+      'numOfBeds': numOfBeds,
       'isNewAC': isNewAC,
       'isNewBed': isNewBed,
+      'numOfMicrowave': numOfMicrowave,
+      'isNewRefergrator': isNewRefergrator,
       'isBigRefergrator': isBigRefergrator,
+      'isBigTV': isBigTV,
+      'isNewTV': isNewTV,
+      'numOfTableLamp': numOfTableLamp,
+      'isNewTableLamp': isNewTableLamp,
+      'numOfStandLamp': numOfStandLamp,
+      'isNewStandLamp': isNewStandLamp,
       if (note != null) 'note': note,
     };
   }
@@ -155,10 +219,18 @@ abstract class Room extends _i1.TableRow {
       'isAvailable': isAvailable,
       'isSmoke': isSmoke,
       'bedType': bedType,
-      'isBigTV': isBigTV,
+      'numOfBeds': numOfBeds,
       'isNewAC': isNewAC,
       'isNewBed': isNewBed,
+      'numOfMicrowave': numOfMicrowave,
+      'isNewRefergrator': isNewRefergrator,
       'isBigRefergrator': isBigRefergrator,
+      'isBigTV': isBigTV,
+      'isNewTV': isNewTV,
+      'numOfTableLamp': numOfTableLamp,
+      'isNewTableLamp': isNewTableLamp,
+      'numOfStandLamp': numOfStandLamp,
+      'isNewStandLamp': isNewStandLamp,
       'note': note,
     };
   }
@@ -174,11 +246,19 @@ abstract class Room extends _i1.TableRow {
       'roomStatus': roomStatus.toJson(),
       'isAvailable': isAvailable,
       'isSmoke': isSmoke,
-      'bedType': bedType,
-      'isBigTV': isBigTV,
+      'bedType': bedType.toJson(),
+      'numOfBeds': numOfBeds,
       'isNewAC': isNewAC,
       'isNewBed': isNewBed,
+      'numOfMicrowave': numOfMicrowave,
+      'isNewRefergrator': isNewRefergrator,
       'isBigRefergrator': isBigRefergrator,
+      'isBigTV': isBigTV,
+      'isNewTV': isNewTV,
+      'numOfTableLamp': numOfTableLamp,
+      'isNewTableLamp': isNewTableLamp,
+      'numOfStandLamp': numOfStandLamp,
+      'isNewStandLamp': isNewStandLamp,
       if (note != null) 'note': note,
     };
   }
@@ -211,8 +291,8 @@ abstract class Room extends _i1.TableRow {
       case 'bedType':
         bedType = value;
         return;
-      case 'isBigTV':
-        isBigTV = value;
+      case 'numOfBeds':
+        numOfBeds = value;
         return;
       case 'isNewAC':
         isNewAC = value;
@@ -220,8 +300,32 @@ abstract class Room extends _i1.TableRow {
       case 'isNewBed':
         isNewBed = value;
         return;
+      case 'numOfMicrowave':
+        numOfMicrowave = value;
+        return;
+      case 'isNewRefergrator':
+        isNewRefergrator = value;
+        return;
       case 'isBigRefergrator':
         isBigRefergrator = value;
+        return;
+      case 'isBigTV':
+        isBigTV = value;
+        return;
+      case 'isNewTV':
+        isNewTV = value;
+        return;
+      case 'numOfTableLamp':
+        numOfTableLamp = value;
+        return;
+      case 'isNewTableLamp':
+        isNewTableLamp = value;
+        return;
+      case 'numOfStandLamp':
+        numOfStandLamp = value;
+        return;
+      case 'isNewStandLamp':
+        isNewStandLamp = value;
         return;
       case 'note':
         note = value;
@@ -392,11 +496,19 @@ class _RoomImpl extends Room {
     required _i2.RoomStatus roomStatus,
     required bool isAvailable,
     required bool isSmoke,
-    required String bedType,
-    required bool isBigTV,
+    required _i2.BedType bedType,
+    required int numOfBeds,
     required bool isNewAC,
     required bool isNewBed,
+    required int numOfMicrowave,
+    required bool isNewRefergrator,
     required bool isBigRefergrator,
+    required bool isBigTV,
+    required bool isNewTV,
+    required int numOfTableLamp,
+    required bool isNewTableLamp,
+    required int numOfStandLamp,
+    required bool isNewStandLamp,
     String? note,
   }) : super._(
           id: id,
@@ -407,10 +519,18 @@ class _RoomImpl extends Room {
           isAvailable: isAvailable,
           isSmoke: isSmoke,
           bedType: bedType,
-          isBigTV: isBigTV,
+          numOfBeds: numOfBeds,
           isNewAC: isNewAC,
           isNewBed: isNewBed,
+          numOfMicrowave: numOfMicrowave,
+          isNewRefergrator: isNewRefergrator,
           isBigRefergrator: isBigRefergrator,
+          isBigTV: isBigTV,
+          isNewTV: isNewTV,
+          numOfTableLamp: numOfTableLamp,
+          isNewTableLamp: isNewTableLamp,
+          numOfStandLamp: numOfStandLamp,
+          isNewStandLamp: isNewStandLamp,
           note: note,
         );
 
@@ -423,11 +543,19 @@ class _RoomImpl extends Room {
     _i2.RoomStatus? roomStatus,
     bool? isAvailable,
     bool? isSmoke,
-    String? bedType,
-    bool? isBigTV,
+    _i2.BedType? bedType,
+    int? numOfBeds,
     bool? isNewAC,
     bool? isNewBed,
+    int? numOfMicrowave,
+    bool? isNewRefergrator,
     bool? isBigRefergrator,
+    bool? isBigTV,
+    bool? isNewTV,
+    int? numOfTableLamp,
+    bool? isNewTableLamp,
+    int? numOfStandLamp,
+    bool? isNewStandLamp,
     Object? note = _Undefined,
   }) {
     return Room(
@@ -441,10 +569,18 @@ class _RoomImpl extends Room {
       isAvailable: isAvailable ?? this.isAvailable,
       isSmoke: isSmoke ?? this.isSmoke,
       bedType: bedType ?? this.bedType,
-      isBigTV: isBigTV ?? this.isBigTV,
+      numOfBeds: numOfBeds ?? this.numOfBeds,
       isNewAC: isNewAC ?? this.isNewAC,
       isNewBed: isNewBed ?? this.isNewBed,
+      numOfMicrowave: numOfMicrowave ?? this.numOfMicrowave,
+      isNewRefergrator: isNewRefergrator ?? this.isNewRefergrator,
       isBigRefergrator: isBigRefergrator ?? this.isBigRefergrator,
+      isBigTV: isBigTV ?? this.isBigTV,
+      isNewTV: isNewTV ?? this.isNewTV,
+      numOfTableLamp: numOfTableLamp ?? this.numOfTableLamp,
+      isNewTableLamp: isNewTableLamp ?? this.isNewTableLamp,
+      numOfStandLamp: numOfStandLamp ?? this.numOfStandLamp,
+      isNewStandLamp: isNewStandLamp ?? this.isNewStandLamp,
       note: note is String? ? note : this.note,
     );
   }
@@ -474,12 +610,13 @@ class RoomTable extends _i1.Table {
       'isSmoke',
       this,
     );
-    bedType = _i1.ColumnString(
+    bedType = _i1.ColumnEnum(
       'bedType',
       this,
+      _i1.EnumSerialization.byName,
     );
-    isBigTV = _i1.ColumnBool(
-      'isBigTV',
+    numOfBeds = _i1.ColumnInt(
+      'numOfBeds',
       this,
     );
     isNewAC = _i1.ColumnBool(
@@ -490,8 +627,40 @@ class RoomTable extends _i1.Table {
       'isNewBed',
       this,
     );
+    numOfMicrowave = _i1.ColumnInt(
+      'numOfMicrowave',
+      this,
+    );
+    isNewRefergrator = _i1.ColumnBool(
+      'isNewRefergrator',
+      this,
+    );
     isBigRefergrator = _i1.ColumnBool(
       'isBigRefergrator',
+      this,
+    );
+    isBigTV = _i1.ColumnBool(
+      'isBigTV',
+      this,
+    );
+    isNewTV = _i1.ColumnBool(
+      'isNewTV',
+      this,
+    );
+    numOfTableLamp = _i1.ColumnInt(
+      'numOfTableLamp',
+      this,
+    );
+    isNewTableLamp = _i1.ColumnBool(
+      'isNewTableLamp',
+      this,
+    );
+    numOfStandLamp = _i1.ColumnInt(
+      'numOfStandLamp',
+      this,
+    );
+    isNewStandLamp = _i1.ColumnBool(
+      'isNewStandLamp',
       this,
     );
     note = _i1.ColumnString(
@@ -514,15 +683,31 @@ class RoomTable extends _i1.Table {
 
   late final _i1.ColumnBool isSmoke;
 
-  late final _i1.ColumnString bedType;
+  late final _i1.ColumnEnum<_i2.BedType> bedType;
 
-  late final _i1.ColumnBool isBigTV;
+  late final _i1.ColumnInt numOfBeds;
 
   late final _i1.ColumnBool isNewAC;
 
   late final _i1.ColumnBool isNewBed;
 
+  late final _i1.ColumnInt numOfMicrowave;
+
+  late final _i1.ColumnBool isNewRefergrator;
+
   late final _i1.ColumnBool isBigRefergrator;
+
+  late final _i1.ColumnBool isBigTV;
+
+  late final _i1.ColumnBool isNewTV;
+
+  late final _i1.ColumnInt numOfTableLamp;
+
+  late final _i1.ColumnBool isNewTableLamp;
+
+  late final _i1.ColumnInt numOfStandLamp;
+
+  late final _i1.ColumnBool isNewStandLamp;
 
   late final _i1.ColumnString note;
 
@@ -566,10 +751,18 @@ class RoomTable extends _i1.Table {
         isAvailable,
         isSmoke,
         bedType,
-        isBigTV,
+        numOfBeds,
         isNewAC,
         isNewBed,
+        numOfMicrowave,
+        isNewRefergrator,
         isBigRefergrator,
+        isBigTV,
+        isNewTV,
+        numOfTableLamp,
+        isNewTableLamp,
+        numOfStandLamp,
+        isNewStandLamp,
         note,
       ];
 

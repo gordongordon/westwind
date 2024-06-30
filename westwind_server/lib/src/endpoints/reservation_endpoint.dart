@@ -110,7 +110,7 @@ class ReservationEndpoint extends Endpoint {
     return await Reservation.db.find(
       session,
       limit: 20,
-      where: (reservation) => reservation.isCheckedIn.equals(false),
+   //   where: (reservation) => reservation.isCheckedIn.equals(false),
       include: Reservation.include(
         guest: Guest.include(),
         room: Room.include(),

@@ -7,7 +7,7 @@ fields :
     roomStatus   : RoomStatus
     isAvailable  : bool 
     isSmoke      : bool
-    bedType      : String
+    bedType      : BedType
     numOfBeds    : int
     isNewAC      : bool
     isNewBed     : bool

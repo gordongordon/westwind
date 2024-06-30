@@ -12,37 +12,39 @@ library protocol; // ignore_for_file: no_leading_underscores_for_library_prefixe
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
 import 'package:serverpod_auth_server/module.dart' as _i3;
-import 'company.dart' as _i4;
-import 'errorType.dart' as _i5;
-import 'example.dart' as _i6;
-import 'guest.dart' as _i7;
-import 'guestInOutDate.dart' as _i8;
-import 'guestTransaction.dart' as _i9;
-import 'inOutReason.dart' as _i10;
-import 'itemType.dart' as _i11;
-import 'myexception.dart' as _i12;
-import 'payment.dart' as _i13;
-import 'paymentType.dart' as _i14;
-import 'permissionType.dart' as _i15;
-import 'rateReason.dart' as _i16;
-import 'rateTable.dart' as _i17;
-import 'rateType.dart' as _i18;
-import 'reservation.dart' as _i19;
-import 'room.dart' as _i20;
-import 'roomChargeType.dart' as _i21;
-import 'roomGuest.dart' as _i22;
-import 'roomInOutDate.dart' as _i23;
-import 'roomNumber.dart' as _i24;
-import 'roomStatus.dart' as _i25;
-import 'roomTransaction.dart' as _i26;
-import 'staff.dart' as _i27;
-import 'transactionType.dart' as _i28;
-import 'protocol.dart' as _i29;
-import 'package:westwind_server/src/generated/guest.dart' as _i30;
-import 'package:westwind_server/src/generated/rateTable.dart' as _i31;
-import 'package:westwind_server/src/generated/reservation.dart' as _i32;
-import 'package:westwind_server/src/generated/roomGuest.dart' as _i33;
-import 'package:westwind_server/src/generated/roomTransaction.dart' as _i34;
+import 'bedType.dart' as _i4;
+import 'company.dart' as _i5;
+import 'errorType.dart' as _i6;
+import 'example.dart' as _i7;
+import 'guest.dart' as _i8;
+import 'guestInOutDate.dart' as _i9;
+import 'guestTransaction.dart' as _i10;
+import 'inOutReason.dart' as _i11;
+import 'itemType.dart' as _i12;
+import 'myexception.dart' as _i13;
+import 'payment.dart' as _i14;
+import 'paymentType.dart' as _i15;
+import 'permissionType.dart' as _i16;
+import 'rateReason.dart' as _i17;
+import 'rateTable.dart' as _i18;
+import 'rateType.dart' as _i19;
+import 'reservation.dart' as _i20;
+import 'room.dart' as _i21;
+import 'roomChargeType.dart' as _i22;
+import 'roomGuest.dart' as _i23;
+import 'roomInOutDate.dart' as _i24;
+import 'roomNumber.dart' as _i25;
+import 'roomStatus.dart' as _i26;
+import 'roomTransaction.dart' as _i27;
+import 'staff.dart' as _i28;
+import 'transactionType.dart' as _i29;
+import 'protocol.dart' as _i30;
+import 'package:westwind_server/src/generated/guest.dart' as _i31;
+import 'package:westwind_server/src/generated/rateTable.dart' as _i32;
+import 'package:westwind_server/src/generated/reservation.dart' as _i33;
+import 'package:westwind_server/src/generated/roomGuest.dart' as _i34;
+import 'package:westwind_server/src/generated/roomTransaction.dart' as _i35;
+export 'bedType.dart';
 export 'company.dart';
 export 'errorType.dart';
 export 'example.dart';
@@ -814,13 +816,13 @@ class Protocol extends _i1.SerializationManagerServer {
           name: 'bedType',
           columnType: _i2.ColumnType.text,
           isNullable: false,
-          dartType: 'String',
+          dartType: 'protocol:BedType',
         ),
         _i2.ColumnDefinition(
-          name: 'isBigTV',
-          columnType: _i2.ColumnType.boolean,
+          name: 'numOfBeds',
+          columnType: _i2.ColumnType.integer,
           isNullable: false,
-          dartType: 'bool',
+          dartType: 'int',
         ),
         _i2.ColumnDefinition(
           name: 'isNewAC',
@@ -835,7 +837,55 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'bool',
         ),
         _i2.ColumnDefinition(
+          name: 'numOfMicrowave',
+          columnType: _i2.ColumnType.integer,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isNewRefergrator',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
           name: 'isBigRefergrator',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isBigTV',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isNewTV',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'numOfTableLamp',
+          columnType: _i2.ColumnType.integer,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isNewTableLamp',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'numOfStandLamp',
+          columnType: _i2.ColumnType.integer,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isNewStandLamp',
           columnType: _i2.ColumnType.boolean,
           isNullable: false,
           dartType: 'bool',
@@ -1372,205 +1422,211 @@ class Protocol extends _i1.SerializationManagerServer {
     if (customConstructors.containsKey(t)) {
       return customConstructors[t]!(data, this) as T;
     }
-    if (t == _i4.Company) {
-      return _i4.Company.fromJson(data, this) as T;
+    if (t == _i4.BedType) {
+      return _i4.BedType.fromJson(data) as T;
     }
-    if (t == _i5.ErrorType) {
-      return _i5.ErrorType.fromJson(data) as T;
+    if (t == _i5.Company) {
+      return _i5.Company.fromJson(data, this) as T;
     }
-    if (t == _i6.Examplekk) {
-      return _i6.Examplekk.fromJson(data, this) as T;
+    if (t == _i6.ErrorType) {
+      return _i6.ErrorType.fromJson(data) as T;
     }
-    if (t == _i7.Guest) {
-      return _i7.Guest.fromJson(data, this) as T;
+    if (t == _i7.Examplekk) {
+      return _i7.Examplekk.fromJson(data, this) as T;
     }
-    if (t == _i8.GuestInOutDate) {
-      return _i8.GuestInOutDate.fromJson(data, this) as T;
+    if (t == _i8.Guest) {
+      return _i8.Guest.fromJson(data, this) as T;
     }
-    if (t == _i9.GuestTransaction) {
-      return _i9.GuestTransaction.fromJson(data, this) as T;
+    if (t == _i9.GuestInOutDate) {
+      return _i9.GuestInOutDate.fromJson(data, this) as T;
     }
-    if (t == _i10.InOutReason) {
-      return _i10.InOutReason.fromJson(data) as T;
+    if (t == _i10.GuestTransaction) {
+      return _i10.GuestTransaction.fromJson(data, this) as T;
     }
-    if (t == _i11.ItemType) {
-      return _i11.ItemType.fromJson(data) as T;
+    if (t == _i11.InOutReason) {
+      return _i11.InOutReason.fromJson(data) as T;
     }
-    if (t == _i12.MyException) {
-      return _i12.MyException.fromJson(data, this) as T;
+    if (t == _i12.ItemType) {
+      return _i12.ItemType.fromJson(data) as T;
     }
-    if (t == _i13.Payment) {
-      return _i13.Payment.fromJson(data, this) as T;
+    if (t == _i13.MyException) {
+      return _i13.MyException.fromJson(data, this) as T;
     }
-    if (t == _i14.PaymentType) {
-      return _i14.PaymentType.fromJson(data) as T;
+    if (t == _i14.Payment) {
+      return _i14.Payment.fromJson(data, this) as T;
     }
-    if (t == _i15.PermissionType) {
-      return _i15.PermissionType.fromJson(data) as T;
+    if (t == _i15.PaymentType) {
+      return _i15.PaymentType.fromJson(data) as T;
     }
-    if (t == _i16.RateReason) {
-      return _i16.RateReason.fromJson(data) as T;
+    if (t == _i16.PermissionType) {
+      return _i16.PermissionType.fromJson(data) as T;
     }
-    if (t == _i17.RateTable) {
-      return _i17.RateTable.fromJson(data, this) as T;
+    if (t == _i17.RateReason) {
+      return _i17.RateReason.fromJson(data) as T;
     }
-    if (t == _i18.RateType) {
-      return _i18.RateType.fromJson(data) as T;
+    if (t == _i18.RateTable) {
+      return _i18.RateTable.fromJson(data, this) as T;
     }
-    if (t == _i19.Reservation) {
-      return _i19.Reservation.fromJson(data, this) as T;
+    if (t == _i19.RateType) {
+      return _i19.RateType.fromJson(data) as T;
     }
-    if (t == _i20.Room) {
-      return _i20.Room.fromJson(data, this) as T;
+    if (t == _i20.Reservation) {
+      return _i20.Reservation.fromJson(data, this) as T;
     }
-    if (t == _i21.RoomChargeType) {
-      return _i21.RoomChargeType.fromJson(data) as T;
+    if (t == _i21.Room) {
+      return _i21.Room.fromJson(data, this) as T;
     }
-    if (t == _i22.RoomGuest) {
-      return _i22.RoomGuest.fromJson(data, this) as T;
+    if (t == _i22.RoomChargeType) {
+      return _i22.RoomChargeType.fromJson(data) as T;
     }
-    if (t == _i23.RoomInOutDate) {
-      return _i23.RoomInOutDate.fromJson(data, this) as T;
+    if (t == _i23.RoomGuest) {
+      return _i23.RoomGuest.fromJson(data, this) as T;
     }
-    if (t == _i24.RoomNumber) {
-      return _i24.RoomNumber.fromJson(data) as T;
+    if (t == _i24.RoomInOutDate) {
+      return _i24.RoomInOutDate.fromJson(data, this) as T;
     }
-    if (t == _i25.RoomStatus) {
-      return _i25.RoomStatus.fromJson(data) as T;
+    if (t == _i25.RoomNumber) {
+      return _i25.RoomNumber.fromJson(data) as T;
     }
-    if (t == _i26.RoomTransaction) {
-      return _i26.RoomTransaction.fromJson(data, this) as T;
+    if (t == _i26.RoomStatus) {
+      return _i26.RoomStatus.fromJson(data) as T;
     }
-    if (t == _i27.Staff) {
-      return _i27.Staff.fromJson(data, this) as T;
+    if (t == _i27.RoomTransaction) {
+      return _i27.RoomTransaction.fromJson(data, this) as T;
     }
-    if (t == _i28.TransactionType) {
-      return _i28.TransactionType.fromJson(data) as T;
+    if (t == _i28.Staff) {
+      return _i28.Staff.fromJson(data, this) as T;
     }
-    if (t == _i1.getType<_i4.Company?>()) {
-      return (data != null ? _i4.Company.fromJson(data, this) : null) as T;
+    if (t == _i29.TransactionType) {
+      return _i29.TransactionType.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i5.ErrorType?>()) {
-      return (data != null ? _i5.ErrorType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i4.BedType?>()) {
+      return (data != null ? _i4.BedType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i6.Examplekk?>()) {
-      return (data != null ? _i6.Examplekk.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i5.Company?>()) {
+      return (data != null ? _i5.Company.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<_i7.Guest?>()) {
-      return (data != null ? _i7.Guest.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i6.ErrorType?>()) {
+      return (data != null ? _i6.ErrorType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i8.GuestInOutDate?>()) {
-      return (data != null ? _i8.GuestInOutDate.fromJson(data, this) : null)
+    if (t == _i1.getType<_i7.Examplekk?>()) {
+      return (data != null ? _i7.Examplekk.fromJson(data, this) : null) as T;
+    }
+    if (t == _i1.getType<_i8.Guest?>()) {
+      return (data != null ? _i8.Guest.fromJson(data, this) : null) as T;
+    }
+    if (t == _i1.getType<_i9.GuestInOutDate?>()) {
+      return (data != null ? _i9.GuestInOutDate.fromJson(data, this) : null)
           as T;
     }
-    if (t == _i1.getType<_i9.GuestTransaction?>()) {
-      return (data != null ? _i9.GuestTransaction.fromJson(data, this) : null)
+    if (t == _i1.getType<_i10.GuestTransaction?>()) {
+      return (data != null ? _i10.GuestTransaction.fromJson(data, this) : null)
           as T;
     }
-    if (t == _i1.getType<_i10.InOutReason?>()) {
-      return (data != null ? _i10.InOutReason.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i11.InOutReason?>()) {
+      return (data != null ? _i11.InOutReason.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i11.ItemType?>()) {
-      return (data != null ? _i11.ItemType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i12.ItemType?>()) {
+      return (data != null ? _i12.ItemType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i12.MyException?>()) {
-      return (data != null ? _i12.MyException.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i13.MyException?>()) {
+      return (data != null ? _i13.MyException.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<_i13.Payment?>()) {
-      return (data != null ? _i13.Payment.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i14.Payment?>()) {
+      return (data != null ? _i14.Payment.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<_i14.PaymentType?>()) {
-      return (data != null ? _i14.PaymentType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i15.PaymentType?>()) {
+      return (data != null ? _i15.PaymentType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i15.PermissionType?>()) {
-      return (data != null ? _i15.PermissionType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i16.PermissionType?>()) {
+      return (data != null ? _i16.PermissionType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i16.RateReason?>()) {
-      return (data != null ? _i16.RateReason.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i17.RateReason?>()) {
+      return (data != null ? _i17.RateReason.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i17.RateTable?>()) {
-      return (data != null ? _i17.RateTable.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i18.RateTable?>()) {
+      return (data != null ? _i18.RateTable.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<_i18.RateType?>()) {
-      return (data != null ? _i18.RateType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i19.RateType?>()) {
+      return (data != null ? _i19.RateType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i19.Reservation?>()) {
-      return (data != null ? _i19.Reservation.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i20.Reservation?>()) {
+      return (data != null ? _i20.Reservation.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<_i20.Room?>()) {
-      return (data != null ? _i20.Room.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i21.Room?>()) {
+      return (data != null ? _i21.Room.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<_i21.RoomChargeType?>()) {
-      return (data != null ? _i21.RoomChargeType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i22.RoomChargeType?>()) {
+      return (data != null ? _i22.RoomChargeType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i22.RoomGuest?>()) {
-      return (data != null ? _i22.RoomGuest.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i23.RoomGuest?>()) {
+      return (data != null ? _i23.RoomGuest.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<_i23.RoomInOutDate?>()) {
-      return (data != null ? _i23.RoomInOutDate.fromJson(data, this) : null)
+    if (t == _i1.getType<_i24.RoomInOutDate?>()) {
+      return (data != null ? _i24.RoomInOutDate.fromJson(data, this) : null)
           as T;
     }
-    if (t == _i1.getType<_i24.RoomNumber?>()) {
-      return (data != null ? _i24.RoomNumber.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i25.RoomNumber?>()) {
+      return (data != null ? _i25.RoomNumber.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i25.RoomStatus?>()) {
-      return (data != null ? _i25.RoomStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i26.RoomStatus?>()) {
+      return (data != null ? _i26.RoomStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i26.RoomTransaction?>()) {
-      return (data != null ? _i26.RoomTransaction.fromJson(data, this) : null)
+    if (t == _i1.getType<_i27.RoomTransaction?>()) {
+      return (data != null ? _i27.RoomTransaction.fromJson(data, this) : null)
           as T;
     }
-    if (t == _i1.getType<_i27.Staff?>()) {
-      return (data != null ? _i27.Staff.fromJson(data, this) : null) as T;
+    if (t == _i1.getType<_i28.Staff?>()) {
+      return (data != null ? _i28.Staff.fromJson(data, this) : null) as T;
     }
-    if (t == _i1.getType<_i28.TransactionType?>()) {
-      return (data != null ? _i28.TransactionType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i29.TransactionType?>()) {
+      return (data != null ? _i29.TransactionType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<List<_i29.Guest>?>()) {
+    if (t == _i1.getType<List<_i30.Guest>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i29.Guest>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i30.Guest>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i29.RoomGuest>?>()) {
+    if (t == _i1.getType<List<_i30.RoomGuest>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i29.RoomGuest>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i30.RoomGuest>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i29.Reservation>?>()) {
+    if (t == _i1.getType<List<_i30.Reservation>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i29.Reservation>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i30.Reservation>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i29.RoomTransaction>?>()) {
+    if (t == _i1.getType<List<_i30.RoomTransaction>?>()) {
       return (data != null
           ? (data as List)
-              .map((e) => deserialize<_i29.RoomTransaction>(e))
+              .map((e) => deserialize<_i30.RoomTransaction>(e))
               .toList()
           : null) as dynamic;
     }
-    if (t == List<_i30.Guest>) {
-      return (data as List).map((e) => deserialize<_i30.Guest>(e)).toList()
+    if (t == List<_i31.Guest>) {
+      return (data as List).map((e) => deserialize<_i31.Guest>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i31.RateTable>) {
-      return (data as List).map((e) => deserialize<_i31.RateTable>(e)).toList()
+    if (t == List<_i32.RateTable>) {
+      return (data as List).map((e) => deserialize<_i32.RateTable>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i32.Reservation>) {
+    if (t == List<_i33.Reservation>) {
       return (data as List)
-          .map((e) => deserialize<_i32.Reservation>(e))
+          .map((e) => deserialize<_i33.Reservation>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i33.RoomGuest>) {
-      return (data as List).map((e) => deserialize<_i33.RoomGuest>(e)).toList()
+    if (t == List<_i34.RoomGuest>) {
+      return (data as List).map((e) => deserialize<_i34.RoomGuest>(e)).toList()
           as dynamic;
     }
     if (t == List<int>) {
       return (data as List).map((e) => deserialize<int>(e)).toList() as dynamic;
     }
-    if (t == List<_i34.RoomTransaction>) {
+    if (t == List<_i35.RoomTransaction>) {
       return (data as List)
-          .map((e) => deserialize<_i34.RoomTransaction>(e))
+          .map((e) => deserialize<_i35.RoomTransaction>(e))
           .toList() as dynamic;
     }
     try {
@@ -1589,79 +1645,82 @@ class Protocol extends _i1.SerializationManagerServer {
     if (className != null) {
       return 'serverpod_auth.$className';
     }
-    if (data is _i4.Company) {
+    if (data is _i4.BedType) {
+      return 'BedType';
+    }
+    if (data is _i5.Company) {
       return 'Company';
     }
-    if (data is _i5.ErrorType) {
+    if (data is _i6.ErrorType) {
       return 'ErrorType';
     }
-    if (data is _i6.Examplekk) {
+    if (data is _i7.Examplekk) {
       return 'Examplekk';
     }
-    if (data is _i7.Guest) {
+    if (data is _i8.Guest) {
       return 'Guest';
     }
-    if (data is _i8.GuestInOutDate) {
+    if (data is _i9.GuestInOutDate) {
       return 'GuestInOutDate';
     }
-    if (data is _i9.GuestTransaction) {
+    if (data is _i10.GuestTransaction) {
       return 'GuestTransaction';
     }
-    if (data is _i10.InOutReason) {
+    if (data is _i11.InOutReason) {
       return 'InOutReason';
     }
-    if (data is _i11.ItemType) {
+    if (data is _i12.ItemType) {
       return 'ItemType';
     }
-    if (data is _i12.MyException) {
+    if (data is _i13.MyException) {
       return 'MyException';
     }
-    if (data is _i13.Payment) {
+    if (data is _i14.Payment) {
       return 'Payment';
     }
-    if (data is _i14.PaymentType) {
+    if (data is _i15.PaymentType) {
       return 'PaymentType';
     }
-    if (data is _i15.PermissionType) {
+    if (data is _i16.PermissionType) {
       return 'PermissionType';
     }
-    if (data is _i16.RateReason) {
+    if (data is _i17.RateReason) {
       return 'RateReason';
     }
-    if (data is _i17.RateTable) {
+    if (data is _i18.RateTable) {
       return 'RateTable';
     }
-    if (data is _i18.RateType) {
+    if (data is _i19.RateType) {
       return 'RateType';
     }
-    if (data is _i19.Reservation) {
+    if (data is _i20.Reservation) {
       return 'Reservation';
     }
-    if (data is _i20.Room) {
+    if (data is _i21.Room) {
       return 'Room';
     }
-    if (data is _i21.RoomChargeType) {
+    if (data is _i22.RoomChargeType) {
       return 'RoomChargeType';
     }
-    if (data is _i22.RoomGuest) {
+    if (data is _i23.RoomGuest) {
       return 'RoomGuest';
     }
-    if (data is _i23.RoomInOutDate) {
+    if (data is _i24.RoomInOutDate) {
       return 'RoomInOutDate';
     }
-    if (data is _i24.RoomNumber) {
+    if (data is _i25.RoomNumber) {
       return 'RoomNumber';
     }
-    if (data is _i25.RoomStatus) {
+    if (data is _i26.RoomStatus) {
       return 'RoomStatus';
     }
-    if (data is _i26.RoomTransaction) {
+    if (data is _i27.RoomTransaction) {
       return 'RoomTransaction';
     }
-    if (data is _i27.Staff) {
+    if (data is _i28.Staff) {
       return 'Staff';
     }
-    if (data is _i28.TransactionType) {
+    if (data is _i29.TransactionType) {
       return 'TransactionType';
     }
     return super.getClassNameForObject(data);
@@ -1673,80 +1732,83 @@ class Protocol extends _i1.SerializationManagerServer {
       data['className'] = data['className'].substring(15);
       return _i3.Protocol().deserializeByClassName(data);
     }
+    if (data['className'] == 'BedType') {
+      return deserialize<_i4.BedType>(data['data']);
+    }
     if (data['className'] == 'Company') {
-      return deserialize<_i4.Company>(data['data']);
+      return deserialize<_i5.Company>(data['data']);
     }
     if (data['className'] == 'ErrorType') {
-      return deserialize<_i5.ErrorType>(data['data']);
+      return deserialize<_i6.ErrorType>(data['data']);
     }
     if (data['className'] == 'Examplekk') {
-      return deserialize<_i6.Examplekk>(data['data']);
+      return deserialize<_i7.Examplekk>(data['data']);
     }
     if (data['className'] == 'Guest') {
-      return deserialize<_i7.Guest>(data['data']);
+      return deserialize<_i8.Guest>(data['data']);
     }
     if (data['className'] == 'GuestInOutDate') {
-      return deserialize<_i8.GuestInOutDate>(data['data']);
+      return deserialize<_i9.GuestInOutDate>(data['data']);
     }
     if (data['className'] == 'GuestTransaction') {
-      return deserialize<_i9.GuestTransaction>(data['data']);
+      return deserialize<_i10.GuestTransaction>(data['data']);
     }
     if (data['className'] == 'InOutReason') {
-      return deserialize<_i10.InOutReason>(data['data']);
+      return deserialize<_i11.InOutReason>(data['data']);
     }
     if (data['className'] == 'ItemType') {
-      return deserialize<_i11.ItemType>(data['data']);
+      return deserialize<_i12.ItemType>(data['data']);
     }
     if (data['className'] == 'MyException') {
-      return deserialize<_i12.MyException>(data['data']);
+      return deserialize<_i13.MyException>(data['data']);
     }
     if (data['className'] == 'Payment') {
-      return deserialize<_i13.Payment>(data['data']);
+      return deserialize<_i14.Payment>(data['data']);
     }
     if (data['className'] == 'PaymentType') {
-      return deserialize<_i14.PaymentType>(data['data']);
+      return deserialize<_i15.PaymentType>(data['data']);
     }
     if (data['className'] == 'PermissionType') {
-      return deserialize<_i15.PermissionType>(data['data']);
+      return deserialize<_i16.PermissionType>(data['data']);
     }
     if (data['className'] == 'RateReason') {
-      return deserialize<_i16.RateReason>(data['data']);
+      return deserialize<_i17.RateReason>(data['data']);
     }
     if (data['className'] == 'RateTable') {
-      return deserialize<_i17.RateTable>(data['data']);
+      return deserialize<_i18.RateTable>(data['data']);
     }
     if (data['className'] == 'RateType') {
-      return deserialize<_i18.RateType>(data['data']);
+      return deserialize<_i19.RateType>(data['data']);
     }
     if (data['className'] == 'Reservation') {
-      return deserialize<_i19.Reservation>(data['data']);
+      return deserialize<_i20.Reservation>(data['data']);
     }
     if (data['className'] == 'Room') {
-      return deserialize<_i20.Room>(data['data']);
+      return deserialize<_i21.Room>(data['data']);
     }
     if (data['className'] == 'RoomChargeType') {
-      return deserialize<_i21.RoomChargeType>(data['data']);
+      return deserialize<_i22.RoomChargeType>(data['data']);
     }
     if (data['className'] == 'RoomGuest') {
-      return deserialize<_i22.RoomGuest>(data['data']);
+      return deserialize<_i23.RoomGuest>(data['data']);
     }
     if (data['className'] == 'RoomInOutDate') {
-      return deserialize<_i23.RoomInOutDate>(data['data']);
+      return deserialize<_i24.RoomInOutDate>(data['data']);
     }
     if (data['className'] == 'RoomNumber') {
-      return deserialize<_i24.RoomNumber>(data['data']);
+      return deserialize<_i25.RoomNumber>(data['data']);
     }
     if (data['className'] == 'RoomStatus') {
-      return deserialize<_i25.RoomStatus>(data['data']);
+      return deserialize<_i26.RoomStatus>(data['data']);
     }
     if (data['className'] == 'RoomTransaction') {
-      return deserialize<_i26.RoomTransaction>(data['data']);
+      return deserialize<_i27.RoomTransaction>(data['data']);
     }
     if (data['className'] == 'Staff') {
-      return deserialize<_i27.Staff>(data['data']);
+      return deserialize<_i28.Staff>(data['data']);
     }
     if (data['className'] == 'TransactionType') {
-      return deserialize<_i28.TransactionType>(data['data']);
+      return deserialize<_i29.TransactionType>(data['data']);
     }
     return super.deserializeByClassName(data);
   }
@@ -1766,30 +1828,30 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
     switch (t) {
-      case _i4.Company:
-        return _i4.Company.t;
-      case _i7.Guest:
-        return _i7.Guest.t;
-      case _i8.GuestInOutDate:
-        return _i8.GuestInOutDate.t;
-      case _i9.GuestTransaction:
-        return _i9.GuestTransaction.t;
-      case _i13.Payment:
-        return _i13.Payment.t;
-      case _i17.RateTable:
-        return _i17.RateTable.t;
-      case _i19.Reservation:
-        return _i19.Reservation.t;
-      case _i20.Room:
-        return _i20.Room.t;
-      case _i22.RoomGuest:
-        return _i22.RoomGuest.t;
-      case _i23.RoomInOutDate:
-        return _i23.RoomInOutDate.t;
-      case _i26.RoomTransaction:
-        return _i26.RoomTransaction.t;
-      case _i27.Staff:
-        return _i27.Staff.t;
+      case _i5.Company:
+        return _i5.Company.t;
+      case _i8.Guest:
+        return _i8.Guest.t;
+      case _i9.GuestInOutDate:
+        return _i9.GuestInOutDate.t;
+      case _i10.GuestTransaction:
+        return _i10.GuestTransaction.t;
+      case _i14.Payment:
+        return _i14.Payment.t;
+      case _i18.RateTable:
+        return _i18.RateTable.t;
+      case _i20.Reservation:
+        return _i20.Reservation.t;
+      case _i21.Room:
+        return _i21.Room.t;
+      case _i23.RoomGuest:
+        return _i23.RoomGuest.t;
+      case _i24.RoomInOutDate:
+        return _i24.RoomInOutDate.t;
+      case _i27.RoomTransaction:
+        return _i27.RoomTransaction.t;
+      case _i28.Staff:
+        return _i28.Staff.t;
     }
     return null;
   }

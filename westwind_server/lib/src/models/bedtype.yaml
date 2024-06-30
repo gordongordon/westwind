@@ -1,11 +1,11 @@
 enum: BedType
 serialized: byName
 values:
- - d
- - q
- - k
- - qq
- - dd
- - dq
- - qd
+ - D
+ - Q
+ - K
+ - QQ
+ - DD
+ - DQ
+ - QD
 

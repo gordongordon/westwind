@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:westwind_client/westwind_client.dart';
-import 'package:westwind_flutter/core/utils/app_bloc_observer.dart';
-import 'package:westwind_flutter/core/widgets/dashboard_testing.dart';
 import 'package:westwind_flutter/features/app_user/presentation/cubits/cubit/app_user_cubit.dart';
 import 'package:westwind_flutter/core/router/app_router.dart';
 import 'package:westwind_flutter/dependencies.dart';
