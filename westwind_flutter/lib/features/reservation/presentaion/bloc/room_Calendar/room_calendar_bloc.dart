@@ -79,24 +79,13 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       
-      print('MoveReservation event received:');
-      print('Reservation ID: ${event.reservation.id}');
-      print('New Room Number: ${event.newRoomNumber}');
-      print('New Start Date: ${event.newStartDate}');
-      print('Is Checked In: ${event.reservation.isCheckedIn}');
-
-      // Validate the move
-      if (event.reservation.isCheckedIn && !_isSameDate(event.reservation.checkInDate, event.newStartDate)) {
+      if (event.reservation.isCheckedIn && event.reservation.checkInDate != event.newStartDate) {
         emit(RoomCalendarError(message: "Cannot change check-in date for a checked-in reservation"));
         return;
       }
-
+      
       final updatedReservation = _updateReservationForMove(event.reservation, event.newRoomNumber, event.newStartDate);
       
-      print('Updated Reservation:');
-      print('New Room ID: ${updatedReservation.roomId}');
-      print('New Check-in Date: ${updatedReservation.checkInDate}');
-
       final saveResult = await reservationRepository.save(updatedReservation);
 
       saveResult.fold(
@@ -104,7 +93,6 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) {
           final updatedState = _updateStateAfterReservationMove(currentState, event.reservation, savedReservation);
           emit(updatedState);
-          print('Reservation moved successfully');
         },
       );
     }
@@ -129,12 +117,15 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
 
   Map<String, List<Reservation>> _groupReservationsByRoom(List<Reservation> reservations) {
     final Map<String, List<Reservation>> reservationsByRoom = {};
+    final now = DateTime.now();
     for (var reservation in reservations) {
-      final roomId = reservation.roomId.toString();
-      if (!reservationsByRoom.containsKey(roomId)) {
-        reservationsByRoom[roomId] = [];
+      if (reservation.checkOutDate.isAfter(now)) {
+        final roomId = reservation.roomId.toString();
+        if (!reservationsByRoom.containsKey(roomId)) {
+          reservationsByRoom[roomId] = [];
+        }
+        reservationsByRoom[roomId]!.add(reservation);
       }
-      reservationsByRoom[roomId]!.add(reservation);
     }
     return reservationsByRoom;
   }
@@ -231,9 +222,5 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       reservations: updatedReservations,
       reservationsByRoom: updatedReservationsByRoom,
     );
-  }
-
-  bool _isSameDate(DateTime date1, DateTime date2) {
-    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
   }
 }

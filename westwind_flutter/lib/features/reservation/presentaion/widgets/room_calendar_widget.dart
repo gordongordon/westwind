@@ -24,6 +24,9 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    
     return Scaffold(
       appBar: _buildAppBar(),
       body: BlocBuilder<RoomCalendarBloc, RoomCalendarState>(
@@ -261,8 +264,7 @@ class RoomRowWidget extends StatelessWidget {
 }
 
 
-
-class ReservationCellWidget extends StatefulWidget {
+class ReservationCellWidget extends StatelessWidget {
   final List<Reservation> reservations;
   final DateTime date;
   final String roomNumber;
@@ -275,276 +277,120 @@ class ReservationCellWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  ReservationCellWidgetState createState() => ReservationCellWidgetState();
-}
-
-class ReservationCellWidgetState extends State<ReservationCellWidget> {
-  bool isExpanded = false;
-  bool isHovering = false;
-
-  @override
   Widget build(BuildContext context) {
-    return DragTarget<Reservation>(
-      onWillAccept: (data) {
-        setState(() => isHovering = true);
-        return true; // Accept all drops, we'll handle the logic in onAccept
-      },
-      onAccept: (data) => _handleDrop(context, data),
-      onLeave: (_) => setState(() => isHovering = false),
-      builder: (context, candidateData, rejectedData) {
-        Widget cellContent;
-        if (widget.reservations.isEmpty) {
-          cellContent = _buildEmptyCell(context);
-        } else if (widget.reservations.length == 1) {
-          cellContent = _buildSingleReservationCell(context, widget.reservations.first);
-        } else {
-          cellContent = _buildMultiReservationCell(context);
-        }
-
-        return Stack(
-          children: [
-            cellContent,
-            if (isHovering)
-              Container(
-                width: 110,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: Colors.yellow.withOpacity(0.3),
-                  border: Border.all(color: Colors.orange, width: 2),
-                ),
-                child: const Center(
-                  child: Icon(Icons.add, color: Colors.orange),
-                ),
-              ),
-          ],
-        );
-      },
-    );
+    if (reservations.isEmpty) {
+      return _buildEmptyCell(context);
+    } else if (reservations.length == 1) {
+      return _buildSingleReservationCell(context, reservations.first);
+    } else {
+      return _buildMultiReservationCell(context);
+    }
   }
 
   Widget _buildEmptyCell(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _openNewReservationPage(context),
-      child: Container(
-        width: 110,
-        height: 30,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSingleReservationCell(BuildContext context, Reservation reservation) {
-    return Draggable<Reservation>(
-      data: reservation,
-      feedback: _buildDragFeedback(context, reservation),
-      childWhenDragging: _buildEmptyCell(context),
-      axis: reservation.isCheckedIn ? Axis.vertical : null,
-      child: GestureDetector(
-        onTap: () => _showReservationDetails(context, reservation),
-        onDoubleTap: () => _openReservationEditPage(context, reservation),
-        child: _buildReservationContent(context, reservation),
-      ),
-    );
-  }
-
-  Widget _buildMultiReservationCell(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          isExpanded = !isExpanded;
-        });
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        width: 110,
-        height: isExpanded ? widget.reservations.length * 35.0 : 30,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          color: Colors.orange,
-        ),
-        child: isExpanded
-            ? _buildExpandedContent(context)
-            : _buildCollapsedContent(context),
-      ),
-    );
-  }
-
-  Widget _buildExpandedContent(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.reservations.length,
-      itemBuilder: (context, index) {
-        final reservation = widget.reservations[index];
-        return Draggable<Reservation>(
-          data: reservation,
-          feedback: _buildDragFeedback(context, reservation),
-          axis: reservation.isCheckedIn ? Axis.vertical : null,
-          child: GestureDetector(
-            onTap: () => _showReservationDetails(context, reservation),
-            onDoubleTap: () => _openReservationEditPage(context, reservation),
-            child: Container(
-              height: 35,
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      '${reservation.guest?.firstName} ${reservation.guest?.lastName}',
-                      style: const TextStyle(fontSize: 10, color: Colors.white),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const Icon(Icons.drag_handle, size: 16, color: Colors.white),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildCollapsedContent(BuildContext context) {
-    return Center(
-      child: Text(
-        '${widget.reservations.length} Reservations',
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  Widget _buildReservationContent(BuildContext context, Reservation reservation) {
-    final String displayText =
-        '${reservation.guest?.firstName ?? ''} ${reservation.guest?.lastName ?? ''}'
-            .trim();
-
     return Container(
       width: 110,
       height: 30,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
-        color: _getReservationColor(reservation),
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Widget _buildSingleReservationCell(BuildContext context, Reservation reservation) {
+    return GestureDetector(
+      onTap: () => _showReservationDetails(context, reservation),
+      child: Container(
+        width: 110,
+        height: 30,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          gradient: _getReservationGradient(reservation),
+        ),
+        child: Stack(
+          children: [
+            Center(
+              child: Text(
+                '${reservation.guest?.firstName ?? ''} ${reservation.guest?.lastName ?? ''}'.trim(),
+                style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            if (_isReservationActive(reservation))
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  color: Colors.yellow,
+                  child: const Text(
+                    'Active',
+                    style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMultiReservationCell(BuildContext context) {
+    return Container(
+      width: 110,
+      height: 30,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        color: Colors.orange,
       ),
       child: Center(
         child: Text(
-          displayText,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-          ),
+          '${reservations.length} Reservations',
+          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
   }
 
-  Widget _buildDragFeedback(BuildContext context, Reservation reservation) {
-    return Opacity(
-      opacity: 0.7,
-      child: Material(
-        child: _buildReservationContent(context, reservation),
-      ),
-    );
-  }
-
-  void _handleDrop(BuildContext context, Reservation droppedReservation) {
-    setState(() => isHovering = false);
-
-    // Debug logging
-    print('Dropped Reservation: Room ${droppedReservation.roomId}, Date ${droppedReservation.checkInDate}');
-    print('Target Cell: Room ${widget.roomNumber}, Date ${widget.date}');
-    print('Is Checked In: ${droppedReservation.isCheckedIn}');
-
-    // Check if the move is valid
-    bool isRoomChange = droppedReservation.roomId.toString() != widget.roomNumber;
-    bool isDateChange = !_isSameDate(droppedReservation.checkInDate, widget.date);
-
-    print('Is Room Change: $isRoomChange');
-    print('Is Date Change: $isDateChange');
-
-    bool isValidMove = isRoomChange || (!droppedReservation.isCheckedIn && isDateChange);
-
-    if (isValidMove) {
-      context.read<RoomCalendarBloc>().add(MoveReservation(
-        reservation: droppedReservation,
-        newRoomNumber: widget.roomNumber,
-        newStartDate: widget.date,
-      ));
-      print('Valid move: Dispatching MoveReservation event');
-    } else {
-      String errorMessage = "Invalid move";
-      if (droppedReservation.isCheckedIn && isDateChange) {
-        errorMessage = "Cannot change check-in date for a checked-in reservation";
-      } else if (!isRoomChange && !isDateChange) {
-        errorMessage = "No changes detected";
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          duration: Duration(seconds: 2),
-        ),
+  Gradient _getReservationGradient(Reservation reservation) {
+    if (_isReservationActive(reservation)) {
+      return const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Colors.blue, Colors.green],
       );
-      print('Invalid move: $errorMessage');
+    } else if (reservation.isCheckedIn) {
+      return const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Colors.blue, Colors.blue],
+      );
+    } else if (reservation.isCanceled) {
+      return const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Colors.grey, Colors.grey],
+      );
     }
+    return const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Colors.green, Colors.green],
+    );
   }
 
-  bool _isSameDate(DateTime date1, DateTime date2) {
-    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
-  }
-
-  Color _getReservationColor(Reservation reservation) {
-    if (reservation.isCheckedIn) return Colors.blue;
-    if (reservation.isCanceled) return Colors.grey;
-    return Colors.green;
+  bool _isReservationActive(Reservation reservation) {
+    final now = DateTime.now();
+    return reservation.isCheckedIn &&
+           reservation.checkInDate.isBefore(now) &&
+           reservation.checkOutDate.isAfter(now);
   }
 
   void _showReservationDetails(BuildContext context, Reservation reservation) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Reservation Details'),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Guest: ${reservation.guest?.firstName} ${reservation.guest?.lastName}'),
-              Text('Check-in: ${reservation.checkInDate.day}/${reservation.checkInDate.month}/${reservation.checkInDate.year}'),
-              Text('Check-out: ${reservation.checkOutDate.day}/${reservation.checkOutDate.month}/${reservation.checkOutDate.year}'),
-              Text('Room: ${reservation.roomId}'),
-              Text('Status: ${reservation.isCheckedIn ? 'Checked In' : 'Not Checked In'}'),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _openReservationEditPage(BuildContext context, Reservation reservation) {
-    if (reservation.id != null && reservation.id! > 0) {
-      context.push(ReservationEditPage.route(reservation.id));
-    }
-  }
-
-  void _openNewReservationPage(BuildContext context) {
-    context.push(ReservationEditPage.routeNew());
+    // Implement reservation details dialog
   }
 }
