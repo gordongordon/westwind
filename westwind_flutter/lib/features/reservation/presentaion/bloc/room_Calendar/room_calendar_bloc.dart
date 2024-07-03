@@ -1,4 +1,6 @@
-import 'package:flutter/foundation.dart';
+// lib/features/room_calendar/presentation/bloc/room_calendar_bloc.dart
+
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:westwind_client/westwind_client.dart';
@@ -78,12 +80,6 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   Future<void> _onMoveReservation(MoveReservation event, Emitter<RoomCalendarState> emit) async {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
-      
-      if (event.reservation.isCheckedIn && event.reservation.checkInDate != event.newStartDate) {
-        emit(RoomCalendarError(message: "Cannot change check-in date for a checked-in reservation"));
-        return;
-      }
-      
       final updatedReservation = _updateReservationForMove(event.reservation, event.newRoomNumber, event.newStartDate);
       
       final saveResult = await reservationRepository.save(updatedReservation);
@@ -93,6 +89,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) {
           final updatedState = _updateStateAfterReservationMove(currentState, event.reservation, savedReservation);
           emit(updatedState);
+          add(FetchReservations());
         },
       );
     }
@@ -105,11 +102,12 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       
       final saveResult = await reservationRepository.save(updatedReservation);
 
-      saveResult.fold(
+       saveResult.fold(
         (failure) => emit(RoomCalendarError(message: "Failed to save reservation: ${failure.message}")),
         (savedReservation) {
           final updatedState = _updateStateAfterReservationAdd(currentState, savedReservation);
           emit(updatedState);
+          add(FetchReservations());
         },
       );
     }
@@ -117,34 +115,23 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
 
   Map<String, List<Reservation>> _groupReservationsByRoom(List<Reservation> reservations) {
     final Map<String, List<Reservation>> reservationsByRoom = {};
-    final now = DateTime.now();
     for (var reservation in reservations) {
-      if (reservation.checkOutDate.isAfter(now)) {
-        final roomId = reservation.roomId.toString();
-        if (!reservationsByRoom.containsKey(roomId)) {
-          reservationsByRoom[roomId] = [];
-        }
-        reservationsByRoom[roomId]!.add(reservation);
+      final roomId = reservation.roomId.toString();
+      if (!reservationsByRoom.containsKey(roomId)) {
+        reservationsByRoom[roomId] = [];
       }
+      reservationsByRoom[roomId]!.add(reservation);
     }
     return reservationsByRoom;
   }
 
   Reservation _updateReservationForMove(Reservation reservation, String newRoomNumber, DateTime newStartDate) {
-    if (reservation.isCheckedIn) {
-      // For checked-in reservations, only update the room
-      return reservation.copyWith(
-        roomId: int.parse(newRoomNumber),
-      );
-    } else {
-      // For non-checked-in reservations, update both room and dates
-      final originalDuration = reservation.checkOutDate.difference(reservation.checkInDate);
-      return reservation.copyWith(
-        roomId: int.parse(newRoomNumber),
-        checkInDate: newStartDate,
-        checkOutDate: newStartDate.add(originalDuration),
-      );
-    }
+    final originalDuration = reservation.checkOutDate.difference(reservation.checkInDate);
+    return reservation.copyWith(
+      roomId: int.parse(newRoomNumber),
+      checkInDate: newStartDate,
+      checkOutDate: newStartDate.add(originalDuration),
+    );
   }
 
   RoomCalendarLoaded _updateStateAfterReservationMove(

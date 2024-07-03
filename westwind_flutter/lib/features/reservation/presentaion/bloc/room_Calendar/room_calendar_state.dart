@@ -1,3 +1,6 @@
+// lib/features/room_calendar/presentation/bloc/room_calendar_state.dart
+
+
 part of 'room_calendar_bloc.dart';
 
 abstract class RoomCalendarState extends Equatable {

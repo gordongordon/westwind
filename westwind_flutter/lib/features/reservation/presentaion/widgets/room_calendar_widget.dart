@@ -1,19 +1,20 @@
+// lib/features/room_calendar/presentation/widgets/room_calendar_widget.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
-import 'package:westwind_flutter/features/reservation/presentaion/pages/any.dart';
-// import 'package:westwind_flutter/features/reservation/presentaion/widgets/reservation_cell_widget.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_edit_page.dart';
 
-class RoomCalendar extends StatefulWidget {
-  const RoomCalendar({super.key});
+class RoomCalendarWidget extends StatefulWidget {
+  const RoomCalendarWidget({Key? key}) : super(key: key);
 
   @override
-  State<RoomCalendar> createState() => _RoomCalendarState();
+  State<RoomCalendarWidget> createState() => _RoomCalendarWidgetState();
 }
 
-class _RoomCalendarState extends State<RoomCalendar> {
+class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
   @override
   void initState() {
     super.initState();
@@ -22,21 +23,8 @@ class _RoomCalendarState extends State<RoomCalendar> {
 
   @override
   Widget build(BuildContext context) {
-
-
-    
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Westwind Motor Inn'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () =>
-                context.read<RoomCalendarBloc>().add(FetchReservations()),
-            tooltip: 'Fetch latest reservations',
-          ),
-        ],
-      ),
+      appBar: _buildAppBar(),
       body: BlocBuilder<RoomCalendarBloc, RoomCalendarState>(
         builder: (context, state) {
           if (state is RoomCalendarLoading) {
@@ -46,9 +34,9 @@ class _RoomCalendarState extends State<RoomCalendar> {
           } else if (state is RoomCalendarLoaded) {
             return Column(
               children: [
-                _buildTopBar(context, state),
-                const _LegendWidget(),
-                Expanded(child: _CalendarGridWidget(state: state)),
+                _TopBarWidget(state: state),
+                const LegendWidget(),
+                Expanded(child: CalendarGridWidget(state: state)),
               ],
             );
           }
@@ -58,7 +46,27 @@ class _RoomCalendarState extends State<RoomCalendar> {
     );
   }
 
-  Widget _buildTopBar(BuildContext context, RoomCalendarLoaded state) {
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: const Text('Westwind Motor Inn'),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          onPressed: () => context.read<RoomCalendarBloc>().add(FetchReservations()),
+          tooltip: 'Fetch latest reservations',
+        ),
+      ],
+    );
+  }
+}
+
+class _TopBarWidget extends StatelessWidget {
+  final RoomCalendarLoaded state;
+
+  const _TopBarWidget({Key? key, required this.state}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       color: Colors.lightBlue[100],
       padding: const EdgeInsets.all(8.0),
@@ -74,14 +82,12 @@ class _RoomCalendarState extends State<RoomCalendar> {
             children: [
               IconButton(
                 icon: const Icon(Icons.navigate_before),
-                onPressed: () =>
-                    _changeStartDate(context, state, -state.daysToShow),
+                onPressed: () => _changeStartDate(context, -state.daysToShow),
                 tooltip: 'Previous week',
               ),
               IconButton(
                 icon: const Icon(Icons.navigate_next),
-                onPressed: () =>
-                    _changeStartDate(context, state, state.daysToShow),
+                onPressed: () => _changeStartDate(context, state.daysToShow),
                 tooltip: 'Next week',
               ),
               const SizedBox(width: 20),
@@ -102,16 +108,15 @@ class _RoomCalendarState extends State<RoomCalendar> {
     );
   }
 
-  void _changeStartDate(
-      BuildContext context, RoomCalendarLoaded state, int daysToAdd) {
+  void _changeStartDate(BuildContext context, int daysToAdd) {
     context
         .read<RoomCalendarBloc>()
         .add(ChangeStartDate(state.startDate.add(Duration(days: daysToAdd))));
   }
 }
 
-class _LegendWidget extends StatelessWidget {
-  const _LegendWidget({Key? key}) : super(key: key);
+class LegendWidget extends StatelessWidget {
+  const LegendWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -146,22 +151,22 @@ class _LegendItem extends StatelessWidget {
   }
 }
 
-class _CalendarGridWidget extends StatelessWidget {
+class CalendarGridWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
-  const _CalendarGridWidget({Key? key, required this.state}) : super(key: key);
+  const CalendarGridWidget({Key? key, required this.state}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _DateHeaderWidget(state: state),
+        DateHeaderWidget(state: state),
         Expanded(
           child: ListView.builder(
             itemCount: state.roomNumbers.length,
             itemBuilder: (context, index) {
               final roomNumber = state.roomNumbers[index];
-              return _RoomRowWidget(
+              return RoomRowWidget(
                 state: state,
                 roomNumber: roomNumber,
                 isEvenRow: index % 2 == 0,
@@ -174,10 +179,10 @@ class _CalendarGridWidget extends StatelessWidget {
   }
 }
 
-class _DateHeaderWidget extends StatelessWidget {
+class DateHeaderWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
-  const _DateHeaderWidget({Key? key, required this.state}) : super(key: key);
+  const DateHeaderWidget({Key? key, required this.state}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -204,12 +209,12 @@ class _DateHeaderWidget extends StatelessWidget {
   }
 }
 
-class _RoomRowWidget extends StatelessWidget {
+class RoomRowWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
   final String roomNumber;
   final bool isEvenRow;
 
-  const _RoomRowWidget({
+  const RoomRowWidget({
     Key? key,
     required this.state,
     required this.roomNumber,
@@ -233,9 +238,8 @@ class _RoomRowWidget extends StatelessWidget {
           ),
           ...List.generate(state.daysToShow, (index) {
             final date = state.startDate.add(Duration(days: index));
-            final reservationsForDate =
-                _findReservationsForDate(reservationsForRoom, date);
-            return _ReservationCellWidget(
+            final reservationsForDate = _findReservationsForDate(reservationsForRoom, date);
+            return ReservationCellWidget(
               reservations: reservationsForDate,
               date: date,
               roomNumber: roomNumber,
@@ -246,8 +250,7 @@ class _RoomRowWidget extends StatelessWidget {
     );
   }
 
-  List<Reservation> _findReservationsForDate(
-      List<Reservation> reservations, DateTime date) {
+  List<Reservation> _findReservationsForDate(List<Reservation> reservations, DateTime date) {
     return reservations
         .where((r) =>
             date.isAtSameMomentAs(r.checkInDate) ||
@@ -261,7 +264,7 @@ class ReservationCellWidget extends StatefulWidget {
   final DateTime date;
   final String roomNumber;
 
-  const _ReservationCellWidget({
+  const ReservationCellWidget({
     Key? key,
     required this.reservations,
     required this.date,
@@ -317,12 +320,15 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   }
 
   Widget _buildEmptyCell(BuildContext context) {
-    return Container(
-      width: 110,
-      height: 30,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        color: Colors.white,
+    return GestureDetector(
+      onTap: () => _openNewReservationPage(context),
+      child: Container(
+        width: 110,
+        height: 30,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -342,10 +348,15 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
 
   Widget _buildMultiReservationCell(BuildContext context) {
     return GestureDetector(
-      onTap: () => _showReservationDetails(context, reservation),
-      child: Container(
+      onTap: () {
+        setState(() {
+          isExpanded = !isExpanded;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
         width: 110,
-        height: 30,
+        height: isExpanded ? widget.reservations.length * 35.0 : 30,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
           color: Colors.orange,
@@ -414,13 +425,19 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
       height: 30,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
-        color: Colors.orange,
+        color: _getReservationColor(reservation),
       ),
       child: Center(
         child: Text(
-          '${reservations.length} Reservations',
-          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+          displayText,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+          ),
           textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
@@ -493,3 +510,4 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     context.push(ReservationEditPage.routeNew());
   }
 }
+
