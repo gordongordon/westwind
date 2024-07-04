@@ -21,7 +21,7 @@ abstract class RoomTransaction extends _i1.TableRow {
     this.room,
     required this.roomGuestId,
     this.roomGuest,
-    this.stayDay,
+    required this.stayDay,
     required this.transactionDay,
     required this.transactionType,
     this.updateDate,
@@ -42,7 +42,7 @@ abstract class RoomTransaction extends _i1.TableRow {
     _i2.Room? room,
     required int roomGuestId,
     _i2.RoomGuest? roomGuest,
-    DateTime? stayDay,
+    required DateTime stayDay,
     required DateTime transactionDay,
     required _i2.TransactionType transactionType,
     DateTime? updateDate,
@@ -74,7 +74,7 @@ abstract class RoomTransaction extends _i1.TableRow {
       roomGuest: serializationManager
           .deserialize<_i2.RoomGuest?>(jsonSerialization['roomGuest']),
       stayDay: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['stayDay']),
+          .deserialize<DateTime>(jsonSerialization['stayDay']),
       transactionDay: serializationManager
           .deserialize<DateTime>(jsonSerialization['transactionDay']),
       transactionType: serializationManager.deserialize<_i2.TransactionType>(
@@ -111,7 +111,7 @@ abstract class RoomTransaction extends _i1.TableRow {
 
   _i2.RoomGuest? roomGuest;
 
-  DateTime? stayDay;
+  DateTime stayDay;
 
   DateTime transactionDay;
 
@@ -166,7 +166,7 @@ abstract class RoomTransaction extends _i1.TableRow {
       if (room != null) 'room': room?.toJson(),
       'roomGuestId': roomGuestId,
       if (roomGuest != null) 'roomGuest': roomGuest?.toJson(),
-      if (stayDay != null) 'stayDay': stayDay?.toJson(),
+      'stayDay': stayDay.toJson(),
       'transactionDay': transactionDay.toJson(),
       'transactionType': transactionType.toJson(),
       if (updateDate != null) 'updateDate': updateDate?.toJson(),
@@ -212,7 +212,7 @@ abstract class RoomTransaction extends _i1.TableRow {
       if (room != null) 'room': room?.allToJson(),
       'roomGuestId': roomGuestId,
       if (roomGuest != null) 'roomGuest': roomGuest?.allToJson(),
-      if (stayDay != null) 'stayDay': stayDay?.toJson(),
+      'stayDay': stayDay.toJson(),
       'transactionDay': transactionDay.toJson(),
       'transactionType': transactionType.toJson(),
       if (updateDate != null) 'updateDate': updateDate?.toJson(),
@@ -452,7 +452,7 @@ class _RoomTransactionImpl extends RoomTransaction {
     _i2.Room? room,
     required int roomGuestId,
     _i2.RoomGuest? roomGuest,
-    DateTime? stayDay,
+    required DateTime stayDay,
     required DateTime transactionDay,
     required _i2.TransactionType transactionType,
     DateTime? updateDate,
@@ -493,7 +493,7 @@ class _RoomTransactionImpl extends RoomTransaction {
     Object? room = _Undefined,
     int? roomGuestId,
     Object? roomGuest = _Undefined,
-    Object? stayDay = _Undefined,
+    DateTime? stayDay,
     DateTime? transactionDay,
     _i2.TransactionType? transactionType,
     Object? updateDate = _Undefined,
@@ -514,7 +514,7 @@ class _RoomTransactionImpl extends RoomTransaction {
       roomGuestId: roomGuestId ?? this.roomGuestId,
       roomGuest:
           roomGuest is _i2.RoomGuest? ? roomGuest : this.roomGuest?.copyWith(),
-      stayDay: stayDay is DateTime? ? stayDay : this.stayDay,
+      stayDay: stayDay ?? this.stayDay,
       transactionDay: transactionDay ?? this.transactionDay,
       transactionType: transactionType ?? this.transactionType,
       updateDate: updateDate is DateTime? ? updateDate : this.updateDate,

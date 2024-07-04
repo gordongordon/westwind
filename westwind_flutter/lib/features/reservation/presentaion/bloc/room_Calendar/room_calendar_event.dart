@@ -1,8 +1,4 @@
-// lib/features/room_calendar/presentation/bloc/room_calendar_event.dart
-
-
 part of 'room_calendar_bloc.dart';
-
 
 @immutable
 abstract class RoomCalendarEvent extends Equatable {
@@ -16,8 +12,8 @@ class InitializeCalendar extends RoomCalendarEvent {
   const InitializeCalendar();
 }
 
-class FetchReservations extends RoomCalendarEvent {
-  const FetchReservations();
+class FetchReservationsAndTransactions extends RoomCalendarEvent {
+  const FetchReservationsAndTransactions();
 }
 
 class ChangeStartDate extends RoomCalendarEvent {

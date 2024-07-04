@@ -4,7 +4,7 @@ fields :
    guest :  Guest? , relation 
    room  :  Room? , relation
    roomGuest : RoomGuest? , relation(name=room_guest_transaction)
-   stayDay : DateTime?
+   stayDay : DateTime
    transactionDay  : DateTime
    transactionType : TransactionType
    updateDate : DateTime?

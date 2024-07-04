@@ -1,6 +1,3 @@
-// lib/features/room_calendar/presentation/bloc/room_calendar_state.dart
-
-
 part of 'room_calendar_bloc.dart';
 
 abstract class RoomCalendarState extends Equatable {
@@ -30,6 +27,8 @@ class RoomCalendarLoaded extends RoomCalendarState {
   final int daysToShow;
   final List<Reservation> reservations;
   final Map<String, List<Reservation>> reservationsByRoom;
+  final List<RoomTransaction> roomTransactions;
+  final Map<String, List<RoomTransaction>> roomTransactionsByRoom;
 
   const RoomCalendarLoaded({
     required this.roomTypes,
@@ -38,6 +37,8 @@ class RoomCalendarLoaded extends RoomCalendarState {
     required this.daysToShow,
     required this.reservations,
     required this.reservationsByRoom,
+    required this.roomTransactions,
+    required this.roomTransactionsByRoom,
   });
 
   @override
@@ -48,6 +49,8 @@ class RoomCalendarLoaded extends RoomCalendarState {
     daysToShow,
     reservations,
     reservationsByRoom,
+    roomTransactions,
+    roomTransactionsByRoom,
   ];
 
   RoomCalendarLoaded copyWith({
@@ -57,6 +60,8 @@ class RoomCalendarLoaded extends RoomCalendarState {
     int? daysToShow,
     List<Reservation>? reservations,
     Map<String, List<Reservation>>? reservationsByRoom,
+    List<RoomTransaction>? roomTransactions,
+    Map<String, List<RoomTransaction>>? roomTransactionsByRoom,
   }) {
     return RoomCalendarLoaded(
       roomTypes: roomTypes ?? this.roomTypes,
@@ -65,6 +70,8 @@ class RoomCalendarLoaded extends RoomCalendarState {
       daysToShow: daysToShow ?? this.daysToShow,
       reservations: reservations ?? this.reservations,
       reservationsByRoom: reservationsByRoom ?? this.reservationsByRoom,
+      roomTransactions: roomTransactions ?? this.roomTransactions,
+      roomTransactionsByRoom: roomTransactionsByRoom ?? this.roomTransactionsByRoom,
     );
   }
 }

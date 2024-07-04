@@ -1,20 +1,24 @@
-// lib/features/room_calendar/presentation/bloc/room_calendar_bloc.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_list_bloc.dart';
 
 part 'room_calendar_event.dart';
 part 'room_calendar_state.dart';
 
 class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   final ReservationRepository reservationRepository;
+  final RoomTransactionRepository roomTransactionRepository;
 
-  RoomCalendarBloc({required this.reservationRepository}) : super(RoomCalendarInitial()) {
+  RoomCalendarBloc({
+    required this.reservationRepository,
+    required this.roomTransactionRepository,
+  }) : super(RoomCalendarInitial()) {
     on<InitializeCalendar>(_onInitializeCalendar);
-    on<FetchReservations>(_onFetchReservations);
+    on<FetchReservationsAndTransactions>(_onFetchReservationsAndTransactions);
     on<ChangeStartDate>(_onChangeStartDate);
     on<ChangeDaysToShow>(_onChangeDaysToShow);
     on<MoveReservation>(_onMoveReservation);
@@ -24,7 +28,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   void _onInitializeCalendar(InitializeCalendar event, Emitter<RoomCalendarState> emit) async {
     final List<String> roomTypes = ['Deluxe', 'Suite'];
     final List<String> roomNumbers = List.generate(67, (index) => (101 + index).toString());
-    final DateTime startDate = DateTime.now();
+    final DateTime startDate = DateTime.now().subtract(Duration(days: 3));
     final int daysToShow = 7;
     
     emit(RoomCalendarLoaded(
@@ -34,32 +38,48 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       daysToShow: daysToShow,
       reservations: [],
       reservationsByRoom: {},
+      roomTransactions: [],
+      roomTransactionsByRoom: {},
     ));
 
-    add(FetchReservations());
+    add(FetchReservationsAndTransactions());
   }
 
-  void _onFetchReservations(FetchReservations event, Emitter<RoomCalendarState> emit) async {
+  void _onFetchReservationsAndTransactions(FetchReservationsAndTransactions event, Emitter<RoomCalendarState> emit) async {
     emit(RoomCalendarLoading());
 
     try {
-      final result = await reservationRepository.list();
-      result.fold(
+      final reservationResult = await reservationRepository.list();
+      final roomTransactionResult = await roomTransactionRepository.list();
+
+      reservationResult.fold(
         (failure) => emit(RoomCalendarError(message: failure.message)),
         (reservations) {
-          final Map<String, List<Reservation>> reservationsByRoom = _groupReservationsByRoom(reservations);
-          emit(RoomCalendarLoaded(
-            roomTypes: ['Deluxe', 'Suite'],
-            roomNumbers: List.generate(67, (index) => (101 + index).toString()),
-            startDate: DateTime.now(),
-            daysToShow: 7,
-            reservations: reservations,
-            reservationsByRoom: reservationsByRoom,
-          ));
+          roomTransactionResult.fold(
+            (failure) => emit(RoomCalendarError(message: failure.message)),
+            (roomTransactions) {
+              final Map<String, List<Reservation>> reservationsByRoom = _groupReservationsByRoom(reservations);
+              final Map<String, List<RoomTransaction>> roomTransactionsByRoom = _groupRoomTransactionsByRoom(roomTransactions);
+              
+              final numOfRoomTransations = roomTransactionsByRoom.length;
+               debugPrint( "# of RoomTransation $numOfRoomTransations");
+
+              emit(RoomCalendarLoaded(
+                roomTypes: ['Deluxe', 'Suite'],
+                roomNumbers: List.generate(67, (index) => (101 + index).toString()),
+                startDate: DateTime.now(),
+                daysToShow: 7,
+                reservations: reservations,
+                reservationsByRoom: reservationsByRoom,
+                roomTransactions: roomTransactions,
+                roomTransactionsByRoom: roomTransactionsByRoom,
+              ));
+            },
+          );
         },
       );
     } catch (e) {
-      emit(RoomCalendarError(message: 'Failed to fetch reservations: ${e.toString()}'));
+      emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
     }
   }
 
@@ -89,7 +109,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) {
           final updatedState = _updateStateAfterReservationMove(currentState, event.reservation, savedReservation);
           emit(updatedState);
-          add(FetchReservations());
+          add(FetchReservationsAndTransactions());
         },
       );
     }
@@ -107,7 +127,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) {
           final updatedState = _updateStateAfterReservationAdd(currentState, savedReservation);
           emit(updatedState);
-          add(FetchReservations());
+          add(FetchReservationsAndTransactions());
         },
       );
     }
@@ -123,6 +143,20 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       reservationsByRoom[roomId]!.add(reservation);
     }
     return reservationsByRoom;
+  }
+
+  Map<String, List<RoomTransaction>> _groupRoomTransactionsByRoom(List<RoomTransaction> roomTransactions) {
+    final Map<String, List<RoomTransaction>> roomTransactionsByRoom = {};
+    for (var transaction in roomTransactions) {
+      if (transaction.itemType == ItemType.room) {
+        final roomId = transaction.roomId.toString();
+        if (!roomTransactionsByRoom.containsKey(roomId)) {
+          roomTransactionsByRoom[roomId] = [];
+        }
+        roomTransactionsByRoom[roomId]!.add(transaction);
+      }
+    }
+    return roomTransactionsByRoom;
   }
 
   Reservation _updateReservationForMove(Reservation reservation, String newRoomNumber, DateTime newStartDate) {

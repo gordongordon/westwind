@@ -21,7 +21,21 @@ class RoomTransactionEndpoint extends Endpoint {
   }
 
   Future<List<RoomTransaction>> list(Session session) async {
-    return await RoomTransaction.db.find(session);
+    return await RoomTransaction.db.find(session,
+        include: RoomTransaction.include(
+          guest: Guest.include(),
+          room: Room.include(),
+        ));
+  }
+
+
+  Future<List<RoomTransaction>> listWithItemTypeRoom(Session session) async {
+    return await RoomTransaction.db.find(session,
+        where: (i) => i.itemType.equals(ItemType.room),
+        include: RoomTransaction.include(
+          guest: Guest.include(),
+          room: Room.include(),
+        ));
   }
 
 

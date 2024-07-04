@@ -147,8 +147,8 @@ void _initRoomTransaction() {
   serverLocator.registerFactory<RoomCalendarBloc>(
     
     () => RoomCalendarBloc(
-      reservationRepository: serverLocator<ReservationRepository>(),
-     //s reservationManageBloc: serverLocator<ReservationManageBloc>()
+      reservationRepository: serverLocator<ReservationRepository>(), 
+      roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
       
     )
   );

@@ -9,7 +9,15 @@ extension MyDateExtension on DateTime {
       day,
     );
   }
+
+  bool isSameDay( DateTime date) {
+  return year == date.year &&
+         month == date.month &&
+         day == date.day;
+  }   
+  
 }
+
 
 extension MyFoldResult<L extends Failure, R> on Either<L, R> {
   R foldResult() {
