@@ -126,10 +126,10 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   }
 
   Reservation _updateReservationForMove(Reservation reservation, String newRoomNumber, DateTime newStartDate) {
-    final originalDuration = reservation.checkOutDate.difference(reservation.checkInDate);
+    final originalDuration = reservation.checkOutDate.difference(reservation.stayDay);
     return reservation.copyWith(
       roomId: int.parse(newRoomNumber),
-      checkInDate: newStartDate,
+      stayDay: newStartDate,
       checkOutDate: newStartDate.add(originalDuration),
     );
   }
@@ -173,7 +173,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   Reservation _updateReservationForCell(Reservation reservation, String roomNumber, DateTime date) {
     return reservation.copyWith(
       roomId: int.parse(roomNumber),
-      checkInDate: date,
+      stayDay: date,
     );
   }
 

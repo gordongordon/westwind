@@ -253,8 +253,8 @@ class RoomRowWidget extends StatelessWidget {
   List<Reservation> _findReservationsForDate(List<Reservation> reservations, DateTime date) {
     return reservations
         .where((r) =>
-            date.isAtSameMomentAs(r.checkInDate) ||
-            (date.isAfter(r.checkInDate) && date.isBefore(r.checkOutDate)))
+            date.isAtSameMomentAs(r.stayDay) ||
+            (date.isAfter(r.stayDay) && date.isBefore(r.checkOutDate)))
         .toList();
   }
 }
@@ -455,7 +455,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   void _handleDrop(BuildContext context, Reservation droppedReservation) {
     setState(() => isHovering = false);
 
-    if (droppedReservation.roomId.toString() != widget.roomNumber || droppedReservation.checkInDate != widget.date) {
+    if (droppedReservation.roomId.toString() != widget.roomNumber || droppedReservation.stayDay != widget.date) {
       context.read<RoomCalendarBloc>().add(MoveReservation(
         reservation: droppedReservation,
         newRoomNumber: widget.roomNumber,
@@ -481,7 +481,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('Guest: ${reservation.guest?.firstName} ${reservation.guest?.lastName}'),
-              Text('Check-in: ${reservation.checkInDate.day}/${reservation.checkInDate.month}/${reservation.checkInDate.year}'),
+              Text('Stay-Day-in: ${reservation.stayDay.day}/${reservation.stayDay.month}/${reservation.stayDay.year}'),
               Text('Check-out: ${reservation.checkOutDate.day}/${reservation.checkOutDate.month}/${reservation.checkOutDate.year}'),
               Text('Room: ${reservation.roomId}'),
               Text('Status: ${reservation.isCheckedIn ? 'Checked In' : 'Not Checked In'}'),

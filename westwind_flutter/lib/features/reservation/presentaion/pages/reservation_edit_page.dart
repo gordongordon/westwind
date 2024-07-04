@@ -424,6 +424,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
     setState(() {
       checkInDate = reservation.checkInDate;
       checkOutDate = reservation.checkOutDate;
+      stayDay = reservation.stayDay;
       isCheckedIn = reservation.isCheckedIn;
       isCanceled = reservation.isCanceled;
       isNightShift = reservation.isNightShift;
