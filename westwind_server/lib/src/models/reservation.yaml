@@ -3,6 +3,7 @@ table : reservation
 fields : 
    checkInDate : DateTime
    checkOutDate : DateTime
+   stayDay: DateTime
    note : String?
    dateCreate : DateTime
    dateUpdate : DateTime?

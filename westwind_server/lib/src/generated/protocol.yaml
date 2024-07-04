@@ -21,13 +21,11 @@ rateTable:
   - getAllRateTables:
 reservation:
   - save:
-  - createReservation:
   - retrieve:
   - cancelReservation:
   - updateReservation:
   - findReservationById:
   - list:
-  - getNullCheckInReservations:
   - getAllReservationsByDay:
   - getTodayReservations:
   - checkIn:

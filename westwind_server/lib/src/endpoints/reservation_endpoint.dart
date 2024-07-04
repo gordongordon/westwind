@@ -41,11 +41,12 @@ class ReservationEndpoint extends Endpoint {
     } else {
       reservation.dateCreate = DateTime.now().toLocal();
       reservation.checkInDate.getDateOnly();
+      reservation.stayDay.getDateOnly();
       reservation.checkOutDate.getDateOnly();
       return Reservation.db.insertRow(session, reservation);
     }
   }
-
+/*
   Future<Reservation> createReservation(
       Session session, Reservation res) async {
     final rateTable = await RateTable.db.findFirstRow(
@@ -65,6 +66,7 @@ class ReservationEndpoint extends Endpoint {
 
     return await Reservation.db.insertRow(session, res);
   }
+*/
 
   Future<Reservation?> retrieve(Session session, {required int id}) async {
     final res = await Reservation.db.findById(session, id,
@@ -133,6 +135,7 @@ class ReservationEndpoint extends Endpoint {
     );
   }
 
+/*
   Future<List<Reservation>> getNullCheckInReservations(Session session) async {
     return await Reservation.db.find(
       session,
@@ -151,6 +154,8 @@ class ReservationEndpoint extends Endpoint {
       where: (item) => item.isCheckedIn.notEquals(true),
     );
   }
+*/
+
 
   Future<List<Reservation>> getAllReservationsByDay(
       Session session, DateTime datetime) async {

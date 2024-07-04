@@ -24,8 +24,6 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
       RateReason.values.map((e) => e.name).toList();
   late final PlutoGridStateManager stateManager;
 
-   
-
   @override
   void initState() {
     super.initState();
@@ -41,6 +39,7 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
       _buildNameColumn('Last Name', 'lastName'),
       _buildDateColumn('Check In', 'checkIn'),
       _buildDateColumn('Check Out', 'checkOut'),
+      _buildDateColumn('Stay Day', 'stayDay'),
       _buildBooleanColumn('Is Night Shift', 'isNightShift'),
       _buildSelectColumn('Rate Type', 'rateType', _rateTypeOptions),
       _buildSelectColumn('Rate Reason', 'rateReason', _rateReasonOptions),
@@ -91,12 +90,12 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
   }
 
   PlutoRow _createRow(Reservation reservation) {
-    
     return PlutoRow(
       cells: {
         'id': PlutoCell(value: reservation.id!),
         'checkIn': PlutoCell(value: reservation.checkInDate),
         'checkOut': PlutoCell(value: reservation.checkOutDate),
+        'stayDay': PlutoCell(value: reservation.stayDay),
         'note': PlutoCell(value: reservation.note),
         'createAt': PlutoCell(value: reservation.dateCreate),
         'updateAt': PlutoCell(value: reservation.dateUpdate),

@@ -188,13 +188,6 @@ class EndpointReservation extends _i1.EndpointRef {
         {'reservation': reservation},
       );
 
-  _i2.Future<_i7.Reservation> createReservation(_i7.Reservation res) =>
-      caller.callServerEndpoint<_i7.Reservation>(
-        'reservation',
-        'createReservation',
-        {'res': res},
-      );
-
   _i2.Future<_i7.Reservation?> retrieve({required int id}) =>
       caller.callServerEndpoint<_i7.Reservation?>(
         'reservation',
@@ -227,13 +220,6 @@ class EndpointReservation extends _i1.EndpointRef {
       caller.callServerEndpoint<List<_i7.Reservation>>(
         'reservation',
         'list',
-        {},
-      );
-
-  _i2.Future<List<_i7.Reservation>> getNullCheckInReservations() =>
-      caller.callServerEndpoint<List<_i7.Reservation>>(
-        'reservation',
-        'getNullCheckInReservations',
         {},
       );
 

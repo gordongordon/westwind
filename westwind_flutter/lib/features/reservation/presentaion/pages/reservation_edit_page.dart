@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
@@ -37,10 +38,12 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
   final TextEditingController rateReasonController =
       TextEditingController(text: RateReason.single.toString());
 
+
   DateTime dateCreate = DateTime.now();
   DateTime dateUpdate = DateTime.now();
-  DateTime checkInDate = DateTime.now();
-  DateTime checkOutDate = DateTime.now().add(Duration(days: 1));
+  DateTime checkInDate = DateTime.now().getDateOnly();
+  DateTime stayDay = DateTime.now().getDateOnly();
+  DateTime checkOutDate = DateTime.now().getDateOnly().add(Duration(days: 1));
 
   bool isCheckedIn = false;
   bool isCanceled = false;
@@ -161,6 +164,8 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             initialValue: checkInDate),
         _buildDateTimePicker('checkOutDate', 'Check Out Date',
             initialValue: checkOutDate),
+                _buildDateTimePicker('stayDay', 'Stay Day',
+            initialValue: stayDay),
         _buildTextField('roomId', 'Room ID', roomIdController, null,
             keyboardType: TextInputType.number),
         FormBuilderSwitch(
@@ -373,6 +378,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
         dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
         checkInDate: formKey.currentState!.fields['checkInDate']!.value,
         checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
+              stayDay: formKey.currentState!.fields['stayDay']!.value,
         rateType: RateType.values
             .byName(formKey.currentState!.fields['rateType']!.value),
         rate: double.parse(rateController.text),

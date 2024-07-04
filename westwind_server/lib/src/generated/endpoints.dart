@@ -410,25 +410,6 @@ class Endpoints extends _i1.EndpointDispatch {
             params['reservation'],
           ),
         ),
-        'createReservation': _i1.MethodConnector(
-          name: 'createReservation',
-          params: {
-            'res': _i1.ParameterDescription(
-              name: 'res',
-              type: _i1.getType<_i12.Reservation>(),
-              nullable: false,
-            )
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['reservation'] as _i5.ReservationEndpoint)
-                  .createReservation(
-            session,
-            params['res'],
-          ),
-        ),
         'retrieve': _i1.MethodConnector(
           name: 'retrieve',
           params: {
@@ -513,16 +494,6 @@ class Endpoints extends _i1.EndpointDispatch {
           ) async =>
               (endpoints['reservation'] as _i5.ReservationEndpoint)
                   .list(session),
-        ),
-        'getNullCheckInReservations': _i1.MethodConnector(
-          name: 'getNullCheckInReservations',
-          params: {},
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['reservation'] as _i5.ReservationEndpoint)
-                  .getNullCheckInReservations(session),
         ),
         'getAllReservationsByDay': _i1.MethodConnector(
           name: 'getAllReservationsByDay',

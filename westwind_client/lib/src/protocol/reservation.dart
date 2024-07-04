@@ -16,6 +16,7 @@ abstract class Reservation extends _i1.SerializableEntity {
     this.id,
     required this.checkInDate,
     required this.checkOutDate,
+    required this.stayDay,
     this.note,
     required this.dateCreate,
     this.dateUpdate,
@@ -35,6 +36,7 @@ abstract class Reservation extends _i1.SerializableEntity {
     int? id,
     required DateTime checkInDate,
     required DateTime checkOutDate,
+    required DateTime stayDay,
     String? note,
     required DateTime dateCreate,
     DateTime? dateUpdate,
@@ -60,6 +62,8 @@ abstract class Reservation extends _i1.SerializableEntity {
           .deserialize<DateTime>(jsonSerialization['checkInDate']),
       checkOutDate: serializationManager
           .deserialize<DateTime>(jsonSerialization['checkOutDate']),
+      stayDay: serializationManager
+          .deserialize<DateTime>(jsonSerialization['stayDay']),
       note:
           serializationManager.deserialize<String?>(jsonSerialization['note']),
       dateCreate: serializationManager
@@ -97,6 +101,8 @@ abstract class Reservation extends _i1.SerializableEntity {
 
   DateTime checkOutDate;
 
+  DateTime stayDay;
+
   String? note;
 
   DateTime dateCreate;
@@ -127,6 +133,7 @@ abstract class Reservation extends _i1.SerializableEntity {
     int? id,
     DateTime? checkInDate,
     DateTime? checkOutDate,
+    DateTime? stayDay,
     String? note,
     DateTime? dateCreate,
     DateTime? dateUpdate,
@@ -147,6 +154,7 @@ abstract class Reservation extends _i1.SerializableEntity {
       if (id != null) 'id': id,
       'checkInDate': checkInDate.toJson(),
       'checkOutDate': checkOutDate.toJson(),
+      'stayDay': stayDay.toJson(),
       if (note != null) 'note': note,
       'dateCreate': dateCreate.toJson(),
       if (dateUpdate != null) 'dateUpdate': dateUpdate?.toJson(),
@@ -171,6 +179,7 @@ class _ReservationImpl extends Reservation {
     int? id,
     required DateTime checkInDate,
     required DateTime checkOutDate,
+    required DateTime stayDay,
     String? note,
     required DateTime dateCreate,
     DateTime? dateUpdate,
@@ -188,6 +197,7 @@ class _ReservationImpl extends Reservation {
           id: id,
           checkInDate: checkInDate,
           checkOutDate: checkOutDate,
+          stayDay: stayDay,
           note: note,
           dateCreate: dateCreate,
           dateUpdate: dateUpdate,
@@ -208,6 +218,7 @@ class _ReservationImpl extends Reservation {
     Object? id = _Undefined,
     DateTime? checkInDate,
     DateTime? checkOutDate,
+    DateTime? stayDay,
     Object? note = _Undefined,
     DateTime? dateCreate,
     Object? dateUpdate = _Undefined,
@@ -226,6 +237,7 @@ class _ReservationImpl extends Reservation {
       id: id is int? ? id : this.id,
       checkInDate: checkInDate ?? this.checkInDate,
       checkOutDate: checkOutDate ?? this.checkOutDate,
+      stayDay: stayDay ?? this.stayDay,
       note: note is String? ? note : this.note,
       dateCreate: dateCreate ?? this.dateCreate,
       dateUpdate: dateUpdate is DateTime? ? dateUpdate : this.dateUpdate,
