@@ -313,7 +313,9 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         } 
         // For non-checked-in reservations, maintain the existing logic
         else {
-       return draggedReservation.stayDay.isAfter(DateTime.now().subtract(Duration(days: 1)));
+           final currentDate = DateTime.now().getDateOnly();
+           return widget.date.isAtSameMomentAs(currentDate) || widget.date.isAfter(currentDate);
+      //  return draggedReservation.stayDay.isAfter(DateTime.now().subtract(Duration(days: 1)));
       //           return  draggedReservation.stayDay.isSameDay(widget.date) || draggedReservation.stayDay.isBefore(widget.date); 
              //    draggedReservation.stayDay.isBefore(DateTime.now().getDateOnly());
         }
@@ -552,8 +554,10 @@ Widget _buildExpandedContent(BuildContext context, List<dynamic> items) {
     );
   }
 
-  void _handleDrop(BuildContext context, Reservation droppedReservation) {
+void _handleDrop(BuildContext context, Reservation droppedReservation) {
     setState(() => isHovering = false);
+
+    final currentDate = DateTime.now().getDateOnly();  // Get current date without time
 
     if (droppedReservation.isCheckedIn) {
       // For checked-in reservations, only update the room number
@@ -565,8 +569,9 @@ Widget _buildExpandedContent(BuildContext context, List<dynamic> items) {
         ));
       }
     } else {
-      // For non-checked-in reservations, allow both room and date changes
-      if (droppedReservation.roomId.toString() != widget.roomNumber || !droppedReservation.stayDay.isSameDay(widget.date)) {
+      // For non-checked-in reservations, allow changes only on or after the current day
+      if ((widget.date.isAtSameMomentAs(currentDate) || widget.date.isAfter(currentDate)) &&
+          (droppedReservation.roomId.toString() != widget.roomNumber || !droppedReservation.stayDay.isSameDay(widget.date))) {
         context.read<RoomCalendarBloc>().add(MoveReservation(
           reservation: droppedReservation,
           newRoomNumber: widget.roomNumber,
