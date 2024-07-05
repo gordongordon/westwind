@@ -63,3 +63,30 @@ class AddReservationToCell extends RoomCalendarEvent {
   @override
   List<Object> get props => [reservation, roomNumber, date];
 }
+
+class NavigateCalendarDays extends RoomCalendarEvent {
+  final int days;
+
+  const NavigateCalendarDays(this.days);
+
+  @override
+  List<Object> get props => [days];
+}
+
+class NavigateCalendarWeeks extends RoomCalendarEvent {
+  final int weeks;
+
+  const NavigateCalendarWeeks(this.weeks);
+
+  @override
+  List<Object> get props => [weeks];
+}
+
+class SelectSpecificDate extends RoomCalendarEvent {
+  final DateTime selectedDate;
+
+  const SelectSpecificDate(this.selectedDate);
+
+  @override
+  List<Object> get props => [selectedDate];
+}

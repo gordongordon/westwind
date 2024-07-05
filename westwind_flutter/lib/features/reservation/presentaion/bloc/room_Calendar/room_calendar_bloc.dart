@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_list_bloc.dart';
 
 part 'room_calendar_event.dart';
 part 'room_calendar_state.dart';
@@ -23,17 +22,17 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     on<ChangeDaysToShow>(_onChangeDaysToShow);
     on<MoveReservation>(_onMoveReservation);
     on<AddReservationToCell>(_onAddReservationToCell);
+    on<NavigateCalendarDays>(_onNavigateCalendarDays);
+    on<NavigateCalendarWeeks>(_onNavigateCalendarWeeks);
+    on<SelectSpecificDate>(_onSelectSpecificDate);
   }
 
   void _onInitializeCalendar(InitializeCalendar event, Emitter<RoomCalendarState> emit) async {
+    emit(RoomCalendarLoading());
+    
     final List<String> roomTypes = ['Deluxe', 'Suite'];
     final List<String> roomNumbers = List.generate(67, (index) => (101 + index).toString());
-   // final DateTime startDate = DateTime.now().subtract(const Duration(days: 2));
-
-    final DateTime startDate = DateTime.parse("2024-07-02"
-
-    );
-
+    final DateTime startDate = DateTime.now();
     final int daysToShow = 7;
     
     emit(RoomCalendarLoaded(
@@ -47,43 +46,54 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       roomTransactionsByRoom: {},
     ));
 
-    add(FetchReservationsAndTransactions());
+     add(const FetchReservationsAndTransactions());
   }
 
-  void _onFetchReservationsAndTransactions(FetchReservationsAndTransactions event, Emitter<RoomCalendarState> emit) async {
+  Future<void> _onFetchReservationsAndTransactions(
+    FetchReservationsAndTransactions event, 
+    Emitter<RoomCalendarState> emit
+  ) async {
     emit(RoomCalendarLoading());
 
     try {
       final reservationResult = await reservationRepository.list();
       final roomTransactionResult = await roomTransactionRepository.list();
 
-      reservationResult.fold(
-        (failure) => emit(RoomCalendarError(message: failure.message)),
-        (reservations) {
-          roomTransactionResult.fold(
-            (failure) => emit(RoomCalendarError(message: failure.message)),
-            (roomTransactions) {
+      final failureOrLoaded = await reservationResult.fold(
+        (failure) async => RoomCalendarError(message: failure.message),
+        (reservations) async {
+          return await roomTransactionResult.fold(
+            (failure) async => RoomCalendarError(message: failure.message),
+            (roomTransactions) async {
               final Map<String, List<Reservation>> reservationsByRoom = _groupReservationsByRoom(reservations);
               final Map<String, List<RoomTransaction>> roomTransactionsByRoom = _groupRoomTransactionsByRoom(roomTransactions);
               
-              final numOfRoomTransations = roomTransactionsByRoom.length;
-               debugPrint( "# of RoomTransation $numOfRoomTransations");
-
-              emit(RoomCalendarLoaded(
-                roomTypes: ['Deluxe', 'Suite'],
-                roomNumbers: List.generate(67, (index) => (101 + index).toString()),
-                startDate: DateTime.now().subtract(Duration(days: 2)),
-       //         startDate: DateTime.now(),
-                daysToShow: 7,
-                reservations: reservations,
-                reservationsByRoom: reservationsByRoom,
-                roomTransactions: roomTransactions,
-                roomTransactionsByRoom: roomTransactionsByRoom,
-              ));
+              if (state is RoomCalendarLoaded) {
+                final currentState = state as RoomCalendarLoaded;
+                return currentState.copyWith(
+                  reservations: reservations,
+                  reservationsByRoom: reservationsByRoom,
+                  roomTransactions: roomTransactions,
+                  roomTransactionsByRoom: roomTransactionsByRoom,
+                );
+              } else {
+                return RoomCalendarLoaded(
+                  roomTypes: ['Deluxe', 'Suite'],
+                  roomNumbers: List.generate(67, (index) => (101 + index).toString()),
+                  startDate: DateTime.now(),
+                  daysToShow: 7,
+                  reservations: reservations,
+                  reservationsByRoom: reservationsByRoom,
+                  roomTransactions: roomTransactions,
+                  roomTransactionsByRoom: roomTransactionsByRoom,
+                );
+              }
             },
           );
         },
       );
+
+      emit(failureOrLoaded);
     } catch (e) {
       emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
     }
@@ -93,6 +103,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       emit(currentState.copyWith(startDate: event.newStartDate));
+      add(const FetchReservationsAndTransactions());
     }
   }
 
@@ -100,6 +111,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       emit(currentState.copyWith(daysToShow: event.newDaysToShow));
+      add(const FetchReservationsAndTransactions());
     }
   }
 
@@ -110,9 +122,9 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       
       final saveResult = await reservationRepository.save(updatedReservation);
 
-      saveResult.fold(
-        (failure) => emit(RoomCalendarError(message: "Failed to move reservation: ${failure.message}")),
-        (savedReservation) {
+      await saveResult.fold(
+        (failure) async => emit(RoomCalendarError(message: "Failed to move reservation: ${failure.message}")),
+        (savedReservation) async {
           final updatedState = _updateStateAfterReservationMove(currentState, event.reservation, savedReservation);
           emit(updatedState);
           add(FetchReservationsAndTransactions());
@@ -128,14 +140,40 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       
       final saveResult = await reservationRepository.save(updatedReservation);
 
-       saveResult.fold(
-        (failure) => emit(RoomCalendarError(message: "Failed to save reservation: ${failure.message}")),
-        (savedReservation) {
+      await saveResult.fold(
+        (failure) async => emit(RoomCalendarError(message: "Failed to save reservation: ${failure.message}")),
+        (savedReservation) async {
           final updatedState = _updateStateAfterReservationAdd(currentState, savedReservation);
           emit(updatedState);
           add(FetchReservationsAndTransactions());
         },
       );
+    }
+  }
+
+  void _onNavigateCalendarDays(NavigateCalendarDays event, Emitter<RoomCalendarState> emit) {
+    if (state is RoomCalendarLoaded) {
+      final currentState = state as RoomCalendarLoaded;
+      final newStartDate = currentState.startDate.add(Duration(days: event.days));
+      emit(currentState.copyWith(startDate: newStartDate));
+   //   add(const FetchReservationsAndTransactions());
+    }
+  }
+
+  void _onNavigateCalendarWeeks(NavigateCalendarWeeks event, Emitter<RoomCalendarState> emit) {
+    if (state is RoomCalendarLoaded) {
+      final currentState = state as RoomCalendarLoaded;
+      final newStartDate = currentState.startDate.add(Duration(days: event.weeks * 7));
+      emit(currentState.copyWith(startDate: newStartDate));
+   //   add(const FetchReservationsAndTransactions());
+    }
+  }
+
+  void _onSelectSpecificDate(SelectSpecificDate event, Emitter<RoomCalendarState> emit) {
+    if (state is RoomCalendarLoaded) {
+      final currentState = state as RoomCalendarLoaded;
+      emit(currentState.copyWith(startDate: event.selectedDate));
+    //  add(const FetchReservationsAndTransactions());
     }
   }
 
@@ -167,13 +205,10 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
 
   Reservation _updateReservationForMove(Reservation reservation, String newRoomNumber, DateTime newStartDate) {
     final originalDuration = reservation.checkOutDate.difference(reservation.stayDay);
-   
-    
-    //! stayDay and checkInDte have to udpate at the same time, precondiiton reservation is not checked in. 
     return reservation.copyWith(
       roomId: int.parse(newRoomNumber),
       stayDay: newStartDate,
-      checkInDate: newStartDate, // ! Gordon add
+      checkInDate: newStartDate,
       checkOutDate: newStartDate.add(originalDuration),
     );
   }
@@ -218,6 +253,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     return reservation.copyWith(
       roomId: int.parse(roomNumber),
       stayDay: date,
+      checkInDate: date,
     );
   }
 

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +6,6 @@ import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_edit_page.dart';
 
-// Main widget for the room calendar
 class RoomCalendarWidget extends StatefulWidget {
   const RoomCalendarWidget({Key? key}) : super(key: key);
 
@@ -19,20 +17,26 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
   @override
   void initState() {
     super.initState();
-    // Fetch reservations and transactions when the widget initializes
-    context.read<RoomCalendarBloc>().add(FetchReservationsAndTransactions());
+    // Initialize the calendar and fetch data
+    context.read<RoomCalendarBloc>().add(const InitializeCalendar());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: BlocBuilder<RoomCalendarBloc, RoomCalendarState>(
+      body: BlocConsumer<RoomCalendarBloc, RoomCalendarState>(
+        listener: (context, state) {
+          // Handle any state changes that require UI feedback
+          if (state is RoomCalendarError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        },
         builder: (context, state) {
           if (state is RoomCalendarLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is RoomCalendarError) {
-            return Center(child: Text(state.message));
           } else if (state is RoomCalendarLoaded) {
             return Column(
               children: [
@@ -54,7 +58,7 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
       actions: [
         IconButton(
           icon: const Icon(Icons.refresh),
-          onPressed: () => context.read<RoomCalendarBloc>().add(FetchReservationsAndTransactions()),
+          onPressed: () => context.read<RoomCalendarBloc>().add(const FetchReservationsAndTransactions()),
           tooltip: 'Fetch latest reservations',
         ),
       ],
@@ -62,7 +66,6 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
   }
 }
 
-// Widget for the top bar of the calendar
 class _TopBarWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
@@ -84,25 +87,44 @@ class _TopBarWidget extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.navigate_before),
-                onPressed: () => _changeStartDate(context, -state.daysToShow),
+                icon: const Icon(Icons.arrow_left),
+                onPressed: () => context.read<RoomCalendarBloc>().add(const NavigateCalendarDays(-1)),
+                tooltip: 'Previous day',
+              ),
+              IconButton(
+                icon: const Icon(Icons.arrow_right),
+                onPressed: () => context.read<RoomCalendarBloc>().add(const NavigateCalendarDays(1)),
+                tooltip: 'Next day',
+              ),
+              const SizedBox(width: 16),
+              IconButton(
+                icon: const Icon(Icons.keyboard_double_arrow_left),
+                onPressed: () => context.read<RoomCalendarBloc>().add(const NavigateCalendarWeeks(-1)),
                 tooltip: 'Previous week',
               ),
               IconButton(
-                icon: const Icon(Icons.navigate_next),
-                onPressed: () => _changeStartDate(context, state.daysToShow),
+                icon: const Icon(Icons.keyboard_double_arrow_right),
+                onPressed: () => context.read<RoomCalendarBloc>().add(const NavigateCalendarWeeks(1)),
                 tooltip: 'Next week',
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 16),
+              IconButton(
+                icon: const Icon(Icons.calendar_today),
+                onPressed: () => _selectDate(context),
+                tooltip: 'Select date',
+              ),
+              const SizedBox(width: 16),
               DropdownButton<int>(
                 value: state.daysToShow,
                 items: [7, 14, 30]
                     .map((days) => DropdownMenuItem<int>(
                         value: days, child: Text('$days days')))
                     .toList(),
-                onChanged: (value) => context
-                    .read<RoomCalendarBloc>()
-                    .add(ChangeDaysToShow(value!)),
+                onChanged: (value) {
+                  if (value != null) {
+                    context.read<RoomCalendarBloc>().add(ChangeDaysToShow(value));
+                  }
+                },
               ),
             ],
           ),
@@ -111,14 +133,21 @@ class _TopBarWidget extends StatelessWidget {
     );
   }
 
-  void _changeStartDate(BuildContext context, int daysToAdd) {
-    context
-        .read<RoomCalendarBloc>()
-        .add(ChangeStartDate(state.startDate.add(Duration(days: daysToAdd))));
+  void _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: state.startDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != state.startDate) {
+      context.read<RoomCalendarBloc>().add(SelectSpecificDate(picked));
+    }
   }
 }
 
-// Widget for displaying the legend
+// ... [Rest of the widget code remains the same]
+
 class LegendWidget extends StatelessWidget {
   const LegendWidget({Key? key}) : super(key: key);
 
@@ -156,7 +185,6 @@ class _LegendItem extends StatelessWidget {
   }
 }
 
-// Widget for the main calendar grid
 class CalendarGridWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
@@ -185,7 +213,6 @@ class CalendarGridWidget extends StatelessWidget {
   }
 }
 
-// Widget for the date header of the calendar
 class DateHeaderWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
@@ -216,7 +243,6 @@ class DateHeaderWidget extends StatelessWidget {
   }
 }
 
-// Widget for each room row in the calendar
 class RoomRowWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
   final String roomNumber;
@@ -276,7 +302,6 @@ class RoomRowWidget extends StatelessWidget {
   }
 }
 
-// Widget for each cell in the calendar grid
 class ReservationCellWidget extends StatefulWidget {
   final List<Reservation> reservations;
   final List<RoomTransaction> roomTransactions;
@@ -306,18 +331,12 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         final Reservation draggedReservation = details.data;
         setState(() => isHovering = true);
         
-        // For checked-in reservations, only allow switching rooms on the same date
         if (draggedReservation.isCheckedIn) {
           return draggedReservation.stayDay.isSameDay(widget.date) && 
                  draggedReservation.roomId.toString() != widget.roomNumber;
-        } 
-        // For non-checked-in reservations, maintain the existing logic
-        else {
+        } else {
            final currentDate = DateTime.now().getDateOnly();
            return widget.date.isAtSameMomentAs(currentDate) || widget.date.isAfter(currentDate);
-      //  return draggedReservation.stayDay.isAfter(DateTime.now().subtract(Duration(days: 1)));
-      //           return  draggedReservation.stayDay.isSameDay(widget.date) || draggedReservation.stayDay.isBefore(widget.date); 
-             //    draggedReservation.stayDay.isBefore(DateTime.now().getDateOnly());
         }
       },
       onAcceptWithDetails: (details) => _handleDrop(context, details.data),
@@ -439,7 +458,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     );
   }
 
-Widget _buildExpandedContent(BuildContext context, List<dynamic> items) {
+  Widget _buildExpandedContent(BuildContext context, List<dynamic> items) {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -554,22 +573,20 @@ Widget _buildExpandedContent(BuildContext context, List<dynamic> items) {
     );
   }
 
-void _handleDrop(BuildContext context, Reservation droppedReservation) {
+  void _handleDrop(BuildContext context, Reservation droppedReservation) {
     setState(() => isHovering = false);
 
-    final currentDate = DateTime.now().getDateOnly();  // Get current date without time
+    final currentDate = DateTime.now().getDateOnly();
 
     if (droppedReservation.isCheckedIn) {
-      // For checked-in reservations, only update the room number
       if (droppedReservation.roomId.toString() != widget.roomNumber) {
         context.read<RoomCalendarBloc>().add(MoveReservation(
           reservation: droppedReservation,
           newRoomNumber: widget.roomNumber,
-          newStartDate: droppedReservation.stayDay, // Keep the original date
+          newStartDate: droppedReservation.stayDay,
         ));
       }
     } else {
-      // For non-checked-in reservations, allow changes only on or after the current day
       if ((widget.date.isAtSameMomentAs(currentDate) || widget.date.isAfter(currentDate)) &&
           (droppedReservation.roomId.toString() != widget.roomNumber || !droppedReservation.stayDay.isSameDay(widget.date))) {
         context.read<RoomCalendarBloc>().add(MoveReservation(
