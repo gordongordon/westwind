@@ -28,7 +28,12 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   void _onInitializeCalendar(InitializeCalendar event, Emitter<RoomCalendarState> emit) async {
     final List<String> roomTypes = ['Deluxe', 'Suite'];
     final List<String> roomNumbers = List.generate(67, (index) => (101 + index).toString());
-    final DateTime startDate = DateTime.now().subtract(Duration(days: 3));
+   // final DateTime startDate = DateTime.now().subtract(const Duration(days: 2));
+
+    final DateTime startDate = DateTime.parse("2024-07-02"
+
+    );
+
     final int daysToShow = 7;
     
     emit(RoomCalendarLoaded(
@@ -67,7 +72,8 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
               emit(RoomCalendarLoaded(
                 roomTypes: ['Deluxe', 'Suite'],
                 roomNumbers: List.generate(67, (index) => (101 + index).toString()),
-                startDate: DateTime.now(),
+                startDate: DateTime.now().subtract(Duration(days: 2)),
+       //         startDate: DateTime.now(),
                 daysToShow: 7,
                 reservations: reservations,
                 reservationsByRoom: reservationsByRoom,
@@ -161,9 +167,13 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
 
   Reservation _updateReservationForMove(Reservation reservation, String newRoomNumber, DateTime newStartDate) {
     final originalDuration = reservation.checkOutDate.difference(reservation.stayDay);
+   
+    
+    //! stayDay and checkInDte have to udpate at the same time, precondiiton reservation is not checked in. 
     return reservation.copyWith(
       roomId: int.parse(newRoomNumber),
       stayDay: newStartDate,
+      checkInDate: newStartDate, // ! Gordon add
       checkOutDate: newStartDate.add(originalDuration),
     );
   }

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +7,7 @@ import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_edit_page.dart';
 
+// Main widget for the room calendar
 class RoomCalendarWidget extends StatefulWidget {
   const RoomCalendarWidget({Key? key}) : super(key: key);
 
@@ -17,6 +19,7 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
   @override
   void initState() {
     super.initState();
+    // Fetch reservations and transactions when the widget initializes
     context.read<RoomCalendarBloc>().add(FetchReservationsAndTransactions());
   }
 
@@ -59,6 +62,7 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
   }
 }
 
+// Widget for the top bar of the calendar
 class _TopBarWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
@@ -114,6 +118,7 @@ class _TopBarWidget extends StatelessWidget {
   }
 }
 
+// Widget for displaying the legend
 class LegendWidget extends StatelessWidget {
   const LegendWidget({Key? key}) : super(key: key);
 
@@ -151,6 +156,7 @@ class _LegendItem extends StatelessWidget {
   }
 }
 
+// Widget for the main calendar grid
 class CalendarGridWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
@@ -179,6 +185,7 @@ class CalendarGridWidget extends StatelessWidget {
   }
 }
 
+// Widget for the date header of the calendar
 class DateHeaderWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
@@ -209,6 +216,7 @@ class DateHeaderWidget extends StatelessWidget {
   }
 }
 
+// Widget for each room row in the calendar
 class RoomRowWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
   final String roomNumber;
@@ -256,30 +264,19 @@ class RoomRowWidget extends StatelessWidget {
   List<Reservation> _findReservationsForDate(List<Reservation> reservations, DateTime date) {
     return reservations
         .where((r) =>
-          //  date.isAtSameMomentAs(r.stayDay)
             r.stayDay.isSameDay(date) ||
             (date.isAfter(r.stayDay) && date.isBefore(r.checkOutDate)))
         .toList();
   }
 
-
   List<RoomTransaction> _findRoomTransactionsForDate(List<RoomTransaction> roomTransactions, DateTime date) {
-  
-    debugPrint( "rt = ${roomTransactions}");
-    final result = roomTransactions
-       .where((r) => 
-           r.stayDay.isSameDay(date)
-       ).toList();
-
-    debugPrint( " find Room Tansactions size of ${result.length} when date = $date");
-
-    return result;
-
+    return roomTransactions
+        .where((r) => r.stayDay.isSameDay(date))
+        .toList();
   }
 }
 
-
-
+// Widget for each cell in the calendar grid
 class ReservationCellWidget extends StatefulWidget {
   final List<Reservation> reservations;
   final List<RoomTransaction> roomTransactions;
@@ -306,8 +303,20 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   Widget build(BuildContext context) {
     return DragTarget<Reservation>(
       onWillAcceptWithDetails: (details) {
+        final Reservation draggedReservation = details.data;
         setState(() => isHovering = true);
-        return true;
+        
+        // For checked-in reservations, only allow switching rooms on the same date
+        if (draggedReservation.isCheckedIn) {
+          return draggedReservation.stayDay.isSameDay(widget.date) && 
+                 draggedReservation.roomId.toString() != widget.roomNumber;
+        } 
+        // For non-checked-in reservations, maintain the existing logic
+        else {
+       return draggedReservation.stayDay.isAfter(DateTime.now().subtract(Duration(days: 1)));
+      //           return  draggedReservation.stayDay.isSameDay(widget.date) || draggedReservation.stayDay.isBefore(widget.date); 
+             //    draggedReservation.stayDay.isBefore(DateTime.now().getDateOnly());
+        }
       },
       onAcceptWithDetails: (details) => _handleDrop(context, details.data),
       onLeave: (_) => setState(() => isHovering = false),
@@ -391,7 +400,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         ),
         child: Center(
           child: Text(
-            transaction.guest!.firstName+" "+transaction.guest!.lastName,
+            '${transaction.guest!.firstName} ${transaction.guest!.lastName}',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 10,
@@ -428,7 +437,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     );
   }
 
-  Widget _buildExpandedContent(BuildContext context, List<dynamic> items) {
+Widget _buildExpandedContent(BuildContext context, List<dynamic> items) {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -531,7 +540,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
           children: [
             Expanded(
               child: Text(
-                       transaction.guest!.firstName+" "+transaction.guest!.lastName,
+                '${transaction.guest!.firstName} ${transaction.guest!.lastName}',
                 style: const TextStyle(fontSize: 10, color: Colors.white),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -546,12 +555,24 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   void _handleDrop(BuildContext context, Reservation droppedReservation) {
     setState(() => isHovering = false);
 
-    if (droppedReservation.roomId.toString() != widget.roomNumber || droppedReservation.stayDay != widget.date) {
-      context.read<RoomCalendarBloc>().add(MoveReservation(
-        reservation: droppedReservation,
-        newRoomNumber: widget.roomNumber,
-        newStartDate: widget.date,
-      ));
+    if (droppedReservation.isCheckedIn) {
+      // For checked-in reservations, only update the room number
+      if (droppedReservation.roomId.toString() != widget.roomNumber) {
+        context.read<RoomCalendarBloc>().add(MoveReservation(
+          reservation: droppedReservation,
+          newRoomNumber: widget.roomNumber,
+          newStartDate: droppedReservation.stayDay, // Keep the original date
+        ));
+      }
+    } else {
+      // For non-checked-in reservations, allow both room and date changes
+      if (droppedReservation.roomId.toString() != widget.roomNumber || !droppedReservation.stayDay.isSameDay(widget.date)) {
+        context.read<RoomCalendarBloc>().add(MoveReservation(
+          reservation: droppedReservation,
+          newRoomNumber: widget.roomNumber,
+          newStartDate: widget.date,
+        ));
+      }
     }
   }
 
