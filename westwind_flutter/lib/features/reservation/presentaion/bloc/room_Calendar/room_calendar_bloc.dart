@@ -46,7 +46,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       roomTransactionsByRoom: {},
     ));
 
-     add(const FetchReservationsAndTransactions());
+     add(FetchReservationsAndTransactions(startDate));
   }
 
   Future<void> _onFetchReservationsAndTransactions(
@@ -68,6 +68,8 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
               final Map<String, List<Reservation>> reservationsByRoom = _groupReservationsByRoom(reservations);
               final Map<String, List<RoomTransaction>> roomTransactionsByRoom = _groupRoomTransactionsByRoom(roomTransactions);
               
+            
+
               if (state is RoomCalendarLoaded) {
                 final currentState = state as RoomCalendarLoaded;
                 return currentState.copyWith(
@@ -77,10 +79,11 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
                   roomTransactionsByRoom: roomTransactionsByRoom,
                 );
               } else {
+
                 return RoomCalendarLoaded(
                   roomTypes: ['Deluxe', 'Suite'],
                   roomNumbers: List.generate(67, (index) => (101 + index).toString()),
-                  startDate: DateTime.now(),
+                  startDate: event.startDate,
                   daysToShow: 7,
                   reservations: reservations,
                   reservationsByRoom: reservationsByRoom,
@@ -103,7 +106,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       emit(currentState.copyWith(startDate: event.newStartDate));
-      add(const FetchReservationsAndTransactions());
+    //  add(const FetchReservationsAndTransactions());
     }
   }
 
@@ -111,7 +114,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       emit(currentState.copyWith(daysToShow: event.newDaysToShow));
-      add(const FetchReservationsAndTransactions());
+     // add(const FetchReservationsAndTransactions());
     }
   }
 
@@ -127,7 +130,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) async {
           final updatedState = _updateStateAfterReservationMove(currentState, event.reservation, savedReservation);
           emit(updatedState);
-          add(FetchReservationsAndTransactions());
+          add(FetchReservationsAndTransactions(currentState.startDate));
         },
       );
     }
@@ -145,7 +148,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) async {
           final updatedState = _updateStateAfterReservationAdd(currentState, savedReservation);
           emit(updatedState);
-          add(FetchReservationsAndTransactions());
+        //  add(FetchReservationsAndTransactions());
         },
       );
     }
