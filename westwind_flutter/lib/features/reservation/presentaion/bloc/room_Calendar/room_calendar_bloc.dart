@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/features/auth/domain/usecases/current_user.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
 
@@ -72,6 +73,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
 
               if (state is RoomCalendarLoaded) {
                 final currentState = state as RoomCalendarLoaded;
+              
                 return currentState.copyWith(
                   reservations: reservations,
                   reservationsByRoom: reservationsByRoom,
@@ -79,7 +81,10 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
                   roomTransactionsByRoom: roomTransactionsByRoom,
                 );
               } else {
+                
+              // final currentState = state as RoomCalendarLoaded;
 
+              
                 return RoomCalendarLoaded(
                   roomTypes: ['Deluxe', 'Suite'],
                   roomNumbers: List.generate(67, (index) => (101 + index).toString()),
