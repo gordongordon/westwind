@@ -1,10 +1,7 @@
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:westwind_client/westwind_client.dart';
-import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/features/auth/domain/usecases/current_user.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
@@ -36,7 +33,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     
     final List<String> roomTypes = ['Deluxe', 'Suite'];
     final List<String> roomNumbers = List.generate(67, (index) => (101 + index).toString());
-    final DateTime startDate = DateTime.now().getDateOnly();
+    final DateTime startDate = DateTime.now();
     final int daysToShow = 7;
     
     emit(RoomCalendarLoaded(
@@ -50,7 +47,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       roomTransactionsByRoom: {},
     ));
 
-     add(const FetchReservationsAndTransactions());
+     add(FetchReservationsAndTransactions(startDate));
   }
 
   Future<void> _onFetchReservationsAndTransactions(
@@ -72,6 +69,8 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
               final Map<String, List<Reservation>> reservationsByRoom = _groupReservationsByRoom(reservations);
               final Map<String, List<RoomTransaction>> roomTransactionsByRoom = _groupRoomTransactionsByRoom(roomTransactions);
               
+            
+
               if (state is RoomCalendarLoaded) {
                 final currentState = state as RoomCalendarLoaded;
                 return currentState.copyWith(
@@ -84,7 +83,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
                 return RoomCalendarLoaded(
                   roomTypes: ['Deluxe', 'Suite'],
                   roomNumbers: List.generate(67, (index) => (101 + index).toString()),
-                  startDate: 
+                  startDate: event.startDate,
                   daysToShow: 7,
                   reservations: reservations,
                   reservationsByRoom: reservationsByRoom,
@@ -131,7 +130,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) async {
           final updatedState = _updateStateAfterReservationMove(currentState, event.reservation, savedReservation);
           emit(updatedState);
-          add(FetchReservationsAndTransactions());
+          add(FetchReservationsAndTransactions(currentState.startDate));
         },
       );
     }
@@ -149,7 +148,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) async {
           final updatedState = _updateStateAfterReservationAdd(currentState, savedReservation);
           emit(updatedState);
-          add(FetchReservationsAndTransactions());
+        //  add(FetchReservationsAndTransactions());
         },
       );
     }

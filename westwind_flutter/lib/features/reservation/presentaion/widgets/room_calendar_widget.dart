@@ -58,7 +58,7 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
       actions: [
         IconButton(
           icon: const Icon(Icons.refresh),
-          onPressed: () => context.read<RoomCalendarBloc>().add(const FetchReservationsAndTransactions()),
+          onPressed: () => context.read<RoomCalendarBloc>().add(FetchReservationsAndTransactions(DateTime.now())),
           tooltip: 'Fetch latest reservations',
         ),
       ],
