@@ -37,7 +37,7 @@ void main() async {
       BlocProvider(create: (_) => serverLocator<RoomGuestListBloc>()),
       BlocProvider(create: (_) => serverLocator<RoomGuestManageBloc>()),
       BlocProvider(create: (_) => serverLocator<DashboardBloc>()),
-      BlocProvider(create: (_) => serverLocator<RoomTransactionBloc>()),
+      BlocProvider(create: (_) => serverLocator<RoomTransactionListBloc>()),
        BlocProvider(create: (_) => serverLocator<RoomCalendarBloc>()),
     ],
     child: const MyApp(),
