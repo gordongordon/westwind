@@ -146,6 +146,7 @@ class _TopBarWidget extends StatelessWidget {
   }
 }
 
+// ... [Rest of the widget code remains the same]
 
 class LegendWidget extends StatelessWidget {
   const LegendWidget({Key? key}) : super(key: key);
@@ -335,7 +336,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
                  draggedReservation.roomId.toString() != widget.roomNumber;
         } else {
            final currentDate = DateTime.now().getDateOnly();
-           return widget.date.isSameDay(currentDate) || widget.date.isAfter(currentDate);
+           return widget.date.isAtSameMomentAs(currentDate) || widget.date.isAfter(currentDate);
         }
       },
       onAcceptWithDetails: (details) => _handleDrop(context, details.data),
@@ -586,7 +587,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         ));
       }
     } else {
-      if ((widget.date.isSameDay(currentDate) || widget.date.isAfter(currentDate)) &&
+      if ((widget.date.isAtSameMomentAs(currentDate) || widget.date.isAfter(currentDate)) &&
           (droppedReservation.roomId.toString() != widget.roomNumber || !droppedReservation.stayDay.isSameDay(widget.date))) {
         context.read<RoomCalendarBloc>().add(MoveReservation(
           reservation: droppedReservation,

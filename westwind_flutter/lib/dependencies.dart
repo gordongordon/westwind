@@ -65,7 +65,7 @@ import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_create_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_delete_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_usecase.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_list_bloc.dart';
 
 final serverLocator = GetIt.instance;
 
@@ -154,8 +154,8 @@ void _initRoomTransaction() {
   );
 
   // bloc
-  serverLocator.registerFactory<RoomTransactionBloc>(
-    () => RoomTransactionBloc(
+  serverLocator.registerFactory<RoomTransactionListBloc>(
+    () => RoomTransactionListBloc(
       listRoomTransactions: serverLocator<ListRoomTransactionsUseCase>(),
       deleteRoomTransaction: serverLocator<DeleteRoomTransactionUseCase>(),
       retrieveRoomTransaction: serverLocator<RetrieveRoomTransactionUseCase>(),

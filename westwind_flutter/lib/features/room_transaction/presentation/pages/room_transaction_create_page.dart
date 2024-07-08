@@ -7,7 +7,7 @@ import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_list_bloc.dart';
 
 class RoomTransactionCreatePage extends StatefulWidget {
   final int? roomTransactionId;
@@ -48,7 +48,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
   void initState() {
     super.initState();
     if (isEditing) {
-      context.read<RoomTransactionBloc>().add(RetrieveRoomTransactionEvent(id: widget.roomTransactionId!));
+      context.read<RoomTransactionListBloc>().add(RetrieveRoomTransactionListEvent(id: widget.roomTransactionId!));
     }
   }
 
@@ -65,10 +65,10 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
           ),
         ],
       ),
-      body: BlocConsumer<RoomTransactionBloc, RoomTransactionState>(
+      body: BlocConsumer<RoomTransactionListBloc, RoomTransactionListState>(
         listener: _blocListener,
         builder: (context, state) {
-          if (state is RoomTransactionStateLoading) {
+          if (state is RoomTransactionListStateLoading) {
             return const Loader();
           }
           return _buildForm();
@@ -147,7 +147,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
     return Column(
       children: [
         const SizedBox(height: 24),
-        _buildButton('Delete Transaction', () => context.read<RoomTransactionBloc>().add(DeleteRoomTransactionEvent(id: widget.roomTransactionId!))),
+        _buildButton('Delete Transaction', () => context.read<RoomTransactionListBloc>().add(DeleteRoomTransactionListEvent(id: widget.roomTransactionId!))),
         const SizedBox(height: 16),
         _buildButton('Charge & Extend Stay', () => context.read<RoomGuestManageBloc>().add(ChargeAndExtendStayDay(id: widget.roomTransactionId!))),
       ],
@@ -236,18 +236,18 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
         itemType: itemType,
       );
 
-      context.read<RoomTransactionBloc>().add(CreateRoomTransactionEvent(roomTransaction: roomTransaction));
+      context.read<RoomTransactionListBloc>().add(CreateRoomTransactionListEvent(roomTransaction: roomTransaction));
     }
   }
 
-  void _blocListener(BuildContext context, RoomTransactionState state) {
-    if (state is RoomTransactionStateFailure) {
+  void _blocListener(BuildContext context, RoomTransactionListState state) {
+    if (state is RoomTransactionListStateFailure) {
       showSnackbar(context, state.message);
-    } else if (state is RoomTransactionStateCreatedSuccess ||
-               state is RoomTransactionStateDeletedSuccess) {
-      context.read<RoomTransactionBloc>().add(FetchRoomTransactionsEvent());
+    } else if (state is RoomTransactionListStateCreatedSuccess ||
+               state is RoomTransactionListStateDeletedSuccess) {
+      context.read<RoomTransactionListBloc>().add(FetchRoomTransactionsListEvent());
       context.pop();
-    } else if (state is RoomTransactionStateRetrievedSuccess) {
+    } else if (state is RoomTransactionListStateRetrievedSuccess) {
       _populateFields(state.roomTransaction);
     }
   }

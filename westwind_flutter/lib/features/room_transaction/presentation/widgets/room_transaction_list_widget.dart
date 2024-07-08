@@ -5,7 +5,7 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_list_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_edit_page.dart';
 
 class RoomTransactionListWidget extends StatefulWidget {
@@ -29,8 +29,8 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
   void initState() {
     super.initState();
     context
-        .read<RoomTransactionBloc>()
-        .add(FetchRoomTransactionsEvent());
+        .read<RoomTransactionListBloc>()
+        .add(FetchRoomTransactionsListEvent());
     _initializeColumns();
   }
 
@@ -143,16 +143,16 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RoomTransactionBloc, RoomTransactionState>(
+    return BlocBuilder<RoomTransactionListBloc, RoomTransactionListState>(
       builder: (context, state) {
         debugPrint("building RoomTransaction List");
-        if (state is RoomTransactionStateInitial) {
+        if (state is RoomTransactionListStateInitial) {
           return const SizedBox.shrink();
-        } else if (state is RoomTransactionStateLoading) {
+        } else if (state is RoomTransactionListStateLoading) {
           return const Loader();
-        } else if (state is RoomTransactionStateLoaded) {
+        } else if (state is RoomTransactionListStateLoaded) {
           return buildDataTable(context, state.roomTransactions);
-        } else if (state is RoomTransactionStateFailure) {
+        } else if (state is RoomTransactionListStateFailure) {
           return Center(child: Text(state.message));
         } else {
           return const Placeholder();
