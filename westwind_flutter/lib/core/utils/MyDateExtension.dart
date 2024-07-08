@@ -16,6 +16,10 @@ extension MyDateExtension on DateTime {
          day == date.day;
   }   
   
+  DateTime getSystemDate() {
+    return DateTime.now().getDateOnly();
+  }
+
 }
 
 
