@@ -13,13 +13,8 @@ class InitializeCalendar extends RoomCalendarEvent {
 }
 
 class FetchReservationsAndTransactions extends RoomCalendarEvent {
-  final DateTime startDate;
-
-  const FetchReservationsAndTransactions(this.startDate);
-    @override
-  List<Object> get props => [startDate];
+  const FetchReservationsAndTransactions();
 }
-
 
 class ChangeStartDate extends RoomCalendarEvent {
   final DateTime newStartDate;

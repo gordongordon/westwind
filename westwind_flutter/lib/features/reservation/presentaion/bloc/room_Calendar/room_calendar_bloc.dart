@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/features/auth/domain/usecases/current_user.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
@@ -33,7 +34,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     
     final List<String> roomTypes = ['Deluxe', 'Suite'];
     final List<String> roomNumbers = List.generate(67, (index) => (101 + index).toString());
-    final DateTime startDate = DateTime.now();
+    final DateTime startDate = DateTime.now().getDateOnly();
     final int daysToShow = 7;
     
     emit(RoomCalendarLoaded(
@@ -47,7 +48,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       roomTransactionsByRoom: {},
     ));
 
-     add(FetchReservationsAndTransactions(startDate));
+     add(const FetchReservationsAndTransactions());
   }
 
   Future<void> _onFetchReservationsAndTransactions(
@@ -69,8 +70,6 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
               final Map<String, List<Reservation>> reservationsByRoom = _groupReservationsByRoom(reservations);
               final Map<String, List<RoomTransaction>> roomTransactionsByRoom = _groupRoomTransactionsByRoom(roomTransactions);
               
-            
-
               if (state is RoomCalendarLoaded) {
                 final currentState = state as RoomCalendarLoaded;
               
@@ -82,13 +81,13 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
                 );
               } else {
                 
-              // final currentState = state as RoomCalendarLoaded;
+               //  final currentState = state as RoomCalendarLoaded;
 
               
                 return RoomCalendarLoaded(
                   roomTypes: ['Deluxe', 'Suite'],
                   roomNumbers: List.generate(67, (index) => (101 + index).toString()),
-                  startDate: event.startDate,
+                  startDate: DateTime.now().getDateOnly(),
                   daysToShow: 7,
                   reservations: reservations,
                   reservationsByRoom: reservationsByRoom,
@@ -111,7 +110,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       emit(currentState.copyWith(startDate: event.newStartDate));
-    //  add(const FetchReservationsAndTransactions());
+     // add(const FetchReservationsAndTransactions());
     }
   }
 
@@ -119,7 +118,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       emit(currentState.copyWith(daysToShow: event.newDaysToShow));
-     // add(const FetchReservationsAndTransactions());
+     //  add(const FetchReservationsAndTransactions());
     }
   }
 
@@ -135,7 +134,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) async {
           final updatedState = _updateStateAfterReservationMove(currentState, event.reservation, savedReservation);
           emit(updatedState);
-          add(FetchReservationsAndTransactions(currentState.startDate));
+          add(FetchReservationsAndTransactions());
         },
       );
     }
@@ -153,7 +152,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) async {
           final updatedState = _updateStateAfterReservationAdd(currentState, savedReservation);
           emit(updatedState);
-        //  add(FetchReservationsAndTransactions());
+          add(FetchReservationsAndTransactions());
         },
       );
     }
