@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -79,11 +81,10 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
                   roomTransactionsByRoom: roomTransactionsByRoom,
                 );
               } else {
-
                 return RoomCalendarLoaded(
                   roomTypes: ['Deluxe', 'Suite'],
                   roomNumbers: List.generate(67, (index) => (101 + index).toString()),
-                  startDate: DateTime.now().getDateOnly(),
+                  startDate: 
                   daysToShow: 7,
                   reservations: reservations,
                   reservationsByRoom: reservationsByRoom,
@@ -106,7 +107,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       emit(currentState.copyWith(startDate: event.newStartDate));
-     // add(const FetchReservationsAndTransactions());
+    //  add(const FetchReservationsAndTransactions());
     }
   }
 
@@ -114,7 +115,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       emit(currentState.copyWith(daysToShow: event.newDaysToShow));
-     //  add(const FetchReservationsAndTransactions());
+     // add(const FetchReservationsAndTransactions());
     }
   }
 
