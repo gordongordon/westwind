@@ -495,35 +495,6 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['reservation'] as _i5.ReservationEndpoint)
                   .list(session),
         ),
-        'getAllReservationsByDay': _i1.MethodConnector(
-          name: 'getAllReservationsByDay',
-          params: {
-            'datetime': _i1.ParameterDescription(
-              name: 'datetime',
-              type: _i1.getType<DateTime>(),
-              nullable: false,
-            )
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['reservation'] as _i5.ReservationEndpoint)
-                  .getAllReservationsByDay(
-            session,
-            params['datetime'],
-          ),
-        ),
-        'getTodayReservations': _i1.MethodConnector(
-          name: 'getTodayReservations',
-          params: {},
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['reservation'] as _i5.ReservationEndpoint)
-                  .getTodayReservations(session),
-        ),
         'checkIn': _i1.MethodConnector(
           name: 'checkIn',
           params: {

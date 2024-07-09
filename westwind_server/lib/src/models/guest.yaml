@@ -4,14 +4,14 @@ fields:
       firstName : String
       lastName  : String
       phone : String
-      email : String
+      email : String?
       isInHouse : bool
       dateCreate : DateTime
       dateUpdate : DateTime?
       rateType : RateType
       staffId  :  int
       company : Company?,relation(name=company_guests)
-      rigNumber : int
+      rigNumber : int?
       accountBalance : double 
       roomGuets : List<RoomGuest>?, relation(name=guest_room_guest)
 

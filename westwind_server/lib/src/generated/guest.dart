@@ -18,7 +18,7 @@ abstract class Guest extends _i1.TableRow {
     required this.firstName,
     required this.lastName,
     required this.phone,
-    required this.email,
+    this.email,
     required this.isInHouse,
     required this.dateCreate,
     this.dateUpdate,
@@ -26,7 +26,7 @@ abstract class Guest extends _i1.TableRow {
     required this.staffId,
     required this.companyId,
     this.company,
-    required this.rigNumber,
+    this.rigNumber,
     required this.accountBalance,
     this.roomGuets,
   }) : super(id);
@@ -36,7 +36,7 @@ abstract class Guest extends _i1.TableRow {
     required String firstName,
     required String lastName,
     required String phone,
-    required String email,
+    String? email,
     required bool isInHouse,
     required DateTime dateCreate,
     DateTime? dateUpdate,
@@ -44,7 +44,7 @@ abstract class Guest extends _i1.TableRow {
     required int staffId,
     required int companyId,
     _i2.Company? company,
-    required int rigNumber,
+    int? rigNumber,
     required double accountBalance,
     List<_i2.RoomGuest>? roomGuets,
   }) = _GuestImpl;
@@ -62,7 +62,7 @@ abstract class Guest extends _i1.TableRow {
       phone:
           serializationManager.deserialize<String>(jsonSerialization['phone']),
       email:
-          serializationManager.deserialize<String>(jsonSerialization['email']),
+          serializationManager.deserialize<String?>(jsonSerialization['email']),
       isInHouse: serializationManager
           .deserialize<bool>(jsonSerialization['isInHouse']),
       dateCreate: serializationManager
@@ -77,8 +77,8 @@ abstract class Guest extends _i1.TableRow {
           serializationManager.deserialize<int>(jsonSerialization['companyId']),
       company: serializationManager
           .deserialize<_i2.Company?>(jsonSerialization['company']),
-      rigNumber:
-          serializationManager.deserialize<int>(jsonSerialization['rigNumber']),
+      rigNumber: serializationManager
+          .deserialize<int?>(jsonSerialization['rigNumber']),
       accountBalance: serializationManager
           .deserialize<double>(jsonSerialization['accountBalance']),
       roomGuets: serializationManager
@@ -96,7 +96,7 @@ abstract class Guest extends _i1.TableRow {
 
   String phone;
 
-  String email;
+  String? email;
 
   bool isInHouse;
 
@@ -112,7 +112,7 @@ abstract class Guest extends _i1.TableRow {
 
   _i2.Company? company;
 
-  int rigNumber;
+  int? rigNumber;
 
   double accountBalance;
 
@@ -145,7 +145,7 @@ abstract class Guest extends _i1.TableRow {
       'firstName': firstName,
       'lastName': lastName,
       'phone': phone,
-      'email': email,
+      if (email != null) 'email': email,
       'isInHouse': isInHouse,
       'dateCreate': dateCreate.toJson(),
       if (dateUpdate != null) 'dateUpdate': dateUpdate?.toJson(),
@@ -153,7 +153,7 @@ abstract class Guest extends _i1.TableRow {
       'staffId': staffId,
       'companyId': companyId,
       if (company != null) 'company': company?.toJson(),
-      'rigNumber': rigNumber,
+      if (rigNumber != null) 'rigNumber': rigNumber,
       'accountBalance': accountBalance,
       if (roomGuets != null)
         'roomGuets': roomGuets?.toJson(valueToJson: (v) => v.toJson()),
@@ -187,7 +187,7 @@ abstract class Guest extends _i1.TableRow {
       'firstName': firstName,
       'lastName': lastName,
       'phone': phone,
-      'email': email,
+      if (email != null) 'email': email,
       'isInHouse': isInHouse,
       'dateCreate': dateCreate.toJson(),
       if (dateUpdate != null) 'dateUpdate': dateUpdate?.toJson(),
@@ -195,7 +195,7 @@ abstract class Guest extends _i1.TableRow {
       'staffId': staffId,
       'companyId': companyId,
       if (company != null) 'company': company?.allToJson(),
-      'rigNumber': rigNumber,
+      if (rigNumber != null) 'rigNumber': rigNumber,
       'accountBalance': accountBalance,
       if (roomGuets != null)
         'roomGuets': roomGuets?.toJson(valueToJson: (v) => v.allToJson()),
@@ -417,7 +417,7 @@ class _GuestImpl extends Guest {
     required String firstName,
     required String lastName,
     required String phone,
-    required String email,
+    String? email,
     required bool isInHouse,
     required DateTime dateCreate,
     DateTime? dateUpdate,
@@ -425,7 +425,7 @@ class _GuestImpl extends Guest {
     required int staffId,
     required int companyId,
     _i2.Company? company,
-    required int rigNumber,
+    int? rigNumber,
     required double accountBalance,
     List<_i2.RoomGuest>? roomGuets,
   }) : super._(
@@ -452,7 +452,7 @@ class _GuestImpl extends Guest {
     String? firstName,
     String? lastName,
     String? phone,
-    String? email,
+    Object? email = _Undefined,
     bool? isInHouse,
     DateTime? dateCreate,
     Object? dateUpdate = _Undefined,
@@ -460,7 +460,7 @@ class _GuestImpl extends Guest {
     int? staffId,
     int? companyId,
     Object? company = _Undefined,
-    int? rigNumber,
+    Object? rigNumber = _Undefined,
     double? accountBalance,
     Object? roomGuets = _Undefined,
   }) {
@@ -469,7 +469,7 @@ class _GuestImpl extends Guest {
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       phone: phone ?? this.phone,
-      email: email ?? this.email,
+      email: email is String? ? email : this.email,
       isInHouse: isInHouse ?? this.isInHouse,
       dateCreate: dateCreate ?? this.dateCreate,
       dateUpdate: dateUpdate is DateTime? ? dateUpdate : this.dateUpdate,
@@ -477,7 +477,7 @@ class _GuestImpl extends Guest {
       staffId: staffId ?? this.staffId,
       companyId: companyId ?? this.companyId,
       company: company is _i2.Company? ? company : this.company?.copyWith(),
-      rigNumber: rigNumber ?? this.rigNumber,
+      rigNumber: rigNumber is int? ? rigNumber : this.rigNumber,
       accountBalance: accountBalance ?? this.accountBalance,
       roomGuets: roomGuets is List<_i2.RoomGuest>?
           ? roomGuets

@@ -82,7 +82,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
                 return RoomCalendarLoaded(
                   roomTypes: ['Deluxe', 'Suite'],
                   roomNumbers: List.generate(67, (index) => (101 + index).toString()),
-                  startDate: event.startDate,
+                  startDate: event.startDate,  //! Fixed the Starting of Calendar
                   daysToShow: 7,
                   reservations: reservations,
                   reservationsByRoom: reservationsByRoom,

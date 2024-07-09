@@ -223,21 +223,6 @@ class EndpointReservation extends _i1.EndpointRef {
         {},
       );
 
-  _i2.Future<List<_i7.Reservation>> getAllReservationsByDay(
-          DateTime datetime) =>
-      caller.callServerEndpoint<List<_i7.Reservation>>(
-        'reservation',
-        'getAllReservationsByDay',
-        {'datetime': datetime},
-      );
-
-  _i2.Future<List<_i7.Reservation>> getTodayReservations() =>
-      caller.callServerEndpoint<List<_i7.Reservation>>(
-        'reservation',
-        'getTodayReservations',
-        {},
-      );
-
   _i2.Future<bool> checkIn({required int reservationId}) =>
       caller.callServerEndpoint<bool>(
         'reservation',

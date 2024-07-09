@@ -37,7 +37,8 @@ class _GuestEditPageState extends State<GuestEditPage> {
   DateTime dateUpdate = DateTime.now();
   bool isInHouse = false;
 
-  final List<String> _rateTypeOptions = RateType.values.map((e) => e.name).toList();
+  final List<String> _rateTypeOptions =
+      RateType.values.map((e) => e.name).toList();
 
   bool get isEditing => widget.guestId != null && widget.guestId! > 0;
 
@@ -45,7 +46,9 @@ class _GuestEditPageState extends State<GuestEditPage> {
   void initState() {
     super.initState();
     if (isEditing) {
-      context.read<GuestManageBloc>().add(GuestManageRetrieveEvent(id: widget.guestId!));
+      context
+          .read<GuestManageBloc>()
+          .add(GuestManageRetrieveEvent(id: widget.guestId!));
     }
   }
 
@@ -98,7 +101,8 @@ class _GuestEditPageState extends State<GuestEditPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Personal Information', style: Theme.of(context).textTheme.headlineMedium),
+        Text('Personal Information',
+            style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('lastName', 'Last Name', lastNameController),
         _buildTextField('firstName', 'First Name', firstNameController),
@@ -111,7 +115,8 @@ class _GuestEditPageState extends State<GuestEditPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 24),
-        Text('Contact Information', style: Theme.of(context).textTheme.headlineMedium),
+        Text('Contact Information',
+            style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('phone', 'Phone Number', phoneController,
             keyboardType: TextInputType.phone,
@@ -128,12 +133,14 @@ class _GuestEditPageState extends State<GuestEditPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 24),
-        Text('Additional Information', style: Theme.of(context).textTheme.headlineMedium),
+        Text('Additional Information',
+            style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
-        _buildTextField('rigNumber', 'Rig Number', rigNumberController,
-            keyboardType: TextInputType.number),
-        const SizedBox(height: 16),
+
         _buildRateTypeDropdown(),
+        const SizedBox(height: 16),
+                _buildTextField('rigNumber', 'Rig Number', rigNumberController,
+            keyboardType: TextInputType.number),
         const SizedBox(height: 16),
         _buildInHouseSwitch(),
         const SizedBox(height: 16),
@@ -143,7 +150,8 @@ class _GuestEditPageState extends State<GuestEditPage> {
     );
   }
 
-  Widget _buildTextField(String name, String label, TextEditingController controller,
+  Widget _buildTextField(
+      String name, String label, TextEditingController controller,
       {TextInputType keyboardType = TextInputType.text,
       int? maxLength,
       Function(String)? onChanged}) {
@@ -160,7 +168,7 @@ class _GuestEditPageState extends State<GuestEditPage> {
         maxLength: maxLength,
         // onChanged: ,
         validator: FormBuilderValidators.compose([
-          FormBuilderValidators.required(),
+          if ( name != 'email' && name != 'rigNumber')  FormBuilderValidators.required(),
           if (name == 'email') FormBuilderValidators.email(),
           if (name == 'phone') FormBuilderValidators.numeric(),
         ]),
@@ -176,9 +184,11 @@ class _GuestEditPageState extends State<GuestEditPage> {
         border: OutlineInputBorder(),
       ),
       items: _rateTypeOptions
-          .map((rateType) => DropdownMenuItem(value: rateType, child: Text(rateType)))
+          .map((rateType) =>
+              DropdownMenuItem(value: rateType, child: Text(rateType)))
           .toList(),
-      validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+      validator:
+          FormBuilderValidators.compose([FormBuilderValidators.required()]),
     );
   }
 
@@ -214,11 +224,14 @@ class _GuestEditPageState extends State<GuestEditPage> {
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: ElevatedButton(
         onPressed: () {
-          context.read<GuestManageBloc>().add(GuestManageDeleteEvent(id: widget.guestId!));
+          context
+              .read<GuestManageBloc>()
+              .add(GuestManageDeleteEvent(id: widget.guestId!));
         },
         child: Text('Delete Guest'),
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white, backgroundColor: Colors.red,
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.red,
         ),
       ),
     );
@@ -226,7 +239,6 @@ class _GuestEditPageState extends State<GuestEditPage> {
 
   void _saveGuest() {
     if (formKey.currentState?.saveAndValidate() ?? false) {
-
       final guest = Guest(
         id: widget.guestId,
         firstName: firstNameController.text,
@@ -236,7 +248,8 @@ class _GuestEditPageState extends State<GuestEditPage> {
         isInHouse: formKey.currentState!.fields['isInHouse']!.value,
         dateCreate: formKey.currentState!.fields['dateCreate']!.value,
         dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
-        rateType: RateType.values.byName(formKey.currentState!.fields['rateType']!.value),
+        rateType: RateType.values
+            .byName(formKey.currentState!.fields['rateType']!.value),
         staffId: 1,
         companyId: 1,
         rigNumber: int.parse(rigNumberController.text),
@@ -249,7 +262,9 @@ class _GuestEditPageState extends State<GuestEditPage> {
 
   void _onPhoneChanged(String value) {
     if (formKey.currentState!.fields['phone']!.valueIsValid) {
-      context.read<GuestManageBloc>().add(GuestManageRetrieveByPhoneEvent(phone: value.trim()));
+      context
+          .read<GuestManageBloc>()
+          .add(GuestManageRetrieveByPhoneEvent(phone: value.trim()));
     }
   }
 
@@ -259,7 +274,9 @@ class _GuestEditPageState extends State<GuestEditPage> {
     } else if (state is GuestManageStateSaveSuccess) {
       context.read<GuestListBloc>().add(FetchGuestsEvent());
       if (isEditing) {
-        context.read<GuestDetailBloc>().add(GuestDetailRetrieveEvent(id: widget.guestId!));
+        context
+            .read<GuestDetailBloc>()
+            .add(GuestDetailRetrieveEvent(id: widget.guestId!));
       }
       context.pop();
     } else if (state is GuestManageStateDeleteSuccess) {
@@ -278,13 +295,22 @@ class _GuestEditPageState extends State<GuestEditPage> {
     idController.text = guest.id.toString();
     firstNameController.text = guest.firstName;
     lastNameController.text = guest.lastName;
-    emailController.text = guest.email;
+    if (guest.email != null) {
+      emailController.text = guest.email!;
+    } else {
+      emailController.text = "";
+    }
     phoneController.text = guest.phone;
     rateTypeController.text = guest.rateType.toString();
     isInHouse = guest.isInHouse;
     dateCreate = guest.dateCreate;
     dateUpdate = guest.dateUpdate!;
-    rigNumberController.text = guest.rigNumber.toString();
+    if (guest.rigNumber != null) {
+      rigNumberController.text = "";
+    } else {
+      rigNumberController.text = guest.rigNumber.toString();
+    }
+
     formKey.currentState?.patchValue({'rateType': guest.rateType.name});
   }
 }

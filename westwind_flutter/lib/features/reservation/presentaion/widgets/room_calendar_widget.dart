@@ -7,7 +7,7 @@ import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Cale
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_edit_page.dart';
 
 class RoomCalendarWidget extends StatefulWidget {
-  const RoomCalendarWidget({Key? key}) : super(key: key);
+  const RoomCalendarWidget({super.key});
 
   @override
   State<RoomCalendarWidget> createState() => _RoomCalendarWidgetState();

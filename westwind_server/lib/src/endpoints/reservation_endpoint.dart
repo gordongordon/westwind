@@ -156,7 +156,7 @@ class ReservationEndpoint extends Endpoint {
   }
 */
 
-
+/*
   Future<List<Reservation>> getAllReservationsByDay(
       Session session, DateTime datetime) async {
     return await Reservation.db.find(session,
@@ -182,6 +182,7 @@ class ReservationEndpoint extends Endpoint {
     );
   }
 
+*/
   Future<bool> checkIn(Session session, {required int reservationId}) async {
     // get the reservation to be checked in
     final reservation = await Reservation.db.findById(session, reservationId);

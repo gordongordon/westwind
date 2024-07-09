@@ -26,8 +26,6 @@ reservation:
   - updateReservation:
   - findReservationById:
   - list:
-  - getAllReservationsByDay:
-  - getTodayReservations:
   - checkIn:
   - delete:
 roomGuest:
