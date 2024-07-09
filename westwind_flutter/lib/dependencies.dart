@@ -65,6 +65,7 @@ import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_create_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_delete_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_usecase.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_guest_transactions/room_guest_transactions_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
 
 final serverLocator = GetIt.instance;
@@ -102,6 +103,35 @@ Future<void> initDependencies() async {
   _initDashboard();
 
   _initRoomTransaction();
+
+  _initRoomGuestTransactions();
+}
+
+void _initRoomGuestTransactions() {
+
+/*
+  // Repositories
+  serverLocator.registerLazySingleton<RoomTransactionRepository>(
+    () => RoomTransactionRepositoryImp(
+      serverLocator<RoomTransactionDatasource>(),
+    ),
+  );
+
+  serverLocator.registerLazySingleton<CreateRoomTransactionUseCase>(
+    () => CreateRoomTransactionUseCase(
+      serverLocator<RoomTransactionRepository>(),
+    ),
+  );
+*/
+  // bloc
+  serverLocator.registerFactory<RoomGuestTransactionsBloc>(
+    () => RoomGuestTransactionsBloc(
+      roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
+      createRoomTransactionUseCase: serverLocator<CreateRoomTransactionUseCase>(),
+    ),
+  );
+
+
 }
 
 void _initRoomTransaction() {
@@ -144,14 +174,10 @@ void _initRoomTransaction() {
     ),
   );
 
-  serverLocator.registerFactory<RoomCalendarBloc>(
-    
-    () => RoomCalendarBloc(
-      reservationRepository: serverLocator<ReservationRepository>(), 
-      roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
-      
-    )
-  );
+  serverLocator.registerFactory<RoomCalendarBloc>(() => RoomCalendarBloc(
+        reservationRepository: serverLocator<ReservationRepository>(),
+        roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
+      ));
 
   // bloc
   serverLocator.registerFactory<RoomTransactionBloc>(
@@ -477,8 +503,7 @@ void _initRoomGuest() {
     ),
   );
 
-
-    serverLocator.registerLazySingleton<GoHomeRoomGuestUseCase>(
+  serverLocator.registerLazySingleton<GoHomeRoomGuestUseCase>(
     () => GoHomeRoomGuestUseCase(
       serverLocator<RoomGuestRepository>(),
       serverLocator<RateTableRepository>(),
@@ -494,8 +519,6 @@ void _initRoomGuest() {
       serverLocator<RoomGuestPolicyService>(),
     ),
   );
-
-
 
   serverLocator.registerLazySingleton<RoomGuestPolicy>(
     () => RooGuestPolicyImpl(
@@ -523,7 +546,8 @@ void _initRoomGuest() {
         calculateRateRoomGuest: serverLocator<CalculateRateRoomGuestUseCase>(),
         chargeRoomGuest: serverLocator<ChargeRoomGuestUseCase>(),
         extendStayDayRoomGuest: serverLocator<ExtendStayDayRoomGuestUseCase>(),
-        chargeAndExtendStayDayRoomGuest:serverLocator<ChargeAndExtendStayDayUseCase>(),
+        chargeAndExtendStayDayRoomGuest:
+            serverLocator<ChargeAndExtendStayDayUseCase>(),
         saveRoomGuest: serverLocator<SaveRoomGuestUseCase>(),
       ));
 }

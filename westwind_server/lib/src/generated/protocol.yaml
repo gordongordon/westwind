@@ -59,6 +59,7 @@ roomTransaction:
   - hasBeenRoomChargedToday:
   - list:
   - listWithItemTypeRoom:
+  - getTransactionsForRoomGuest:
   - saveRoomTransaciton:
   - retrieve:
   - delete:

@@ -45,4 +45,13 @@ class RoomTransactionRepositoryImp implements RoomTransactionRepository {
       return left(Failure(e.message));
     }
   }
+  
+  @override
+  Future<Either<Failure, List<RoomTransaction>>> getTransactionsForRoomGuest(int roomGuesetId) async {
+    try {
+      return right(await _datasource.getTransactionsForRoomGuest(roomGuesetId));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 }

@@ -7,6 +7,7 @@ import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_guest_transaction_manage_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_create_page.dart';
 
 class RoomGuestListWidget extends StatefulWidget {
@@ -82,12 +83,17 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
         stateManager = event.stateManager;
       },
       onSelected: _handleRowSelected,
-      onRowDoubleTap: _handleRowDoubleTap,
+      //! Testing 
+   //   onRowDoubleTap: _handleRowDoubleTap,
+      onRowDoubleTap: _handleRowDoubleTapRoomGuestTransactioin,
+
       configuration: PlutoGridConfiguration(
         columnFilter: _buildColumnFilterConfig(),
       ),
     );
   }
+
+
 
   PlutoRow _createRow(RoomGuest roomGuest) {
     // Compute Balance
@@ -121,6 +127,16 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
       },
     );
   }
+
+  void _handleRowDoubleTapRoomGuestTransactioin(PlutoGridOnRowDoubleTapEvent event) {
+    final field = event.row.cells['id'];
+    if (field == null) {
+      showSnackbar(context, 'Cell id cannot be found!');
+    } else {
+      context.push(RoomGuestTransactionsManagePage.route(field.value));
+    }
+  }
+
 
   void _handleRowSelected(PlutoGridOnSelectedEvent event) {
     context.push(RoomTransactionCreatePage.route(1));

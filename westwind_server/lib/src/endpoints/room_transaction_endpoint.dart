@@ -39,6 +39,18 @@ class RoomTransactionEndpoint extends Endpoint {
   }
 
 
+
+
+  Future<List<RoomTransaction>> getTransactionsForRoomGuest(Session session, int roomGuestId) async {
+    return await RoomTransaction.db.find(session,
+        where: (i) => i.roomGuestId.equals(roomGuestId),
+        include: RoomTransaction.include(
+          guest: Guest.include(),
+          room: Room.include(),
+        ));
+  }
+
+
  Future<RoomTransaction> saveRoomTransaciton(Session session, RoomTransaction rt) async {
     if ( rt.id != null) {
       rt.updateDate = DateTime.now().toLocal();

@@ -499,6 +499,14 @@ class EndpointRoomTransaction extends _i1.EndpointRef {
         {},
       );
 
+  _i2.Future<List<_i9.RoomTransaction>> getTransactionsForRoomGuest(
+          int roomGuestId) =>
+      caller.callServerEndpoint<List<_i9.RoomTransaction>>(
+        'roomTransaction',
+        'getTransactionsForRoomGuest',
+        {'roomGuestId': roomGuestId},
+      );
+
   _i2.Future<_i9.RoomTransaction> saveRoomTransaciton(_i9.RoomTransaction rt) =>
       caller.callServerEndpoint<_i9.RoomTransaction>(
         'roomTransaction',

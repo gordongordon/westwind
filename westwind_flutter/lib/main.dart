@@ -13,12 +13,11 @@ import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservati
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_guest_transactions/room_guest_transactions_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
 
-
 void main() async {
-
- // Bloc.observer = AppBlocObserver();
+  // Bloc.observer = AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
   runApp(MultiBlocProvider(
@@ -37,7 +36,8 @@ void main() async {
       BlocProvider(create: (_) => serverLocator<RoomGuestManageBloc>()),
       BlocProvider(create: (_) => serverLocator<DashboardBloc>()),
       BlocProvider(create: (_) => serverLocator<RoomTransactionBloc>()),
-       BlocProvider(create: (_) => serverLocator<RoomCalendarBloc>()),
+      BlocProvider(create: (_) => serverLocator<RoomCalendarBloc>()),
+      BlocProvider(create: (_) => serverLocator<RoomGuestTransactionsBloc>()),
     ],
     child: const MyApp(),
   ));

@@ -6,6 +6,7 @@ abstract class RoomTransactionDatasource {
   Future<RoomTransaction> retrieve(int id);
   Future<bool> delete(int id);
   Future<RoomTransaction> save(RoomTransaction roomTransaction);
+  Future<List<RoomTransaction>> getTransactionsForRoomGuest(int roomGuestId);
 }
 
 class RoomTransactionDatasourceImpl implements RoomTransactionDatasource {
@@ -62,6 +63,15 @@ class RoomTransactionDatasourceImpl implements RoomTransactionDatasource {
       }
       return result;
         
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+  
+  @override
+  Future<List<RoomTransaction>> getTransactionsForRoomGuest(int roomGuestId) async {
+    try { 
+      return await _client.roomTransaction.getTransactionsForRoomGuest(roomGuestId);
     } catch (e) {
       throw ServerException(e.toString());
     }

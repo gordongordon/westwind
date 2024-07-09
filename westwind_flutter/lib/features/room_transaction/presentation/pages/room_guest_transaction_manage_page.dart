@@ -6,17 +6,23 @@ import 'package:westwind_flutter/features/room_transaction/presentation/widgets/
 import 'package:westwind_flutter/features/room_transaction/presentation/widgets/room_transaction_list_widget.dart';
 
 
-class RoomTransactionListPage extends StatelessWidget {
-  static String route() => "/roomtransactions";
+class RoomGuestTransactionsManagePage extends StatelessWidget {
 
-  const RoomTransactionListPage({super.key});
+  final int? roomGuestId;
+
+  static String route([int? roomGuestId]) =>
+      "/roomguesttransactionsmanage/edit/${roomGuestId ?? ':id'}";
+
+
+
+  const RoomGuestTransactionsManagePage({super.key, this.roomGuestId});
 
   @override
   Widget build(BuildContext context) {
    //  final auth = serverLocator<Client>().modules.auth;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Room Transaction"),
+        title:  Text("Room Transaction ${roomGuestId ?? 0}"),
         actions: const [
             AppUserDropdown(),
         ],
@@ -24,11 +30,9 @@ class RoomTransactionListPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(onPressed: () {
            context.push(RoomTransactionEditPage.routeNew());   
       },child: const Icon( Icons.add),),
-      body: 
-      //! handle input roomGuestId 
-     // const RoomGuestTransactionsWidget(roomGuestId: 1),
+      body: RoomGuestTransactionsWidget(roomGuestId: roomGuestId ?? 0 ),
       
-       const RoomTransactionListWidget(),
+     //const RoomTransactionListWidget(),
     );
     
   }

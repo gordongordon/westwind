@@ -1,0 +1,34 @@
+// file: lib/features/room_transaction/presentation/pages/room_transaction_management_page.dart
+
+import 'package:flutter/material.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/widgets/room_transaction_list_widget.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/widgets/room_transaction_form_widget.dart';
+
+class RoomTransactionManagementPage extends StatelessWidget {
+  static String route() => "/room-transactions";
+
+  const RoomTransactionManagementPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Room Transaction Management"),
+      ),
+      body: Row(
+        children: [
+          // Left side: Transaction List
+           Expanded(
+            flex: 2,
+            child: RoomTransactionListWidget(),
+          ),
+          // Right side: Transaction Form
+          Expanded(
+            flex: 1,
+            child: RoomTransactionFormWidget(), 
+          ),
+        ],
+      ),
+    );
+  }
+}
