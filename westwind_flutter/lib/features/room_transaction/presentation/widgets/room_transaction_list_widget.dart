@@ -5,7 +5,7 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_list_bloc.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_edit_page.dart';
 
 class RoomTransactionListWidget extends StatefulWidget {
@@ -29,8 +29,8 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
   void initState() {
     super.initState();
     context
-        .read<RoomTransactionListBloc>()
-        .add(FetchRoomTransactionsListEvent());
+        .read<RoomTransactionBloc>()
+        .add(FetchRoomTransactionsEvent());
     _initializeColumns();
   }
 
@@ -143,7 +143,7 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RoomTransactionListBloc, RoomTransactionListState>(
+    return BlocBuilder<RoomTransactionBloc, RoomTransactionState>(
       builder: (context, state) {
         debugPrint("building RoomTransaction List");
         if (state is RoomTransactionListStateInitial) {
@@ -152,7 +152,7 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
           return const Loader();
         } else if (state is RoomTransactionListStateLoaded) {
           return buildDataTable(context, state.roomTransactions);
-        } else if (state is RoomTransactionListStateFailure) {
+        } else if (state is RoomTransactionStateFailure) {
           return Center(child: Text(state.message));
         } else {
           return const Placeholder();

@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
-import 'package:westwind_flutter/core/utils/show_snackbar.dart';
-import 'package:westwind_flutter/core/widgets/loader.dart';
-import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
 
-class RoomTransactionCreatePage extends StatefulWidget {
-  final int? roomTransactionId;
-  static String route([int? roomTransactionId]) =>
-      "/roomtransactions/create/${roomTransactionId ?? ':id'}";
-  static String routeNew() => "/roomtransactions/new";
+class RoomTransactionFormWidget extends StatefulWidget {
+  final RoomTransaction? roomTransaction;
+  final Function(RoomTransaction) onSave;
 
-  const RoomTransactionCreatePage({super.key, this.roomTransactionId});
+  const RoomTransactionFormWidget({
+    super.key,
+    this.roomTransaction,
+    required this.onSave,
+  });
 
   @override
-  State<RoomTransactionCreatePage> createState() => _RoomTransactionEditPageState();
+  State<RoomTransactionFormWidget> createState() => _RoomTransactionFormWidgetState();
 }
 
-class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
+class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
   final formKey = GlobalKey<FormBuilderState>();
   final TextEditingController idController = TextEditingController(text: "0");
   final TextEditingController roomIdController = TextEditingController();
@@ -42,42 +38,16 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
   final List<String> _transactionTypeOptions = TransactionType.values.map((e) => e.name).toList();
   final List<String> _itemTypeOptions = ItemType.values.map((e) => e.name).toList();
 
-  bool get isEditing => widget.roomTransactionId != null && widget.roomTransactionId! > 0;
-
   @override
   void initState() {
     super.initState();
-    if (isEditing) {
-      context.read<RoomTransactionBloc>().add(RetrieveRoomTransactionEvent(id: widget.roomTransactionId!));
+    if (widget.roomTransaction != null) {
+      _populateFields(widget.roomTransaction!);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(isEditing ? "Edit Room Transaction" : "New Room Transaction"),
-        actions: [
-          IconButton(
-            onPressed: _saveRoomTransaction,
-            icon: Icon(Icons.save),
-            tooltip: 'Save Room Transaction',
-          ),
-        ],
-      ),
-      body: BlocConsumer<RoomTransactionBloc, RoomTransactionState>(
-        listener: _blocListener,
-        builder: (context, state) {
-          if (state is RoomTransactionListStateLoading) {
-            return const Loader();
-          }
-          return _buildForm();
-        },
-      ),
-    );
-  }
-
-  Widget _buildForm() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -89,7 +59,11 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
               _buildTransactionDetailsSection(),
               _buildFinancialDetailsSection(),
               _buildAdditionalInfoSection(),
-              if (isEditing) _buildActionButtons(),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _saveRoomTransaction,
+                child: const Text('Save Room Transaction'),
+              ),
             ],
           ),
         ),
@@ -139,17 +113,6 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
         _buildTextField('roomGuestId', 'Room Guest ID', roomGuestIdController),
         _buildDropdown('itemType', 'Item Type', _itemTypeOptions, initialValue: itemTypeController.text),
         _buildTextField('description', 'Description', descriptionController, maxLines: 3),
-      ],
-    );
-  }
-
-  Widget _buildActionButtons() {
-    return Column(
-      children: [
-        const SizedBox(height: 24),
-        _buildButton('Delete Transaction', () => context.read<RoomTransactionBloc>().add(DeleteRoomTransactionEvent(id: widget.roomTransactionId!))),
-        const SizedBox(height: 16),
-        _buildButton('Charge & Extend Stay', () => context.read<RoomGuestManageBloc>().add(ChargeAndExtendStayDay(id: widget.roomTransactionId!))),
       ],
     );
   }
@@ -204,23 +167,13 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
     );
   }
 
-  Widget _buildButton(String text, VoidCallback onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: Text(text),
-      style: ElevatedButton.styleFrom(
-        minimumSize: Size(double.infinity, 50),
-      ),
-    );
-  }
-
   void _saveRoomTransaction() {
     if (formKey.currentState!.saveAndValidate()) {
       final transactionType = TransactionType.values.byName(formKey.currentState!.fields['transactionType']!.value);
       final itemType = ItemType.values.byName(formKey.currentState!.fields['itemType']!.value);
 
       final roomTransaction = RoomTransaction(
-        id: widget.roomTransactionId,
+        id: widget.roomTransaction?.id,
         guestId: int.parse(guestIdController.text),
         roomId: int.parse(roomIdController.text),
         roomGuestId: int.parse(roomGuestIdController.text),
@@ -236,19 +189,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
         itemType: itemType,
       );
 
-      context.read<RoomTransactionBloc>().add(CreateRoomTransactionEvent(roomTransaction: roomTransaction));
-    }
-  }
-
-  void _blocListener(BuildContext context, RoomTransactionState state) {
-    if (state is RoomTransactionStateFailure) {
-      showSnackbar(context, state.message);
-    } else if (state is RoomTransactionStateCreatedSuccess ||
-               state is RoomTransactionStateDeletedSuccess) {
-      context.read<RoomTransactionBloc>().add(FetchRoomTransactionsEvent());
-      context.pop();
-    } else if (state is RoomTransactionStateRetrievedSuccess) {
-      _populateFields(state.roomTransaction);
+      widget.onSave(roomTransaction);
     }
   }
 
