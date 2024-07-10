@@ -11,8 +11,8 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class MyException extends _i1.SerializableEntity
-    implements _i1.SerializableException {
+abstract class MyException
+    implements _i1.SerializableException, _i1.SerializableModel {
   MyException._({
     required this.message,
     required this.errorType,
@@ -23,15 +23,11 @@ abstract class MyException extends _i1.SerializableEntity
     required _i2.ErrorType errorType,
   }) = _MyExceptionImpl;
 
-  factory MyException.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory MyException.fromJson(Map<String, dynamic> jsonSerialization) {
     return MyException(
-      message: serializationManager
-          .deserialize<String>(jsonSerialization['message']),
-      errorType: serializationManager
-          .deserialize<_i2.ErrorType>(jsonSerialization['errorType']),
+      message: jsonSerialization['message'] as String,
+      errorType:
+          _i2.ErrorType.fromJson((jsonSerialization['errorType'] as String)),
     );
   }
 
@@ -49,6 +45,11 @@ abstract class MyException extends _i1.SerializableEntity
       'message': message,
       'errorType': errorType.toJson(),
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

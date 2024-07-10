@@ -35,8 +35,8 @@ class AuthDataSourceImpl implements AuthDataSource {
   UserModel? currentUser() {
     final user = sessionManager.signedInUser;
     if (user != null && user.id != null && user.email != null) {
-      return UserModel(
-          id: user.id!, email: user.email!, username: user.userName);
+      return UserModel(  //! add !in userName
+          id: user.id!, email: user.email!, username: user.userName!);
     }
 
     return null;
@@ -74,7 +74,7 @@ class AuthDataSourceImpl implements AuthDataSource {
       return UserModel(
         id: result.userInfo!.id!,
         email: result.userInfo!.email!,
-        username: result.userInfo!.userName,
+        username: result.userInfo!.userName!,
       );
     } catch (e) {
       throw ServerException(e.toString());
@@ -117,7 +117,7 @@ class AuthDataSourceImpl implements AuthDataSource {
             throw ServerException('Id or Email was null ');
           }
 
-          return UserModel(id: result.id!, email: result.email!, username: result.userName);
+          return UserModel(id: result.id!, email: result.email!, username: result.userName!); 
     } catch (e) {
       throw ServerException(e.toString());
     }

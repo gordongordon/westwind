@@ -12,7 +12,8 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import 'protocol.dart' as _i2;
 import 'package:serverpod_serialization/serverpod_serialization.dart';
 
-abstract class GuestTransaction extends _i1.TableRow {
+abstract class GuestTransaction extends _i1.TableRow
+    implements _i1.ProtocolSerialization {
   GuestTransaction._({
     int? id,
     required this.roomId,
@@ -41,31 +42,31 @@ abstract class GuestTransaction extends _i1.TableRow {
     _i2.RoomGuest? roomGuest,
   }) = _GuestTransactionImpl;
 
-  factory GuestTransaction.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory GuestTransaction.fromJson(Map<String, dynamic> jsonSerialization) {
     return GuestTransaction(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      roomId:
-          serializationManager.deserialize<int>(jsonSerialization['roomId']),
-      room: serializationManager
-          .deserialize<_i2.Room?>(jsonSerialization['room']),
-      stateDate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['stateDate']),
-      rateType: serializationManager
-          .deserialize<_i2.RateType>(jsonSerialization['rateType']),
-      rateReason: serializationManager
-          .deserialize<_i2.RateReason>(jsonSerialization['rateReason']),
-      rate: serializationManager.deserialize<double>(jsonSerialization['rate']),
-      roomStatus: serializationManager
-          .deserialize<_i2.RoomStatus>(jsonSerialization['roomStatus']),
-      updateDate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['updateDate']),
-      roomGuestId: serializationManager
-          .deserialize<int>(jsonSerialization['roomGuestId']),
-      roomGuest: serializationManager
-          .deserialize<_i2.RoomGuest?>(jsonSerialization['roomGuest']),
+      id: jsonSerialization['id'] as int?,
+      roomId: jsonSerialization['roomId'] as int,
+      room: jsonSerialization['room'] == null
+          ? null
+          : _i2.Room.fromJson(
+              (jsonSerialization['room'] as Map<String, dynamic>)),
+      stateDate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['stateDate']),
+      rateType:
+          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+      rateReason:
+          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+      rate: (jsonSerialization['rate'] as num).toDouble(),
+      roomStatus:
+          _i2.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
+      updateDate: jsonSerialization['updateDate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updateDate']),
+      roomGuestId: jsonSerialization['roomGuestId'] as int,
+      roomGuest: jsonSerialization['roomGuest'] == null
+          ? null
+          : _i2.RoomGuest.fromJson(
+              (jsonSerialization['roomGuest'] as Map<String, dynamic>)),
     );
   }
 
@@ -127,27 +128,11 @@ abstract class GuestTransaction extends _i1.TableRow {
   }
 
   @override
-  @Deprecated('Will be removed in 2.0.0')
-  Map<String, dynamic> toJsonForDatabase() {
-    return {
-      'id': id,
-      'roomId': roomId,
-      'stateDate': stateDate,
-      'rateType': rateType,
-      'rateReason': rateReason,
-      'rate': rate,
-      'roomStatus': roomStatus,
-      'updateDate': updateDate,
-      'roomGuestId': roomGuestId,
-    };
-  }
-
-  @override
-  Map<String, dynamic> allToJson() {
+  Map<String, dynamic> toJsonForProtocol() {
     return {
       if (id != null) 'id': id,
       'roomId': roomId,
-      if (room != null) 'room': room?.allToJson(),
+      if (room != null) 'room': room?.toJsonForProtocol(),
       'stateDate': stateDate.toJson(),
       'rateType': rateType.toJson(),
       'rateReason': rateReason.toJson(),
@@ -155,172 +140,8 @@ abstract class GuestTransaction extends _i1.TableRow {
       'roomStatus': roomStatus.toJson(),
       if (updateDate != null) 'updateDate': updateDate?.toJson(),
       'roomGuestId': roomGuestId,
-      if (roomGuest != null) 'roomGuest': roomGuest?.allToJson(),
+      if (roomGuest != null) 'roomGuest': roomGuest?.toJsonForProtocol(),
     };
-  }
-
-  @override
-  @Deprecated('Will be removed in 2.0.0')
-  void setColumn(
-    String columnName,
-    value,
-  ) {
-    switch (columnName) {
-      case 'id':
-        id = value;
-        return;
-      case 'roomId':
-        roomId = value;
-        return;
-      case 'stateDate':
-        stateDate = value;
-        return;
-      case 'rateType':
-        rateType = value;
-        return;
-      case 'rateReason':
-        rateReason = value;
-        return;
-      case 'rate':
-        rate = value;
-        return;
-      case 'roomStatus':
-        roomStatus = value;
-        return;
-      case 'updateDate':
-        updateDate = value;
-        return;
-      case 'roomGuestId':
-        roomGuestId = value;
-        return;
-      default:
-        throw UnimplementedError();
-    }
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.find instead.')
-  static Future<List<GuestTransaction>> find(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<GuestTransactionTable>? where,
-    int? limit,
-    int? offset,
-    _i1.Column? orderBy,
-    List<_i1.Order>? orderByList,
-    bool orderDescending = false,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-    GuestTransactionInclude? include,
-  }) async {
-    return session.db.find<GuestTransaction>(
-      where: where != null ? where(GuestTransaction.t) : null,
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy,
-      orderByList: orderByList,
-      orderDescending: orderDescending,
-      useCache: useCache,
-      transaction: transaction,
-      include: include,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.findRow instead.')
-  static Future<GuestTransaction?> findSingleRow(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<GuestTransactionTable>? where,
-    int? offset,
-    _i1.Column? orderBy,
-    bool orderDescending = false,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-    GuestTransactionInclude? include,
-  }) async {
-    return session.db.findSingleRow<GuestTransaction>(
-      where: where != null ? where(GuestTransaction.t) : null,
-      offset: offset,
-      orderBy: orderBy,
-      orderDescending: orderDescending,
-      useCache: useCache,
-      transaction: transaction,
-      include: include,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.findById instead.')
-  static Future<GuestTransaction?> findById(
-    _i1.Session session,
-    int id, {
-    GuestTransactionInclude? include,
-  }) async {
-    return session.db.findById<GuestTransaction>(
-      id,
-      include: include,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.deleteWhere instead.')
-  static Future<int> delete(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<GuestTransactionTable> where,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.delete<GuestTransaction>(
-      where: where(GuestTransaction.t),
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.deleteRow instead.')
-  static Future<bool> deleteRow(
-    _i1.Session session,
-    GuestTransaction row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.deleteRow(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.update instead.')
-  static Future<bool> update(
-    _i1.Session session,
-    GuestTransaction row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.update(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated(
-      'Will be removed in 2.0.0. Use: db.insert instead. Important note: In db.insert, the object you pass in is no longer modified, instead a new copy with the added row is returned which contains the inserted id.')
-  static Future<void> insert(
-    _i1.Session session,
-    GuestTransaction row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.insert(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.count instead.')
-  static Future<int> count(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<GuestTransactionTable>? where,
-    int? limit,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.count<GuestTransaction>(
-      where: where != null ? where(GuestTransaction.t) : null,
-      limit: limit,
-      useCache: useCache,
-      transaction: transaction,
-    );
   }
 
   static GuestTransactionInclude include({
@@ -351,6 +172,11 @@ abstract class GuestTransaction extends _i1.TableRow {
       orderByList: orderByList?.call(GuestTransaction.t),
       include: include,
     );
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 
@@ -525,9 +351,6 @@ class GuestTransactionTable extends _i1.Table {
   }
 }
 
-@Deprecated('Use GuestTransactionTable.t instead.')
-GuestTransactionTable tGuestTransaction = GuestTransactionTable();
-
 class GuestTransactionInclude extends _i1.IncludeObject {
   GuestTransactionInclude._({
     _i2.RoomInclude? room,
@@ -587,7 +410,7 @@ class GuestTransactionRepository {
     _i1.Transaction? transaction,
     GuestTransactionInclude? include,
   }) async {
-    return session.dbNext.find<GuestTransaction>(
+    return session.db.find<GuestTransaction>(
       where: where?.call(GuestTransaction.t),
       orderBy: orderBy?.call(GuestTransaction.t),
       orderByList: orderByList?.call(GuestTransaction.t),
@@ -609,7 +432,7 @@ class GuestTransactionRepository {
     _i1.Transaction? transaction,
     GuestTransactionInclude? include,
   }) async {
-    return session.dbNext.findFirstRow<GuestTransaction>(
+    return session.db.findFirstRow<GuestTransaction>(
       where: where?.call(GuestTransaction.t),
       orderBy: orderBy?.call(GuestTransaction.t),
       orderByList: orderByList?.call(GuestTransaction.t),
@@ -626,7 +449,7 @@ class GuestTransactionRepository {
     _i1.Transaction? transaction,
     GuestTransactionInclude? include,
   }) async {
-    return session.dbNext.findById<GuestTransaction>(
+    return session.db.findById<GuestTransaction>(
       id,
       transaction: transaction,
       include: include,
@@ -638,7 +461,7 @@ class GuestTransactionRepository {
     List<GuestTransaction> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.insert<GuestTransaction>(
+    return session.db.insert<GuestTransaction>(
       rows,
       transaction: transaction,
     );
@@ -649,7 +472,7 @@ class GuestTransactionRepository {
     GuestTransaction row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.insertRow<GuestTransaction>(
+    return session.db.insertRow<GuestTransaction>(
       row,
       transaction: transaction,
     );
@@ -661,7 +484,7 @@ class GuestTransactionRepository {
     _i1.ColumnSelections<GuestTransactionTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.update<GuestTransaction>(
+    return session.db.update<GuestTransaction>(
       rows,
       columns: columns?.call(GuestTransaction.t),
       transaction: transaction,
@@ -674,41 +497,41 @@ class GuestTransactionRepository {
     _i1.ColumnSelections<GuestTransactionTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.updateRow<GuestTransaction>(
+    return session.db.updateRow<GuestTransaction>(
       row,
       columns: columns?.call(GuestTransaction.t),
       transaction: transaction,
     );
   }
 
-  Future<List<int>> delete(
+  Future<List<GuestTransaction>> delete(
     _i1.Session session,
     List<GuestTransaction> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.delete<GuestTransaction>(
+    return session.db.delete<GuestTransaction>(
       rows,
       transaction: transaction,
     );
   }
 
-  Future<int> deleteRow(
+  Future<GuestTransaction> deleteRow(
     _i1.Session session,
     GuestTransaction row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.deleteRow<GuestTransaction>(
+    return session.db.deleteRow<GuestTransaction>(
       row,
       transaction: transaction,
     );
   }
 
-  Future<List<int>> deleteWhere(
+  Future<List<GuestTransaction>> deleteWhere(
     _i1.Session session, {
     required _i1.WhereExpressionBuilder<GuestTransactionTable> where,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.deleteWhere<GuestTransaction>(
+    return session.db.deleteWhere<GuestTransaction>(
       where: where(GuestTransaction.t),
       transaction: transaction,
     );
@@ -720,7 +543,7 @@ class GuestTransactionRepository {
     int? limit,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.count<GuestTransaction>(
+    return session.db.count<GuestTransaction>(
       where: where?.call(GuestTransaction.t),
       limit: limit,
       transaction: transaction,
@@ -744,7 +567,7 @@ class GuestTransactionAttachRowRepository {
     }
 
     var $guestTransaction = guestTransaction.copyWith(roomId: room.id);
-    await session.dbNext.updateRow<GuestTransaction>(
+    await session.db.updateRow<GuestTransaction>(
       $guestTransaction,
       columns: [GuestTransaction.t.roomId],
     );
@@ -764,7 +587,7 @@ class GuestTransactionAttachRowRepository {
 
     var $guestTransaction =
         guestTransaction.copyWith(roomGuestId: roomGuest.id);
-    await session.dbNext.updateRow<GuestTransaction>(
+    await session.db.updateRow<GuestTransaction>(
       $guestTransaction,
       columns: [GuestTransaction.t.roomGuestId],
     );

@@ -12,7 +12,8 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import 'protocol.dart' as _i2;
 import 'package:serverpod_serialization/serverpod_serialization.dart';
 
-abstract class Payment extends _i1.TableRow {
+abstract class Payment extends _i1.TableRow
+    implements _i1.ProtocolSerialization {
   Payment._({
     int? id,
     required this.guestId,
@@ -37,28 +38,23 @@ abstract class Payment extends _i1.TableRow {
     required int userId,
   }) = _PaymentImpl;
 
-  factory Payment.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory Payment.fromJson(Map<String, dynamic> jsonSerialization) {
     return Payment(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      guestId:
-          serializationManager.deserialize<int>(jsonSerialization['guestId']),
-      guest: serializationManager
-          .deserialize<_i2.Guest?>(jsonSerialization['guest']),
-      chargeDate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['chargeDate']),
-      dateVoid: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateVoid']),
-      amount:
-          serializationManager.deserialize<double>(jsonSerialization['amount']),
-      description: serializationManager
-          .deserialize<String>(jsonSerialization['description']),
-      paymentType: serializationManager
-          .deserialize<_i2.PaymentType>(jsonSerialization['paymentType']),
-      userId:
-          serializationManager.deserialize<int>(jsonSerialization['userId']),
+      id: jsonSerialization['id'] as int?,
+      guestId: jsonSerialization['guestId'] as int,
+      guest: jsonSerialization['guest'] == null
+          ? null
+          : _i2.Guest.fromJson(
+              (jsonSerialization['guest'] as Map<String, dynamic>)),
+      chargeDate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['chargeDate']),
+      dateVoid:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateVoid']),
+      amount: (jsonSerialization['amount'] as num).toDouble(),
+      description: jsonSerialization['description'] as String,
+      paymentType: _i2.PaymentType.fromJson(
+          (jsonSerialization['paymentType'] as String)),
+      userId: jsonSerialization['userId'] as int,
     );
   }
 
@@ -112,26 +108,11 @@ abstract class Payment extends _i1.TableRow {
   }
 
   @override
-  @Deprecated('Will be removed in 2.0.0')
-  Map<String, dynamic> toJsonForDatabase() {
-    return {
-      'id': id,
-      'guestId': guestId,
-      'chargeDate': chargeDate,
-      'dateVoid': dateVoid,
-      'amount': amount,
-      'description': description,
-      'paymentType': paymentType,
-      'userId': userId,
-    };
-  }
-
-  @override
-  Map<String, dynamic> allToJson() {
+  Map<String, dynamic> toJsonForProtocol() {
     return {
       if (id != null) 'id': id,
       'guestId': guestId,
-      if (guest != null) 'guest': guest?.allToJson(),
+      if (guest != null) 'guest': guest?.toJsonForProtocol(),
       'chargeDate': chargeDate.toJson(),
       'dateVoid': dateVoid.toJson(),
       'amount': amount,
@@ -139,167 +120,6 @@ abstract class Payment extends _i1.TableRow {
       'paymentType': paymentType.toJson(),
       'userId': userId,
     };
-  }
-
-  @override
-  @Deprecated('Will be removed in 2.0.0')
-  void setColumn(
-    String columnName,
-    value,
-  ) {
-    switch (columnName) {
-      case 'id':
-        id = value;
-        return;
-      case 'guestId':
-        guestId = value;
-        return;
-      case 'chargeDate':
-        chargeDate = value;
-        return;
-      case 'dateVoid':
-        dateVoid = value;
-        return;
-      case 'amount':
-        amount = value;
-        return;
-      case 'description':
-        description = value;
-        return;
-      case 'paymentType':
-        paymentType = value;
-        return;
-      case 'userId':
-        userId = value;
-        return;
-      default:
-        throw UnimplementedError();
-    }
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.find instead.')
-  static Future<List<Payment>> find(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<PaymentTable>? where,
-    int? limit,
-    int? offset,
-    _i1.Column? orderBy,
-    List<_i1.Order>? orderByList,
-    bool orderDescending = false,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-    PaymentInclude? include,
-  }) async {
-    return session.db.find<Payment>(
-      where: where != null ? where(Payment.t) : null,
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy,
-      orderByList: orderByList,
-      orderDescending: orderDescending,
-      useCache: useCache,
-      transaction: transaction,
-      include: include,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.findRow instead.')
-  static Future<Payment?> findSingleRow(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<PaymentTable>? where,
-    int? offset,
-    _i1.Column? orderBy,
-    bool orderDescending = false,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-    PaymentInclude? include,
-  }) async {
-    return session.db.findSingleRow<Payment>(
-      where: where != null ? where(Payment.t) : null,
-      offset: offset,
-      orderBy: orderBy,
-      orderDescending: orderDescending,
-      useCache: useCache,
-      transaction: transaction,
-      include: include,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.findById instead.')
-  static Future<Payment?> findById(
-    _i1.Session session,
-    int id, {
-    PaymentInclude? include,
-  }) async {
-    return session.db.findById<Payment>(
-      id,
-      include: include,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.deleteWhere instead.')
-  static Future<int> delete(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<PaymentTable> where,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.delete<Payment>(
-      where: where(Payment.t),
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.deleteRow instead.')
-  static Future<bool> deleteRow(
-    _i1.Session session,
-    Payment row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.deleteRow(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.update instead.')
-  static Future<bool> update(
-    _i1.Session session,
-    Payment row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.update(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated(
-      'Will be removed in 2.0.0. Use: db.insert instead. Important note: In db.insert, the object you pass in is no longer modified, instead a new copy with the added row is returned which contains the inserted id.')
-  static Future<void> insert(
-    _i1.Session session,
-    Payment row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.insert(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.count instead.')
-  static Future<int> count(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<PaymentTable>? where,
-    int? limit,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.count<Payment>(
-      where: where != null ? where(Payment.t) : null,
-      limit: limit,
-      useCache: useCache,
-      transaction: transaction,
-    );
   }
 
   static PaymentInclude include({_i2.GuestInclude? guest}) {
@@ -324,6 +144,11 @@ abstract class Payment extends _i1.TableRow {
       orderByList: orderByList?.call(Payment.t),
       include: include,
     );
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 
@@ -461,9 +286,6 @@ class PaymentTable extends _i1.Table {
   }
 }
 
-@Deprecated('Use PaymentTable.t instead.')
-PaymentTable tPayment = PaymentTable();
-
 class PaymentInclude extends _i1.IncludeObject {
   PaymentInclude._({_i2.GuestInclude? guest}) {
     _guest = guest;
@@ -514,7 +336,7 @@ class PaymentRepository {
     _i1.Transaction? transaction,
     PaymentInclude? include,
   }) async {
-    return session.dbNext.find<Payment>(
+    return session.db.find<Payment>(
       where: where?.call(Payment.t),
       orderBy: orderBy?.call(Payment.t),
       orderByList: orderByList?.call(Payment.t),
@@ -536,7 +358,7 @@ class PaymentRepository {
     _i1.Transaction? transaction,
     PaymentInclude? include,
   }) async {
-    return session.dbNext.findFirstRow<Payment>(
+    return session.db.findFirstRow<Payment>(
       where: where?.call(Payment.t),
       orderBy: orderBy?.call(Payment.t),
       orderByList: orderByList?.call(Payment.t),
@@ -553,7 +375,7 @@ class PaymentRepository {
     _i1.Transaction? transaction,
     PaymentInclude? include,
   }) async {
-    return session.dbNext.findById<Payment>(
+    return session.db.findById<Payment>(
       id,
       transaction: transaction,
       include: include,
@@ -565,7 +387,7 @@ class PaymentRepository {
     List<Payment> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.insert<Payment>(
+    return session.db.insert<Payment>(
       rows,
       transaction: transaction,
     );
@@ -576,7 +398,7 @@ class PaymentRepository {
     Payment row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.insertRow<Payment>(
+    return session.db.insertRow<Payment>(
       row,
       transaction: transaction,
     );
@@ -588,7 +410,7 @@ class PaymentRepository {
     _i1.ColumnSelections<PaymentTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.update<Payment>(
+    return session.db.update<Payment>(
       rows,
       columns: columns?.call(Payment.t),
       transaction: transaction,
@@ -601,41 +423,41 @@ class PaymentRepository {
     _i1.ColumnSelections<PaymentTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.updateRow<Payment>(
+    return session.db.updateRow<Payment>(
       row,
       columns: columns?.call(Payment.t),
       transaction: transaction,
     );
   }
 
-  Future<List<int>> delete(
+  Future<List<Payment>> delete(
     _i1.Session session,
     List<Payment> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.delete<Payment>(
+    return session.db.delete<Payment>(
       rows,
       transaction: transaction,
     );
   }
 
-  Future<int> deleteRow(
+  Future<Payment> deleteRow(
     _i1.Session session,
     Payment row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.deleteRow<Payment>(
+    return session.db.deleteRow<Payment>(
       row,
       transaction: transaction,
     );
   }
 
-  Future<List<int>> deleteWhere(
+  Future<List<Payment>> deleteWhere(
     _i1.Session session, {
     required _i1.WhereExpressionBuilder<PaymentTable> where,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.deleteWhere<Payment>(
+    return session.db.deleteWhere<Payment>(
       where: where(Payment.t),
       transaction: transaction,
     );
@@ -647,7 +469,7 @@ class PaymentRepository {
     int? limit,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.count<Payment>(
+    return session.db.count<Payment>(
       where: where?.call(Payment.t),
       limit: limit,
       transaction: transaction,
@@ -671,7 +493,7 @@ class PaymentAttachRowRepository {
     }
 
     var $payment = payment.copyWith(guestId: guest.id);
-    await session.dbNext.updateRow<Payment>(
+    await session.db.updateRow<Payment>(
       $payment,
       columns: [Payment.t.guestId],
     );

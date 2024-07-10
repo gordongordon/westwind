@@ -11,7 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class RoomGuest extends _i1.SerializableEntity {
+abstract class RoomGuest implements _i1.SerializableModel {
   RoomGuest._({
     this.id,
     required this.roomId,
@@ -52,44 +52,45 @@ abstract class RoomGuest extends _i1.SerializableEntity {
     required bool isCheckOut,
   }) = _RoomGuestImpl;
 
-  factory RoomGuest.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory RoomGuest.fromJson(Map<String, dynamic> jsonSerialization) {
     return RoomGuest(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      roomId:
-          serializationManager.deserialize<int>(jsonSerialization['roomId']),
-      room: serializationManager
-          .deserialize<_i2.Room?>(jsonSerialization['room']),
-      stayDate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['stayDate']),
-      guestId:
-          serializationManager.deserialize<int>(jsonSerialization['guestId']),
-      guest: serializationManager
-          .deserialize<_i2.Guest?>(jsonSerialization['guest']),
-      roomTransactions:
-          serializationManager.deserialize<List<_i2.RoomTransaction>?>(
-              jsonSerialization['roomTransactions']),
-      rateType: serializationManager
-          .deserialize<_i2.RateType>(jsonSerialization['rateType']),
-      rateReason: serializationManager
-          .deserialize<_i2.RateReason>(jsonSerialization['rateReason']),
-      rate: serializationManager.deserialize<double>(jsonSerialization['rate']),
-      reservationId: serializationManager
-          .deserialize<int>(jsonSerialization['reservationId']),
-      reservation: serializationManager
-          .deserialize<_i2.Reservation?>(jsonSerialization['reservation']),
-      roomStatus: serializationManager
-          .deserialize<_i2.RoomStatus>(jsonSerialization['roomStatus']),
-      checkInDate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['checkInDate']),
-      checkOutDate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['checkOutDate']),
-      updateDate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['updateDate']),
-      isCheckOut: serializationManager
-          .deserialize<bool>(jsonSerialization['isCheckOut']),
+      id: jsonSerialization['id'] as int?,
+      roomId: jsonSerialization['roomId'] as int,
+      room: jsonSerialization['room'] == null
+          ? null
+          : _i2.Room.fromJson(
+              (jsonSerialization['room'] as Map<String, dynamic>)),
+      stayDate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['stayDate']),
+      guestId: jsonSerialization['guestId'] as int,
+      guest: jsonSerialization['guest'] == null
+          ? null
+          : _i2.Guest.fromJson(
+              (jsonSerialization['guest'] as Map<String, dynamic>)),
+      roomTransactions: (jsonSerialization['roomTransactions'] as List?)
+          ?.map(
+              (e) => _i2.RoomTransaction.fromJson((e as Map<String, dynamic>)))
+          .toList(),
+      rateType:
+          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+      rateReason:
+          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+      rate: (jsonSerialization['rate'] as num).toDouble(),
+      reservationId: jsonSerialization['reservationId'] as int,
+      reservation: jsonSerialization['reservation'] == null
+          ? null
+          : _i2.Reservation.fromJson(
+              (jsonSerialization['reservation'] as Map<String, dynamic>)),
+      roomStatus:
+          _i2.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
+      checkInDate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['checkInDate']),
+      checkOutDate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['checkOutDate']),
+      updateDate: jsonSerialization['updateDate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updateDate']),
+      isCheckOut: jsonSerialization['isCheckOut'] as bool,
     );
   }
 
@@ -172,6 +173,11 @@ abstract class RoomGuest extends _i1.SerializableEntity {
       if (updateDate != null) 'updateDate': updateDate?.toJson(),
       'isCheckOut': isCheckOut,
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

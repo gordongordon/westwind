@@ -17,7 +17,7 @@ import 'package:westwind_client/src/protocol/rateReason.dart' as _i6;
 import 'package:westwind_client/src/protocol/reservation.dart' as _i7;
 import 'package:westwind_client/src/protocol/roomGuest.dart' as _i8;
 import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i9;
-import 'package:serverpod_auth_client/module.dart' as _i10;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i10;
 import 'protocol.dart' as _i11;
 
 /// {@category Endpoint}
@@ -431,8 +431,8 @@ class EndpointRoomGuest extends _i1.EndpointRef {
         {'id': id},
       );
 
-  _i2.Future<List<int>> delete({required int id}) =>
-      caller.callServerEndpoint<List<int>>(
+  _i2.Future<List<_i8.RoomGuest>> delete({required int id}) =>
+      caller.callServerEndpoint<List<_i8.RoomGuest>>(
         'roomGuest',
         'delete',
         {'id': id},
@@ -444,11 +444,11 @@ class EndpointRoomGuest extends _i1.EndpointRef {
         {'id': id},
       );
 
-  _i2.Future<int> checkOut({
+  _i2.Future<_i8.RoomGuest> checkOut({
     required _i8.RoomGuest roommate,
     required _i8.RoomGuest roomGuest,
   }) =>
-      caller.callServerEndpoint<int>(
+      caller.callServerEndpoint<_i8.RoomGuest>(
         'roomGuest',
         'checkOut',
         {
@@ -543,6 +543,12 @@ class Client extends _i1.ServerpodClient {
     _i1.AuthenticationKeyManager? authenticationKeyManager,
     Duration? streamingConnectionTimeout,
     Duration? connectionTimeout,
+    Function(
+      _i1.MethodCallContext,
+      Object,
+      StackTrace,
+    )? onFailedCall,
+    Function(_i1.MethodCallContext)? onSucceededCall,
   }) : super(
           host,
           _i11.Protocol(),
@@ -550,6 +556,8 @@ class Client extends _i1.ServerpodClient {
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
           connectionTimeout: connectionTimeout,
+          onFailedCall: onFailedCall,
+          onSucceededCall: onSucceededCall,
         ) {
     example = EndpointExample(this);
     guest = EndpointGuest(this);

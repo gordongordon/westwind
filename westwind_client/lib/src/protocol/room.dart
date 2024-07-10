@@ -11,7 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class Room extends _i1.SerializableEntity {
+abstract class Room implements _i1.SerializableModel {
   Room._({
     this.id,
     required this.roomNumber,
@@ -60,52 +60,33 @@ abstract class Room extends _i1.SerializableEntity {
     String? note,
   }) = _RoomImpl;
 
-  factory Room.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory Room.fromJson(Map<String, dynamic> jsonSerialization) {
     return Room(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      roomNumber: serializationManager
-          .deserialize<_i2.RoomNumber>(jsonSerialization['roomNumber']),
-      reservations: serializationManager.deserialize<List<_i2.Reservation>?>(
-          jsonSerialization['reservations']),
-      roomType: serializationManager
-          .deserialize<String>(jsonSerialization['roomType']),
-      roomStatus: serializationManager
-          .deserialize<_i2.RoomStatus>(jsonSerialization['roomStatus']),
-      isAvailable: serializationManager
-          .deserialize<bool>(jsonSerialization['isAvailable']),
-      isSmoke:
-          serializationManager.deserialize<bool>(jsonSerialization['isSmoke']),
-      bedType: serializationManager
-          .deserialize<_i2.BedType>(jsonSerialization['bedType']),
-      numOfBeds:
-          serializationManager.deserialize<int>(jsonSerialization['numOfBeds']),
-      isNewAC:
-          serializationManager.deserialize<bool>(jsonSerialization['isNewAC']),
-      isNewBed:
-          serializationManager.deserialize<bool>(jsonSerialization['isNewBed']),
-      numOfMicrowave: serializationManager
-          .deserialize<int>(jsonSerialization['numOfMicrowave']),
-      isNewRefergrator: serializationManager
-          .deserialize<bool>(jsonSerialization['isNewRefergrator']),
-      isBigRefergrator: serializationManager
-          .deserialize<bool>(jsonSerialization['isBigRefergrator']),
-      isBigTV:
-          serializationManager.deserialize<bool>(jsonSerialization['isBigTV']),
-      isNewTV:
-          serializationManager.deserialize<bool>(jsonSerialization['isNewTV']),
-      numOfTableLamp: serializationManager
-          .deserialize<int>(jsonSerialization['numOfTableLamp']),
-      isNewTableLamp: serializationManager
-          .deserialize<bool>(jsonSerialization['isNewTableLamp']),
-      numOfStandLamp: serializationManager
-          .deserialize<int>(jsonSerialization['numOfStandLamp']),
-      isNewStandLamp: serializationManager
-          .deserialize<bool>(jsonSerialization['isNewStandLamp']),
-      note:
-          serializationManager.deserialize<String?>(jsonSerialization['note']),
+      id: jsonSerialization['id'] as int?,
+      roomNumber:
+          _i2.RoomNumber.fromJson((jsonSerialization['roomNumber'] as String)),
+      reservations: (jsonSerialization['reservations'] as List?)
+          ?.map((e) => _i2.Reservation.fromJson((e as Map<String, dynamic>)))
+          .toList(),
+      roomType: jsonSerialization['roomType'] as String,
+      roomStatus:
+          _i2.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
+      isAvailable: jsonSerialization['isAvailable'] as bool,
+      isSmoke: jsonSerialization['isSmoke'] as bool,
+      bedType: _i2.BedType.fromJson((jsonSerialization['bedType'] as String)),
+      numOfBeds: jsonSerialization['numOfBeds'] as int,
+      isNewAC: jsonSerialization['isNewAC'] as bool,
+      isNewBed: jsonSerialization['isNewBed'] as bool,
+      numOfMicrowave: jsonSerialization['numOfMicrowave'] as int,
+      isNewRefergrator: jsonSerialization['isNewRefergrator'] as bool,
+      isBigRefergrator: jsonSerialization['isBigRefergrator'] as bool,
+      isBigTV: jsonSerialization['isBigTV'] as bool,
+      isNewTV: jsonSerialization['isNewTV'] as bool,
+      numOfTableLamp: jsonSerialization['numOfTableLamp'] as int,
+      isNewTableLamp: jsonSerialization['isNewTableLamp'] as bool,
+      numOfStandLamp: jsonSerialization['numOfStandLamp'] as int,
+      isNewStandLamp: jsonSerialization['isNewStandLamp'] as bool,
+      note: jsonSerialization['note'] as String?,
     );
   }
 
@@ -203,6 +184,11 @@ abstract class Room extends _i1.SerializableEntity {
       'isNewStandLamp': isNewStandLamp,
       if (note != null) 'note': note,
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

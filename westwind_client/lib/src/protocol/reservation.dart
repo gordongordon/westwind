@@ -11,7 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class Reservation extends _i1.SerializableEntity {
+abstract class Reservation implements _i1.SerializableModel {
   Reservation._({
     this.id,
     required this.checkInDate,
@@ -52,43 +52,38 @@ abstract class Reservation extends _i1.SerializableEntity {
     _i2.Room? room,
   }) = _ReservationImpl;
 
-  factory Reservation.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory Reservation.fromJson(Map<String, dynamic> jsonSerialization) {
     return Reservation(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      checkInDate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['checkInDate']),
-      checkOutDate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['checkOutDate']),
-      stayDay: serializationManager
-          .deserialize<DateTime>(jsonSerialization['stayDay']),
-      note:
-          serializationManager.deserialize<String?>(jsonSerialization['note']),
-      dateCreate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateCreate']),
-      dateUpdate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['dateUpdate']),
-      guestId:
-          serializationManager.deserialize<int>(jsonSerialization['guestId']),
-      guest: serializationManager
-          .deserialize<_i2.Guest?>(jsonSerialization['guest']),
-      rateType: serializationManager
-          .deserialize<_i2.RateType>(jsonSerialization['rateType']),
-      rateReason: serializationManager
-          .deserialize<_i2.RateReason>(jsonSerialization['rateReason']),
-      rate: serializationManager.deserialize<double>(jsonSerialization['rate']),
-      isCheckedIn: serializationManager
-          .deserialize<bool>(jsonSerialization['isCheckedIn']),
-      isCanceled: serializationManager
-          .deserialize<bool>(jsonSerialization['isCanceled']),
-      isNightShift: serializationManager
-          .deserialize<bool>(jsonSerialization['isNightShift']),
-      roomId:
-          serializationManager.deserialize<int>(jsonSerialization['roomId']),
-      room: serializationManager
-          .deserialize<_i2.Room?>(jsonSerialization['room']),
+      id: jsonSerialization['id'] as int?,
+      checkInDate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['checkInDate']),
+      checkOutDate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['checkOutDate']),
+      stayDay: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['stayDay']),
+      note: jsonSerialization['note'] as String?,
+      dateCreate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateCreate']),
+      dateUpdate: jsonSerialization['dateUpdate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateUpdate']),
+      guestId: jsonSerialization['guestId'] as int,
+      guest: jsonSerialization['guest'] == null
+          ? null
+          : _i2.Guest.fromJson(
+              (jsonSerialization['guest'] as Map<String, dynamic>)),
+      rateType:
+          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+      rateReason:
+          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+      rate: (jsonSerialization['rate'] as num).toDouble(),
+      isCheckedIn: jsonSerialization['isCheckedIn'] as bool,
+      isCanceled: jsonSerialization['isCanceled'] as bool,
+      isNightShift: jsonSerialization['isNightShift'] as bool,
+      roomId: jsonSerialization['roomId'] as int,
+      room: jsonSerialization['room'] == null
+          ? null
+          : _i2.Room.fromJson(
+              (jsonSerialization['room'] as Map<String, dynamic>)),
     );
   }
 
@@ -169,6 +164,11 @@ abstract class Reservation extends _i1.SerializableEntity {
       'roomId': roomId,
       if (room != null) 'room': room?.toJson(),
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

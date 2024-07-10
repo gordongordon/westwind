@@ -10,7 +10,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-abstract class Examplekk extends _i1.SerializableEntity {
+abstract class Examplekk
+    implements _i1.SerializableModel, _i1.ProtocolSerialization {
   Examplekk._({
     required this.name,
     required this.data,
@@ -21,13 +22,10 @@ abstract class Examplekk extends _i1.SerializableEntity {
     required int data,
   }) = _ExamplekkImpl;
 
-  factory Examplekk.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory Examplekk.fromJson(Map<String, dynamic> jsonSerialization) {
     return Examplekk(
-      name: serializationManager.deserialize<String>(jsonSerialization['name']),
-      data: serializationManager.deserialize<int>(jsonSerialization['data']),
+      name: jsonSerialization['name'] as String,
+      data: jsonSerialization['data'] as int,
     );
   }
 
@@ -48,11 +46,16 @@ abstract class Examplekk extends _i1.SerializableEntity {
   }
 
   @override
-  Map<String, dynamic> allToJson() {
+  Map<String, dynamic> toJsonForProtocol() {
     return {
       'name': name,
       'data': data,
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

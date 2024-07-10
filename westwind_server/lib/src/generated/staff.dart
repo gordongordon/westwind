@@ -12,7 +12,7 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import 'protocol.dart' as _i2;
 import 'package:serverpod_serialization/serverpod_serialization.dart';
 
-abstract class Staff extends _i1.TableRow {
+abstract class Staff extends _i1.TableRow implements _i1.ProtocolSerialization {
   Staff._({
     int? id,
     required this.firstName,
@@ -41,32 +41,26 @@ abstract class Staff extends _i1.TableRow {
     DateTime? dateUpdate,
   }) = _StaffImpl;
 
-  factory Staff.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory Staff.fromJson(Map<String, dynamic> jsonSerialization) {
     return Staff(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      firstName: serializationManager
-          .deserialize<String>(jsonSerialization['firstName']),
-      lastName: serializationManager
-          .deserialize<String>(jsonSerialization['lastName']),
-      phone:
-          serializationManager.deserialize<String>(jsonSerialization['phone']),
-      email:
-          serializationManager.deserialize<String>(jsonSerialization['email']),
-      password: serializationManager
-          .deserialize<String>(jsonSerialization['password']),
-      timelogout: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['timelogout']),
-      timelogin: serializationManager
-          .deserialize<DateTime>(jsonSerialization['timelogin']),
-      permissionType: serializationManager
-          .deserialize<_i2.PermissionType>(jsonSerialization['permissionType']),
-      dateCreate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateCreate']),
-      dateUpdate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['dateUpdate']),
+      id: jsonSerialization['id'] as int?,
+      firstName: jsonSerialization['firstName'] as String,
+      lastName: jsonSerialization['lastName'] as String,
+      phone: jsonSerialization['phone'] as String,
+      email: jsonSerialization['email'] as String,
+      password: jsonSerialization['password'] as String,
+      timelogout: jsonSerialization['timelogout'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['timelogout']),
+      timelogin:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['timelogin']),
+      permissionType: _i2.PermissionType.fromJson(
+          (jsonSerialization['permissionType'] as String)),
+      dateCreate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateCreate']),
+      dateUpdate: jsonSerialization['dateUpdate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateUpdate']),
     );
   }
 
@@ -128,25 +122,7 @@ abstract class Staff extends _i1.TableRow {
   }
 
   @override
-  @Deprecated('Will be removed in 2.0.0')
-  Map<String, dynamic> toJsonForDatabase() {
-    return {
-      'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
-      'phone': phone,
-      'email': email,
-      'password': password,
-      'timelogout': timelogout,
-      'timelogin': timelogin,
-      'permissionType': permissionType,
-      'dateCreate': dateCreate,
-      'dateUpdate': dateUpdate,
-    };
-  }
-
-  @override
-  Map<String, dynamic> allToJson() {
+  Map<String, dynamic> toJsonForProtocol() {
     return {
       if (id != null) 'id': id,
       'firstName': firstName,
@@ -160,168 +136,6 @@ abstract class Staff extends _i1.TableRow {
       'dateCreate': dateCreate.toJson(),
       if (dateUpdate != null) 'dateUpdate': dateUpdate?.toJson(),
     };
-  }
-
-  @override
-  @Deprecated('Will be removed in 2.0.0')
-  void setColumn(
-    String columnName,
-    value,
-  ) {
-    switch (columnName) {
-      case 'id':
-        id = value;
-        return;
-      case 'firstName':
-        firstName = value;
-        return;
-      case 'lastName':
-        lastName = value;
-        return;
-      case 'phone':
-        phone = value;
-        return;
-      case 'email':
-        email = value;
-        return;
-      case 'password':
-        password = value;
-        return;
-      case 'timelogout':
-        timelogout = value;
-        return;
-      case 'timelogin':
-        timelogin = value;
-        return;
-      case 'permissionType':
-        permissionType = value;
-        return;
-      case 'dateCreate':
-        dateCreate = value;
-        return;
-      case 'dateUpdate':
-        dateUpdate = value;
-        return;
-      default:
-        throw UnimplementedError();
-    }
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.find instead.')
-  static Future<List<Staff>> find(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<StaffTable>? where,
-    int? limit,
-    int? offset,
-    _i1.Column? orderBy,
-    List<_i1.Order>? orderByList,
-    bool orderDescending = false,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.find<Staff>(
-      where: where != null ? where(Staff.t) : null,
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy,
-      orderByList: orderByList,
-      orderDescending: orderDescending,
-      useCache: useCache,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.findRow instead.')
-  static Future<Staff?> findSingleRow(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<StaffTable>? where,
-    int? offset,
-    _i1.Column? orderBy,
-    bool orderDescending = false,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.findSingleRow<Staff>(
-      where: where != null ? where(Staff.t) : null,
-      offset: offset,
-      orderBy: orderBy,
-      orderDescending: orderDescending,
-      useCache: useCache,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.findById instead.')
-  static Future<Staff?> findById(
-    _i1.Session session,
-    int id,
-  ) async {
-    return session.db.findById<Staff>(id);
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.deleteWhere instead.')
-  static Future<int> delete(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<StaffTable> where,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.delete<Staff>(
-      where: where(Staff.t),
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.deleteRow instead.')
-  static Future<bool> deleteRow(
-    _i1.Session session,
-    Staff row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.deleteRow(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.update instead.')
-  static Future<bool> update(
-    _i1.Session session,
-    Staff row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.update(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated(
-      'Will be removed in 2.0.0. Use: db.insert instead. Important note: In db.insert, the object you pass in is no longer modified, instead a new copy with the added row is returned which contains the inserted id.')
-  static Future<void> insert(
-    _i1.Session session,
-    Staff row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.insert(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.count instead.')
-  static Future<int> count(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<StaffTable>? where,
-    int? limit,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.count<Staff>(
-      where: where != null ? where(Staff.t) : null,
-      limit: limit,
-      useCache: useCache,
-      transaction: transaction,
-    );
   }
 
   static StaffInclude include() {
@@ -346,6 +160,11 @@ abstract class Staff extends _i1.TableRow {
       orderByList: orderByList?.call(Staff.t),
       include: include,
     );
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 
@@ -489,9 +308,6 @@ class StaffTable extends _i1.Table {
       ];
 }
 
-@Deprecated('Use StaffTable.t instead.')
-StaffTable tStaff = StaffTable();
-
 class StaffInclude extends _i1.IncludeObject {
   StaffInclude._();
 
@@ -535,7 +351,7 @@ class StaffRepository {
     _i1.OrderByListBuilder<StaffTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.find<Staff>(
+    return session.db.find<Staff>(
       where: where?.call(Staff.t),
       orderBy: orderBy?.call(Staff.t),
       orderByList: orderByList?.call(Staff.t),
@@ -555,7 +371,7 @@ class StaffRepository {
     _i1.OrderByListBuilder<StaffTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.findFirstRow<Staff>(
+    return session.db.findFirstRow<Staff>(
       where: where?.call(Staff.t),
       orderBy: orderBy?.call(Staff.t),
       orderByList: orderByList?.call(Staff.t),
@@ -570,7 +386,7 @@ class StaffRepository {
     int id, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.findById<Staff>(
+    return session.db.findById<Staff>(
       id,
       transaction: transaction,
     );
@@ -581,7 +397,7 @@ class StaffRepository {
     List<Staff> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.insert<Staff>(
+    return session.db.insert<Staff>(
       rows,
       transaction: transaction,
     );
@@ -592,7 +408,7 @@ class StaffRepository {
     Staff row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.insertRow<Staff>(
+    return session.db.insertRow<Staff>(
       row,
       transaction: transaction,
     );
@@ -604,7 +420,7 @@ class StaffRepository {
     _i1.ColumnSelections<StaffTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.update<Staff>(
+    return session.db.update<Staff>(
       rows,
       columns: columns?.call(Staff.t),
       transaction: transaction,
@@ -617,41 +433,41 @@ class StaffRepository {
     _i1.ColumnSelections<StaffTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.updateRow<Staff>(
+    return session.db.updateRow<Staff>(
       row,
       columns: columns?.call(Staff.t),
       transaction: transaction,
     );
   }
 
-  Future<List<int>> delete(
+  Future<List<Staff>> delete(
     _i1.Session session,
     List<Staff> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.delete<Staff>(
+    return session.db.delete<Staff>(
       rows,
       transaction: transaction,
     );
   }
 
-  Future<int> deleteRow(
+  Future<Staff> deleteRow(
     _i1.Session session,
     Staff row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.deleteRow<Staff>(
+    return session.db.deleteRow<Staff>(
       row,
       transaction: transaction,
     );
   }
 
-  Future<List<int>> deleteWhere(
+  Future<List<Staff>> deleteWhere(
     _i1.Session session, {
     required _i1.WhereExpressionBuilder<StaffTable> where,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.deleteWhere<Staff>(
+    return session.db.deleteWhere<Staff>(
       where: where(Staff.t),
       transaction: transaction,
     );
@@ -663,7 +479,7 @@ class StaffRepository {
     int? limit,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.count<Staff>(
+    return session.db.count<Staff>(
       where: where?.call(Staff.t),
       limit: limit,
       transaction: transaction,

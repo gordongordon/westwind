@@ -12,7 +12,8 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import 'protocol.dart' as _i2;
 import 'package:serverpod_serialization/serverpod_serialization.dart';
 
-abstract class RoomInOutDate extends _i1.TableRow {
+abstract class RoomInOutDate extends _i1.TableRow
+    implements _i1.ProtocolSerialization {
   RoomInOutDate._({
     int? id,
     this.checkInDate,
@@ -33,24 +34,26 @@ abstract class RoomInOutDate extends _i1.TableRow {
     required DateTime dateCreate,
   }) = _RoomInOutDateImpl;
 
-  factory RoomInOutDate.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory RoomInOutDate.fromJson(Map<String, dynamic> jsonSerialization) {
     return RoomInOutDate(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      checkInDate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['checkInDate']),
-      checkOutDate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['checkOutDate']),
-      guestId:
-          serializationManager.deserialize<int>(jsonSerialization['guestId']),
-      guest: serializationManager
-          .deserialize<_i2.Guest?>(jsonSerialization['guest']),
-      roomNumber: serializationManager
-          .deserialize<_i2.RoomNumber>(jsonSerialization['roomNumber']),
-      dateCreate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateCreate']),
+      id: jsonSerialization['id'] as int?,
+      checkInDate: jsonSerialization['checkInDate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['checkInDate']),
+      checkOutDate: jsonSerialization['checkOutDate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['checkOutDate']),
+      guestId: jsonSerialization['guestId'] as int,
+      guest: jsonSerialization['guest'] == null
+          ? null
+          : _i2.Guest.fromJson(
+              (jsonSerialization['guest'] as Map<String, dynamic>)),
+      roomNumber:
+          _i2.RoomNumber.fromJson((jsonSerialization['roomNumber'] as String)),
+      dateCreate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateCreate']),
     );
   }
 
@@ -96,184 +99,16 @@ abstract class RoomInOutDate extends _i1.TableRow {
   }
 
   @override
-  @Deprecated('Will be removed in 2.0.0')
-  Map<String, dynamic> toJsonForDatabase() {
-    return {
-      'id': id,
-      'checkInDate': checkInDate,
-      'checkOutDate': checkOutDate,
-      'guestId': guestId,
-      'roomNumber': roomNumber,
-      'dateCreate': dateCreate,
-    };
-  }
-
-  @override
-  Map<String, dynamic> allToJson() {
+  Map<String, dynamic> toJsonForProtocol() {
     return {
       if (id != null) 'id': id,
       if (checkInDate != null) 'checkInDate': checkInDate?.toJson(),
       if (checkOutDate != null) 'checkOutDate': checkOutDate?.toJson(),
       'guestId': guestId,
-      if (guest != null) 'guest': guest?.allToJson(),
+      if (guest != null) 'guest': guest?.toJsonForProtocol(),
       'roomNumber': roomNumber.toJson(),
       'dateCreate': dateCreate.toJson(),
     };
-  }
-
-  @override
-  @Deprecated('Will be removed in 2.0.0')
-  void setColumn(
-    String columnName,
-    value,
-  ) {
-    switch (columnName) {
-      case 'id':
-        id = value;
-        return;
-      case 'checkInDate':
-        checkInDate = value;
-        return;
-      case 'checkOutDate':
-        checkOutDate = value;
-        return;
-      case 'guestId':
-        guestId = value;
-        return;
-      case 'roomNumber':
-        roomNumber = value;
-        return;
-      case 'dateCreate':
-        dateCreate = value;
-        return;
-      default:
-        throw UnimplementedError();
-    }
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.find instead.')
-  static Future<List<RoomInOutDate>> find(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<RoomInOutDateTable>? where,
-    int? limit,
-    int? offset,
-    _i1.Column? orderBy,
-    List<_i1.Order>? orderByList,
-    bool orderDescending = false,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-    RoomInOutDateInclude? include,
-  }) async {
-    return session.db.find<RoomInOutDate>(
-      where: where != null ? where(RoomInOutDate.t) : null,
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy,
-      orderByList: orderByList,
-      orderDescending: orderDescending,
-      useCache: useCache,
-      transaction: transaction,
-      include: include,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.findRow instead.')
-  static Future<RoomInOutDate?> findSingleRow(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<RoomInOutDateTable>? where,
-    int? offset,
-    _i1.Column? orderBy,
-    bool orderDescending = false,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-    RoomInOutDateInclude? include,
-  }) async {
-    return session.db.findSingleRow<RoomInOutDate>(
-      where: where != null ? where(RoomInOutDate.t) : null,
-      offset: offset,
-      orderBy: orderBy,
-      orderDescending: orderDescending,
-      useCache: useCache,
-      transaction: transaction,
-      include: include,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.findById instead.')
-  static Future<RoomInOutDate?> findById(
-    _i1.Session session,
-    int id, {
-    RoomInOutDateInclude? include,
-  }) async {
-    return session.db.findById<RoomInOutDate>(
-      id,
-      include: include,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.deleteWhere instead.')
-  static Future<int> delete(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<RoomInOutDateTable> where,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.delete<RoomInOutDate>(
-      where: where(RoomInOutDate.t),
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.deleteRow instead.')
-  static Future<bool> deleteRow(
-    _i1.Session session,
-    RoomInOutDate row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.deleteRow(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.update instead.')
-  static Future<bool> update(
-    _i1.Session session,
-    RoomInOutDate row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.update(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated(
-      'Will be removed in 2.0.0. Use: db.insert instead. Important note: In db.insert, the object you pass in is no longer modified, instead a new copy with the added row is returned which contains the inserted id.')
-  static Future<void> insert(
-    _i1.Session session,
-    RoomInOutDate row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.insert(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.count instead.')
-  static Future<int> count(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<RoomInOutDateTable>? where,
-    int? limit,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.count<RoomInOutDate>(
-      where: where != null ? where(RoomInOutDate.t) : null,
-      limit: limit,
-      useCache: useCache,
-      transaction: transaction,
-    );
   }
 
   static RoomInOutDateInclude include({_i2.GuestInclude? guest}) {
@@ -298,6 +133,11 @@ abstract class RoomInOutDate extends _i1.TableRow {
       orderByList: orderByList?.call(RoomInOutDate.t),
       include: include,
     );
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 
@@ -415,9 +255,6 @@ class RoomInOutDateTable extends _i1.Table {
   }
 }
 
-@Deprecated('Use RoomInOutDateTable.t instead.')
-RoomInOutDateTable tRoomInOutDate = RoomInOutDateTable();
-
 class RoomInOutDateInclude extends _i1.IncludeObject {
   RoomInOutDateInclude._({_i2.GuestInclude? guest}) {
     _guest = guest;
@@ -468,7 +305,7 @@ class RoomInOutDateRepository {
     _i1.Transaction? transaction,
     RoomInOutDateInclude? include,
   }) async {
-    return session.dbNext.find<RoomInOutDate>(
+    return session.db.find<RoomInOutDate>(
       where: where?.call(RoomInOutDate.t),
       orderBy: orderBy?.call(RoomInOutDate.t),
       orderByList: orderByList?.call(RoomInOutDate.t),
@@ -490,7 +327,7 @@ class RoomInOutDateRepository {
     _i1.Transaction? transaction,
     RoomInOutDateInclude? include,
   }) async {
-    return session.dbNext.findFirstRow<RoomInOutDate>(
+    return session.db.findFirstRow<RoomInOutDate>(
       where: where?.call(RoomInOutDate.t),
       orderBy: orderBy?.call(RoomInOutDate.t),
       orderByList: orderByList?.call(RoomInOutDate.t),
@@ -507,7 +344,7 @@ class RoomInOutDateRepository {
     _i1.Transaction? transaction,
     RoomInOutDateInclude? include,
   }) async {
-    return session.dbNext.findById<RoomInOutDate>(
+    return session.db.findById<RoomInOutDate>(
       id,
       transaction: transaction,
       include: include,
@@ -519,7 +356,7 @@ class RoomInOutDateRepository {
     List<RoomInOutDate> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.insert<RoomInOutDate>(
+    return session.db.insert<RoomInOutDate>(
       rows,
       transaction: transaction,
     );
@@ -530,7 +367,7 @@ class RoomInOutDateRepository {
     RoomInOutDate row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.insertRow<RoomInOutDate>(
+    return session.db.insertRow<RoomInOutDate>(
       row,
       transaction: transaction,
     );
@@ -542,7 +379,7 @@ class RoomInOutDateRepository {
     _i1.ColumnSelections<RoomInOutDateTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.update<RoomInOutDate>(
+    return session.db.update<RoomInOutDate>(
       rows,
       columns: columns?.call(RoomInOutDate.t),
       transaction: transaction,
@@ -555,41 +392,41 @@ class RoomInOutDateRepository {
     _i1.ColumnSelections<RoomInOutDateTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.updateRow<RoomInOutDate>(
+    return session.db.updateRow<RoomInOutDate>(
       row,
       columns: columns?.call(RoomInOutDate.t),
       transaction: transaction,
     );
   }
 
-  Future<List<int>> delete(
+  Future<List<RoomInOutDate>> delete(
     _i1.Session session,
     List<RoomInOutDate> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.delete<RoomInOutDate>(
+    return session.db.delete<RoomInOutDate>(
       rows,
       transaction: transaction,
     );
   }
 
-  Future<int> deleteRow(
+  Future<RoomInOutDate> deleteRow(
     _i1.Session session,
     RoomInOutDate row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.deleteRow<RoomInOutDate>(
+    return session.db.deleteRow<RoomInOutDate>(
       row,
       transaction: transaction,
     );
   }
 
-  Future<List<int>> deleteWhere(
+  Future<List<RoomInOutDate>> deleteWhere(
     _i1.Session session, {
     required _i1.WhereExpressionBuilder<RoomInOutDateTable> where,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.deleteWhere<RoomInOutDate>(
+    return session.db.deleteWhere<RoomInOutDate>(
       where: where(RoomInOutDate.t),
       transaction: transaction,
     );
@@ -601,7 +438,7 @@ class RoomInOutDateRepository {
     int? limit,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.count<RoomInOutDate>(
+    return session.db.count<RoomInOutDate>(
       where: where?.call(RoomInOutDate.t),
       limit: limit,
       transaction: transaction,
@@ -625,7 +462,7 @@ class RoomInOutDateAttachRowRepository {
     }
 
     var $roomInOutDate = roomInOutDate.copyWith(guestId: guest.id);
-    await session.dbNext.updateRow<RoomInOutDate>(
+    await session.db.updateRow<RoomInOutDate>(
       $roomInOutDate,
       columns: [RoomInOutDate.t.guestId],
     );

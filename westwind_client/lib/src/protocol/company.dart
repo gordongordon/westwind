@@ -11,7 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class Company extends _i1.SerializableEntity {
+abstract class Company implements _i1.SerializableModel {
   Company._({
     this.id,
     required this.name,
@@ -36,27 +36,22 @@ abstract class Company extends _i1.SerializableEntity {
     List<_i2.Guest>? guests,
   }) = _CompanyImpl;
 
-  factory Company.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory Company.fromJson(Map<String, dynamic> jsonSerialization) {
     return Company(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      name: serializationManager.deserialize<String>(jsonSerialization['name']),
-      contactName: serializationManager
-          .deserialize<String>(jsonSerialization['contactName']),
-      phone:
-          serializationManager.deserialize<String>(jsonSerialization['phone']),
-      email:
-          serializationManager.deserialize<String>(jsonSerialization['email']),
-      dateCreate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateCreate']),
-      dateUpdate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['dateUpdate']),
-      byStaffId:
-          serializationManager.deserialize<int>(jsonSerialization['byStaffId']),
-      guests: serializationManager
-          .deserialize<List<_i2.Guest>?>(jsonSerialization['guests']),
+      id: jsonSerialization['id'] as int?,
+      name: jsonSerialization['name'] as String,
+      contactName: jsonSerialization['contactName'] as String,
+      phone: jsonSerialization['phone'] as String,
+      email: jsonSerialization['email'] as String,
+      dateCreate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateCreate']),
+      dateUpdate: jsonSerialization['dateUpdate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateUpdate']),
+      byStaffId: jsonSerialization['byStaffId'] as int,
+      guests: (jsonSerialization['guests'] as List?)
+          ?.map((e) => _i2.Guest.fromJson((e as Map<String, dynamic>)))
+          .toList(),
     );
   }
 
@@ -106,6 +101,11 @@ abstract class Company extends _i1.SerializableEntity {
       if (guests != null)
         'guests': guests?.toJson(valueToJson: (v) => v.toJson()),
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

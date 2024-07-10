@@ -11,7 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class Staff extends _i1.SerializableEntity {
+abstract class Staff implements _i1.SerializableModel {
   Staff._({
     this.id,
     required this.firstName,
@@ -40,32 +40,26 @@ abstract class Staff extends _i1.SerializableEntity {
     DateTime? dateUpdate,
   }) = _StaffImpl;
 
-  factory Staff.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory Staff.fromJson(Map<String, dynamic> jsonSerialization) {
     return Staff(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      firstName: serializationManager
-          .deserialize<String>(jsonSerialization['firstName']),
-      lastName: serializationManager
-          .deserialize<String>(jsonSerialization['lastName']),
-      phone:
-          serializationManager.deserialize<String>(jsonSerialization['phone']),
-      email:
-          serializationManager.deserialize<String>(jsonSerialization['email']),
-      password: serializationManager
-          .deserialize<String>(jsonSerialization['password']),
-      timelogout: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['timelogout']),
-      timelogin: serializationManager
-          .deserialize<DateTime>(jsonSerialization['timelogin']),
-      permissionType: serializationManager
-          .deserialize<_i2.PermissionType>(jsonSerialization['permissionType']),
-      dateCreate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateCreate']),
-      dateUpdate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['dateUpdate']),
+      id: jsonSerialization['id'] as int?,
+      firstName: jsonSerialization['firstName'] as String,
+      lastName: jsonSerialization['lastName'] as String,
+      phone: jsonSerialization['phone'] as String,
+      email: jsonSerialization['email'] as String,
+      password: jsonSerialization['password'] as String,
+      timelogout: jsonSerialization['timelogout'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['timelogout']),
+      timelogin:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['timelogin']),
+      permissionType: _i2.PermissionType.fromJson(
+          (jsonSerialization['permissionType'] as String)),
+      dateCreate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateCreate']),
+      dateUpdate: jsonSerialization['dateUpdate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateUpdate']),
     );
   }
 
@@ -122,6 +116,11 @@ abstract class Staff extends _i1.SerializableEntity {
       'dateCreate': dateCreate.toJson(),
       if (dateUpdate != null) 'dateUpdate': dateUpdate?.toJson(),
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

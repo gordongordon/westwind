@@ -11,7 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class RoomInOutDate extends _i1.SerializableEntity {
+abstract class RoomInOutDate implements _i1.SerializableModel {
   RoomInOutDate._({
     this.id,
     this.checkInDate,
@@ -32,24 +32,26 @@ abstract class RoomInOutDate extends _i1.SerializableEntity {
     required DateTime dateCreate,
   }) = _RoomInOutDateImpl;
 
-  factory RoomInOutDate.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory RoomInOutDate.fromJson(Map<String, dynamic> jsonSerialization) {
     return RoomInOutDate(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      checkInDate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['checkInDate']),
-      checkOutDate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['checkOutDate']),
-      guestId:
-          serializationManager.deserialize<int>(jsonSerialization['guestId']),
-      guest: serializationManager
-          .deserialize<_i2.Guest?>(jsonSerialization['guest']),
-      roomNumber: serializationManager
-          .deserialize<_i2.RoomNumber>(jsonSerialization['roomNumber']),
-      dateCreate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateCreate']),
+      id: jsonSerialization['id'] as int?,
+      checkInDate: jsonSerialization['checkInDate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['checkInDate']),
+      checkOutDate: jsonSerialization['checkOutDate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['checkOutDate']),
+      guestId: jsonSerialization['guestId'] as int,
+      guest: jsonSerialization['guest'] == null
+          ? null
+          : _i2.Guest.fromJson(
+              (jsonSerialization['guest'] as Map<String, dynamic>)),
+      roomNumber:
+          _i2.RoomNumber.fromJson((jsonSerialization['roomNumber'] as String)),
+      dateCreate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateCreate']),
     );
   }
 
@@ -90,6 +92,11 @@ abstract class RoomInOutDate extends _i1.SerializableEntity {
       'roomNumber': roomNumber.toJson(),
       'dateCreate': dateCreate.toJson(),
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

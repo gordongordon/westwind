@@ -10,7 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
-enum PaymentType with _i1.SerializableEntity {
+enum PaymentType implements _i1.SerializableModel {
   visa,
   master,
   debit,
@@ -20,7 +20,7 @@ enum PaymentType with _i1.SerializableEntity {
   bill,
   other;
 
-  static PaymentType? fromJson(String name) {
+  static PaymentType fromJson(String name) {
     switch (name) {
       case 'visa':
         return visa;
@@ -39,12 +39,13 @@ enum PaymentType with _i1.SerializableEntity {
       case 'other':
         return other;
       default:
-        return null;
+        throw ArgumentError(
+            'Value "$name" cannot be converted to "PaymentType"');
     }
   }
 
   @override
   String toJson() => name;
   @override
-  String toString() => toJson();
+  String toString() => name;
 }

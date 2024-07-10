@@ -10,7 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-enum RateType with _i1.SerializableEntity {
+enum RateType implements _i1.SerializableModel {
   standard,
   ironhand,
   horizon,
@@ -20,7 +20,7 @@ enum RateType with _i1.SerializableEntity {
   online,
   staff;
 
-  static RateType? fromJson(String name) {
+  static RateType fromJson(String name) {
     switch (name) {
       case 'standard':
         return standard;
@@ -39,12 +39,12 @@ enum RateType with _i1.SerializableEntity {
       case 'staff':
         return staff;
       default:
-        return null;
+        throw ArgumentError('Value "$name" cannot be converted to "RateType"');
     }
   }
 
   @override
   String toJson() => name;
   @override
-  String toString() => toJson();
+  String toString() => name;
 }

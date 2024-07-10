@@ -11,7 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class Payment extends _i1.SerializableEntity {
+abstract class Payment implements _i1.SerializableModel {
   Payment._({
     this.id,
     required this.guestId,
@@ -36,28 +36,23 @@ abstract class Payment extends _i1.SerializableEntity {
     required int userId,
   }) = _PaymentImpl;
 
-  factory Payment.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory Payment.fromJson(Map<String, dynamic> jsonSerialization) {
     return Payment(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      guestId:
-          serializationManager.deserialize<int>(jsonSerialization['guestId']),
-      guest: serializationManager
-          .deserialize<_i2.Guest?>(jsonSerialization['guest']),
-      chargeDate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['chargeDate']),
-      dateVoid: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateVoid']),
-      amount:
-          serializationManager.deserialize<double>(jsonSerialization['amount']),
-      description: serializationManager
-          .deserialize<String>(jsonSerialization['description']),
-      paymentType: serializationManager
-          .deserialize<_i2.PaymentType>(jsonSerialization['paymentType']),
-      userId:
-          serializationManager.deserialize<int>(jsonSerialization['userId']),
+      id: jsonSerialization['id'] as int?,
+      guestId: jsonSerialization['guestId'] as int,
+      guest: jsonSerialization['guest'] == null
+          ? null
+          : _i2.Guest.fromJson(
+              (jsonSerialization['guest'] as Map<String, dynamic>)),
+      chargeDate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['chargeDate']),
+      dateVoid:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateVoid']),
+      amount: (jsonSerialization['amount'] as num).toDouble(),
+      description: jsonSerialization['description'] as String,
+      paymentType: _i2.PaymentType.fromJson(
+          (jsonSerialization['paymentType'] as String)),
+      userId: jsonSerialization['userId'] as int,
     );
   }
 
@@ -106,6 +101,11 @@ abstract class Payment extends _i1.SerializableEntity {
       'paymentType': paymentType.toJson(),
       'userId': userId,
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

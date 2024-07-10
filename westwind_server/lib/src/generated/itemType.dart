@@ -10,7 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-enum ItemType with _i1.SerializableEntity {
+enum ItemType implements _i1.SerializableModel {
   room,
   food,
   laundry,
@@ -21,7 +21,7 @@ enum ItemType with _i1.SerializableEntity {
   deposite,
   other;
 
-  static ItemType? fromJson(String name) {
+  static ItemType fromJson(String name) {
     switch (name) {
       case 'room':
         return room;
@@ -42,12 +42,12 @@ enum ItemType with _i1.SerializableEntity {
       case 'other':
         return other;
       default:
-        return null;
+        throw ArgumentError('Value "$name" cannot be converted to "ItemType"');
     }
   }
 
   @override
   String toJson() => name;
   @override
-  String toString() => toJson();
+  String toString() => name;
 }

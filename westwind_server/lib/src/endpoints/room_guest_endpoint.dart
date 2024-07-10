@@ -35,7 +35,7 @@ class RoomGuestEndpoint extends Endpoint {
       Reservation reservation) async {
 
     final result =
-        await session.dbNext.transaction<RoomGuest>((transaction) async {
+        await session.db.transaction<RoomGuest>((transaction) async {
 
       reservation.isCheckedIn = true;
       await Reservation.db.updateRow(session, reservation);
@@ -339,7 +339,7 @@ class RoomGuestEndpoint extends Endpoint {
         ));
   }
 
-  Future<List<int>> delete(Session session, {required int id}) async {
+  Future<List<RoomGuest>> delete(Session session, {required int id}) async {
     //  return await RoomGuest.db.deleteWhere(session, roomGuest);
     // return await RoomGuest.delete(session, where: where).delete(session, rows)
     return await RoomGuest.db
@@ -405,9 +405,9 @@ class RoomGuestEndpoint extends Endpoint {
 
   */
 
-  Future<int> checkOut(Session session,
+  Future<RoomGuest> checkOut(Session session,
       {required RoomGuest roommate, required RoomGuest roomGuest}) async {
-    var result = await session.dbNext.transaction((transaction) async {
+    var result = await session.db.transaction((transaction) async {
       // Do some database queries here.
       /*
         * update an roommate share and rate 

@@ -42,7 +42,7 @@ import 'package:westwind_client/src/protocol/rateTable.dart' as _i30;
 import 'package:westwind_client/src/protocol/reservation.dart' as _i31;
 import 'package:westwind_client/src/protocol/roomGuest.dart' as _i32;
 import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i33;
-import 'package:serverpod_auth_client/module.dart' as _i34;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i34;
 export 'bedType.dart';
 export 'company.dart';
 export 'errorType.dart';
@@ -76,8 +76,6 @@ class Protocol extends _i1.SerializationManager {
 
   factory Protocol() => _instance;
 
-  static final Map<Type, _i1.constructor> customConstructors = {};
-
   static final Protocol _instance = Protocol._();
 
   @override
@@ -86,29 +84,26 @@ class Protocol extends _i1.SerializationManager {
     Type? t,
   ]) {
     t ??= T;
-    if (customConstructors.containsKey(t)) {
-      return customConstructors[t]!(data, this) as T;
-    }
     if (t == _i2.BedType) {
       return _i2.BedType.fromJson(data) as T;
     }
     if (t == _i3.Company) {
-      return _i3.Company.fromJson(data, this) as T;
+      return _i3.Company.fromJson(data) as T;
     }
     if (t == _i4.ErrorType) {
       return _i4.ErrorType.fromJson(data) as T;
     }
     if (t == _i5.Examplekk) {
-      return _i5.Examplekk.fromJson(data, this) as T;
+      return _i5.Examplekk.fromJson(data) as T;
     }
     if (t == _i6.Guest) {
-      return _i6.Guest.fromJson(data, this) as T;
+      return _i6.Guest.fromJson(data) as T;
     }
     if (t == _i7.GuestInOutDate) {
-      return _i7.GuestInOutDate.fromJson(data, this) as T;
+      return _i7.GuestInOutDate.fromJson(data) as T;
     }
     if (t == _i8.GuestTransaction) {
-      return _i8.GuestTransaction.fromJson(data, this) as T;
+      return _i8.GuestTransaction.fromJson(data) as T;
     }
     if (t == _i9.InOutReason) {
       return _i9.InOutReason.fromJson(data) as T;
@@ -117,10 +112,10 @@ class Protocol extends _i1.SerializationManager {
       return _i10.ItemType.fromJson(data) as T;
     }
     if (t == _i11.MyException) {
-      return _i11.MyException.fromJson(data, this) as T;
+      return _i11.MyException.fromJson(data) as T;
     }
     if (t == _i12.Payment) {
-      return _i12.Payment.fromJson(data, this) as T;
+      return _i12.Payment.fromJson(data) as T;
     }
     if (t == _i13.PaymentType) {
       return _i13.PaymentType.fromJson(data) as T;
@@ -132,25 +127,25 @@ class Protocol extends _i1.SerializationManager {
       return _i15.RateReason.fromJson(data) as T;
     }
     if (t == _i16.RateTable) {
-      return _i16.RateTable.fromJson(data, this) as T;
+      return _i16.RateTable.fromJson(data) as T;
     }
     if (t == _i17.RateType) {
       return _i17.RateType.fromJson(data) as T;
     }
     if (t == _i18.Reservation) {
-      return _i18.Reservation.fromJson(data, this) as T;
+      return _i18.Reservation.fromJson(data) as T;
     }
     if (t == _i19.Room) {
-      return _i19.Room.fromJson(data, this) as T;
+      return _i19.Room.fromJson(data) as T;
     }
     if (t == _i20.RoomChargeType) {
       return _i20.RoomChargeType.fromJson(data) as T;
     }
     if (t == _i21.RoomGuest) {
-      return _i21.RoomGuest.fromJson(data, this) as T;
+      return _i21.RoomGuest.fromJson(data) as T;
     }
     if (t == _i22.RoomInOutDate) {
-      return _i22.RoomInOutDate.fromJson(data, this) as T;
+      return _i22.RoomInOutDate.fromJson(data) as T;
     }
     if (t == _i23.RoomNumber) {
       return _i23.RoomNumber.fromJson(data) as T;
@@ -159,10 +154,10 @@ class Protocol extends _i1.SerializationManager {
       return _i24.RoomStatus.fromJson(data) as T;
     }
     if (t == _i25.RoomTransaction) {
-      return _i25.RoomTransaction.fromJson(data, this) as T;
+      return _i25.RoomTransaction.fromJson(data) as T;
     }
     if (t == _i26.Staff) {
-      return _i26.Staff.fromJson(data, this) as T;
+      return _i26.Staff.fromJson(data) as T;
     }
     if (t == _i27.TransactionType) {
       return _i27.TransactionType.fromJson(data) as T;
@@ -171,24 +166,22 @@ class Protocol extends _i1.SerializationManager {
       return (data != null ? _i2.BedType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i3.Company?>()) {
-      return (data != null ? _i3.Company.fromJson(data, this) : null) as T;
+      return (data != null ? _i3.Company.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i4.ErrorType?>()) {
       return (data != null ? _i4.ErrorType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i5.Examplekk?>()) {
-      return (data != null ? _i5.Examplekk.fromJson(data, this) : null) as T;
+      return (data != null ? _i5.Examplekk.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i6.Guest?>()) {
-      return (data != null ? _i6.Guest.fromJson(data, this) : null) as T;
+      return (data != null ? _i6.Guest.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i7.GuestInOutDate?>()) {
-      return (data != null ? _i7.GuestInOutDate.fromJson(data, this) : null)
-          as T;
+      return (data != null ? _i7.GuestInOutDate.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i8.GuestTransaction?>()) {
-      return (data != null ? _i8.GuestTransaction.fromJson(data, this) : null)
-          as T;
+      return (data != null ? _i8.GuestTransaction.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i9.InOutReason?>()) {
       return (data != null ? _i9.InOutReason.fromJson(data) : null) as T;
@@ -197,10 +190,10 @@ class Protocol extends _i1.SerializationManager {
       return (data != null ? _i10.ItemType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i11.MyException?>()) {
-      return (data != null ? _i11.MyException.fromJson(data, this) : null) as T;
+      return (data != null ? _i11.MyException.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i12.Payment?>()) {
-      return (data != null ? _i12.Payment.fromJson(data, this) : null) as T;
+      return (data != null ? _i12.Payment.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i13.PaymentType?>()) {
       return (data != null ? _i13.PaymentType.fromJson(data) : null) as T;
@@ -212,26 +205,25 @@ class Protocol extends _i1.SerializationManager {
       return (data != null ? _i15.RateReason.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i16.RateTable?>()) {
-      return (data != null ? _i16.RateTable.fromJson(data, this) : null) as T;
+      return (data != null ? _i16.RateTable.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i17.RateType?>()) {
       return (data != null ? _i17.RateType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i18.Reservation?>()) {
-      return (data != null ? _i18.Reservation.fromJson(data, this) : null) as T;
+      return (data != null ? _i18.Reservation.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i19.Room?>()) {
-      return (data != null ? _i19.Room.fromJson(data, this) : null) as T;
+      return (data != null ? _i19.Room.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i20.RoomChargeType?>()) {
       return (data != null ? _i20.RoomChargeType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i21.RoomGuest?>()) {
-      return (data != null ? _i21.RoomGuest.fromJson(data, this) : null) as T;
+      return (data != null ? _i21.RoomGuest.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i22.RoomInOutDate?>()) {
-      return (data != null ? _i22.RoomInOutDate.fromJson(data, this) : null)
-          as T;
+      return (data != null ? _i22.RoomInOutDate.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i23.RoomNumber?>()) {
       return (data != null ? _i23.RoomNumber.fromJson(data) : null) as T;
@@ -240,11 +232,10 @@ class Protocol extends _i1.SerializationManager {
       return (data != null ? _i24.RoomStatus.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i25.RoomTransaction?>()) {
-      return (data != null ? _i25.RoomTransaction.fromJson(data, this) : null)
-          as T;
+      return (data != null ? _i25.RoomTransaction.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i26.Staff?>()) {
-      return (data != null ? _i26.Staff.fromJson(data, this) : null) as T;
+      return (data != null ? _i26.Staff.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i27.TransactionType?>()) {
       return (data != null ? _i27.TransactionType.fromJson(data) : null) as T;
@@ -288,9 +279,6 @@ class Protocol extends _i1.SerializationManager {
       return (data as List).map((e) => deserialize<_i32.RoomGuest>(e)).toList()
           as dynamic;
     }
-    if (t == List<int>) {
-      return (data as List).map((e) => deserialize<int>(e)).toList() as dynamic;
-    }
     if (t == List<_i33.RoomTransaction>) {
       return (data as List)
           .map((e) => deserialize<_i33.RoomTransaction>(e))
@@ -298,7 +286,7 @@ class Protocol extends _i1.SerializationManager {
     }
     try {
       return _i34.Protocol().deserialize<T>(data, t);
-    } catch (_) {}
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
 

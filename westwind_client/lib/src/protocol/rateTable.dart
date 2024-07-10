@@ -11,7 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class RateTable extends _i1.SerializableEntity {
+abstract class RateTable implements _i1.SerializableModel {
   RateTable._({
     this.id,
     required this.rateType,
@@ -26,17 +26,14 @@ abstract class RateTable extends _i1.SerializableEntity {
     required double rate,
   }) = _RateTableImpl;
 
-  factory RateTable.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory RateTable.fromJson(Map<String, dynamic> jsonSerialization) {
     return RateTable(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      rateType: serializationManager
-          .deserialize<_i2.RateType>(jsonSerialization['rateType']),
-      rateReason: serializationManager
-          .deserialize<_i2.RateReason>(jsonSerialization['rateReason']),
-      rate: serializationManager.deserialize<double>(jsonSerialization['rate']),
+      id: jsonSerialization['id'] as int?,
+      rateType:
+          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+      rateReason:
+          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+      rate: (jsonSerialization['rate'] as num).toDouble(),
     );
   }
 
@@ -65,6 +62,11 @@ abstract class RateTable extends _i1.SerializableEntity {
       'rateReason': rateReason.toJson(),
       'rate': rate,
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

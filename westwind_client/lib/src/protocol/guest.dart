@@ -11,7 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class Guest extends _i1.SerializableEntity {
+abstract class Guest implements _i1.SerializableModel {
   Guest._({
     this.id,
     required this.firstName,
@@ -48,40 +48,32 @@ abstract class Guest extends _i1.SerializableEntity {
     List<_i2.RoomGuest>? roomGuets,
   }) = _GuestImpl;
 
-  factory Guest.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory Guest.fromJson(Map<String, dynamic> jsonSerialization) {
     return Guest(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      firstName: serializationManager
-          .deserialize<String>(jsonSerialization['firstName']),
-      lastName: serializationManager
-          .deserialize<String>(jsonSerialization['lastName']),
-      phone:
-          serializationManager.deserialize<String>(jsonSerialization['phone']),
-      email:
-          serializationManager.deserialize<String?>(jsonSerialization['email']),
-      isInHouse: serializationManager
-          .deserialize<bool>(jsonSerialization['isInHouse']),
-      dateCreate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['dateCreate']),
-      dateUpdate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['dateUpdate']),
-      rateType: serializationManager
-          .deserialize<_i2.RateType>(jsonSerialization['rateType']),
-      staffId:
-          serializationManager.deserialize<int>(jsonSerialization['staffId']),
-      companyId:
-          serializationManager.deserialize<int>(jsonSerialization['companyId']),
-      company: serializationManager
-          .deserialize<_i2.Company?>(jsonSerialization['company']),
-      rigNumber: serializationManager
-          .deserialize<int?>(jsonSerialization['rigNumber']),
-      accountBalance: serializationManager
-          .deserialize<double>(jsonSerialization['accountBalance']),
-      roomGuets: serializationManager
-          .deserialize<List<_i2.RoomGuest>?>(jsonSerialization['roomGuets']),
+      id: jsonSerialization['id'] as int?,
+      firstName: jsonSerialization['firstName'] as String,
+      lastName: jsonSerialization['lastName'] as String,
+      phone: jsonSerialization['phone'] as String,
+      email: jsonSerialization['email'] as String?,
+      isInHouse: jsonSerialization['isInHouse'] as bool,
+      dateCreate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateCreate']),
+      dateUpdate: jsonSerialization['dateUpdate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateUpdate']),
+      rateType:
+          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+      staffId: jsonSerialization['staffId'] as int,
+      companyId: jsonSerialization['companyId'] as int,
+      company: jsonSerialization['company'] == null
+          ? null
+          : _i2.Company.fromJson(
+              (jsonSerialization['company'] as Map<String, dynamic>)),
+      rigNumber: jsonSerialization['rigNumber'] as int?,
+      accountBalance: (jsonSerialization['accountBalance'] as num).toDouble(),
+      roomGuets: (jsonSerialization['roomGuets'] as List?)
+          ?.map((e) => _i2.RoomGuest.fromJson((e as Map<String, dynamic>)))
+          .toList(),
     );
   }
 
@@ -155,6 +147,11 @@ abstract class Guest extends _i1.SerializableEntity {
       if (roomGuets != null)
         'roomGuets': roomGuets?.toJson(valueToJson: (v) => v.toJson()),
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

@@ -7,8 +7,8 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  serverpod: 1.2.7
-  serverpod_auth_server: 1.2.7
+  serverpod: 2.0.1
+  serverpod_auth_server: 2.0.1
 
 
 dev_dependencies:

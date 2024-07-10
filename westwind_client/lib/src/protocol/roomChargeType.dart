@@ -10,7 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
-enum RoomChargeType with _i1.SerializableEntity {
+enum RoomChargeType implements _i1.SerializableModel {
   room,
   laundry,
   pet,
@@ -18,7 +18,7 @@ enum RoomChargeType with _i1.SerializableEntity {
   drink,
   other;
 
-  static RoomChargeType? fromJson(String name) {
+  static RoomChargeType fromJson(String name) {
     switch (name) {
       case 'room':
         return room;
@@ -33,12 +33,13 @@ enum RoomChargeType with _i1.SerializableEntity {
       case 'other':
         return other;
       default:
-        return null;
+        throw ArgumentError(
+            'Value "$name" cannot be converted to "RoomChargeType"');
     }
   }
 
   @override
   String toJson() => name;
   @override
-  String toString() => toJson();
+  String toString() => name;
 }

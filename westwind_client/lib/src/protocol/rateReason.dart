@@ -10,7 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
-enum RateReason with _i1.SerializableEntity {
+enum RateReason implements _i1.SerializableModel {
   single,
   share,
   triple,
@@ -19,7 +19,7 @@ enum RateReason with _i1.SerializableEntity {
   gohome,
   other;
 
-  static RateReason? fromJson(String name) {
+  static RateReason fromJson(String name) {
     switch (name) {
       case 'single':
         return single;
@@ -36,12 +36,13 @@ enum RateReason with _i1.SerializableEntity {
       case 'other':
         return other;
       default:
-        return null;
+        throw ArgumentError(
+            'Value "$name" cannot be converted to "RateReason"');
     }
   }
 
   @override
   String toJson() => name;
   @override
-  String toString() => toJson();
+  String toString() => name;
 }

@@ -22,7 +22,7 @@ import 'package:westwind_server/src/generated/rateReason.dart' as _i11;
 import 'package:westwind_server/src/generated/reservation.dart' as _i12;
 import 'package:westwind_server/src/generated/roomGuest.dart' as _i13;
 import 'package:westwind_server/src/generated/roomTransaction.dart' as _i14;
-import 'package:serverpod_auth_server/module.dart' as _i15;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i15;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override

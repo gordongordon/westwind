@@ -11,7 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class RoomTransaction extends _i1.SerializableEntity {
+abstract class RoomTransaction implements _i1.SerializableModel {
   RoomTransaction._({
     this.id,
     required this.guestId,
@@ -54,43 +54,40 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
     required _i2.ItemType itemType,
   }) = _RoomTransactionImpl;
 
-  factory RoomTransaction.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory RoomTransaction.fromJson(Map<String, dynamic> jsonSerialization) {
     return RoomTransaction(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      guestId:
-          serializationManager.deserialize<int>(jsonSerialization['guestId']),
-      guest: serializationManager
-          .deserialize<_i2.Guest?>(jsonSerialization['guest']),
-      roomId:
-          serializationManager.deserialize<int>(jsonSerialization['roomId']),
-      room: serializationManager
-          .deserialize<_i2.Room?>(jsonSerialization['room']),
-      roomGuestId: serializationManager
-          .deserialize<int>(jsonSerialization['roomGuestId']),
-      roomGuest: serializationManager
-          .deserialize<_i2.RoomGuest?>(jsonSerialization['roomGuest']),
-      stayDay: serializationManager
-          .deserialize<DateTime>(jsonSerialization['stayDay']),
-      transactionDay: serializationManager
-          .deserialize<DateTime>(jsonSerialization['transactionDay']),
-      transactionType: serializationManager.deserialize<_i2.TransactionType>(
-          jsonSerialization['transactionType']),
-      updateDate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['updateDate']),
-      amount:
-          serializationManager.deserialize<double>(jsonSerialization['amount']),
-      tax1: serializationManager.deserialize<double>(jsonSerialization['tax1']),
-      tax2: serializationManager.deserialize<double>(jsonSerialization['tax2']),
-      tax3: serializationManager.deserialize<double>(jsonSerialization['tax3']),
-      total:
-          serializationManager.deserialize<double>(jsonSerialization['total']),
-      description: serializationManager
-          .deserialize<String>(jsonSerialization['description']),
-      itemType: serializationManager
-          .deserialize<_i2.ItemType>(jsonSerialization['itemType']),
+      id: jsonSerialization['id'] as int?,
+      guestId: jsonSerialization['guestId'] as int,
+      guest: jsonSerialization['guest'] == null
+          ? null
+          : _i2.Guest.fromJson(
+              (jsonSerialization['guest'] as Map<String, dynamic>)),
+      roomId: jsonSerialization['roomId'] as int,
+      room: jsonSerialization['room'] == null
+          ? null
+          : _i2.Room.fromJson(
+              (jsonSerialization['room'] as Map<String, dynamic>)),
+      roomGuestId: jsonSerialization['roomGuestId'] as int,
+      roomGuest: jsonSerialization['roomGuest'] == null
+          ? null
+          : _i2.RoomGuest.fromJson(
+              (jsonSerialization['roomGuest'] as Map<String, dynamic>)),
+      stayDay: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['stayDay']),
+      transactionDay: _i1.DateTimeJsonExtension.fromJson(
+          jsonSerialization['transactionDay']),
+      transactionType: _i2.TransactionType.fromJson(
+          (jsonSerialization['transactionType'] as String)),
+      updateDate: jsonSerialization['updateDate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updateDate']),
+      amount: (jsonSerialization['amount'] as num).toDouble(),
+      tax1: (jsonSerialization['tax1'] as num).toDouble(),
+      tax2: (jsonSerialization['tax2'] as num).toDouble(),
+      tax3: (jsonSerialization['tax3'] as num).toDouble(),
+      total: (jsonSerialization['total'] as num).toDouble(),
+      description: jsonSerialization['description'] as String,
+      itemType:
+          _i2.ItemType.fromJson((jsonSerialization['itemType'] as String)),
     );
   }
 
@@ -175,6 +172,11 @@ abstract class RoomTransaction extends _i1.SerializableEntity {
       'description': description,
       'itemType': itemType.toJson(),
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

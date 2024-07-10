@@ -11,7 +11,7 @@ library protocol; // ignore_for_file: no_leading_underscores_for_library_prefixe
 
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
-import 'package:serverpod_auth_server/module.dart' as _i3;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i3;
 import 'bedType.dart' as _i4;
 import 'company.dart' as _i5;
 import 'errorType.dart' as _i6;
@@ -76,8 +76,6 @@ class Protocol extends _i1.SerializationManagerServer {
 
   factory Protocol() => _instance;
 
-  static final Map<Type, _i1.constructor> customConstructors = {};
-
   static final Protocol _instance = Protocol._();
 
   static final List<_i2.TableDefinition> targetTableDefinitions = [
@@ -89,7 +87,7 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'company_id_seq\'::regclass)',
@@ -132,7 +130,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'byStaffId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -176,7 +174,7 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'guest_id_seq\'::regclass)',
@@ -231,19 +229,19 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'staffId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
         _i2.ColumnDefinition(
           name: 'companyId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
         _i2.ColumnDefinition(
           name: 'rigNumber',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: true,
           dartType: 'int?',
         ),
@@ -304,7 +302,7 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'guest_in_out_date_id_seq\'::regclass)',
@@ -329,7 +327,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'guestId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -377,14 +375,14 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'guest_transaction_id_seq\'::regclass)',
         ),
         _i2.ColumnDefinition(
           name: 'roomId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -426,7 +424,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'roomGuestId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -478,14 +476,14 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'payment_id_seq\'::regclass)',
         ),
         _i2.ColumnDefinition(
           name: 'guestId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -521,7 +519,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'userId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -563,7 +561,7 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'rate_table_id_seq\'::regclass)',
@@ -630,7 +628,7 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'reservation_id_seq\'::regclass)',
@@ -673,7 +671,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'guestId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -715,13 +713,13 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'roomId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
         _i2.ColumnDefinition(
           name: '_roomReservationsRoomId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: true,
           dartType: 'int?',
         ),
@@ -783,7 +781,7 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'room_id_seq\'::regclass)',
@@ -826,7 +824,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'numOfBeds',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -844,7 +842,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'numOfMicrowave',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -874,7 +872,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'numOfTableLamp',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -886,7 +884,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'numOfStandLamp',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -929,14 +927,14 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'room_guest_id_seq\'::regclass)',
         ),
         _i2.ColumnDefinition(
           name: 'roomId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -948,7 +946,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'guestId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -972,7 +970,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'reservationId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -1081,7 +1079,7 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'room_in_out_date_id_seq\'::regclass)',
@@ -1100,7 +1098,7 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'guestId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -1154,26 +1152,26 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'room_transaction_id_seq\'::regclass)',
         ),
         _i2.ColumnDefinition(
           name: 'guestId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
         _i2.ColumnDefinition(
           name: 'roomId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
         _i2.ColumnDefinition(
           name: 'roomGuestId',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
         ),
@@ -1318,7 +1316,7 @@ class Protocol extends _i1.SerializationManagerServer {
       columns: [
         _i2.ColumnDefinition(
           name: 'id',
-          columnType: _i2.ColumnType.integer,
+          columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int?',
           columnDefault: 'nextval(\'staff_id_seq\'::regclass)',
@@ -1425,29 +1423,26 @@ class Protocol extends _i1.SerializationManagerServer {
     Type? t,
   ]) {
     t ??= T;
-    if (customConstructors.containsKey(t)) {
-      return customConstructors[t]!(data, this) as T;
-    }
     if (t == _i4.BedType) {
       return _i4.BedType.fromJson(data) as T;
     }
     if (t == _i5.Company) {
-      return _i5.Company.fromJson(data, this) as T;
+      return _i5.Company.fromJson(data) as T;
     }
     if (t == _i6.ErrorType) {
       return _i6.ErrorType.fromJson(data) as T;
     }
     if (t == _i7.Examplekk) {
-      return _i7.Examplekk.fromJson(data, this) as T;
+      return _i7.Examplekk.fromJson(data) as T;
     }
     if (t == _i8.Guest) {
-      return _i8.Guest.fromJson(data, this) as T;
+      return _i8.Guest.fromJson(data) as T;
     }
     if (t == _i9.GuestInOutDate) {
-      return _i9.GuestInOutDate.fromJson(data, this) as T;
+      return _i9.GuestInOutDate.fromJson(data) as T;
     }
     if (t == _i10.GuestTransaction) {
-      return _i10.GuestTransaction.fromJson(data, this) as T;
+      return _i10.GuestTransaction.fromJson(data) as T;
     }
     if (t == _i11.InOutReason) {
       return _i11.InOutReason.fromJson(data) as T;
@@ -1456,10 +1451,10 @@ class Protocol extends _i1.SerializationManagerServer {
       return _i12.ItemType.fromJson(data) as T;
     }
     if (t == _i13.MyException) {
-      return _i13.MyException.fromJson(data, this) as T;
+      return _i13.MyException.fromJson(data) as T;
     }
     if (t == _i14.Payment) {
-      return _i14.Payment.fromJson(data, this) as T;
+      return _i14.Payment.fromJson(data) as T;
     }
     if (t == _i15.PaymentType) {
       return _i15.PaymentType.fromJson(data) as T;
@@ -1471,25 +1466,25 @@ class Protocol extends _i1.SerializationManagerServer {
       return _i17.RateReason.fromJson(data) as T;
     }
     if (t == _i18.RateTable) {
-      return _i18.RateTable.fromJson(data, this) as T;
+      return _i18.RateTable.fromJson(data) as T;
     }
     if (t == _i19.RateType) {
       return _i19.RateType.fromJson(data) as T;
     }
     if (t == _i20.Reservation) {
-      return _i20.Reservation.fromJson(data, this) as T;
+      return _i20.Reservation.fromJson(data) as T;
     }
     if (t == _i21.Room) {
-      return _i21.Room.fromJson(data, this) as T;
+      return _i21.Room.fromJson(data) as T;
     }
     if (t == _i22.RoomChargeType) {
       return _i22.RoomChargeType.fromJson(data) as T;
     }
     if (t == _i23.RoomGuest) {
-      return _i23.RoomGuest.fromJson(data, this) as T;
+      return _i23.RoomGuest.fromJson(data) as T;
     }
     if (t == _i24.RoomInOutDate) {
-      return _i24.RoomInOutDate.fromJson(data, this) as T;
+      return _i24.RoomInOutDate.fromJson(data) as T;
     }
     if (t == _i25.RoomNumber) {
       return _i25.RoomNumber.fromJson(data) as T;
@@ -1498,10 +1493,10 @@ class Protocol extends _i1.SerializationManagerServer {
       return _i26.RoomStatus.fromJson(data) as T;
     }
     if (t == _i27.RoomTransaction) {
-      return _i27.RoomTransaction.fromJson(data, this) as T;
+      return _i27.RoomTransaction.fromJson(data) as T;
     }
     if (t == _i28.Staff) {
-      return _i28.Staff.fromJson(data, this) as T;
+      return _i28.Staff.fromJson(data) as T;
     }
     if (t == _i29.TransactionType) {
       return _i29.TransactionType.fromJson(data) as T;
@@ -1510,24 +1505,22 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data != null ? _i4.BedType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i5.Company?>()) {
-      return (data != null ? _i5.Company.fromJson(data, this) : null) as T;
+      return (data != null ? _i5.Company.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i6.ErrorType?>()) {
       return (data != null ? _i6.ErrorType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i7.Examplekk?>()) {
-      return (data != null ? _i7.Examplekk.fromJson(data, this) : null) as T;
+      return (data != null ? _i7.Examplekk.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i8.Guest?>()) {
-      return (data != null ? _i8.Guest.fromJson(data, this) : null) as T;
+      return (data != null ? _i8.Guest.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i9.GuestInOutDate?>()) {
-      return (data != null ? _i9.GuestInOutDate.fromJson(data, this) : null)
-          as T;
+      return (data != null ? _i9.GuestInOutDate.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i10.GuestTransaction?>()) {
-      return (data != null ? _i10.GuestTransaction.fromJson(data, this) : null)
-          as T;
+      return (data != null ? _i10.GuestTransaction.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i11.InOutReason?>()) {
       return (data != null ? _i11.InOutReason.fromJson(data) : null) as T;
@@ -1536,10 +1529,10 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data != null ? _i12.ItemType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i13.MyException?>()) {
-      return (data != null ? _i13.MyException.fromJson(data, this) : null) as T;
+      return (data != null ? _i13.MyException.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i14.Payment?>()) {
-      return (data != null ? _i14.Payment.fromJson(data, this) : null) as T;
+      return (data != null ? _i14.Payment.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i15.PaymentType?>()) {
       return (data != null ? _i15.PaymentType.fromJson(data) : null) as T;
@@ -1551,26 +1544,25 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data != null ? _i17.RateReason.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i18.RateTable?>()) {
-      return (data != null ? _i18.RateTable.fromJson(data, this) : null) as T;
+      return (data != null ? _i18.RateTable.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i19.RateType?>()) {
       return (data != null ? _i19.RateType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i20.Reservation?>()) {
-      return (data != null ? _i20.Reservation.fromJson(data, this) : null) as T;
+      return (data != null ? _i20.Reservation.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i21.Room?>()) {
-      return (data != null ? _i21.Room.fromJson(data, this) : null) as T;
+      return (data != null ? _i21.Room.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i22.RoomChargeType?>()) {
       return (data != null ? _i22.RoomChargeType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i23.RoomGuest?>()) {
-      return (data != null ? _i23.RoomGuest.fromJson(data, this) : null) as T;
+      return (data != null ? _i23.RoomGuest.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i24.RoomInOutDate?>()) {
-      return (data != null ? _i24.RoomInOutDate.fromJson(data, this) : null)
-          as T;
+      return (data != null ? _i24.RoomInOutDate.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i25.RoomNumber?>()) {
       return (data != null ? _i25.RoomNumber.fromJson(data) : null) as T;
@@ -1579,11 +1571,10 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data != null ? _i26.RoomStatus.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i27.RoomTransaction?>()) {
-      return (data != null ? _i27.RoomTransaction.fromJson(data, this) : null)
-          as T;
+      return (data != null ? _i27.RoomTransaction.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i28.Staff?>()) {
-      return (data != null ? _i28.Staff.fromJson(data, this) : null) as T;
+      return (data != null ? _i28.Staff.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i29.TransactionType?>()) {
       return (data != null ? _i29.TransactionType.fromJson(data) : null) as T;
@@ -1627,9 +1618,6 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data as List).map((e) => deserialize<_i34.RoomGuest>(e)).toList()
           as dynamic;
     }
-    if (t == List<int>) {
-      return (data as List).map((e) => deserialize<int>(e)).toList() as dynamic;
-    }
     if (t == List<_i35.RoomTransaction>) {
       return (data as List)
           .map((e) => deserialize<_i35.RoomTransaction>(e))
@@ -1637,10 +1625,10 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);
-    } catch (_) {}
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
       return _i2.Protocol().deserialize<T>(data, t);
-    } catch (_) {}
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
 

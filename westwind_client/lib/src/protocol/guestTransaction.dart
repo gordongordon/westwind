@@ -11,7 +11,7 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class GuestTransaction extends _i1.SerializableEntity {
+abstract class GuestTransaction implements _i1.SerializableModel {
   GuestTransaction._({
     this.id,
     required this.roomId,
@@ -40,31 +40,31 @@ abstract class GuestTransaction extends _i1.SerializableEntity {
     _i2.RoomGuest? roomGuest,
   }) = _GuestTransactionImpl;
 
-  factory GuestTransaction.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory GuestTransaction.fromJson(Map<String, dynamic> jsonSerialization) {
     return GuestTransaction(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      roomId:
-          serializationManager.deserialize<int>(jsonSerialization['roomId']),
-      room: serializationManager
-          .deserialize<_i2.Room?>(jsonSerialization['room']),
-      stateDate: serializationManager
-          .deserialize<DateTime>(jsonSerialization['stateDate']),
-      rateType: serializationManager
-          .deserialize<_i2.RateType>(jsonSerialization['rateType']),
-      rateReason: serializationManager
-          .deserialize<_i2.RateReason>(jsonSerialization['rateReason']),
-      rate: serializationManager.deserialize<double>(jsonSerialization['rate']),
-      roomStatus: serializationManager
-          .deserialize<_i2.RoomStatus>(jsonSerialization['roomStatus']),
-      updateDate: serializationManager
-          .deserialize<DateTime?>(jsonSerialization['updateDate']),
-      roomGuestId: serializationManager
-          .deserialize<int>(jsonSerialization['roomGuestId']),
-      roomGuest: serializationManager
-          .deserialize<_i2.RoomGuest?>(jsonSerialization['roomGuest']),
+      id: jsonSerialization['id'] as int?,
+      roomId: jsonSerialization['roomId'] as int,
+      room: jsonSerialization['room'] == null
+          ? null
+          : _i2.Room.fromJson(
+              (jsonSerialization['room'] as Map<String, dynamic>)),
+      stateDate:
+          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['stateDate']),
+      rateType:
+          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+      rateReason:
+          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+      rate: (jsonSerialization['rate'] as num).toDouble(),
+      roomStatus:
+          _i2.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
+      updateDate: jsonSerialization['updateDate'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updateDate']),
+      roomGuestId: jsonSerialization['roomGuestId'] as int,
+      roomGuest: jsonSerialization['roomGuest'] == null
+          ? null
+          : _i2.RoomGuest.fromJson(
+              (jsonSerialization['roomGuest'] as Map<String, dynamic>)),
     );
   }
 
@@ -121,6 +121,11 @@ abstract class GuestTransaction extends _i1.SerializableEntity {
       'roomGuestId': roomGuestId,
       if (roomGuest != null) 'roomGuest': roomGuest?.toJson(),
     };
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 

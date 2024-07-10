@@ -11,7 +11,8 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'protocol.dart' as _i2;
 
-abstract class RateTable extends _i1.TableRow {
+abstract class RateTable extends _i1.TableRow
+    implements _i1.ProtocolSerialization {
   RateTable._({
     int? id,
     required this.rateType,
@@ -26,17 +27,14 @@ abstract class RateTable extends _i1.TableRow {
     required double rate,
   }) = _RateTableImpl;
 
-  factory RateTable.fromJson(
-    Map<String, dynamic> jsonSerialization,
-    _i1.SerializationManager serializationManager,
-  ) {
+  factory RateTable.fromJson(Map<String, dynamic> jsonSerialization) {
     return RateTable(
-      id: serializationManager.deserialize<int?>(jsonSerialization['id']),
-      rateType: serializationManager
-          .deserialize<_i2.RateType>(jsonSerialization['rateType']),
-      rateReason: serializationManager
-          .deserialize<_i2.RateReason>(jsonSerialization['rateReason']),
-      rate: serializationManager.deserialize<double>(jsonSerialization['rate']),
+      id: jsonSerialization['id'] as int?,
+      rateType:
+          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+      rateReason:
+          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+      rate: (jsonSerialization['rate'] as num).toDouble(),
     );
   }
 
@@ -70,165 +68,13 @@ abstract class RateTable extends _i1.TableRow {
   }
 
   @override
-  @Deprecated('Will be removed in 2.0.0')
-  Map<String, dynamic> toJsonForDatabase() {
-    return {
-      'id': id,
-      'rateType': rateType,
-      'rateReason': rateReason,
-      'rate': rate,
-    };
-  }
-
-  @override
-  Map<String, dynamic> allToJson() {
+  Map<String, dynamic> toJsonForProtocol() {
     return {
       if (id != null) 'id': id,
       'rateType': rateType.toJson(),
       'rateReason': rateReason.toJson(),
       'rate': rate,
     };
-  }
-
-  @override
-  @Deprecated('Will be removed in 2.0.0')
-  void setColumn(
-    String columnName,
-    value,
-  ) {
-    switch (columnName) {
-      case 'id':
-        id = value;
-        return;
-      case 'rateType':
-        rateType = value;
-        return;
-      case 'rateReason':
-        rateReason = value;
-        return;
-      case 'rate':
-        rate = value;
-        return;
-      default:
-        throw UnimplementedError();
-    }
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.find instead.')
-  static Future<List<RateTable>> find(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<RateTableTable>? where,
-    int? limit,
-    int? offset,
-    _i1.Column? orderBy,
-    List<_i1.Order>? orderByList,
-    bool orderDescending = false,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.find<RateTable>(
-      where: where != null ? where(RateTable.t) : null,
-      limit: limit,
-      offset: offset,
-      orderBy: orderBy,
-      orderByList: orderByList,
-      orderDescending: orderDescending,
-      useCache: useCache,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.findRow instead.')
-  static Future<RateTable?> findSingleRow(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<RateTableTable>? where,
-    int? offset,
-    _i1.Column? orderBy,
-    bool orderDescending = false,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.findSingleRow<RateTable>(
-      where: where != null ? where(RateTable.t) : null,
-      offset: offset,
-      orderBy: orderBy,
-      orderDescending: orderDescending,
-      useCache: useCache,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.findById instead.')
-  static Future<RateTable?> findById(
-    _i1.Session session,
-    int id,
-  ) async {
-    return session.db.findById<RateTable>(id);
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.deleteWhere instead.')
-  static Future<int> delete(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<RateTableTable> where,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.delete<RateTable>(
-      where: where(RateTable.t),
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.deleteRow instead.')
-  static Future<bool> deleteRow(
-    _i1.Session session,
-    RateTable row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.deleteRow(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.update instead.')
-  static Future<bool> update(
-    _i1.Session session,
-    RateTable row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.update(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated(
-      'Will be removed in 2.0.0. Use: db.insert instead. Important note: In db.insert, the object you pass in is no longer modified, instead a new copy with the added row is returned which contains the inserted id.')
-  static Future<void> insert(
-    _i1.Session session,
-    RateTable row, {
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.insert(
-      row,
-      transaction: transaction,
-    );
-  }
-
-  @Deprecated('Will be removed in 2.0.0. Use: db.count instead.')
-  static Future<int> count(
-    _i1.Session session, {
-    _i1.WhereExpressionBuilder<RateTableTable>? where,
-    int? limit,
-    bool useCache = true,
-    _i1.Transaction? transaction,
-  }) async {
-    return session.db.count<RateTable>(
-      where: where != null ? where(RateTable.t) : null,
-      limit: limit,
-      useCache: useCache,
-      transaction: transaction,
-    );
   }
 
   static RateTableInclude include() {
@@ -253,6 +99,11 @@ abstract class RateTable extends _i1.TableRow {
       orderByList: orderByList?.call(RateTable.t),
       include: include,
     );
+  }
+
+  @override
+  String toString() {
+    return _i1.SerializationManager.encode(this);
   }
 }
 
@@ -320,9 +171,6 @@ class RateTableTable extends _i1.Table {
       ];
 }
 
-@Deprecated('Use RateTableTable.t instead.')
-RateTableTable tRateTable = RateTableTable();
-
 class RateTableInclude extends _i1.IncludeObject {
   RateTableInclude._();
 
@@ -366,7 +214,7 @@ class RateTableRepository {
     _i1.OrderByListBuilder<RateTableTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.find<RateTable>(
+    return session.db.find<RateTable>(
       where: where?.call(RateTable.t),
       orderBy: orderBy?.call(RateTable.t),
       orderByList: orderByList?.call(RateTable.t),
@@ -386,7 +234,7 @@ class RateTableRepository {
     _i1.OrderByListBuilder<RateTableTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.findFirstRow<RateTable>(
+    return session.db.findFirstRow<RateTable>(
       where: where?.call(RateTable.t),
       orderBy: orderBy?.call(RateTable.t),
       orderByList: orderByList?.call(RateTable.t),
@@ -401,7 +249,7 @@ class RateTableRepository {
     int id, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.findById<RateTable>(
+    return session.db.findById<RateTable>(
       id,
       transaction: transaction,
     );
@@ -412,7 +260,7 @@ class RateTableRepository {
     List<RateTable> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.insert<RateTable>(
+    return session.db.insert<RateTable>(
       rows,
       transaction: transaction,
     );
@@ -423,7 +271,7 @@ class RateTableRepository {
     RateTable row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.insertRow<RateTable>(
+    return session.db.insertRow<RateTable>(
       row,
       transaction: transaction,
     );
@@ -435,7 +283,7 @@ class RateTableRepository {
     _i1.ColumnSelections<RateTableTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.update<RateTable>(
+    return session.db.update<RateTable>(
       rows,
       columns: columns?.call(RateTable.t),
       transaction: transaction,
@@ -448,41 +296,41 @@ class RateTableRepository {
     _i1.ColumnSelections<RateTableTable>? columns,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.updateRow<RateTable>(
+    return session.db.updateRow<RateTable>(
       row,
       columns: columns?.call(RateTable.t),
       transaction: transaction,
     );
   }
 
-  Future<List<int>> delete(
+  Future<List<RateTable>> delete(
     _i1.Session session,
     List<RateTable> rows, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.delete<RateTable>(
+    return session.db.delete<RateTable>(
       rows,
       transaction: transaction,
     );
   }
 
-  Future<int> deleteRow(
+  Future<RateTable> deleteRow(
     _i1.Session session,
     RateTable row, {
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.deleteRow<RateTable>(
+    return session.db.deleteRow<RateTable>(
       row,
       transaction: transaction,
     );
   }
 
-  Future<List<int>> deleteWhere(
+  Future<List<RateTable>> deleteWhere(
     _i1.Session session, {
     required _i1.WhereExpressionBuilder<RateTableTable> where,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.deleteWhere<RateTable>(
+    return session.db.deleteWhere<RateTable>(
       where: where(RateTable.t),
       transaction: transaction,
     );
@@ -494,7 +342,7 @@ class RateTableRepository {
     int? limit,
     _i1.Transaction? transaction,
   }) async {
-    return session.dbNext.count<RateTable>(
+    return session.db.count<RateTable>(
       where: where?.call(RateTable.t),
       limit: limit,
       transaction: transaction,

@@ -10,7 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
-enum BedType with _i1.SerializableEntity {
+enum BedType implements _i1.SerializableModel {
   D,
   Q,
   K,
@@ -19,7 +19,7 @@ enum BedType with _i1.SerializableEntity {
   DQ,
   QD;
 
-  static BedType? fromJson(String name) {
+  static BedType fromJson(String name) {
     switch (name) {
       case 'D':
         return D;
@@ -36,12 +36,12 @@ enum BedType with _i1.SerializableEntity {
       case 'QD':
         return QD;
       default:
-        return null;
+        throw ArgumentError('Value "$name" cannot be converted to "BedType"');
     }
   }
 
   @override
   String toJson() => name;
   @override
-  String toString() => toJson();
+  String toString() => name;
 }

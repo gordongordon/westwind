@@ -10,13 +10,13 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-enum PermissionType with _i1.SerializableEntity {
+enum PermissionType implements _i1.SerializableModel {
   staff,
   supervisor,
   manager,
   admin;
 
-  static PermissionType? fromJson(String name) {
+  static PermissionType fromJson(String name) {
     switch (name) {
       case 'staff':
         return staff;
@@ -27,12 +27,13 @@ enum PermissionType with _i1.SerializableEntity {
       case 'admin':
         return admin;
       default:
-        return null;
+        throw ArgumentError(
+            'Value "$name" cannot be converted to "PermissionType"');
     }
   }
 
   @override
   String toJson() => name;
   @override
-  String toString() => toJson();
+  String toString() => name;
 }
