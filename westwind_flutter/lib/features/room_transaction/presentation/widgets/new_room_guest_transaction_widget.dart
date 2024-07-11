@@ -15,10 +15,12 @@ class RoomGuestTransactionFormWidget extends StatefulWidget {
   });
 
   @override
-  _RoomTransactionFormWidgetState createState() => _RoomTransactionFormWidgetState();
+  _RoomGuestTransactionFormWidgetState createState() =>
+      _RoomGuestTransactionFormWidgetState();
 }
 
-class _RoomTransactionFormWidgetState extends State<RoomGuestTransactionFormWidget> {
+class _RoomGuestTransactionFormWidgetState
+    extends State<RoomGuestTransactionFormWidget> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -58,6 +60,7 @@ class _RoomTransactionFormWidgetState extends State<RoomGuestTransactionFormWidg
             ]),
             keyboardType: TextInputType.number,
           ),
+          /* 
           FormBuilderTextField(
             name: 'tax1',
             decoration: InputDecoration(labelText: 'GST'),
@@ -67,6 +70,8 @@ class _RoomTransactionFormWidgetState extends State<RoomGuestTransactionFormWidg
             ]),
             keyboardType: TextInputType.number,
           ),
+         // if ( _formKey.)
+
           FormBuilderTextField(
             name: 'tax2',
             decoration: InputDecoration(labelText: 'Levy'),
@@ -76,6 +81,8 @@ class _RoomTransactionFormWidgetState extends State<RoomGuestTransactionFormWidg
             ]),
             keyboardType: TextInputType.number,
           ),
+          */
+          /*
           FormBuilderTextField(
             name: 'tax3',
             decoration: InputDecoration(labelText: 'Additional Tax'),
@@ -85,6 +92,8 @@ class _RoomTransactionFormWidgetState extends State<RoomGuestTransactionFormWidg
             ]),
             keyboardType: TextInputType.number,
           ),
+          */
+
           FormBuilderTextField(
             name: 'description',
             decoration: InputDecoration(labelText: 'Description'),
@@ -104,21 +113,95 @@ class _RoomTransactionFormWidgetState extends State<RoomGuestTransactionFormWidg
   void _submitForm() {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
       final formData = _formKey.currentState!.value;
+      final itemType = formData['itemType'] as ItemType;
+      final amount = double.parse(formData['amount']);
+      final tax1 = double.parse(formData['tax1']);
+      final tax2 = double.parse(formData['tax2']);
+      late double gst;
+      late double levy;
+      late double total;
+
+      switch (itemType) {
+        case ItemType.room:
+          {
+            gst = amount * 0.05;
+            levy = amount * 0.04;
+            total = amount + gst + levy;
+          }
+        case ItemType.food:
+          {
+            gst = amount * 0.05;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.laundry:
+          {
+            gst = amount * 0.05;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.vending:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.atm:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.pet:
+          {
+            gst = amount * 0.05;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.demage:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.deposite:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.other:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.balance:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+            total = total * -1;
+          }
+      }
+
       final newTransaction = RoomTransaction(
         guestId: widget.roomGuestId,
         roomGuestId: widget.roomGuestId,
+        // Get 
         roomId: 101,
         transactionType: formData['transactionType'] as TransactionType,
         itemType: formData['itemType'] as ItemType,
-        amount: double.parse(formData['amount']),
-        tax1: double.parse(formData['tax1']),
-        tax2: double.parse(formData['tax2']),
+        amount: amount,
+        tax1: tax1,
+        tax2: tax2,
+       // tax3: 0,
+        /*
         tax3: double.parse(formData['tax3']),
-        total: double.parse(formData['amount']) +
-            double.parse(formData['tax1']) +
-            double.parse(formData['tax2']) +
-            double.parse(formData['tax3']),
+        */
+        total: total,
         description: formData['description'],
+        //! need to get stayDay from roomGuest,
         stayDay: DateTime.now(),
         transactionDay: DateTime.now(),
         // Set other fields as needed

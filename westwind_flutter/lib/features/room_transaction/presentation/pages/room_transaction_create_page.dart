@@ -32,7 +32,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
   final TextEditingController amountController = TextEditingController();
   final TextEditingController tax1Controller = TextEditingController();
   final TextEditingController tax2Controller = TextEditingController();
-  final TextEditingController tax3Controller = TextEditingController();
+ // final TextEditingController tax3Controller = TextEditingController();
   final TextEditingController totalController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
@@ -123,7 +123,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
         _buildTextField('amount', 'Amount', amountController, keyboardType: TextInputType.number),
         _buildTextField('tax1', 'GST', tax1Controller, keyboardType: TextInputType.number),
         _buildTextField('tax2', 'Levy', tax2Controller, keyboardType: TextInputType.number),
-        _buildTextField('tax3', 'Additional Tax', tax3Controller, keyboardType: TextInputType.number),
+      //  _buildTextField('tax3', 'Additional Tax', tax3Controller, keyboardType: TextInputType.number),
         _buildTextField('total', 'Total', totalController, keyboardType: TextInputType.number),
       ],
     );
@@ -230,7 +230,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
         amount: double.parse(amountController.text),
         tax1: double.parse(tax1Controller.text),
         tax2: double.parse(tax2Controller.text),
-        tax3: double.parse(tax3Controller.text),
+       // tax3: double.parse(tax3Controller.text),
         total: double.parse(totalController.text),
         description: descriptionController.text,
         itemType: itemType,
@@ -260,7 +260,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
     amountController.text = transaction.amount.toString();
     tax1Controller.text = transaction.tax1.toString();
     tax2Controller.text = transaction.tax2.toString();
-    tax3Controller.text = transaction.tax3.toString();
+  //  tax3Controller.text = transaction.tax3.toString();
     totalController.text = transaction.total.toString();
     transactionTypeController.text = transaction.transactionType.toString();
     itemTypeController.text = transaction.itemType.toString();

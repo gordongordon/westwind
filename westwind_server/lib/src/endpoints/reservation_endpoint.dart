@@ -215,7 +215,7 @@ class ReservationEndpoint extends Endpoint {
     
     final roomGuest = RoomGuest(
       roomId: reservation.roomId,
-      stayDate: reservation.checkInDate,
+      stayDay: reservation.checkInDate,
       guestId: reservation.guestId,
    //   roomTransactions: null,
       rateType: reservation.rateType,

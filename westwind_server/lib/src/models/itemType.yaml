@@ -1,6 +1,7 @@
 enum: ItemType
 serialized: byName
 values:
+  - balance
   - room
   - food
   - laundry

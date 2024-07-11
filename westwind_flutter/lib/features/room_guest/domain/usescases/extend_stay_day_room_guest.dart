@@ -20,7 +20,7 @@ class ExtendStayDayRoomGuestUseCase
     // Get RoomGuest
     final rg = foldResult(await roomGuestRepository.retrieve( params.id ));
 
-    rg.stayDate = rg.stayDate.add(Duration(days: 1));
+    rg.stayDay = rg.stayDay.add(Duration(days: 1));
 
     if ( rg.roomTransactions != null ) {
        debugPrint( rg.roomTransactions!.first.toString() );

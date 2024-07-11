@@ -11,6 +11,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 enum ItemType implements _i1.SerializableModel {
+  balance,
   room,
   food,
   laundry,
@@ -23,6 +24,8 @@ enum ItemType implements _i1.SerializableModel {
 
   static ItemType fromJson(String name) {
     switch (name) {
+      case 'balance':
+        return balance;
       case 'room':
         return room;
       case 'food':

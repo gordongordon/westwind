@@ -47,7 +47,7 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
         _buildAmountColumn('Amount', 'amount'),
       _buildAmountColumn('GST', 'tax1'),
       _buildAmountColumn('Levy', 'tax2'),
-      _buildAmountColumn('Tax3', 'tax3'),
+    //  _buildAmountColumn('Tax3', 'tax3'),
       _buildAmountColumn('Total', 'total'),
  
       _buildDateColumn('Transaction Day', 'transactionDay'),
@@ -95,9 +95,9 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
     return PlutoColumn(
       title: title,
       field: field,
-      type: PlutoColumnType.number(
-          negative: false, format: "#.##", applyFormatOnInit: true),
-      width: 70,
+      type: PlutoColumnType.currency(
+          negative: true, format: "#.##", applyFormatOnInit: true),
+      width: 100,
       footerRenderer: (rendererContext) => _buildAggregateFooter(
           rendererContext, PlutoAggregateColumnType.sum,
           formatAsCurrency: true),
@@ -216,7 +216,7 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
         'amount': PlutoCell(value: roomTransaction.amount),
         'tax1': PlutoCell(value: roomTransaction.tax1),
         'tax2': PlutoCell(value: roomTransaction.tax2),
-        'tax3': PlutoCell(value: roomTransaction.tax3),
+       // 'tax3': PlutoCell(value: roomTransaction.tax3),
         'total': PlutoCell(value: roomTransaction.total),
         'transactionDay': PlutoCell(value: roomTransaction.transactionDay),
         'description': PlutoCell(value: roomTransaction.description),

@@ -22,3 +22,9 @@ class CreateRoomTransactionEvent extends RoomTransactionEvent {
 
   CreateRoomTransactionEvent({required this.roomTransaction});
 }
+
+final class RetrieveRoomGuestEvent extends RoomTransactionEvent {
+  final int roomGuestId;
+
+  RetrieveRoomGuestEvent({required this.roomGuestId});
+}

@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/error/failure.dart';
 import 'package:westwind_flutter/core/usecases/usecase.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_room_guest.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_Transaction_list_usercase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_create_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_delete_usecase.dart';
@@ -17,17 +18,21 @@ class RoomTransactionBloc
   final DeleteRoomTransactionUseCase deleteRoomTransaction;
   final RetrieveRoomTransactionUseCase retrieveRoomTransaction;
   final CreateRoomTransactionUseCase createRoomTransaction;
+  final RetrieveRoomGuestUseCase retrieveRoomGuest;
 
   RoomTransactionBloc({
     required this.listRoomTransactions,
     required this.deleteRoomTransaction,
     required this.retrieveRoomTransaction,
     required this.createRoomTransaction,
+    required this.retrieveRoomGuest,
   }) : super(RoomTransactionListStateInitial()) {
     on<FetchRoomTransactionsEvent>(_onFetchRoomTransactions);
     on<DeleteRoomTransactionEvent>((_onDeleteRoomTransaction));
     on<RetrieveRoomTransactionEvent>((_onRetrieveRoomTransaction));
     on<CreateRoomTransactionEvent>((_onCreateRoomTransaction));
+    on<RetrieveRoomGuestEvent>(
+        (_onRetrieveRoomGuest));
   }
 
   Future<void> _onFetchRoomTransactions(RoomTransactionEvent event,
@@ -85,4 +90,23 @@ class RoomTransactionBloc
       emit(RoomTransactionStateCreatedSuccess(roomTransaction: r));
     });
   }
+
+
+    Future<void> _onRetrieveRoomGuest(
+      RetrieveRoomGuestEvent event,
+      Emitter<RoomTransactionState> emit) async {
+
+
+   emit(RoomTransactionListStateLoading());
+  //  await Future.delayed(Duration(seconds: 1));
+    final result = await retrieveRoomGuest(
+
+        RetrieveRoomGuestParams( id: event.roomGuestId));
+
+    result.fold(
+      (failure) =>  emit(RoomTransactionStateFailure(message: failure.message)),
+      (r) { emit(RoomTransactionStateRetrievedRoomGuestSuccess(roomGuest: r)); }
+    );
+  }
+  
 }

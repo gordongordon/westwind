@@ -18,13 +18,13 @@ class RooGuestPolicyImpl implements RoomGuestPolicy {
   @override
   bool canChargeGuest(RoomGuest guest) {
    // return false;
-   debugPrint( guest.stayDate.toLocal().toString() );
+   debugPrint( guest.stayDay.toLocal().toString() );
    
    // PostDay old then one day.
    final postDay = DateTime.now().getDateOnly();
   // postDay.add( Duration( days: 1 ));
 
-   final result = guest.stayDate.isBefore(postDay);
+   final result = guest.stayDay.isBefore(postDay);
 
    return result;
   }

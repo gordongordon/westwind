@@ -24,7 +24,7 @@ class RoomGuestPolicyService {
 
     if ( !result )  {
 
-      final stayDay = roomGuest.stayDate.getDateOnly().day;
+      final stayDay = roomGuest.stayDay.getDateOnly().day;
       final today = DateTime.now().toLocal().getDateOnly().day;
 
       return Left(  Failure( "You can only charge when Stay Day $stayDay less then Today $today " ) );

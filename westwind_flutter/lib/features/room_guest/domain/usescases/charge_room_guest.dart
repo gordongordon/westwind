@@ -21,19 +21,23 @@ class ChargeRoomGuestUseCase
     final rg = foldResult(await roomGuestRepository.retrieve(params.id));
 
     // Crate RoomTransaction
+    final amount = rg.rate;
+    final gst = rg.rate * 0.05;
+    final levy = rg.rate * 0.04;
+    final total = amount + gst + levy;
 
     final roomTransaction = RoomTransaction(
         guestId: rg.guestId,
         roomId: rg.roomId,
         roomGuestId: params.id,
-        stayDay: rg.stayDate,
+        stayDay: rg.stayDay,
         transactionDay: DateTime.now(),
         transactionType: TransactionType.charge,
-        amount: rg.rate,
-        tax1: 5,
-        tax2: 0,
-        tax3: 0,
-        total: rg.rate + 5,
+        amount: amount,
+        tax1: gst,
+        tax2: levy,
+       // tax3: 0,
+        total: total,
         description: rg.rateReason.toString(),
         itemType: ItemType.room)
         ;

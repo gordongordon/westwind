@@ -16,7 +16,7 @@ abstract class RoomGuest implements _i1.SerializableModel {
     this.id,
     required this.roomId,
     this.room,
-    required this.stayDate,
+    required this.stayDay,
     required this.guestId,
     this.guest,
     this.roomTransactions,
@@ -36,7 +36,7 @@ abstract class RoomGuest implements _i1.SerializableModel {
     int? id,
     required int roomId,
     _i2.Room? room,
-    required DateTime stayDate,
+    required DateTime stayDay,
     required int guestId,
     _i2.Guest? guest,
     List<_i2.RoomTransaction>? roomTransactions,
@@ -60,8 +60,7 @@ abstract class RoomGuest implements _i1.SerializableModel {
           ? null
           : _i2.Room.fromJson(
               (jsonSerialization['room'] as Map<String, dynamic>)),
-      stayDate:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['stayDate']),
+      stayDay: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['stayDay']),
       guestId: jsonSerialization['guestId'] as int,
       guest: jsonSerialization['guest'] == null
           ? null
@@ -103,7 +102,7 @@ abstract class RoomGuest implements _i1.SerializableModel {
 
   _i2.Room? room;
 
-  DateTime stayDate;
+  DateTime stayDay;
 
   int guestId;
 
@@ -135,7 +134,7 @@ abstract class RoomGuest implements _i1.SerializableModel {
     int? id,
     int? roomId,
     _i2.Room? room,
-    DateTime? stayDate,
+    DateTime? stayDay,
     int? guestId,
     _i2.Guest? guest,
     List<_i2.RoomTransaction>? roomTransactions,
@@ -156,7 +155,7 @@ abstract class RoomGuest implements _i1.SerializableModel {
       if (id != null) 'id': id,
       'roomId': roomId,
       if (room != null) 'room': room?.toJson(),
-      'stayDate': stayDate.toJson(),
+      'stayDay': stayDay.toJson(),
       'guestId': guestId,
       if (guest != null) 'guest': guest?.toJson(),
       if (roomTransactions != null)
@@ -188,7 +187,7 @@ class _RoomGuestImpl extends RoomGuest {
     int? id,
     required int roomId,
     _i2.Room? room,
-    required DateTime stayDate,
+    required DateTime stayDay,
     required int guestId,
     _i2.Guest? guest,
     List<_i2.RoomTransaction>? roomTransactions,
@@ -206,7 +205,7 @@ class _RoomGuestImpl extends RoomGuest {
           id: id,
           roomId: roomId,
           room: room,
-          stayDate: stayDate,
+          stayDay: stayDay,
           guestId: guestId,
           guest: guest,
           roomTransactions: roomTransactions,
@@ -227,7 +226,7 @@ class _RoomGuestImpl extends RoomGuest {
     Object? id = _Undefined,
     int? roomId,
     Object? room = _Undefined,
-    DateTime? stayDate,
+    DateTime? stayDay,
     int? guestId,
     Object? guest = _Undefined,
     Object? roomTransactions = _Undefined,
@@ -246,7 +245,7 @@ class _RoomGuestImpl extends RoomGuest {
       id: id is int? ? id : this.id,
       roomId: roomId ?? this.roomId,
       room: room is _i2.Room? ? room : this.room?.copyWith(),
-      stayDate: stayDate ?? this.stayDate,
+      stayDay: stayDay ?? this.stayDay,
       guestId: guestId ?? this.guestId,
       guest: guest is _i2.Guest? ? guest : this.guest?.copyWith(),
       roomTransactions: roomTransactions is List<_i2.RoomTransaction>?

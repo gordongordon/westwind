@@ -2,7 +2,7 @@ class : RoomGuest
 table : room_guest
 fields: 
   room : Room?, relation
-  stayDate     : DateTime
+  stayDay     : DateTime
   guest        : Guest? , relation(name=guest_room_guest)
   roomTransactions : List<RoomTransaction>?, relation(name=room_guest_transaction)
   rateType     : RateType

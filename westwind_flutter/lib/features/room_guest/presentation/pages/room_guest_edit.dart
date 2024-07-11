@@ -35,7 +35,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   final TextEditingController rateReasonController = TextEditingController();
   final TextEditingController reservationIdController = TextEditingController();
 
-  DateTime stayDate = DateTime.now();
+  DateTime stayDay= DateTime.now();
   DateTime updatedDate = DateTime.now();
   DateTime checkOutDate = DateTime.now();
   bool isCheckOut = false;
@@ -121,7 +121,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
         const SizedBox(height: 24),
         Text('Stay Information', style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
-        _buildDateTimePicker('stayDate', 'Stay Date', initialValue: stayDate),
+        _buildDateTimePicker('stayDay', 'Stay Day', initialValue: stayDay),
         _buildDateTimePicker('checkOutDate', 'Check Out Date', initialValue: checkOutDate),
         _buildTextField('roomId', 'Room ID', roomIdController, keyboardType: TextInputType.number),
         _buildTextField('reservationId', 'Reservation ID', reservationIdController, keyboardType: TextInputType.number),
@@ -241,7 +241,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
         id: widget.roomGuestId,
         guestId: int.parse(guestIdController.text),
         roomId: int.parse(roomIdController.text),
-        stayDate: formKey.currentState!.fields['stayDate']!.value,
+        stayDay: formKey.currentState!.fields['stayDay']!.value,
         updateDate: formKey.currentState!.fields['updateDate']!.value,
         checkInDate: DateTime.now().getDateOnly(),
         checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
@@ -285,7 +285,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
 
     setState(() {
       checkOutDate = roomGuest.checkOutDate;
-      stayDate = roomGuest.stayDate;
+      stayDay = roomGuest.stayDay;
       isCheckOut = roomGuest.isCheckOut;
     });
 

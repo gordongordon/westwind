@@ -367,7 +367,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       RoomGuest roomGuest, String newRoomNumber, DateTime newStayDate) {
     return roomGuest.copyWith(
       roomId: int.parse(newRoomNumber),
-      stayDate: newStayDate,
+      stayDay: newStayDate,
     );
   }
 

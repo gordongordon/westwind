@@ -186,7 +186,9 @@ void _initRoomTransaction() {
       listRoomTransactions: serverLocator<ListRoomTransactionsUseCase>(),
       deleteRoomTransaction: serverLocator<DeleteRoomTransactionUseCase>(),
       retrieveRoomTransaction: serverLocator<RetrieveRoomTransactionUseCase>(),
-      createRoomTransaction: serverLocator<CreateRoomTransactionUseCase>(),
+      createRoomTransaction: serverLocator<CreateRoomTransactionUseCase>(), 
+      retrieveRoomGuest: serverLocator<RetrieveRoomGuestUseCase>(),
+      
     ),
   );
 }

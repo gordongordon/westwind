@@ -31,8 +31,20 @@ class RoomTransactionStateRetrievedSuccess extends RoomTransactionState {
   RoomTransactionStateRetrievedSuccess({required this.roomTransaction});
 }
 
+class RoomTransactionStateRetrievedRoomGuestSuccess extends RoomTransactionState {
+  final RoomGuest roomGuest;
+
+  RoomTransactionStateRetrievedRoomGuestSuccess({required this.roomGuest});
+}
+
 class RoomTransactionStateCreatedSuccess extends RoomTransactionState {
   final RoomTransaction roomTransaction;
 
   RoomTransactionStateCreatedSuccess({required this.roomTransaction});
+}
+
+final class RoomTransactionStateRetrieveGuestByRoomGuestSuccess extends RoomTransactionState {
+    final RoomGuest roomGuest;
+
+     RoomTransactionStateRetrieveGuestByRoomGuestSuccess ( this.roomGuest );
 }

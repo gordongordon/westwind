@@ -29,7 +29,6 @@ abstract class RoomTransaction extends _i1.TableRow
     required this.amount,
     required this.tax1,
     required this.tax2,
-    required this.tax3,
     required this.total,
     required this.description,
     required this.itemType,
@@ -50,7 +49,6 @@ abstract class RoomTransaction extends _i1.TableRow
     required double amount,
     required double tax1,
     required double tax2,
-    required double tax3,
     required double total,
     required String description,
     required _i2.ItemType itemType,
@@ -85,7 +83,6 @@ abstract class RoomTransaction extends _i1.TableRow
       amount: (jsonSerialization['amount'] as num).toDouble(),
       tax1: (jsonSerialization['tax1'] as num).toDouble(),
       tax2: (jsonSerialization['tax2'] as num).toDouble(),
-      tax3: (jsonSerialization['tax3'] as num).toDouble(),
       total: (jsonSerialization['total'] as num).toDouble(),
       description: jsonSerialization['description'] as String,
       itemType:
@@ -123,8 +120,6 @@ abstract class RoomTransaction extends _i1.TableRow
 
   double tax2;
 
-  double tax3;
-
   double total;
 
   String description;
@@ -149,7 +144,6 @@ abstract class RoomTransaction extends _i1.TableRow
     double? amount,
     double? tax1,
     double? tax2,
-    double? tax3,
     double? total,
     String? description,
     _i2.ItemType? itemType,
@@ -171,7 +165,6 @@ abstract class RoomTransaction extends _i1.TableRow
       'amount': amount,
       'tax1': tax1,
       'tax2': tax2,
-      'tax3': tax3,
       'total': total,
       'description': description,
       'itemType': itemType.toJson(),
@@ -195,7 +188,6 @@ abstract class RoomTransaction extends _i1.TableRow
       'amount': amount,
       'tax1': tax1,
       'tax2': tax2,
-      'tax3': tax3,
       'total': total,
       'description': description,
       'itemType': itemType.toJson(),
@@ -258,7 +250,6 @@ class _RoomTransactionImpl extends RoomTransaction {
     required double amount,
     required double tax1,
     required double tax2,
-    required double tax3,
     required double total,
     required String description,
     required _i2.ItemType itemType,
@@ -277,7 +268,6 @@ class _RoomTransactionImpl extends RoomTransaction {
           amount: amount,
           tax1: tax1,
           tax2: tax2,
-          tax3: tax3,
           total: total,
           description: description,
           itemType: itemType,
@@ -299,7 +289,6 @@ class _RoomTransactionImpl extends RoomTransaction {
     double? amount,
     double? tax1,
     double? tax2,
-    double? tax3,
     double? total,
     String? description,
     _i2.ItemType? itemType,
@@ -320,7 +309,6 @@ class _RoomTransactionImpl extends RoomTransaction {
       amount: amount ?? this.amount,
       tax1: tax1 ?? this.tax1,
       tax2: tax2 ?? this.tax2,
-      tax3: tax3 ?? this.tax3,
       total: total ?? this.total,
       description: description ?? this.description,
       itemType: itemType ?? this.itemType,
@@ -372,10 +360,6 @@ class RoomTransactionTable extends _i1.Table {
       'tax2',
       this,
     );
-    tax3 = _i1.ColumnDouble(
-      'tax3',
-      this,
-    );
     total = _i1.ColumnDouble(
       'total',
       this,
@@ -416,8 +400,6 @@ class RoomTransactionTable extends _i1.Table {
   late final _i1.ColumnDouble tax1;
 
   late final _i1.ColumnDouble tax2;
-
-  late final _i1.ColumnDouble tax3;
 
   late final _i1.ColumnDouble total;
 
@@ -477,7 +459,6 @@ class RoomTransactionTable extends _i1.Table {
         amount,
         tax1,
         tax2,
-        tax3,
         total,
         description,
         itemType,

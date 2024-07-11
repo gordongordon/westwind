@@ -7,7 +7,7 @@ import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_guest_transaction_manage_page.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_guest_transactions_manage_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_create_page.dart';
 
 class RoomGuestListWidget extends StatefulWidget {
@@ -39,7 +39,7 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
       _buildNumberColumn('Room Id', 'roomId'),
       _buildNameColumn('First', 'firstName'),
       _buildNameColumn('Last', 'lastName'),
-      _buildDateColumn('Stay Date', 'stayDate'),
+      _buildDateColumn('Stay Day', 'stayDay'),
       _buildDateColumn('C/I', 'checkIn', width: 80),
       _buildDateColumn('C/O', 'checkOut', width: 80),
       _buildSelectColumn('Rate Type', 'rateType', _rateTypeOptions),
@@ -110,7 +110,7 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
       cells: {
         'id': PlutoCell(value: roomGuest.id!),
         'roomId': PlutoCell(value: roomGuest.roomId),
-        'stayDate': PlutoCell(value: roomGuest.stayDate),
+        'stayDay': PlutoCell(value: roomGuest.stayDay),
         'guestId': PlutoCell(value: roomGuest.guestId),
         'rateType': PlutoCell(value: roomGuest.rateType.toString()),
         'rateReason': PlutoCell(value: roomGuest.rateReason.toString()),

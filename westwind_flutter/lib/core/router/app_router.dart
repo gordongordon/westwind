@@ -13,7 +13,7 @@ import 'package:westwind_flutter/features/reservation/presentaion/pages/reservat
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_list_page.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_guest_transaction_manage_page.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_guest_transactions_manage_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_create_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_edit_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_list_page.dart';

@@ -154,10 +154,10 @@ class RoomGuestEndpoint extends Endpoint {
 
     final roomId = roomGuest.roomId; 
     final roomGuestId = roomGuest.id;
-    final stayDay = roomGuest.stayDate;
+    final stayDay = roomGuest.stayDay;
 
     final result = await RoomGuest.db.find(session,
-        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDate.equals(stayDay) & roomGuest.rateReason.notEquals(RateReason.gohome),
+        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDay.equals(stayDay) & roomGuest.rateReason.notEquals(RateReason.gohome),
         include: RoomGuest.include(
           guest: Guest.include(),
           room: Room.include(),
@@ -182,10 +182,10 @@ class RoomGuestEndpoint extends Endpoint {
 
     final roomId = roomGuest.roomId; 
     final roomGuestId = roomGuest.id;
-    final stayDay = roomGuest.stayDate;
+    final stayDay = roomGuest.stayDay;
 
     final roommates = await RoomGuest.db.find(session,
-        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDate.equals(stayDay) & roomGuest.rateReason.equals(reason),
+        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDay.equals(stayDay) & roomGuest.rateReason.equals(reason),
         include: RoomGuest.include(
           guest: Guest.include(),
           room: Room.include(),
@@ -218,10 +218,10 @@ class RoomGuestEndpoint extends Endpoint {
 
     final roomId = roomGuest.roomId; 
     final roomGuestId = roomGuest.id;
-    final stayDay = roomGuest.stayDate;
+    final stayDay = roomGuest.stayDay;
 
     final result = await RoomGuest.db.find(session,
-        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDate.equals(stayDay),
+        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDay.equals(stayDay),
         include: RoomGuest.include(
           guest: Guest.include(),
           room: Room.include(),
@@ -239,7 +239,7 @@ class RoomGuestEndpoint extends Endpoint {
         //orderBy: (t) => t.roomId,
         orderByList: (t) => [
           Order( column: t.roomId, orderDescending : true),
-          Order( column: t.stayDate, orderDescending: false),
+          Order( column: t.stayDay, orderDescending: false),
           Order( column: t.checkOutDate, orderDescending: false),
           Order( column: t.guest.lastName, orderDescending: false),
         ],
@@ -254,7 +254,7 @@ class RoomGuestEndpoint extends Endpoint {
   Future<List<RoomGuest>> getAllRoomGuestByDay(
       Session session, DateTime datetime) async {
     return await RoomGuest.db.find(session,
-        where: (t) => t.stayDate.between(
+        where: (t) => t.stayDay.between(
             datetime.subtract(const Duration(days: 1)),
             datetime.add(const Duration(days: 1))));
   }

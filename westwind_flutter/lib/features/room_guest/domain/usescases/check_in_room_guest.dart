@@ -3,6 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/error/failure.dart';
 import 'package:westwind_flutter/core/usecases/usecase.dart';
+import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/features/rate_table/domain/repositories/rate_table_repository.dart';
 import 'package:westwind_flutter/features/room_guest/domain/repositories/room_guest_repository.dart';
 
@@ -53,7 +54,7 @@ void _updateRoomMatesRateAndReason(List<RoomGuest> roommates, double rate, RateR
 RoomGuest createRoomGuestObject(Reservation reservation, double rate, RateReason reason) {
   return RoomGuest(
       roomId: reservation.roomId,
-      stayDate: DateTime.now(),
+      stayDay: DateTime.now().getDateOnly(),
       guestId: reservation.guestId,
       rateType: reservation.rateType,
       rateReason: reason,
