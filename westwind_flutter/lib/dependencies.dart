@@ -177,6 +177,7 @@ void _initRoomTransaction() {
   serverLocator.registerFactory<RoomCalendarBloc>(() => RoomCalendarBloc(
         reservationRepository: serverLocator<ReservationRepository>(),
         roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
+         roomGuestRepository:  serverLocator<RoomGuestRepository>(),
       ));
 
   // bloc

@@ -84,8 +84,8 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
       },
       onSelected: _handleRowSelected,
       //! Testing 
-   //   onRowDoubleTap: _handleRowDoubleTap,
-      onRowDoubleTap: _handleRowDoubleTapRoomGuestTransactioin,
+      onRowDoubleTap: _handleRowDoubleTap,
+     // onRowDoubleTap: _handleRowDoubleTapRoomGuestTransactioin,
 
       configuration: PlutoGridConfiguration(
         columnFilter: _buildColumnFilterConfig(),

@@ -95,3 +95,18 @@ class SelectSpecificDate extends RoomCalendarEvent {
   @override
   List<Object> get props => [selectedDate];
 }
+
+class MoveRoomGuest extends RoomCalendarEvent {
+  final RoomGuest roomGuest;
+  final String newRoomNumber;
+  final DateTime newStayDate;
+
+  const MoveRoomGuest({
+    required this.roomGuest,
+    required this.newRoomNumber,
+    required this.newStayDate,
+  });
+
+  @override
+  List<Object> get props => [roomGuest, newRoomNumber, newStayDate];
+}

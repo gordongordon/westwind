@@ -29,6 +29,8 @@ class RoomCalendarLoaded extends RoomCalendarState {
   final Map<String, List<Reservation>> reservationsByRoom;
   final List<RoomTransaction> roomTransactions;
   final Map<String, List<RoomTransaction>> roomTransactionsByRoom;
+  final List<RoomGuest> roomGuests;
+  final Map<String, List<RoomGuest>> roomGuestsByRoom;
 
   const RoomCalendarLoaded({
     required this.roomTypes,
@@ -39,6 +41,8 @@ class RoomCalendarLoaded extends RoomCalendarState {
     required this.reservationsByRoom,
     required this.roomTransactions,
     required this.roomTransactionsByRoom,
+    required this.roomGuests,
+    required this.roomGuestsByRoom,
   });
 
   @override
@@ -51,6 +55,8 @@ class RoomCalendarLoaded extends RoomCalendarState {
     reservationsByRoom,
     roomTransactions,
     roomTransactionsByRoom,
+    roomGuests,
+    roomGuestsByRoom,
   ];
 
   RoomCalendarLoaded copyWith({
@@ -62,6 +68,8 @@ class RoomCalendarLoaded extends RoomCalendarState {
     Map<String, List<Reservation>>? reservationsByRoom,
     List<RoomTransaction>? roomTransactions,
     Map<String, List<RoomTransaction>>? roomTransactionsByRoom,
+    List<RoomGuest>? roomGuests,
+    Map<String, List<RoomGuest>>? roomGuestsByRoom,
   }) {
     return RoomCalendarLoaded(
       roomTypes: roomTypes ?? this.roomTypes,
@@ -72,6 +80,8 @@ class RoomCalendarLoaded extends RoomCalendarState {
       reservationsByRoom: reservationsByRoom ?? this.reservationsByRoom,
       roomTransactions: roomTransactions ?? this.roomTransactions,
       roomTransactionsByRoom: roomTransactionsByRoom ?? this.roomTransactionsByRoom,
+      roomGuests: roomGuests ?? this.roomGuests,
+      roomGuestsByRoom: roomGuestsByRoom ?? this.roomGuestsByRoom,
     );
   }
 }
