@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:intl/intl.dart';
+import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 
 class RoomGuestTransactionFormWidget extends StatefulWidget {
   final Function(RoomTransaction) onSave;
@@ -120,6 +121,24 @@ class _RoomGuestTransactionFormWidgetState
       late double gst;
       late double levy;
       late double total;
+      late double sign;
+
+      final transactionType = formData['transactionType'] as TransactionType;
+
+      switch (transactionType) {
+        case TransactionType.deposit:
+          sign = -1;
+        case TransactionType.pay:
+          sign = -1;
+        case TransactionType.charge:
+          sign = 1;
+        case TransactionType.refund:
+          sign = -1;
+        case TransactionType.adjustDebit:
+          sign = 1;
+        case TransactionType.adjustCredit:
+          sign = -1;
+      }
 
       switch (itemType) {
         case ItemType.room:
@@ -181,28 +200,31 @@ class _RoomGuestTransactionFormWidgetState
             gst = 0;
             levy = 0;
             total = amount + gst + levy;
-            total = total * -1;
+            //   total = total * -1;
           }
       }
+
+      final totalFinal = total * sign;
+      final amountFinal = amount * sign;
 
       final newTransaction = RoomTransaction(
         guestId: widget.roomGuestId,
         roomGuestId: widget.roomGuestId,
-        // Get 
+        // Get
         roomId: 101,
         transactionType: formData['transactionType'] as TransactionType,
         itemType: formData['itemType'] as ItemType,
-        amount: amount,
+        amount: amountFinal,
         tax1: tax1,
         tax2: tax2,
-       // tax3: 0,
+        // tax3: 0,
         /*
         tax3: double.parse(formData['tax3']),
         */
-        total: total,
+        total: totalFinal,
         description: formData['description'],
         //! need to get stayDay from roomGuest,
-        stayDay: DateTime.now(),
+        stayDay: DateTime.now().getDateOnly(),
         transactionDay: DateTime.now(),
         // Set other fields as needed
       );

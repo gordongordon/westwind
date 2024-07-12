@@ -123,8 +123,8 @@ class _GuestEditPageState extends State<GuestEditPage> {
             keyboardType: TextInputType.phone,
             maxLength: 11,
             onChanged: _onPhoneChanged),
-   _buildTextFieldOptionalEmail('email','Email Address', emailController,         
-      //  _buildTextField('email', 'Email Address', emailController,
+        _buildTextFieldOptionalEmail('email', 'Email Address', emailController,
+            //  _buildTextField('email', 'Email Address', emailController,
             keyboardType: TextInputType.emailAddress),
       ],
     );
@@ -178,7 +178,6 @@ class _GuestEditPageState extends State<GuestEditPage> {
     );
   }
 
-
   Widget _buildTextFieldOptionalEmail(
       String name, String label, TextEditingController controller,
       {TextInputType keyboardType = TextInputType.text,
@@ -195,14 +194,12 @@ class _GuestEditPageState extends State<GuestEditPage> {
         ),
         keyboardType: keyboardType,
         maxLength: maxLength,
-       // onChanged: ,
-         validator: FormBuilderValidators.compose([
-          FormBuilderValidators.email()
-         ]),
+        // onChanged: ,
+        validator:
+            FormBuilderValidators.compose([FormBuilderValidators.email()]),
       ),
     );
   }
-
 
   Widget _buildTextFieldOptional(
       String name, String label, TextEditingController controller,
@@ -288,81 +285,52 @@ class _GuestEditPageState extends State<GuestEditPage> {
     );
   }
 
-
   void _showValidationErrors(FormBuilderState formState) {
-  // This will force the form to show error messages
-  formState.validate();
-  
-  // You can also manually traverse the form fields
+    // This will force the form to show error messages
+    formState.validate();
 
-  formState.fields.forEach((key, formFieldState) {
-    if (formFieldState.hasError) {
-      print("Field '${key}' error: ${formFieldState.errorText}");
-    }
-  });
-}
+    // You can also manually traverse the form fields
+
+    formState.fields.forEach((key, formFieldState) {
+      if (formFieldState.hasError) {
+        print("Field '${key}' error: ${formFieldState.errorText}");
+      }
+    });
+  }
 
   void _saveGuest() {
+    final formState = formKey.currentState;
 
-final formState = formKey.currentState;
+    if (formState != null) {
+      bool isValid = formState.validate();
+      if (isValid) {
+        final guest = Guest(
+          id: widget.guestId,
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          phone: phoneController.text,
+          email: emailController.text.isNotEmpty ? emailController.text : null,
+          isInHouse: formKey.currentState!.fields['isInHouse']!.value,
+          dateCreate: formKey.currentState!.fields['dateCreate']!.value,
+          dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
+          rateType: RateType.values
+              .byName(formKey.currentState!.fields['rateType']!.value),
+          staffId: 1,
+          companyId: 1,
+          rigNumber: rigNumberController.text.isNotEmpty
+              ? int.parse(rigNumberController.text)
+              : null,
+          accountBalance: 0,
+        );
 
-  
-
-if (formState != null) {
-  bool isValid = formState.validate();
+        context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
+      } else {
+        // Handle invalid form
         _showValidationErrors(formState);
-  if (isValid) {
-      final guest = Guest(
-        id: widget.guestId,
-        firstName: firstNameController.text,
-        lastName: lastNameController.text,
-        phone: phoneController.text,
-        email: emailController.text,
-        isInHouse: formKey.currentState!.fields['isInHouse']!.value,
-        dateCreate: formKey.currentState!.fields['dateCreate']!.value,
-        dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
-        rateType: RateType.values
-            .byName(formKey.currentState!.fields['rateType']!.value),
-        staffId: 1,
-        companyId: 1,
-        rigNumber: int.parse(rigNumberController.text),
-        accountBalance: 0,
-      );
-          _showValidationErrors(formState);
-
-      context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
-  } else {
-    // Handle invalid form
-    _showValidationErrors(formState);
-  }
-} else {
-  
-  print("Form state is null");
-}
-
-/*
-
-    if ( formKey.currentState?.saveAndValidate() ?? false ) {
-      final guest = Guest(
-        id: widget.guestId,
-        firstName: firstNameController.text,
-        lastName: lastNameController.text,
-        phone: phoneController.text,
-        email: emailController.text,
-        isInHouse: formKey.currentState!.fields['isInHouse']!.value,
-        dateCreate: formKey.currentState!.fields['dateCreate']!.value,
-        dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
-        rateType: RateType.values
-            .byName(formKey.currentState!.fields['rateType']!.value),
-        staffId: 1,
-        companyId: 1,
-        rigNumber: int.parse(rigNumberController.text),
-        accountBalance: 0,
-      );
-
-      context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
+      }
+    } else {
+      print("Form state is null");
     }
-    */
   }
 
   void _onPhoneChanged(String value) {

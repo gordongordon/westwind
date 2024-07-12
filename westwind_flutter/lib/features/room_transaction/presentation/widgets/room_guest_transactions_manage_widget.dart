@@ -138,7 +138,7 @@ class _RoomGuestTransactionsManageWidgetState
 
   Widget _buildTransactionsList(List<RoomTransaction> transactions) {
     return ListView.builder(
-      // reverse: true,
+      // reverse: tr
       itemCount: transactions.length,
       itemBuilder: (context, index) {
         final transaction = transactions[index];
@@ -151,7 +151,7 @@ class _RoomGuestTransactionsManageWidgetState
               : null, // Light red background for the last item
           child: ExpansionTile(
             title: Text(
-              '${transaction.transactionType} - ${transaction.itemType} - # ${transaction.roomId} - StayDay - ${transaction.stayDay.getSystemDate()} ',
+              '${transaction.transactionType} - ${transaction.itemType}    /    # ${transaction.roomId} - StayDay at ${transaction.stayDay.getMonthNameDD()}  /          Create At - ${transaction.transactionDay.getMonthDayHour()}',
               style: TextStyle(color: isLastItem ? Colors.red : null),
             ),
             subtitle: Text(
@@ -173,10 +173,10 @@ class _RoomGuestTransactionsManageWidgetState
                     _buildInfoRow('Guest ',
                         '${transaction.guest?.lastName} ${transaction.guest?.firstName}',
                         isLastItem: isLastItem),
-                    _buildInfoRow('Stay Day', _formatDate(transaction.stayDay),
+                    _buildInfoRow('Stay Day', transaction.stayDay.getMonthNameDD(),
                         isLastItem: isLastItem),
                     _buildInfoRow('Transaction Day',
-                        _formatDate(transaction.transactionDay),
+                        transaction.transactionDay.getMonthDayHour(),
                         isLastItem: isLastItem),
                     _buildInfoRow(
                         'Amount', '\$${transaction.amount.toStringAsFixed(2)}',
@@ -252,6 +252,6 @@ class _RoomGuestTransactionsManageWidgetState
 
   String _formatDate(DateTime? date) {
     if (date == null) return 'N/A';
-    return DateFormat('yyyy-MM-dd HH:mm').format(date);
+    return DateFormat('MM-dd').format(date);
   }
 }

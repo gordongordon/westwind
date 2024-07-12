@@ -8,6 +8,7 @@ import 'package:westwind_flutter/features/dashboard/screens/main_screen.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_detail_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_edit_page.dart';
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/pages/guest_reservation_edit_page.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_calendar_page.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_edit_page.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_list_page.dart';
@@ -114,6 +115,20 @@ class AppRouter {
           path: RoomGuestTransactionsManagePage.route(),
           builder: (context, state) => RoomGuestTransactionsManagePage(
             roomGuestId: int.parse(state.pathParameters['id'] ?? '0'),
+          ),
+        ),
+
+                GoRoute(
+          path: GuestReservationEditPage.route(),
+          builder: (context, state) => GuestReservationEditPage(
+            guestId: int.parse(state.pathParameters['id'] ?? '0'),
+            reservationId: int.parse(state.pathParameters['id'] ?? '0'),
+          )
+          ,
+        ),
+                GoRoute(
+          path: GuestReservationEditPage.routeNew(),
+          builder: (context, state) => GuestReservationEditPage(
           ),
         ),
       ],

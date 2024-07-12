@@ -25,23 +25,26 @@ class GuestEndpoint extends Endpoint {
   }
 
   Future<Guest> save(Session session, Guest guest) async {
-
     if (guest.id != null) {
       guest.dateUpdate = DateTime.now();
+      final existingGuest = await Guest.db.findById(session, guest.id!);
+      if (existingGuest == null) {
+        throw Exception('Guest not found id ${guest.id!}');
+      }
       return await Guest.db.updateRow(session, guest);
     } else {
-       guest.dateCreate = DateTime.now();
-       return Guest.db.insertRow(session, guest);
+      guest.dateCreate = DateTime.now();
+      return Guest.db.insertRow(session, guest);
     }
   }
 
-
-  Future<Guest?> retrieveGuestByPhone( Session session, {required String phone}) async {
-     return await Guest.db.findFirstRow(session,
-           where: (guest) => guest.phone.equals(phone)
-       ,);
+  Future<Guest?> retrieveGuestByPhone(Session session,
+      {required String phone}) async {
+    return await Guest.db.findFirstRow(
+      session,
+      where: (guest) => guest.phone.equals(phone),
+    );
   }
-
 
   Future<Guest> createGuest(Session session, {required Guest guest}) async {
     guest.dateCreate = DateTime.now();
