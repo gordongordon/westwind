@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:westwind_flutter/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:westwind_flutter/features/dashboard/const/constant.dart';
-import 'package:westwind_flutter/features/dashboard/data/side_menu_data.dart';
+import 'package:westwind_flutter/features/dashboard/screens/side_menu_data.dart';
 
 class SideMenuWidget extends StatefulWidget {
   const SideMenuWidget({super.key});

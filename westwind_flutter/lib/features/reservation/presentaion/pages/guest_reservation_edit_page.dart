@@ -39,7 +39,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController rateTypeController = TextEditingController();
+  final TextEditingController rateTypeController = TextEditingController(text: RateType.standard.name);
   final TextEditingController rigNumberController = TextEditingController();
 
   // Reservation-related controllers
@@ -155,6 +155,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         _buildTextFieldPhone('phone', 'Phone', phoneController, _onPhoneChanged),
         _buildTextFieldOptional('rigNumber', 'Rig Number', rigNumberController, keyboardType: TextInputType.number),
         _buildRateTypeDropdown(),
+     //     _buildDropdown('rateType', 'Rate Type', _rateTypeOptions, initialValue: rateTypeController.text),      
         _buildInHouseSwitch(),
       ],
     );
@@ -358,17 +359,24 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     );
   }
 
-Widget _buildRateTypeDropdown() {
+  Widget _buildRateTypeDropdown() {
     return FormBuilderDropdown<String>(
       name: 'rateType',
-      initialValue: rateTypeController.text,
       decoration: InputDecoration(
         labelText: 'Rate Type',
         border: OutlineInputBorder(),
       ),
+      initialValue: rateTypeController.text,
       items: _rateTypeOptions
           .map((rateType) => DropdownMenuItem(value: rateType, child: Text(rateType)))
           .toList(),
+      onChanged: (value) {
+        if (value != null) {
+          setState(() {
+            rateTypeController.text = value;
+          });
+        }
+      },
       validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
     );
   }
@@ -430,8 +438,6 @@ Widget _buildRateTypeDropdown() {
       showSnackbar(context, 'Please fill all required fields for the guest');
     }
   }
-
-
 
   void _saveReservation(int guestId) {
     print('Attempting to save reservation for guest ID: $guestId');
@@ -511,28 +517,23 @@ Widget _buildRateTypeDropdown() {
 
   */
 
-  // BLoC listeners
   void _guestBlocListener(BuildContext context, GuestManageState state) {
+    print('Current guest state: $state');
     if (state is GuestManageStateFailure) {
-      showSnackbar(context, state.message);
+      print('Guest save failed: ${state.message}');
+      showSnackbar(context, 'Failed to save guest: ${state.message}');
     } else if (state is GuestManageStateSaveSuccess) {
-
-          _saveReservation(state.guest.id!);
-
-      context.read<GuestListBloc>().add(FetchGuestsEvent());
-      if (isGuestEditing) {
-        context.read<GuestDetailBloc>().add(GuestDetailRetrieveEvent(id: widget.guestId!));
-      }
-    
-      // Don't pop context here, wait for reservation save
-    } else if (state is GuestManageStateDeleteSuccess) {
-      context.read<GuestListBloc>().add(FetchGuestsEvent());
-      context.pop();
-    } else if (state is GuestManageStateRetrieveSuccess ||
-        state is GuestManageStateRetrieveByPhoneSuccess) {
-      _populateGuestFields(state is GuestManageStateRetrieveSuccess
-          ? state.guest
-          : (state as GuestManageStateRetrieveByPhoneSuccess).guest);
+      print('Guest saved successfully. ID: ${state.guest.id}');
+      print('Saved guest rate type: ${state.guest.rateType}');
+      _saveReservation(state.guest.id!);
+    } else if (state is GuestManageStateLoading) {
+      // Show loading indicator if needed
+    } else if (state is GuestManageStateRetrieveSuccess) {
+      _populateGuestFields(state.guest);
+    } else if (state is GuestManageStateRetrieveByPhoneSuccess) {
+      _populateGuestFields(state.guest);
+    } else {
+      print('Unhandled guest state: $state');
     }
   }
 
@@ -561,7 +562,6 @@ Widget _buildRateTypeDropdown() {
     }
   }
 
-  // Helper methods to populate form fields
   void _populateGuestFields(Guest guest) {
     guestIdController.text = guest.id.toString();
     firstNameController.text = guest.firstName;
@@ -569,7 +569,7 @@ Widget _buildRateTypeDropdown() {
     phoneController.text = guest.phone;
     emailController.text = guest.email ?? '';
     rigNumberController.text = guest.rigNumber?.toString() ?? '';
-    rateTypeController.text = guest.rateType.toString();
+    rateTypeController.text = guest.rateType.name; // Use .name here
 
     setState(() {
       isInHouse = guest.isInHouse;

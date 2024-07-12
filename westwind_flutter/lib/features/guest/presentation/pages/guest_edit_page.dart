@@ -384,6 +384,6 @@ class _GuestEditPageState extends State<GuestEditPage> {
       rigNumberController.text = guest.rigNumber.toString();
     }
 
-    //  formKey.currentState?.patchValue({'rateType': guest.rateType.name});
+      formKey.currentState?.patchValue({'rateType': guest.rateType.name});
   }
 }
