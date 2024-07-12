@@ -9,4 +9,4 @@ build/
 doc/api/
 
 # Passwords file
-config/passwords.yaml
+# config/passwords.yaml
