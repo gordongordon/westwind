@@ -28,6 +28,9 @@ reservation:
   - list:
   - checkIn:
   - delete:
+room:
+  - retrieve:
+  - list:
 roomGuest:
   - saveRoomGuest:
   - insertGuestByReservation:

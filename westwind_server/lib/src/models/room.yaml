@@ -1,7 +1,7 @@
 class : Room
 table : room
 fields : 
-    roomNumber   : RoomNumber
+    roomNumber   : String
     reservations : List<Reservation>?, relation
     roomType     : String
     roomStatus   : RoomStatus

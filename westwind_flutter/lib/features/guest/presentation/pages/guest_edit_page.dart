@@ -104,8 +104,9 @@ class _GuestEditPageState extends State<GuestEditPage> {
         Text('Personal Information',
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
-        _buildTextField('lastName', 'Last Name', lastNameController),
         _buildTextField('firstName', 'First Name', firstNameController),
+        _buildTextField('lastName', 'Last Name', lastNameController),
+        // _buildTextField('firstName', 'First Name', firstNameController),
       ],
     );
   }
@@ -122,7 +123,8 @@ class _GuestEditPageState extends State<GuestEditPage> {
             keyboardType: TextInputType.phone,
             maxLength: 11,
             onChanged: _onPhoneChanged),
-        _buildTextField('email', 'Email Address', emailController,
+   _buildTextFieldOptionalEmail('email','Email Address', emailController,         
+      //  _buildTextField('email', 'Email Address', emailController,
             keyboardType: TextInputType.emailAddress),
       ],
     );
@@ -136,10 +138,9 @@ class _GuestEditPageState extends State<GuestEditPage> {
         Text('Additional Information',
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
-
         _buildRateTypeDropdown(),
         const SizedBox(height: 16),
-                _buildTextField('rigNumber', 'Rig Number', rigNumberController,
+        _buildTextFieldOptional('rigNumber', 'Rig Number', rigNumberController,
             keyboardType: TextInputType.number),
         const SizedBox(height: 16),
         _buildInHouseSwitch(),
@@ -168,7 +169,8 @@ class _GuestEditPageState extends State<GuestEditPage> {
         maxLength: maxLength,
         // onChanged: ,
         validator: FormBuilderValidators.compose([
-          if ( name != 'email' && name != 'rigNumber')  FormBuilderValidators.required(),
+          if (name != 'email' && name != 'rigNumber')
+            FormBuilderValidators.required(),
           if (name == 'email') FormBuilderValidators.email(),
           if (name == 'phone') FormBuilderValidators.numeric(),
         ]),
@@ -176,9 +178,58 @@ class _GuestEditPageState extends State<GuestEditPage> {
     );
   }
 
+
+  Widget _buildTextFieldOptionalEmail(
+      String name, String label, TextEditingController controller,
+      {TextInputType keyboardType = TextInputType.text,
+      int? maxLength,
+      Function(String)? onChanged}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        maxLength: maxLength,
+       // onChanged: ,
+         validator: FormBuilderValidators.compose([
+          FormBuilderValidators.email()
+         ]),
+      ),
+    );
+  }
+
+
+  Widget _buildTextFieldOptional(
+      String name, String label, TextEditingController controller,
+      {TextInputType keyboardType = TextInputType.text,
+      int? maxLength,
+      Function(String)? onChanged}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        maxLength: maxLength,
+        // onChanged: ,
+        // validator: FormBuilderValidators.compose([]),
+      ),
+    );
+  }
+
   Widget _buildRateTypeDropdown() {
     return FormBuilderDropdown<String>(
       name: 'rateType',
+      initialValue: rateTypeController.text,
       decoration: InputDecoration(
         labelText: 'Rate Type',
         border: OutlineInputBorder(),
@@ -237,8 +288,61 @@ class _GuestEditPageState extends State<GuestEditPage> {
     );
   }
 
+
+  void _showValidationErrors(FormBuilderState formState) {
+  // This will force the form to show error messages
+  formState.validate();
+  
+  // You can also manually traverse the form fields
+
+  formState.fields.forEach((key, formFieldState) {
+    if (formFieldState.hasError) {
+      print("Field '${key}' error: ${formFieldState.errorText}");
+    }
+  });
+}
+
   void _saveGuest() {
-    if (formKey.currentState?.saveAndValidate() ?? false) {
+
+final formState = formKey.currentState;
+
+  
+
+if (formState != null) {
+  bool isValid = formState.validate();
+        _showValidationErrors(formState);
+  if (isValid) {
+      final guest = Guest(
+        id: widget.guestId,
+        firstName: firstNameController.text,
+        lastName: lastNameController.text,
+        phone: phoneController.text,
+        email: emailController.text,
+        isInHouse: formKey.currentState!.fields['isInHouse']!.value,
+        dateCreate: formKey.currentState!.fields['dateCreate']!.value,
+        dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
+        rateType: RateType.values
+            .byName(formKey.currentState!.fields['rateType']!.value),
+        staffId: 1,
+        companyId: 1,
+        rigNumber: int.parse(rigNumberController.text),
+        accountBalance: 0,
+      );
+          _showValidationErrors(formState);
+
+      context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
+  } else {
+    // Handle invalid form
+    _showValidationErrors(formState);
+  }
+} else {
+  
+  print("Form state is null");
+}
+
+/*
+
+    if ( formKey.currentState?.saveAndValidate() ?? false ) {
       final guest = Guest(
         id: widget.guestId,
         firstName: firstNameController.text,
@@ -258,6 +362,7 @@ class _GuestEditPageState extends State<GuestEditPage> {
 
       context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
     }
+    */
   }
 
   void _onPhoneChanged(String value) {
@@ -305,12 +410,12 @@ class _GuestEditPageState extends State<GuestEditPage> {
     isInHouse = guest.isInHouse;
     dateCreate = guest.dateCreate;
     dateUpdate = guest.dateUpdate!;
-    if (guest.rigNumber != null) {
+    if (guest.rigNumber == null) {
       rigNumberController.text = "";
     } else {
       rigNumberController.text = guest.rigNumber.toString();
     }
 
-    formKey.currentState?.patchValue({'rateType': guest.rateType.name});
+    //  formKey.currentState?.patchValue({'rateType': guest.rateType.name});
   }
 }

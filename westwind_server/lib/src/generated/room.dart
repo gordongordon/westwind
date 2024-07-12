@@ -39,7 +39,7 @@ abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
 
   factory Room({
     int? id,
-    required _i2.RoomNumber roomNumber,
+    required String roomNumber,
     List<_i2.Reservation>? reservations,
     required String roomType,
     required _i2.RoomStatus roomStatus,
@@ -64,8 +64,7 @@ abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
   factory Room.fromJson(Map<String, dynamic> jsonSerialization) {
     return Room(
       id: jsonSerialization['id'] as int?,
-      roomNumber:
-          _i2.RoomNumber.fromJson((jsonSerialization['roomNumber'] as String)),
+      roomNumber: jsonSerialization['roomNumber'] as String,
       reservations: (jsonSerialization['reservations'] as List?)
           ?.map((e) => _i2.Reservation.fromJson((e as Map<String, dynamic>)))
           .toList(),
@@ -95,7 +94,7 @@ abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
 
   static const db = RoomRepository._();
 
-  _i2.RoomNumber roomNumber;
+  String roomNumber;
 
   List<_i2.Reservation>? reservations;
 
@@ -140,7 +139,7 @@ abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
 
   Room copyWith({
     int? id,
-    _i2.RoomNumber? roomNumber,
+    String? roomNumber,
     List<_i2.Reservation>? reservations,
     String? roomType,
     _i2.RoomStatus? roomStatus,
@@ -165,7 +164,7 @@ abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
-      'roomNumber': roomNumber.toJson(),
+      'roomNumber': roomNumber,
       if (reservations != null)
         'reservations': reservations?.toJson(valueToJson: (v) => v.toJson()),
       'roomType': roomType,
@@ -193,7 +192,7 @@ abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
   Map<String, dynamic> toJsonForProtocol() {
     return {
       if (id != null) 'id': id,
-      'roomNumber': roomNumber.toJson(),
+      'roomNumber': roomNumber,
       if (reservations != null)
         'reservations':
             reservations?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
@@ -253,7 +252,7 @@ class _Undefined {}
 class _RoomImpl extends Room {
   _RoomImpl({
     int? id,
-    required _i2.RoomNumber roomNumber,
+    required String roomNumber,
     List<_i2.Reservation>? reservations,
     required String roomType,
     required _i2.RoomStatus roomStatus,
@@ -300,7 +299,7 @@ class _RoomImpl extends Room {
   @override
   Room copyWith({
     Object? id = _Undefined,
-    _i2.RoomNumber? roomNumber,
+    String? roomNumber,
     Object? reservations = _Undefined,
     String? roomType,
     _i2.RoomStatus? roomStatus,
@@ -351,10 +350,9 @@ class _RoomImpl extends Room {
 
 class RoomTable extends _i1.Table {
   RoomTable({super.tableRelation}) : super(tableName: 'room') {
-    roomNumber = _i1.ColumnEnum(
+    roomNumber = _i1.ColumnString(
       'roomNumber',
       this,
-      _i1.EnumSerialization.byName,
     );
     roomType = _i1.ColumnString(
       'roomType',
@@ -432,7 +430,7 @@ class RoomTable extends _i1.Table {
     );
   }
 
-  late final _i1.ColumnEnum<_i2.RoomNumber> roomNumber;
+  late final _i1.ColumnString roomNumber;
 
   _i2.ReservationTable? ___reservations;
 

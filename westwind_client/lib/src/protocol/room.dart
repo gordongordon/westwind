@@ -38,7 +38,7 @@ abstract class Room implements _i1.SerializableModel {
 
   factory Room({
     int? id,
-    required _i2.RoomNumber roomNumber,
+    required String roomNumber,
     List<_i2.Reservation>? reservations,
     required String roomType,
     required _i2.RoomStatus roomStatus,
@@ -63,8 +63,7 @@ abstract class Room implements _i1.SerializableModel {
   factory Room.fromJson(Map<String, dynamic> jsonSerialization) {
     return Room(
       id: jsonSerialization['id'] as int?,
-      roomNumber:
-          _i2.RoomNumber.fromJson((jsonSerialization['roomNumber'] as String)),
+      roomNumber: jsonSerialization['roomNumber'] as String,
       reservations: (jsonSerialization['reservations'] as List?)
           ?.map((e) => _i2.Reservation.fromJson((e as Map<String, dynamic>)))
           .toList(),
@@ -95,7 +94,7 @@ abstract class Room implements _i1.SerializableModel {
   /// the id will be null.
   int? id;
 
-  _i2.RoomNumber roomNumber;
+  String roomNumber;
 
   List<_i2.Reservation>? reservations;
 
@@ -137,7 +136,7 @@ abstract class Room implements _i1.SerializableModel {
 
   Room copyWith({
     int? id,
-    _i2.RoomNumber? roomNumber,
+    String? roomNumber,
     List<_i2.Reservation>? reservations,
     String? roomType,
     _i2.RoomStatus? roomStatus,
@@ -162,7 +161,7 @@ abstract class Room implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
-      'roomNumber': roomNumber.toJson(),
+      'roomNumber': roomNumber,
       if (reservations != null)
         'reservations': reservations?.toJson(valueToJson: (v) => v.toJson()),
       'roomType': roomType,
@@ -197,7 +196,7 @@ class _Undefined {}
 class _RoomImpl extends Room {
   _RoomImpl({
     int? id,
-    required _i2.RoomNumber roomNumber,
+    required String roomNumber,
     List<_i2.Reservation>? reservations,
     required String roomType,
     required _i2.RoomStatus roomStatus,
@@ -244,7 +243,7 @@ class _RoomImpl extends Room {
   @override
   Room copyWith({
     Object? id = _Undefined,
-    _i2.RoomNumber? roomNumber,
+    String? roomNumber,
     Object? reservations = _Undefined,
     String? roomType,
     _i2.RoomStatus? roomStatus,

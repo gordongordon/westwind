@@ -139,8 +139,8 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('id', 'ID', idController, null, enabled: false),
-        _buildTextField('lastName', 'Last Name', lastNameController, null),
         _buildTextField('firstName', 'First Name', firstNameController, null),
+        _buildTextField('lastName', 'Last Name', lastNameController, null),
         _buildTextFieldPhone('phone', 'Phone', phoneController, onChangedPhone,
             keyboardType: TextInputType.phone),
         _buildTextField(

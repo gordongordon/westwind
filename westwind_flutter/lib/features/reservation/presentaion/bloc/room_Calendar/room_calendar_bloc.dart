@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
+import 'package:westwind_flutter/features/room/domain/repositories/room_repository.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
 import 'package:westwind_flutter/features/room_guest/domain/repositories/room_guest_repository.dart';
 
@@ -14,11 +15,13 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   final ReservationRepository reservationRepository;
   final RoomTransactionRepository roomTransactionRepository;
   final RoomGuestRepository roomGuestRepository;
+  final RoomRepository roomRepository;
 
   RoomCalendarBloc({
     required this.reservationRepository,
     required this.roomTransactionRepository,
     required this.roomGuestRepository,
+    required this.roomRepository,
   }) : super(RoomCalendarInitial()) {
     on<InitializeCalendar>(_onInitializeCalendar);
     on<FetchReservationsAndTransactions>(_onFetchReservationsAndTransactions);
@@ -36,26 +39,34 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       InitializeCalendar event, Emitter<RoomCalendarState> emit) async {
     emit(RoomCalendarLoading());
 
-    final List<String> roomTypes = ['Deluxe', 'Suite'];
-    final List<String> roomNumbers =
-        List.generate(67, (index) => (101 + index).toString());
-    final DateTime startDate = DateTime.now().getDateOnly();
-    final int daysToShow = 7;
+    //  final List<String> roomNumbers =
+    //    List.generate(67, (index) => (101 + index).toString());
+    try {
+      final List<String> roomTypes = ['Deluxe', 'Suite'];
+      final rooms = (await roomRepository.list()).foldResult();
+      final roomNumbers =
+          rooms.map((room) => room.id!.toString()).toList();
 
-    emit(RoomCalendarLoaded(
-      roomTypes: roomTypes,
-      roomNumbers: roomNumbers,
-      startDate: startDate,
-      daysToShow: daysToShow,
-      reservations: [],
-      reservationsByRoom: {},
-      roomTransactions: [],
-      roomTransactionsByRoom: {},
-      roomGuests: [],
-      roomGuestsByRoom: {},
-    ));
+      final DateTime startDate = DateTime.now().getDateOnly();
+      final int daysToShow = 14;
 
-    add(FetchReservationsAndTransactions(startDate));
+      emit(RoomCalendarLoaded(
+        roomTypes: roomTypes,
+        roomNumbers: roomNumbers,
+        startDate: startDate,
+        daysToShow: daysToShow,
+        reservations: [],
+        reservationsByRoom: {},
+        roomTransactions: [],
+        roomTransactionsByRoom: {},
+        roomGuests: [],
+        roomGuestsByRoom: {},
+      ));
+
+      add(FetchReservationsAndTransactions(startDate));
+    } catch (e) {
+      emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
+    }
   }
 
   Future<void> _onFetchReservationsAndTransactions(
@@ -96,12 +107,19 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
                       roomGuestsByRoom: roomGuestsByRoom,
                     );
                   } else {
+
+
+      final rooms = (await roomRepository.list()).foldResult();
+      final roomNumbers =
+          rooms.map((room) => room.id!.toString()).toList();
+
                     return RoomCalendarLoaded(
                       roomTypes: ['Deluxe', 'Suite'],
-                      roomNumbers: List.generate(
-                          67, (index) => (101 + index).toString()),
+                      roomNumbers: roomNumbers,
+                 //     roomNumbers: List.generate(
+                 //         67, (index) => (101 + index).toString()),
                       startDate: event.startDate,
-                      daysToShow: 7,
+                      daysToShow: 14,
                       reservations: reservations,
                       reservationsByRoom: reservationsByRoom,
                       roomTransactions: roomTransactions,

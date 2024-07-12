@@ -1,0 +1,177 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "room"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "room",
+        "dartName": "Room",
+        "module": "westwind",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "nextval('room_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "roomNumber",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "roomType",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "roomStatus",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:RoomStatus"
+          },
+          {
+            "name": "isAvailable",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "name": "isSmoke",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "name": "bedType",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "protocol:BedType"
+          },
+          {
+            "name": "numOfBeds",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "isNewAC",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "name": "isNewBed",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "name": "numOfMicrowave",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "isNewRefergrator",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "name": "isBigRefergrator",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "name": "isBigTV",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "name": "isNewTV",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "name": "numOfTableLamp",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "isNewTableLamp",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "name": "numOfStandLamp",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "isNewStandLamp",
+            "columnType": 1,
+            "isNullable": false,
+            "dartType": "bool"
+          },
+          {
+            "name": "note",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "room_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "columnDropped",
+      "message": "Column roomNumber of table room is modified in a way that it must be deleted and recreated.",
+      "table": "room",
+      "columns": [
+        "roomNumber"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"room\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "room",
+      "columns": [
+        "roomNumber"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

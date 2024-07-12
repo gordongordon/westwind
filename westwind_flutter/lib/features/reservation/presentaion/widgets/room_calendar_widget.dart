@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
@@ -282,7 +283,7 @@ class RoomRowWidget extends StatelessWidget {
             width: 50,
             child: Text(
               roomNumber,
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 14, color: Colors.black),
             ),
           ),
           ...List.generate(state.daysToShow, (index) {
@@ -559,8 +560,9 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
       child: GestureDetector(
         onTap: () => _showRoomGuestDetails(context, roomGuest),
         onDoubleTap: () => _openRoomGuestEditPage(context, roomGuest),
-        onLongPress: () => _openRoomGuestTransactionManagePage(context, roomGuest),
-          //  context.push(RoomGuestTransactionsManagePage.route(roomGuest.id)),
+        onLongPress: () =>
+            _openRoomGuestTransactionManagePage(context, roomGuest),
+        //  context.push(RoomGuestTransactionsManagePage.route(roomGuest.id)),
         child: _buildRoomGuestContent(context, roomGuest),
       ),
     );
@@ -793,8 +795,10 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
               Text(
                   'Check-out: ${reservation.checkOutDate.day}/${reservation.checkOutDate.month}/${reservation.checkOutDate.year}'),
               Text('Room: ${reservation.roomId}'),
+              Text('Rate Type :  ${reservation.rateType}'),
               Text(
                   'Status: ${reservation.isCheckedIn ? 'Checked In' : 'Not Checked In'}'),
+              Text('Rate : ${reservation.rate}'),
             ],
           ),
           actions: <Widget>[
@@ -821,7 +825,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                  'Guest: ${roomGuest.guest?.firstName} ${roomGuest.guest?.lastName}'),
+                  'Guest: ${roomGuest.guest?.firstName} ${roomGuest.guest!.lastName}'),
               Text(
                   'Stay-day: ${roomGuest.stayDay.day}/${roomGuest.stayDay.month}/${roomGuest.stayDay.year}'),
               Text(
@@ -829,6 +833,10 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
               Text(
                   'Check-out: ${roomGuest.checkOutDate.day}/${roomGuest.checkOutDate.month}/${roomGuest.checkOutDate.year}'),
               Text('Room: ${roomGuest.roomId}'),
+              Text('Rate Type :  ${roomGuest.rateType}'),
+              Text('Rate Reason :  ${roomGuest.rateReason}'),
+              Text('Rate : ${roomGuest.rate}'),
+              Text('Balance : ${roomGuest.guest!.accountBalance}')
               // Text('Status: ${roomGuest.isCheckedIn ? 'Checked In' : 'Not Checked In'}'),
             ],
           ),

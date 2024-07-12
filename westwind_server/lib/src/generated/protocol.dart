@@ -42,8 +42,9 @@ import 'protocol.dart' as _i30;
 import 'package:westwind_server/src/generated/guest.dart' as _i31;
 import 'package:westwind_server/src/generated/rateTable.dart' as _i32;
 import 'package:westwind_server/src/generated/reservation.dart' as _i33;
-import 'package:westwind_server/src/generated/roomGuest.dart' as _i34;
-import 'package:westwind_server/src/generated/roomTransaction.dart' as _i35;
+import 'package:westwind_server/src/generated/room.dart' as _i34;
+import 'package:westwind_server/src/generated/roomGuest.dart' as _i35;
+import 'package:westwind_server/src/generated/roomTransaction.dart' as _i36;
 export 'bedType.dart';
 export 'company.dart';
 export 'errorType.dart';
@@ -790,7 +791,7 @@ class Protocol extends _i1.SerializationManagerServer {
           name: 'roomNumber',
           columnType: _i2.ColumnType.text,
           isNullable: false,
-          dartType: 'protocol:RoomNumber',
+          dartType: 'String',
         ),
         _i2.ColumnDefinition(
           name: 'roomType',
@@ -1608,13 +1609,17 @@ class Protocol extends _i1.SerializationManagerServer {
           .map((e) => deserialize<_i33.Reservation>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i34.RoomGuest>) {
-      return (data as List).map((e) => deserialize<_i34.RoomGuest>(e)).toList()
+    if (t == List<_i34.Room>) {
+      return (data as List).map((e) => deserialize<_i34.Room>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i35.RoomTransaction>) {
+    if (t == List<_i35.RoomGuest>) {
+      return (data as List).map((e) => deserialize<_i35.RoomGuest>(e)).toList()
+          as dynamic;
+    }
+    if (t == List<_i36.RoomTransaction>) {
       return (data as List)
-          .map((e) => deserialize<_i35.RoomTransaction>(e))
+          .map((e) => deserialize<_i36.RoomTransaction>(e))
           .toList() as dynamic;
     }
     try {
