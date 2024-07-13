@@ -7,6 +7,7 @@ import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
 
@@ -265,6 +266,9 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                state is RoomGuestManageStateDeleteSuccess ||
                state is RoomGuestManageStateChargeAndExtendStayDaySuccess) {
       context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
+
+      //! Handle exit to Calendar 
+         context.read<RoomCalendarBloc>().add(InitializeCalendar());
       context.pop();
     } else if (state is RoomGuestManageStateRetrieveSuccess) {
       _populateFields(state.roomGuest);

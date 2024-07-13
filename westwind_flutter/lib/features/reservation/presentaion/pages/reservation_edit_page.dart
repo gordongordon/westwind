@@ -9,6 +9,7 @@ import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
 
 class ReservationEditPage extends StatefulWidget {
   final int? reservationId;
@@ -399,6 +400,8 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
         state is ReservationManageStateDeleteSuccess ||
         state is ReservationManageStateCheckInSuccess) {
       context.read<ReservationListBloc>().add(FetchReservationsEvent());
+      //! handle Reservtion exit refresh
+      context.read<RoomCalendarBloc>().add(InitializeCalendar());
       context.pop();
     } else if (state is ReservationManageStateRetrieveSuccess) {
       _populateFields(state.reservation);
