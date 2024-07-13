@@ -57,7 +57,7 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
       roomIdController.text = roomGuest.roomId.toString();
       roomGuestIdController.text = roomGuest.id.toString();
       stayDay = roomGuest.stayDay;
-      itemTypeController.text = ItemType.balance.toString();
+      itemTypeController.text = ItemType.other.toString();
       transactionTypeController.text = TransactionType.pay.toString();
     }
   }
@@ -246,34 +246,24 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
       var amount = double.parse(amountController.text);
       // final  tax1: double.parse(tax1Controller.text),
       // final  tax2: double.parse(tax2Controller.text),
-      double gst = 0;
-      double levy = 0;
-      double total = 0;
+      late double gst;
+      late double levy;
+      late double total;
+      late double sign;
 
       switch (transactionType) {
         case TransactionType.deposit:
-          {
-            total = gst + levy + amount;
-            amount = amount * -1;
-            total = total * -1;
-          }
+          sign = -1;
         case TransactionType.pay:
-          {
-            total = gst + levy + amount;
-            amount = amount * -1;
-          }
+          sign = -1;
         case TransactionType.charge:
-        // TODO: Handle this case.
+          sign = 1;
         case TransactionType.refund:
-        // TODO: Handle this case.
+          sign = -1;
         case TransactionType.adjustDebit:
-          {}
+          sign = 1;
         case TransactionType.adjustCredit:
-          {
-            total = gst + levy + amount;
-            amount = amount * -1;
-            total = total * -1;
-          }
+          sign = -1;
       }
 
       switch (itemType) {
@@ -331,13 +321,41 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
             levy = 0;
             total = amount + gst + levy;
           }
-        case ItemType.balance:
+        case ItemType.visa:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.master:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.cash:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.eTransfer:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.gift_card:
           {
             gst = 0;
             levy = 0;
             total = amount + gst + levy;
           }
       }
+
+      final totalFinal = total * sign;
+      final amountFinal = amount * sign;
+
 
       final roomTransaction = RoomTransaction(
         id: widget.roomTransaction?.id,
@@ -347,10 +365,10 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
         stayDay: finalStayDay,
         transactionDay: transactionDay,
         transactionType: transactionType,
-        amount: amount,
+        amount: amountFinal,
         tax1: gst,
         tax2: levy,
-        total: total,
+        total: totalFinal,
         description: descriptionController.text,
         itemType: itemType,
       );

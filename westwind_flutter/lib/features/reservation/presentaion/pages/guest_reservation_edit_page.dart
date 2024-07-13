@@ -407,7 +407,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   void _onPhoneChanged(String? value) {
     if (value != null && formKey.currentState!.fields['phone']!.isValid) {
       context.read<GuestManageBloc>().add(GuestManageRetrieveByPhoneEvent(phone: value.trim()));
-      context.read<ReservationManageBloc>().add(RetrieveGuestByPhoneForReservation(phone: value.trim()));
+    //  context.read<ReservationManageBloc>().add(RetrieveGuestByPhoneForReservation(phone: value.trim()));
     }
   }
 
@@ -525,8 +525,8 @@ void _saveReservation(int guestId) {
 void _guestBlocListener(BuildContext context, GuestManageState state) {
   print('Current guest state: $state');
   if (state is GuestManageStateFailure) {
-    print('Guest save failed: ${state.message}');
-    showSnackbar(context, 'Failed to save guest: ${state.message}');
+    print('${state.message}');
+    showSnackbar(context, 'Failed to Guest: ${state.message}');
   } else if (state is GuestManageStateSaveSuccess) {
     print('Guest saved successfully. ID: ${state.guest.id}');
     _saveReservation(state.guest.id!);
@@ -545,17 +545,21 @@ void _reservationBlocListener(BuildContext context, ReservationManageState state
   } else if (state is ReservationManageStateSaveSuccess) {
     print('Reservation saved successfully');
     showSnackbar(context, 'Guest and Reservation saved successfully');
-    context.read<GuestListBloc>().add(FetchGuestsEvent());
-    context.read<ReservationListBloc>().add(FetchReservationsEvent());
-    context.pop();
+   // context.read<GuestListBloc>().add(FetchGuestsEvent());
+   // context.read<ReservationListBloc>().add(FetchReservationsEvent());
+   // context.pop();
   } else if (state is ReservationManageStateRetrieveSuccess) {
     _populateReservationFields(state.reservation);
-  } else if (state is ReservationManageStateRetrieveGuestSuccess ||
+  }
+  /*
+   else if (state is ReservationManageStateRetrieveGuestSuccess ||
       state is ReservationManageStateRetrieveGuestByPhoneSuccess) {
+
     _populateGuestFields(state is ReservationManageStateRetrieveGuestSuccess
         ? state.guest
         : (state as ReservationManageStateRetrieveGuestByPhoneSuccess).guest);
   }
+  */
 }
 
   void _populateGuestFields(Guest guest) {

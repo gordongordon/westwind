@@ -1,7 +1,6 @@
 enum: ItemType
 serialized: byName
 values:
-  - balance
   - room
   - food
   - laundry
@@ -11,3 +10,8 @@ values:
   - demage
   - deposite
   - other
+  - visa
+  - master
+  - cash
+  - eTransfer
+  - gift_card

@@ -116,8 +116,8 @@ class _RoomGuestTransactionFormWidgetState
       final formData = _formKey.currentState!.value;
       final itemType = formData['itemType'] as ItemType;
       final amount = double.parse(formData['amount']);
-      final tax1 = double.parse(formData['tax1']);
-      final tax2 = double.parse(formData['tax2']);
+  //    final tax1 = double.parse(formData['tax1']);
+  //     final tax2 = double.parse(formData['tax2']);
       late double gst;
       late double levy;
       late double total;
@@ -195,12 +195,35 @@ class _RoomGuestTransactionFormWidgetState
             levy = 0;
             total = amount + gst + levy;
           }
-        case ItemType.balance:
+        case ItemType.visa:
           {
             gst = 0;
             levy = 0;
             total = amount + gst + levy;
-            //   total = total * -1;
+          }
+        case ItemType.master:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.cash:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.eTransfer:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
+          }
+        case ItemType.gift_card:
+          {
+            gst = 0;
+            levy = 0;
+            total = amount + gst + levy;
           }
       }
 
@@ -215,8 +238,8 @@ class _RoomGuestTransactionFormWidgetState
         transactionType: formData['transactionType'] as TransactionType,
         itemType: formData['itemType'] as ItemType,
         amount: amountFinal,
-        tax1: tax1,
-        tax2: tax2,
+        tax1: gst,
+        tax2: levy,
         // tax3: 0,
         /*
         tax3: double.parse(formData['tax3']),

@@ -11,7 +11,6 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 enum ItemType implements _i1.SerializableModel {
-  balance,
   room,
   food,
   laundry,
@@ -20,12 +19,15 @@ enum ItemType implements _i1.SerializableModel {
   pet,
   demage,
   deposite,
-  other;
+  other,
+  visa,
+  master,
+  cash,
+  eTransfer,
+  gift_card;
 
   static ItemType fromJson(String name) {
     switch (name) {
-      case 'balance':
-        return balance;
       case 'room':
         return room;
       case 'food':
@@ -44,6 +46,16 @@ enum ItemType implements _i1.SerializableModel {
         return deposite;
       case 'other':
         return other;
+      case 'visa':
+        return visa;
+      case 'master':
+        return master;
+      case 'cash':
+        return cash;
+      case 'eTransfer':
+        return eTransfer;
+      case 'gift_card':
+        return gift_card;
       default:
         throw ArgumentError('Value "$name" cannot be converted to "ItemType"');
     }
