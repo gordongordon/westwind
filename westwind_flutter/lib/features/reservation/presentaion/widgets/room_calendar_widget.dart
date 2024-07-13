@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,12 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/pages/guest_reservation_edit_page.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_edit_page.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_guest_transactions_manage_page.dart';
 
 class RoomCalendarWidget extends StatefulWidget {
-  const RoomCalendarWidget({Key? key}) : super(key: key);
+  const RoomCalendarWidget({super.key});
 
   @override
   State<RoomCalendarWidget> createState() => _RoomCalendarWidgetState();
@@ -29,7 +32,7 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
       appBar: _buildAppBar(),
       body: BlocConsumer<RoomCalendarBloc, RoomCalendarState>(
         listener: (context, state) {
-          if (state is RoomCalendarError) {
+          if (state is RoomCalendarError) {   
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
@@ -213,9 +216,11 @@ class CalendarGridWidget extends StatelessWidget {
             itemCount: state.roomNumbers.length,
             itemBuilder: (context, index) {
               final roomNumber = state.roomNumbers[index];
+              final roomType = state.roomTypes[index];
               return RoomRowWidget(
                 state: state,
                 roomNumber: roomNumber,
+                roomType: roomType,
                 isEvenRow: index % 2 == 0,
               );
             },
@@ -236,11 +241,12 @@ class DateHeaderWidget extends StatelessWidget {
     return Row(
       children: [
         const SizedBox(
-            width: 50, child: Text('Room', style: TextStyle(fontSize: 12))),
+            width: 80,
+            child: Text('Room/Type', style: TextStyle(fontSize: 12))),
         ...List.generate(state.daysToShow, (index) {
           final date = state.startDate.add(Duration(days: index));
           return SizedBox(
-            width: 100,
+            width: 110,
             child: Padding(
               padding: const EdgeInsets.all(4),
               child: Text(
@@ -259,12 +265,14 @@ class DateHeaderWidget extends StatelessWidget {
 class RoomRowWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
   final String roomNumber;
+  final String roomType;
   final bool isEvenRow;
 
   const RoomRowWidget({
     Key? key,
     required this.state,
     required this.roomNumber,
+    required this.roomType,
     required this.isEvenRow,
   }) : super(key: key);
 
@@ -280,10 +288,17 @@ class RoomRowWidget extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 50,
+            width: 40,
             child: Text(
               roomNumber,
               style: const TextStyle(fontSize: 14, color: Colors.black),
+            ),
+          ),
+          SizedBox(
+            width: 40,
+            child: Text(
+              roomType,
+              style: const TextStyle(fontSize: 13, color: Colors.blue),
             ),
           ),
           ...List.generate(state.daysToShow, (index) {
@@ -374,11 +389,15 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
           ...widget.roomTransactions,
           ...widget.roomGuests
         ];
-
+        
+       // widget.
+        final roomNumber = widget.roomNumber;
+        final date = widget.date;
+       //  cellContent.
         if (items.isEmpty) {
-          cellContent = _buildEmptyCell(context);
+          cellContent = _buildEmptyCell(context, roomNumber, date);
         } else if (items.length == 1) {
-          cellContent = _buildSingleItemCell(context, items.first);
+          cellContent = _buildSingleItemCell(context, items.first, roomNumber, date);
         } else {
           cellContent = _buildMultiItemCell(context, items);
         }
@@ -485,9 +504,12 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   }
 */
 
-  Widget _buildEmptyCell(BuildContext context) {
+  
+
+  Widget _buildEmptyCell(BuildContext context, [ String? roomNumber, DateTime? date ]) {
     return GestureDetector(
-      onTap: () => _openNewReservationPage(context),
+   //   onTap: () => _openNewReservationPage(context),
+        onTap: () => _openNewGuestReservationEditPage(context, roomNumber!, date! ),
       child: Container(
         width: 110,
         height: 30,
@@ -499,7 +521,9 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     );
   }
 
-  Widget _buildSingleItemCell(BuildContext context, dynamic item) {
+
+
+  Widget _buildSingleItemCell(BuildContext context, dynamic item, String roomNumber, DateTime date) {
     if (item is Reservation) {
       return _buildSingleReservationCell(context, item);
     } else if (item is RoomTransaction) {
@@ -507,7 +531,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     } else if (item is RoomGuest) {
       return _buildSingleRoomGuestCell(context, item);
     }
-    return _buildEmptyCell(context);
+    return _buildEmptyCell(context, roomNumber, date);
   }
 
   Widget _buildSingleReservationCell(
@@ -515,7 +539,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     return Draggable<Reservation>(
       data: reservation,
       feedback: _buildDragFeedback(context, reservation),
-      childWhenDragging: _buildEmptyCell(context),
+      childWhenDragging: _buildEmptyCell(context, reservation.roomId.toString(), reservation.stayDay),
       child: GestureDetector(
         onTap: () => _showReservationDetails(context, reservation),
         onDoubleTap: () => _openReservationEditPage(context, reservation),
@@ -890,6 +914,12 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     if (reservation.id != null && reservation.id! > 0) {
       context.push(ReservationEditPage.route(reservation.id));
     }
+  }
+
+  void _openNewGuestReservationEditPage(BuildContext context, String roomNumber, DateTime date ) {
+      final int roomId = int.parse(roomNumber);
+
+      context.push(GuestReservationEditPage.routeCalendar(roomId, date));
   }
 
   void _openNewReservationPage(BuildContext context) {

@@ -8,8 +8,7 @@ import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_guest_transactions/room_guest_transactions_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/widgets/new_room_guest_transaction_widget.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/widgets/room_transaction_form_widget.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/widgets/room_transaction_management_form_widget.dart';
 
 class RoomGuestTransactionsManageWidget extends StatefulWidget {
   final int roomGuestId;
@@ -90,7 +89,7 @@ class _RoomGuestTransactionsManageWidgetState
                 listener: _blocListener,
                 builder: (context, state) {
                   if (state is RoomTransactionStateRetrievedRoomGuestSuccess) {
-                    return RoomTransactionFormWidget(
+                    return RoomTransactionManagementFormWidget(
                         roomTransaction: null,
                         roomGuest: state.roomGuest,
                         onSave: (updatedTransaction) {

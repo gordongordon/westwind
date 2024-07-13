@@ -1,0 +1,187 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:westwind_client/westwind_client.dart';
+
+class RoomGuestTransactionFormWidget extends StatefulWidget {
+  final Function(RoomTransaction) onSave;
+  final int roomGuestId;
+
+  const RoomGuestTransactionFormWidget({
+    Key? key,
+    required this.onSave,
+    required this.roomGuestId,
+  }) : super(key: key);
+
+  @override
+  _RoomGuestTransactionFormWidgetState createState() =>
+      _RoomGuestTransactionFormWidgetState();
+}
+
+class _RoomGuestTransactionFormWidgetState
+    extends State<RoomGuestTransactionFormWidget> {
+  final _formKey = GlobalKey<FormBuilderState>();
+  TransactionType? _selectedTransactionType;
+  ItemType? _selectedItemType;
+
+  @override
+  Widget build(BuildContext context) {
+    return FormBuilder(
+      key: _formKey,
+      child: Column(
+        children: [
+          FormBuilderDropdown<TransactionType>(
+            name: 'transactionType',
+            decoration: InputDecoration(labelText: 'Transaction Type'),
+            validator: FormBuilderValidators.required(),
+            items: TransactionType.values
+                .map((type) => DropdownMenuItem(
+                      value: type,
+                      child: Text(type.toString().split('.').last),
+                    ))
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedTransactionType = value;
+                _selectedItemType = null;
+                print('Transaction Type changed to: $value'); // Debug print
+              });
+            },
+          ),
+          FormBuilderDropdown<ItemType>(
+            name: 'itemType',
+            decoration: InputDecoration(labelText: 'Item Type'),
+            validator: FormBuilderValidators.required(),
+            items: _getItemTypeDropdownItems(),
+            onChanged: (value) {
+              setState(() {
+                _selectedItemType = value;
+                print('Item Type changed to: $value'); // Debug print
+              });
+            },
+          ),
+          FormBuilderTextField(
+            name: 'amount',
+            decoration: InputDecoration(labelText: 'Amount'),
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(),
+              FormBuilderValidators.numeric(),
+            ]),
+            keyboardType: TextInputType.number,
+          ),
+          FormBuilderTextField(
+            name: 'description',
+            decoration: InputDecoration(labelText: 'Description'),
+            validator: FormBuilderValidators.required(),
+            maxLines: 3,
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _submitForm,
+            child: Text('Create Transaction'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<DropdownMenuItem<ItemType>> _getItemTypeDropdownItems() {
+    List<ItemType> itemTypes;
+    if (_selectedTransactionType == TransactionType.pay) {
+      itemTypes = [
+        ItemType.cash,
+        ItemType.visa,
+        ItemType.master,
+        ItemType.eTransfer,
+        ItemType.gift_card,
+      ];
+    } else {
+      itemTypes = ItemType.values.toList();
+    }
+    print('Available Item Types: $itemTypes'); // Debug print
+    return itemTypes
+        .map((type) => DropdownMenuItem(
+              value: type,
+              child: Text(type.toString().split('.').last),
+            ))
+        .toList();
+  }
+
+  void _submitForm() {
+    print('Submit button pressed'); // Debug print
+    if (_formKey.currentState?.saveAndValidate() ?? false) {
+      try {
+        final formData = _formKey.currentState!.value;
+        print('Form Data: $formData'); // Debug print
+
+        final itemType = formData['itemType'] as ItemType;
+        final amount = double.parse(formData['amount']);
+        final transactionType = formData['transactionType'] as TransactionType;
+
+        double gst = 0;
+        double levy = 0;
+        double total = amount;
+
+        switch (itemType) {
+          case ItemType.room:
+            gst = amount * 0.05;
+            levy = amount * 0.04;
+            total = amount + gst + levy;
+            break;
+          case ItemType.food:
+          case ItemType.laundry:
+          case ItemType.pet:
+            gst = amount * 0.05;
+            total = amount + gst;
+            break;
+          default:
+            break;
+        }
+
+        int sign = 1;
+        switch (transactionType) {
+          case TransactionType.deposit:
+          case TransactionType.pay:
+          case TransactionType.refund:
+          case TransactionType.adjustCredit:
+            sign = -1;
+            break;
+          default:
+            sign = 1;
+            break;
+        }
+
+        final totalFinal = total * sign;
+        final amountFinal = amount * sign;
+
+        final newTransaction = RoomTransaction(
+          guestId: widget.roomGuestId,
+          roomGuestId: widget.roomGuestId,
+          roomId: 101,
+          transactionType: transactionType,
+          itemType: itemType,
+          amount: amountFinal,
+          tax1: gst,
+          tax2: levy,
+          total: totalFinal,
+          description: formData['description'],
+          stayDay: DateTime.now(),
+          transactionDay: DateTime.now(),
+        );
+
+        print('New Transaction: $newTransaction'); // Debug print
+        widget.onSave(newTransaction);
+      } catch (e) {
+        print('Error in form submission: $e'); // Debug print
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    } else {
+      print('Form validation failed'); // Debug print
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill all required fields')),
+      );
+    }
+  }
+}

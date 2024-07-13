@@ -5,8 +5,7 @@ import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/widgets/room_transaction_form_widget.dart';
-import 'package:westwind_flutter/features/room_transaction/presentation/widgets/room_transaction_list_widget.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/widgets/room_transaction_management_form_widget.dart';
 
 class RoomTransactionEditPage extends StatefulWidget {
   final int? roomTransactionId;
@@ -60,7 +59,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionEditPage> {
   }
 
   Widget _buildForm(BuildContext context) {
-    return RoomTransactionFormWidget(
+    return RoomTransactionManagementFormWidget(
       roomTransaction: _roomTransaction,
       onSave: (updatedTransaction) {
         context.read<RoomTransactionBloc>().add(

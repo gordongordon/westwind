@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/features/app_user/presentation/cubits/cubit/app_user_cubit.dart';
 import 'package:westwind_flutter/features/auth/presentation/pages/login_page.dart';
 import 'package:westwind_flutter/features/auth/presentation/pages/register_confirmation_page.dart';
@@ -63,7 +64,7 @@ class AppRouter {
           path: ReservationListPage.route(),
           builder: (context, _) => const ReservationListPage(),
         ),
-              GoRoute(
+        GoRoute(
           path: ReservationListPage.route(),
           builder: (context, _) => const ReservationCalendarPage(),
         ),
@@ -111,24 +112,28 @@ class AppRouter {
             roomTransactionId: int.parse(state.pathParameters['id'] ?? '0'),
           ),
         ),
-                GoRoute(
+        GoRoute(
           path: RoomGuestTransactionsManagePage.route(),
           builder: (context, state) => RoomGuestTransactionsManagePage(
             roomGuestId: int.parse(state.pathParameters['id'] ?? '0'),
           ),
         ),
-
-                GoRoute(
+        GoRoute(
           path: GuestReservationEditPage.route(),
           builder: (context, state) => GuestReservationEditPage(
             guestId: int.parse(state.pathParameters['id'] ?? '0'),
             reservationId: int.parse(state.pathParameters['id'] ?? '0'),
-          )
-          ,
+          ),
         ),
-                GoRoute(
+        GoRoute(
           path: GuestReservationEditPage.routeNew(),
+          builder: (context, state) => GuestReservationEditPage(),
+        ),
+        GoRoute(
+          path: GuestReservationEditPage.routeCalendar(),
           builder: (context, state) => GuestReservationEditPage(
+            roomId: int.parse(state.pathParameters['roomId'] ?? '0'),
+            date:   DateTime.parse( state.pathParameters['date'] ?? DateTime.now().getDateOnly().toString() ),
           ),
         ),
       ],

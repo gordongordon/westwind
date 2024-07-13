@@ -42,25 +42,25 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     //  final List<String> roomNumbers =
     //    List.generate(67, (index) => (101 + index).toString());
     try {
-      final List<String> roomTypes = ['Deluxe', 'Suite'];
+      //  final List<String> roomTypes = ['Deluxe', 'Suite'];
       final rooms = (await roomRepository.list()).foldResult();
-      final roomNumbers =
-          rooms.map((room) => room.id!.toString()).toList();
+      final roomTypes = rooms.map((room) => room.roomType.toString()).toList();
+      final roomNumbers = rooms.map((room) => room.id!.toString()).toList();
 
       final DateTime startDate = DateTime.now().getDateOnly();
-      final int daysToShow = 14;
+      const int daysToShow = 14;
 
       emit(RoomCalendarLoaded(
         roomTypes: roomTypes,
         roomNumbers: roomNumbers,
         startDate: startDate,
         daysToShow: daysToShow,
-        reservations: [],
-        reservationsByRoom: {},
-        roomTransactions: [],
-        roomTransactionsByRoom: {},
-        roomGuests: [],
-        roomGuestsByRoom: {},
+        reservations: const [],
+        reservationsByRoom: const {},
+        roomTransactions: const [],
+        roomTransactionsByRoom: const {},
+        roomGuests: const [],
+        roomGuestsByRoom: const {},
       ));
 
       add(FetchReservationsAndTransactions(startDate));
@@ -107,17 +107,14 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
                       roomGuestsByRoom: roomGuestsByRoom,
                     );
                   } else {
-
-
-      final rooms = (await roomRepository.list()).foldResult();
-      final roomNumbers =
-          rooms.map((room) => room.id!.toString()).toList();
-
+                    final rooms = (await roomRepository.list()).foldResult();
+                    final roomNumbers =
+                        rooms.map((room) => room.id!.toString()).toList();
+                    final roomTypes =
+                        rooms.map((room) => room.roomType.toString()).toList();
                     return RoomCalendarLoaded(
-                      roomTypes: ['Deluxe', 'Suite'],
+                      roomTypes: roomTypes,
                       roomNumbers: roomNumbers,
-                 //     roomNumbers: List.generate(
-                 //         67, (index) => (101 + index).toString()),
                       startDate: event.startDate,
                       daysToShow: 14,
                       reservations: reservations,

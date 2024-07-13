@@ -16,12 +16,17 @@ import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservati
 class GuestReservationEditPage extends StatefulWidget {
   final int? guestId;
   final int? reservationId;
+  final int? roomId;
+  final DateTime? date;
   
   static String route([int? guestId, int? reservationId]) => 
       "/guest-reservation/edit/${guestId ?? ':guestId'}/${reservationId ?? ':reservationId'}";
   static String routeNew() => "/guest-reservation/new";
 
-  const GuestReservationEditPage({super.key, this.guestId, this.reservationId});
+  static String routeCalendar([int? roomId, DateTime? date]) =>  "/guest-reservation/calendar/${roomId ?? ':roomId'}/${date ?? ':date'}";
+
+
+  const GuestReservationEditPage({super.key, this.guestId, this.reservationId, this.roomId, this.date});
 
   @override
   State<GuestReservationEditPage> createState() => _GuestReservationEditPageState();
@@ -31,7 +36,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   final formKey = GlobalKey<FormBuilderState>();
   
   // Guest-related controllers
-  final TextEditingController guestIdController = TextEditingController(text: "0");
+  final TextEditingController guestIdController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -69,6 +74,14 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   @override
   void initState() {
     super.initState();
+    if ( widget.roomId != null ) {
+      roomIdController.text = widget.roomId.toString();
+    }
+    if ( widget.date != null) {
+      stayDay = widget.date!; 
+      checkInDate = widget.date!;
+      checkOutDate = widget.date!.add( Duration( days: 1 ));
+    }
     if (isGuestEditing) {
       context.read<GuestManageBloc>().add(GuestManageRetrieveEvent(id: widget.guestId!));
     }
@@ -455,8 +468,24 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   }
 
   void _saveGuest() {
+
+      late int? id; 
+       //final id = guestIdController.text ?? null;
+
+       //if ( formKey.currentState?.fields['guestId']?.value ) {
+
+      //}
+      
+       if ( guestIdController.text.isEmpty ) {
+         id = null;
+       } else 
+       {
+         id = int.tryParse(guestIdController.text);
+       }
+
+     
     final guest = Guest(
-      id: widget.guestId == null ? null : int.tryParse(guestIdController.text),
+      id: id,
       firstName: firstNameController.text,
       lastName: lastNameController.text,
       phone: phoneController.text,

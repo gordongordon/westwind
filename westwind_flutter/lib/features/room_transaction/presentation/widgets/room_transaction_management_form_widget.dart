@@ -3,12 +3,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:westwind_client/westwind_client.dart';
 
-class RoomTransactionFormWidget extends StatefulWidget {
+class RoomTransactionManagementFormWidget extends StatefulWidget {
   final RoomTransaction? roomTransaction;
   final RoomGuest? roomGuest;
   final Function(RoomTransaction) onSave;
 
-  const RoomTransactionFormWidget({
+  const RoomTransactionManagementFormWidget({
     super.key,
     this.roomTransaction,
     this.roomGuest,
@@ -16,23 +16,22 @@ class RoomTransactionFormWidget extends StatefulWidget {
   });
 
   @override
-  State<RoomTransactionFormWidget> createState() =>
-      _RoomTransactionFormWidgetState();
+  State<RoomTransactionManagementFormWidget> createState() =>
+      _RoomTransactionManagementFormWidgetState();
 }
 
-class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
+class _RoomTransactionManagementFormWidgetState
+    extends State<RoomTransactionManagementFormWidget> {
   final formKey = GlobalKey<FormBuilderState>();
   final TextEditingController idController = TextEditingController(text: "0");
   final TextEditingController roomIdController = TextEditingController();
   final TextEditingController guestIdController = TextEditingController();
   final TextEditingController roomGuestIdController = TextEditingController();
-  final TextEditingController transactionTypeController =
-      TextEditingController();
+  final TextEditingController transactionTypeController = TextEditingController();
   final TextEditingController itemTypeController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController tax1Controller = TextEditingController();
   final TextEditingController tax2Controller = TextEditingController();
-
   final TextEditingController totalController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
@@ -41,25 +40,45 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
 
   final List<String> _transactionTypeOptions =
       TransactionType.values.map((e) => e.name).toList();
-  final List<String> _itemTypeOptions =
+  final List<String> _allItemTypeOptions =
       ItemType.values.map((e) => e.name).toList();
+  List<String> _currentItemTypeOptions = [];
 
   @override
   void initState() {
     super.initState();
     if (widget.roomTransaction != null) {
       _populateFields(widget.roomTransaction!);
-    }
-    if (widget.roomGuest != null) {
-      final roomGuest = widget.roomGuest;
-      roomGuestIdController.text = widget.roomGuest!.id.toString();
-      guestIdController.text = roomGuest!.guestId.toString();
-      roomIdController.text = roomGuest.roomId.toString();
+    } else if (widget.roomGuest != null) {
+      final roomGuest = widget.roomGuest!;
       roomGuestIdController.text = roomGuest.id.toString();
+      guestIdController.text = roomGuest.guestId.toString();
+      roomIdController.text = roomGuest.roomId.toString();
       stayDay = roomGuest.stayDay;
-      itemTypeController.text = ItemType.other.toString();
-      transactionTypeController.text = TransactionType.pay.toString();
+      itemTypeController.text = ItemType.other.name;
+      transactionTypeController.text = TransactionType.pay.name;
     }
+    _updateItemTypeOptions(transactionTypeController.text);
+  }
+
+  void _updateItemTypeOptions(String transactionType) {
+    setState(() {
+      if (transactionType == TransactionType.pay.name) {
+        _currentItemTypeOptions = [
+          ItemType.cash.name,
+          ItemType.visa.name,
+          ItemType.master.name,
+          ItemType.eTransfer.name,
+          ItemType.gift_card.name,
+        ];
+      } else {
+        _currentItemTypeOptions = _allItemTypeOptions;
+      }
+      // Ensure the current itemType is valid for the new options
+      if (!_currentItemTypeOptions.contains(itemTypeController.text)) {
+        itemTypeController.text = _currentItemTypeOptions.first;
+      }
+    });
   }
 
   @override
@@ -99,12 +118,30 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildDropdown(
-            'transactionType', 'Transaction Type', _transactionTypeOptions,
-            initialValue: transactionTypeController.text),
+          'transactionType',
+          'Transaction Type',
+          _transactionTypeOptions,
+          initialValue: transactionTypeController.text,
+          onChanged: (value) {
+            if (value != null) {
+              setState(() {
+                transactionTypeController.text = value;
+                _updateItemTypeOptions(value);
+              });
+            }
+          },
+        ),
         _buildTextField('amount', 'Amount', amountController,
             keyboardType: TextInputType.number),
-        _buildDropdown('itemType', 'Item Type', _itemTypeOptions,
-            initialValue: itemTypeController.text),
+        _buildDropdown('itemType', 'Item Type', _currentItemTypeOptions,
+            initialValue: itemTypeController.text,
+            onChanged: (value) {
+              if (value != null) {
+                setState(() {
+                  itemTypeController.text = value;
+                });
+              }
+            }),
         _buildTextField('description', 'Description', descriptionController,
             maxLines: 3),
       ],
@@ -125,8 +162,19 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
         _buildTextField('roomId', 'Room ID', roomIdController),
         _buildTextField('guestId', 'Guest ID', guestIdController),
         _buildDropdown(
-            'transactionType', 'Transaction Type', _transactionTypeOptions,
-            initialValue: transactionTypeController.text),
+          'transactionType',
+          'Transaction Type',
+          _transactionTypeOptions,
+          initialValue: transactionTypeController.text,
+          onChanged: (value) {
+            if (value != null) {
+              setState(() {
+                transactionTypeController.text = value;
+                _updateItemTypeOptions(value);
+              });
+            }
+          },
+        ),
       ],
     );
   }
@@ -141,10 +189,6 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
         const SizedBox(height: 16),
         _buildTextField('amount', 'Amount', amountController,
             keyboardType: TextInputType.number),
-        //      _buildTextField('tax1', 'GST', tax1Controller, keyboardType: TextInputType.number),
-        //      _buildTextField('tax2', 'Levy', tax2Controller, keyboardType: TextInputType.number),
-        //      _buildTextField('tax3', 'Additional Tax', tax3Controller, keyboardType: TextInputType.number),
-        //      _buildTextField('total', 'Total', totalController, keyboardType: TextInputType.number),
       ],
     );
   }
@@ -158,8 +202,15 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('roomGuestId', 'Room Guest ID', roomGuestIdController),
-        _buildDropdown('itemType', 'Item Type', _itemTypeOptions,
-            initialValue: itemTypeController.text),
+        _buildDropdown('itemType', 'Item Type', _currentItemTypeOptions,
+            initialValue: itemTypeController.text,
+            onChanged: (value) {
+              if (value != null) {
+                setState(() {
+                  itemTypeController.text = value;
+                });
+              }
+            }),
         _buildTextField('description', 'Description', descriptionController,
             maxLines: 3),
       ],
@@ -208,7 +259,7 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
   }
 
   Widget _buildDropdown(String name, String label, List<String> options,
-      {required String initialValue}) {
+      {required String initialValue, void Function(String?)? onChanged}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: FormBuilderDropdown<String>(
@@ -224,28 +275,22 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
             .map((option) =>
                 DropdownMenuItem(value: option, child: Text(option)))
             .toList(),
+        onChanged: onChanged,
       ),
     );
   }
 
   void _saveRoomTransaction() {
     if (formKey.currentState!.saveAndValidate()) {
-
       final transactionType = TransactionType.values
           .byName(formKey.currentState!.fields['transactionType']!.value);
       final itemType = ItemType.values
           .byName(formKey.currentState!.fields['itemType']!.value);
-      final finalStayDay = widget.roomGuest == null ? formKey.currentState!.fields['stayDay']!.value : stayDay;
-
-      //  final formData = _formKey.currentState!.value;
-      //  final itemType = formData['itemType'] as ItemType;
-      //  final amount = double.parse(formData['amount']);
-      //  final tax1 = double.parse(formData['tax1']);
-      //  final tax2 = double.parse(formData['tax2']);
+      final finalStayDay = widget.roomGuest == null
+          ? formKey.currentState!.fields['stayDay']!.value
+          : stayDay;
 
       var amount = double.parse(amountController.text);
-      // final  tax1: double.parse(tax1Controller.text),
-      // final  tax2: double.parse(tax2Controller.text),
       late double gst;
       late double levy;
       late double total;
@@ -253,109 +298,41 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
 
       switch (transactionType) {
         case TransactionType.deposit:
-          sign = -1;
         case TransactionType.pay:
-          sign = -1;
-        case TransactionType.charge:
-          sign = 1;
         case TransactionType.refund:
-          sign = -1;
-        case TransactionType.adjustDebit:
-          sign = 1;
         case TransactionType.adjustCredit:
           sign = -1;
+        case TransactionType.charge:
+        case TransactionType.adjustDebit:
+          sign = 1;
       }
 
       switch (itemType) {
         case ItemType.room:
-          {
-            gst = amount * 0.05;
-            levy = amount * 0.04;
-            total = amount + gst + levy;
-          }
+          gst = amount * 0.05;
+          levy = amount * 0.04;
         case ItemType.food:
-          {
-            gst = amount * 0.05;
-            levy = 0;
-            total = amount + gst + levy;
-          }
         case ItemType.laundry:
-          {
-            gst = amount * 0.05;
-            levy = 0;
-            total = amount + gst + levy;
-          }
-        case ItemType.vending:
-          {
-            gst = 0;
-            levy = 0;
-            total = amount + gst + levy;
-          }
-        case ItemType.atm:
-          {
-            gst = 0;
-            levy = 0;
-            total = amount + gst + levy;
-          }
         case ItemType.pet:
-          {
-            gst = amount * 0.05;
-            levy = 0;
-            total = amount + gst + levy;
-          }
+          gst = amount * 0.05;
+          levy = 0;
+        case ItemType.vending:
+        case ItemType.atm:
         case ItemType.demage:
-          {
-            gst = 0;
-            levy = 0;
-            total = amount + gst + levy;
-          }
         case ItemType.deposite:
-          {
-            gst = 0;
-            levy = 0;
-            total = amount + gst + levy;
-          }
         case ItemType.other:
-          {
-            gst = 0;
-            levy = 0;
-            total = amount + gst + levy;
-          }
         case ItemType.visa:
-          {
-            gst = 0;
-            levy = 0;
-            total = amount + gst + levy;
-          }
         case ItemType.master:
-          {
-            gst = 0;
-            levy = 0;
-            total = amount + gst + levy;
-          }
         case ItemType.cash:
-          {
-            gst = 0;
-            levy = 0;
-            total = amount + gst + levy;
-          }
         case ItemType.eTransfer:
-          {
-            gst = 0;
-            levy = 0;
-            total = amount + gst + levy;
-          }
         case ItemType.gift_card:
-          {
-            gst = 0;
-            levy = 0;
-            total = amount + gst + levy;
-          }
+          gst = 0;
+          levy = 0;
       }
 
+      total = amount + gst + levy;
       final totalFinal = total * sign;
       final amountFinal = amount * sign;
-
 
       final roomTransaction = RoomTransaction(
         id: widget.roomTransaction?.id,
@@ -373,25 +350,6 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
         itemType: itemType,
       );
 
-/*
-      final roomTransaction = RoomTransaction(
-        id: widget.roomTransaction?.id,
-        guestId: int.parse(guestIdController.text),
-        roomId: int.parse(roomIdController.text),
-        roomGuestId: int.parse(roomGuestIdController.text),
-        stayDay: formKey.currentState!.fields['stayDay']!.value,
-        transactionDay: formKey.currentState!.fields['transactionDay']!.value,
-        transactionType: transactionType,
-        amount: double.parse(amountController.text),
-        tax1: double.parse(tax1Controller.text),
-        tax2: double.parse(tax2Controller.text),
-        tax3: double.parse(tax3Controller.text),
-        total: double.parse(totalController.text),
-        description: descriptionController.text,
-        itemType: itemType,
-      );
-      */
-
       widget.onSave(roomTransaction);
     }
   }
@@ -401,20 +359,16 @@ class _RoomTransactionFormWidgetState extends State<RoomTransactionFormWidget> {
     guestIdController.text = transaction.guestId.toString();
     roomGuestIdController.text = transaction.roomGuestId.toString();
     roomIdController.text = transaction.roomId.toString();
-    amountController.text = transaction.amount.toString();
+    amountController.text = transaction.amount.abs().toString();
     tax1Controller.text = transaction.tax1.toString();
     tax2Controller.text = transaction.tax2.toString();
-    //  tax3Controller.text = transaction.tax3.toString();
-    totalController.text = transaction.total.toString();
-    transactionTypeController.text = transaction.transactionType.toString();
-    itemTypeController.text = transaction.itemType.toString();
+    totalController.text = transaction.total.abs().toString();
+    transactionTypeController.text = transaction.transactionType.name;
+    itemTypeController.text = transaction.itemType.name;
     transactionDay = transaction.transactionDay.toLocal();
     stayDay = transaction.stayDay!;
     descriptionController.text = transaction.description;
 
-    formKey.currentState?.patchValue({
-      'transactionType': transaction.transactionType.name,
-      'itemType': transaction.itemType.name,
-    });
+    _updateItemTypeOptions(transaction.transactionType.name);
   }
 }
