@@ -7,8 +7,6 @@ import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
-import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_bloc.dart';
-import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_events.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_events.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_manage/guest_manage_bloc.dart';
@@ -30,7 +28,6 @@ class GuestReservationEditPage extends StatefulWidget {
 }
 
 class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
-  // Form key and controllers
   final formKey = GlobalKey<FormBuilderState>();
   
   // Guest-related controllers
@@ -72,7 +69,6 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   @override
   void initState() {
     super.initState();
-    // Initialize data based on editing mode
     if (isGuestEditing) {
       context.read<GuestManageBloc>().add(GuestManageRetrieveEvent(id: widget.guestId!));
     }
@@ -141,7 +137,6 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     );
   }
 
-  // Guest Information Section
   Widget _buildGuestInfoSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,19 +144,19 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         Text('Guest Information', style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('guestId', 'Guest ID', guestIdController, null, enabled: false),
-        _buildTextField('firstName', 'First Name', firstNameController, null),
-        _buildTextField('lastName', 'Last Name', lastNameController, null),
+        _buildTextField('firstName', 'First Name', firstNameController, null,
+          validator: FormBuilderValidators.compose([FormBuilderValidators.required()])),
+        _buildTextField('lastName', 'Last Name', lastNameController, null,
+          validator: FormBuilderValidators.compose([FormBuilderValidators.required()])),
         _buildTextFieldOptionalEmail('email', 'Email', emailController),
         _buildTextFieldPhone('phone', 'Phone', phoneController, _onPhoneChanged),
         _buildTextFieldOptional('rigNumber', 'Rig Number', rigNumberController, keyboardType: TextInputType.number),
         _buildRateTypeDropdown(),
-     //     _buildDropdown('rateType', 'Rate Type', _rateTypeOptions, initialValue: rateTypeController.text),      
         _buildInHouseSwitch(),
       ],
     );
   }
 
-  // Reservation Information Section
   Widget _buildReservationInfoSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +168,12 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         _buildDateTimePicker('checkInDate', 'Check In Date', initialValue: checkInDate),
         _buildDateTimePicker('checkOutDate', 'Check Out Date', initialValue: checkOutDate),
         _buildDateTimePicker('stayDay', 'Stay Day', initialValue: stayDay),
-        _buildTextField('roomId', 'Room ID', roomIdController, null, keyboardType: TextInputType.number),
+        _buildTextField('roomId', 'Room ID', roomIdController, null, 
+          keyboardType: TextInputType.number,
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(),
+            FormBuilderValidators.integer(),
+          ])),
         FormBuilderSwitch(
           name: 'isCheckedIn',
           title: const Text('Is Checked In'),
@@ -196,7 +196,6 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     );
   }
 
-  // Rate Information Section
   Widget _buildRateInfoSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,12 +204,16 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         Text('Rate Information', style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildDropdown('rateReason', 'Rate Reason', _rateReasonOptions, initialValue: rateReasonController.text),
-        _buildTextField('rate', 'Rate', rateController, null, keyboardType: TextInputType.number),
+        _buildTextField('rate', 'Rate', rateController, null, 
+          keyboardType: TextInputType.number,
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(),
+            FormBuilderValidators.numeric(),
+          ])),
       ],
     );
   }
 
-  // Additional Information Section
   Widget _buildAdditionalInfoSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,7 +227,6 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     );
   }
 
-  // Action Buttons
   Widget _buildActionButtons() {
     return Column(
       children: [
@@ -250,9 +252,8 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     );
   }
 
-  // Reusable form field widgets
   Widget _buildTextField(String name, String label, TextEditingController controller, void Function(String?)? onChanged,
-      {bool enabled = true, TextInputType keyboardType = TextInputType.text}) {
+      {bool enabled = true, TextInputType keyboardType = TextInputType.text, String? Function(String?)? validator}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: FormBuilderTextField(
@@ -265,7 +266,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         ),
         keyboardType: keyboardType,
         onChanged: onChanged,
-        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+        validator: validator,
       ),
     );
   }
@@ -403,7 +404,6 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     );
   }
 
-  // Event handlers
   void _onPhoneChanged(String? value) {
     if (value != null && formKey.currentState!.fields['phone']!.isValid) {
       context.read<GuestManageBloc>().add(GuestManageRetrieveByPhoneEvent(phone: value.trim()));
@@ -411,156 +411,152 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     }
   }
 
-
   void _saveGuestReservation() {
-    if (formKey.currentState?.saveAndValidate() ?? false) {
-      // Create Guest object
-      final guest = Guest(
-        id: widget.guestId == null ? null : int.tryParse(guestIdController.text),
-        firstName: firstNameController.text,
-        lastName: lastNameController.text,
-        phone: phoneController.text,
-        email: emailController.text.isNotEmpty ? emailController.text : null,
-        isInHouse: formKey.currentState!.fields['isInHouse']!.value,
-        dateCreate: formKey.currentState!.fields['dateCreate']!.value,
-        dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
-        rateType: RateType.values.byName(formKey.currentState!.fields['rateType']!.value),
-        staffId: 1, // Assuming a default value, adjust as necessary
-        companyId: 1, // Assuming a default value, adjust as necessary
-        rigNumber: rigNumberController.text.isNotEmpty ? int.parse(rigNumberController.text) : null,
-        accountBalance: 0, // Assuming a default value, adjust as necessary
-      );
-
-      // Dispatch event to save guest
-      context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
+    if (_validateGuestForm()) {
+      _saveGuest();
     } else {
-      print('Form validation failed when trying to save guest');
       showSnackbar(context, 'Please fill all required fields for the guest');
     }
   }
 
-  void _saveReservation(int guestId) {
-    print('Attempting to save reservation for guest ID: $guestId');
-    if (formKey.currentState?.saveAndValidate() ?? false) {
+  bool _validateGuestForm() {
+    final guestFields = [
+      'firstName',
+      'lastName',
+      'phone',
+      'rateType',
+    ];
+    
+    return _validateFields(guestFields);
+  }
+
+  bool _validateReservationForm() {
+    final reservationFields = [
+      'roomId',
+      'checkInDate',
+      'checkOutDate',
+      'stayDay',
+      'rate',
+      'rateReason',
+    ];
+    
+    return _validateFields(reservationFields);
+  }
+
+  bool _validateFields(List<String> fields) {
+    bool isValid = true;
+    for (var field in fields) {
+      if (formKey.currentState?.fields[field]?.validate() == false) {
+        isValid = false;
+        print('Validation failed for field: $field');
+      }
+    }
+    return isValid;
+  }
+
+  void _saveGuest() {
+    final guest = Guest(
+      id: widget.guestId == null ? null : int.tryParse(guestIdController.text),
+      firstName: firstNameController.text,
+      lastName: lastNameController.text,
+      phone: phoneController.text,
+      email: emailController.text.isNotEmpty ? emailController.text : null,
+      isInHouse: formKey.currentState!.fields['isInHouse']!.value,
+      dateCreate: formKey.currentState!.fields['dateCreate']!.value,
+      dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
+      rateType: RateType.values.byName(formKey.currentState!.fields['rateType']!.value),
+      staffId: 1,
+      companyId: 1,
+      rigNumber: rigNumberController.text.isNotEmpty ? int.parse(rigNumberController.text) : null,
+      accountBalance: 0,
+    );
+
+    context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
+  }
+
+void _saveReservation(int guestId) {
+  print('Attempting to save reservation for guest ID: $guestId');
+  if (_validateReservationForm()) {
+    try {
+      // Log each field separately with null checks
+      print('Room ID: ${roomIdController.text}');
+      print('Is Checked In: ${formKey.currentState?.fields['isCheckedIn']?.value ?? false}');
+      print('Is Canceled: ${formKey.currentState?.fields['isCanceled']?.value ?? false}');
+      print('Is Night Shift: ${formKey.currentState?.fields['isNightShift']?.value ?? false}');
+      print('Date Create: ${formKey.currentState?.fields['dateCreate']?.value ?? DateTime.now()}');
+      print('Date Update: ${formKey.currentState?.fields['dateUpdate']?.value ?? DateTime.now()}');
+      print('Check In Date: ${formKey.currentState?.fields['checkInDate']?.value ?? DateTime.now()}');
+      print('Check Out Date: ${formKey.currentState?.fields['checkOutDate']?.value ?? DateTime.now().add(Duration(days: 1))}');
+      print('Stay Day: ${formKey.currentState?.fields['stayDay']?.value ?? DateTime.now()}');
+      print('Rate Type: ${formKey.currentState?.fields['rateType']?.value ?? RateType.standard.name}');
+      print('Rate: ${rateController.text}');
+      print('Rate Reason: ${formKey.currentState?.fields['rateReason']?.value ?? RateReason.single.name}');
+
       final reservation = Reservation(
         id: widget.reservationId == null ? null : int.tryParse(reservationIdController.text),
         guestId: guestId,
-        roomId: int.parse(roomIdController.text),
-        isCheckedIn: formKey.currentState!.fields['isCheckedIn']!.value,
-        isCanceled: formKey.currentState!.fields['isCanceled']!.value,
-        isNightShift: formKey.currentState!.fields['isNightShift']!.value,
-        dateCreate: formKey.currentState!.fields['dateCreate']!.value,
-        dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
-        checkInDate: formKey.currentState!.fields['checkInDate']!.value,
-        checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
-        stayDay: formKey.currentState!.fields['stayDay']!.value,
-        rateType: RateType.values.byName(formKey.currentState!.fields['rateType']!.value),
-        rate: double.parse(rateController.text),
-        rateReason: RateReason.values.byName(formKey.currentState!.fields['rateReason']!.value),
+        roomId: int.tryParse(roomIdController.text) ?? 0,
+        isCheckedIn: formKey.currentState?.fields['isCheckedIn']?.value ?? false,
+        isCanceled: formKey.currentState?.fields['isCanceled']?.value ?? false,
+        isNightShift: formKey.currentState?.fields['isNightShift']?.value ?? false,
+        dateCreate: formKey.currentState?.fields['dateCreate']?.value ?? DateTime.now(),
+        dateUpdate: formKey.currentState?.fields['dateUpdate']?.value ?? DateTime.now(),
+        checkInDate: formKey.currentState?.fields['checkInDate']?.value ?? DateTime.now(),
+        checkOutDate: formKey.currentState?.fields['checkOutDate']?.value ?? DateTime.now().add(Duration(days: 1)),
+        stayDay: formKey.currentState?.fields['stayDay']?.value ?? DateTime.now(),
+        rateType: RateType.values.byName(formKey.currentState?.fields['rateType']?.value ?? RateType.standard.name),
+        rate: double.tryParse(rateController.text) ?? 0.0,
+        rateReason: RateReason.values.byName(formKey.currentState?.fields['rateReason']?.value ?? RateReason.single.name),
       );
 
       print('Reservation object created: $reservation');
       context.read<ReservationManageBloc>().add(SaveReservation(reservation: reservation));
-    } else {
-      print('Form validation failed when trying to save reservation');
-      showSnackbar(context, 'Please fill all required fields for the reservation');
+    } catch (e, stackTrace) {
+      print('Error creating reservation object: $e');
+      print('Stack trace: $stackTrace');
+      showSnackbar(context, 'Error creating reservation: $e');
     }
+  } else {
+    print('Reservation form validation failed');
+    showSnackbar(context, 'Please fill all required fields for the reservation');
   }
+}
 
-  /*
-  void _saveGuestReservation() {
-    if (formKey.currentState?.saveAndValidate() ?? false) {
-      // Save Guest
-      final guest = Guest(
-     //   id: int.tryParse(guestIdController.text),
-        id : widget.guestId == null ? null : int.tryParse(guestIdController.text),
-        firstName: firstNameController.text,
-        lastName: lastNameController.text,
-        phone: phoneController.text,
-        email: emailController.text.isNotEmpty ? emailController.text : null,
-        isInHouse: formKey.currentState!.fields['isInHouse']!.value,
-        dateCreate: formKey.currentState!.fields['dateCreate']!.value,
-        dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
-        rateType: RateType.values.byName(formKey.currentState!.fields['rateType']!.value),
-        staffId: 1, // Assuming a default value, adjust as necessary
-        companyId: 1, // Assuming a default value, adjust as necessary
-        rigNumber: rigNumberController.text.isNotEmpty ? int.parse(rigNumberController.text) : null,
-        accountBalance: 0, // Assuming a default value, adjust as necessary
-      );
-
-      context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
-
-      // Save Guest and wait for the result
-      final savedGuest = await context.read<GuestManageBloc>().saveGuest(guest);
-
-      // Save Reservation
-      final reservation = Reservation(
-        id:  widget.reservationId == null ? null : int.tryParse(reservationIdController.text),
-        guestId: int.parse(guestIdController.text),
-        roomId: int.parse(roomIdController.text),
-        isCheckedIn: formKey.currentState!.fields['isCheckedIn']!.value,
-        isCanceled: formKey.currentState!.fields['isCanceled']!.value,
-        isNightShift: formKey.currentState!.fields['isNightShift']!.value,
-        dateCreate: formKey.currentState!.fields['dateCreate']!.value,
-        dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
-        checkInDate: formKey.currentState!.fields['checkInDate']!.value,
-        checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
-        stayDay: formKey.currentState!.fields['stayDay']!.value,
-        rateType: RateType.values.byName(formKey.currentState!.fields['rateType']!.value),
-        rate: double.parse(rateController.text),
-        rateReason: RateReason.values.byName(formKey.currentState!.fields['rateReason']!.value),
-      );
-
-      context.read<ReservationManageBloc>().add(SaveReservation(reservation: reservation));
-    }
+void _guestBlocListener(BuildContext context, GuestManageState state) {
+  print('Current guest state: $state');
+  if (state is GuestManageStateFailure) {
+    print('Guest save failed: ${state.message}');
+    showSnackbar(context, 'Failed to save guest: ${state.message}');
+  } else if (state is GuestManageStateSaveSuccess) {
+    print('Guest saved successfully. ID: ${state.guest.id}');
+    _saveReservation(state.guest.id!);
+  } else if (state is GuestManageStateRetrieveSuccess) {
+    _populateGuestFields(state.guest);
+  } else if (state is GuestManageStateRetrieveByPhoneSuccess) {
+    _populateGuestFields(state.guest);
   }
+}
 
-  */
-
-  void _guestBlocListener(BuildContext context, GuestManageState state) {
-    print('Current guest state: $state');
-    if (state is GuestManageStateFailure) {
-      print('Guest save failed: ${state.message}');
-      showSnackbar(context, 'Failed to save guest: ${state.message}');
-    } else if (state is GuestManageStateSaveSuccess) {
-      print('Guest saved successfully. ID: ${state.guest.id}');
-      print('Saved guest rate type: ${state.guest.rateType}');
-      _saveReservation(state.guest.id!);
-    } else if (state is GuestManageStateLoading) {
-      // Show loading indicator if needed
-    } else if (state is GuestManageStateRetrieveSuccess) {
-      _populateGuestFields(state.guest);
-    } else if (state is GuestManageStateRetrieveByPhoneSuccess) {
-      _populateGuestFields(state.guest);
-    } else {
-      print('Unhandled guest state: $state');
-    }
+void _reservationBlocListener(BuildContext context, ReservationManageState state) {
+  print('Current reservation state: $state');
+  if (state is ReservationManageStateFailure) {
+    print('Reservation save failed: ${state.message}');
+    showSnackbar(context, 'Failed to save reservation: ${state.message}');
+  } else if (state is ReservationManageStateSaveSuccess) {
+    print('Reservation saved successfully');
+    showSnackbar(context, 'Guest and Reservation saved successfully');
+    context.read<GuestListBloc>().add(FetchGuestsEvent());
+    context.read<ReservationListBloc>().add(FetchReservationsEvent());
+    context.pop();
+  } else if (state is ReservationManageStateRetrieveSuccess) {
+    _populateReservationFields(state.reservation);
+  } else if (state is ReservationManageStateRetrieveGuestSuccess ||
+      state is ReservationManageStateRetrieveGuestByPhoneSuccess) {
+    _populateGuestFields(state is ReservationManageStateRetrieveGuestSuccess
+        ? state.guest
+        : (state as ReservationManageStateRetrieveGuestByPhoneSuccess).guest);
   }
-
-  void _reservationBlocListener(BuildContext context, ReservationManageState state) {
-    if (state is ReservationManageStateFailure) {
-      showSnackbar(context, state.message);
-    } else if (state is ReservationManageStateSaveSuccess ||
-        state is ReservationManageStateDeleteSuccess ||
-        state is ReservationManageStateCheckInSuccess) {
-
-
-      context.read<GuestListBloc>().add(FetchGuestsEvent());
-      context.read<ReservationListBloc>().add(FetchReservationsEvent());
-      context.pop();
-
-
-    //  context.read<ReservationListBloc>().add(FetchReservationsEvent());
-    //  context.pop(); // Pop context after both guest and reservation are saved
-    } else if (state is ReservationManageStateRetrieveSuccess) {
-      _populateReservationFields(state.reservation);
-    } else if (state is ReservationManageStateRetrieveGuestSuccess ||
-        state is ReservationManageStateRetrieveGuestByPhoneSuccess) {
-      _populateGuestFields(state is ReservationManageStateRetrieveGuestSuccess
-          ? state.guest
-          : (state as ReservationManageStateRetrieveGuestByPhoneSuccess).guest);
-    }
-  }
+}
 
   void _populateGuestFields(Guest guest) {
     guestIdController.text = guest.id.toString();
@@ -569,7 +565,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     phoneController.text = guest.phone;
     emailController.text = guest.email ?? '';
     rigNumberController.text = guest.rigNumber?.toString() ?? '';
-    rateTypeController.text = guest.rateType.name; // Use .name here
+    rateTypeController.text = guest.rateType.name;
 
     setState(() {
       isInHouse = guest.isInHouse;
@@ -607,7 +603,6 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       'isNightShift': reservation.isNightShift,
     });
 
-    // If the reservation has a guest, populate guest fields
     if (reservation.guest != null) {
       _populateGuestFields(reservation.guest!);
     }
