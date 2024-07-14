@@ -47,7 +47,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       final roomTypes = rooms.map((room) => room.roomType.toString()).toList();
       final roomNumbers = rooms.map((room) => room.id!.toString()).toList();
 
-      final DateTime startDate = DateTime.now().getDateOnly();
+      final DateTime startDate = DateTime.now().getDateOnly().subtract(Duration( days : 1));
       const int daysToShow = 14;
 
       emit(RoomCalendarLoaded(

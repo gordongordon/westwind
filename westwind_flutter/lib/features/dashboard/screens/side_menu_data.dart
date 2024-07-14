@@ -9,7 +9,7 @@ class SideMenuData {
     MenuModel(icon: Icons.app_registration_rounded, title: 'Reservtions'),
     MenuModel(icon: Icons.calendar_month, title: 'Calendar'),
     MenuModel(icon: Icons.bed_rounded, title: 'RoomGuests'),
-    MenuModel(icon: Icons.payment, title: 'Charges'),
+    MenuModel(icon: Icons.payment, title: 'RoomTransactions'),
     MenuModel(icon: Icons.book_sharp, title: 'Booking'),
     MenuModel(icon: Icons.history, title: 'History'),
     MenuModel(icon: Icons.logout, title: 'SignOut'),

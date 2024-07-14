@@ -15,3 +15,5 @@ values:
   - cash
   - eTransfer
   - gift_card
+  - debit
+  - room_adjust

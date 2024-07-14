@@ -27,7 +27,8 @@ class _RoomTransactionManagementFormWidgetState
   final TextEditingController roomIdController = TextEditingController();
   final TextEditingController guestIdController = TextEditingController();
   final TextEditingController roomGuestIdController = TextEditingController();
-  final TextEditingController transactionTypeController = TextEditingController();
+  final TextEditingController transactionTypeController =
+      TextEditingController();
   final TextEditingController itemTypeController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController tax1Controller = TextEditingController();
@@ -65,15 +66,68 @@ class _RoomTransactionManagementFormWidgetState
     setState(() {
       if (transactionType == TransactionType.pay.name) {
         _currentItemTypeOptions = [
+          ItemType.debit.name,
           ItemType.cash.name,
           ItemType.visa.name,
           ItemType.master.name,
           ItemType.eTransfer.name,
           ItemType.gift_card.name,
         ];
+      } else if (transactionType == TransactionType.charge.name) {
+        _currentItemTypeOptions = [
+          ItemType.laundry.name,
+          ItemType.room_adjust.name,
+          ItemType.pet.name,
+          ItemType.atm.name,
+          ItemType.demage.name,
+          ItemType.food.name,
+          ItemType.other.name,
+          ItemType.vending.name,
+        ];
+      } else if (transactionType == TransactionType.deposit.name) {
+        _currentItemTypeOptions = [
+          ItemType.debit.name,
+          ItemType.cash.name,
+          ItemType.visa.name,
+          ItemType.master.name,
+          ItemType.eTransfer.name,
+          ItemType.gift_card.name,
+        ];
+      } else if (transactionType == TransactionType.refund.name) {
+        _currentItemTypeOptions = [
+          ItemType.debit.name,
+          ItemType.cash.name,
+          ItemType.visa.name,
+          ItemType.master.name,
+          ItemType.eTransfer.name,
+          ItemType.gift_card.name,
+        ];
+      } else if (transactionType == TransactionType.adjustCredit.name) {
+        _currentItemTypeOptions = [
+          ItemType.laundry.name,
+          ItemType.room_adjust.name,
+          ItemType.pet.name,
+          ItemType.atm.name,
+          ItemType.demage.name,
+          ItemType.food.name,
+          ItemType.other.name,
+          ItemType.vending.name,
+        ];
+      } else if (transactionType == TransactionType.adjustDebit.name) {
+        _currentItemTypeOptions = [
+          ItemType.laundry.name,
+          ItemType.room_adjust.name,
+          ItemType.pet.name,
+          ItemType.atm.name,
+          ItemType.demage.name,
+          ItemType.food.name,
+          ItemType.other.name,
+          ItemType.vending.name,
+        ];
       } else {
         _currentItemTypeOptions = _allItemTypeOptions;
       }
+
       // Ensure the current itemType is valid for the new options
       if (!_currentItemTypeOptions.contains(itemTypeController.text)) {
         itemTypeController.text = _currentItemTypeOptions.first;
@@ -134,14 +188,13 @@ class _RoomTransactionManagementFormWidgetState
         _buildTextField('amount', 'Amount', amountController,
             keyboardType: TextInputType.number),
         _buildDropdown('itemType', 'Item Type', _currentItemTypeOptions,
-            initialValue: itemTypeController.text,
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  itemTypeController.text = value;
-                });
-              }
-            }),
+            initialValue: itemTypeController.text, onChanged: (value) {
+          if (value != null) {
+            setState(() {
+              itemTypeController.text = value;
+            });
+          }
+        }),
         _buildTextField('description', 'Description', descriptionController,
             maxLines: 3),
       ],
@@ -203,14 +256,13 @@ class _RoomTransactionManagementFormWidgetState
         const SizedBox(height: 16),
         _buildTextField('roomGuestId', 'Room Guest ID', roomGuestIdController),
         _buildDropdown('itemType', 'Item Type', _currentItemTypeOptions,
-            initialValue: itemTypeController.text,
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  itemTypeController.text = value;
-                });
-              }
-            }),
+            initialValue: itemTypeController.text, onChanged: (value) {
+          if (value != null) {
+            setState(() {
+              itemTypeController.text = value;
+            });
+          }
+        }),
         _buildTextField('description', 'Description', descriptionController,
             maxLines: 3),
       ],
@@ -309,6 +361,7 @@ class _RoomTransactionManagementFormWidgetState
 
       switch (itemType) {
         case ItemType.room:
+        case ItemType.room_adjust:
           gst = amount * 0.05;
           levy = amount * 0.04;
         case ItemType.food:
@@ -326,6 +379,7 @@ class _RoomTransactionManagementFormWidgetState
         case ItemType.cash:
         case ItemType.eTransfer:
         case ItemType.gift_card:
+        case ItemType.debit:
           gst = 0;
           levy = 0;
       }
@@ -366,7 +420,7 @@ class _RoomTransactionManagementFormWidgetState
     transactionTypeController.text = transaction.transactionType.name;
     itemTypeController.text = transaction.itemType.name;
     transactionDay = transaction.transactionDay.toLocal();
-    stayDay = transaction.stayDay!;
+    stayDay = transaction.stayDay;
     descriptionController.text = transaction.description;
 
     _updateItemTypeOptions(transaction.transactionType.name);

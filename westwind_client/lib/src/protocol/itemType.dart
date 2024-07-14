@@ -24,7 +24,9 @@ enum ItemType implements _i1.SerializableModel {
   master,
   cash,
   eTransfer,
-  gift_card;
+  gift_card,
+  debit,
+  room_adjust;
 
   static ItemType fromJson(String name) {
     switch (name) {
@@ -56,6 +58,10 @@ enum ItemType implements _i1.SerializableModel {
         return eTransfer;
       case 'gift_card':
         return gift_card;
+      case 'debit':
+        return debit;
+      case 'room_adjust':
+        return room_adjust;
       default:
         throw ArgumentError('Value "$name" cannot be converted to "ItemType"');
     }

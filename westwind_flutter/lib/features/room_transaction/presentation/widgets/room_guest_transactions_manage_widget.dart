@@ -226,29 +226,6 @@ class _RoomGuestTransactionsManageWidgetState
       ),
     );
   }
-/*
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(
-            child: Text(value),
-          ),
-        ],
-      ),
-    );
-  }
-  */
-
   String _formatDate(DateTime? date) {
     if (date == null) return 'N/A';
     return DateFormat('MM-dd').format(date);

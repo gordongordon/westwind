@@ -168,11 +168,11 @@ class LegendWidget extends StatelessWidget {
       child: Wrap(
         spacing: 8,
         children: const [
-          _LegendItem('Reserved', Colors.green),
-          _LegendItem('Checked In', Colors.blue),
+          _LegendItem('Reservation', Colors.green),
+          _LegendItem('RoomGuest - Checked In', Colors.blue),
           _LegendItem('Cancelled', Colors.grey),
-          _LegendItem('Multiple Reservations', Colors.purple),
-          _LegendItem('Room Transaction', Colors.orange),
+          _LegendItem('Mixed Multiple Guests', Colors.purple),
+          _LegendItem('Room Transaction - Posted', Colors.orange),
         ],
       ),
     );

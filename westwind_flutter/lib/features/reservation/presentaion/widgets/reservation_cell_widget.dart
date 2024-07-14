@@ -268,7 +268,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         });
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 200),
         width: 110,
         height: isExpanded ? items.length * 35.0 : 30,
         decoration: BoxDecoration(
@@ -302,7 +302,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   Widget _buildCollapsedContent(BuildContext context, List<dynamic> items) {
     return Center(
       child: Text(
-        '${items.length} Items',
+        '${items.length} Guests',
         style: const TextStyle(
           color: Colors.white,
           fontSize: 10,
