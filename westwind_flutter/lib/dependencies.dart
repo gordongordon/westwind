@@ -79,7 +79,7 @@ Future<void> initDependencies() async {
 
   serverLocator.registerLazySingleton<Client>(
     () => Client(
-      "http://192.168.20.248:8080/",
+      "http://localhost:8080/",
       authenticationKeyManager: FlutterAuthenticationKeyManager(),
     )..connectivityMonitor = FlutterConnectivityMonitor(),
   );

@@ -13,7 +13,7 @@ class RoomTransactionEndpoint extends Endpoint {
             item.guestId.equals(guestId) & item.itemType.equals(ItemType.room));
 
     return transactionHistory.any((transaction) {
-      DateTime today = DateTime.now();
+      DateTime today = DateTime.now().toLocal();
       return transaction.transactionDay.year == today.year &&
           transaction.transactionDay.month == today.month &&
           transaction.transactionDay.day == today.day;
@@ -93,7 +93,7 @@ class RoomTransactionEndpoint extends Endpoint {
 
     final result = await RoomTransaction.db.deleteRow(session, rt);
 
-    if (result == id) {
+    if (result.id == id) {
       return true;
     }
 

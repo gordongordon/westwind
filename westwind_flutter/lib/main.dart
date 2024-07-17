@@ -23,6 +23,7 @@ void main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => serverLocator<AppUserCubit>()),
+    
       BlocProvider(create: (_) => serverLocator<GuestListBloc>()),
       BlocProvider(create: (_) => serverLocator<GuestDetailBloc>()),
       BlocProvider(

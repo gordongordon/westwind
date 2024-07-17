@@ -37,7 +37,7 @@ class _RoomTransactionManagementFormWidgetState
   final TextEditingController descriptionController = TextEditingController();
 
   DateTime stayDay = DateTime.now();
-  DateTime transactionDay = DateTime.now();
+  DateTime transactionDay = DateTime.now().toLocal();
 
   final List<String> _transactionTypeOptions =
       TransactionType.values.map((e) => e.name).toList();

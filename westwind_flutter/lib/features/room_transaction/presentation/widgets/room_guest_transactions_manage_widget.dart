@@ -63,7 +63,6 @@ class _RoomGuestTransactionsManageWidgetState
                   }
                 });
 
-
                 return _buildTransactionsList(state.transactions);
               } else if (state is RoomGuestTransactionsError) {
                 return Center(child: Text(state.message));
@@ -112,14 +111,14 @@ class _RoomGuestTransactionsManageWidgetState
   void _blocListener(BuildContext context, RoomTransactionState state) {
     if (state is RoomTransactionStateFailure) {
       showSnackbar(context, state.message);
-    } else if (state is RoomTransactionStateCreatedSuccess) {
+    } else if (state is RoomTransactionStateCreatedSuccess || state is RoomTransactionStateDeletedSuccess ) {
       context
           .read<RoomGuestTransactionsBloc>()
           .add(FetchRoomGuestTransactions(widget.roomGuestId));
       context
           .read<RoomTransactionBloc>()
           .add(RetrieveRoomGuestEvent(roomGuestId: widget.roomGuestId));
-    }
+    } 
   }
 
   double _computeTotal(List<RoomTransaction> transactions) {
@@ -172,7 +171,8 @@ class _RoomGuestTransactionsManageWidgetState
                     _buildInfoRow('Guest ',
                         '${transaction.guest?.lastName} ${transaction.guest?.firstName}',
                         isLastItem: isLastItem),
-                    _buildInfoRow('Stay Day', transaction.stayDay.getMonthNameDD(),
+                    _buildInfoRow(
+                        'Stay Day', transaction.stayDay.getMonthNameDD(),
                         isLastItem: isLastItem),
                     _buildInfoRow('Transaction Day',
                         transaction.transactionDay.getMonthDayHour(),
@@ -191,6 +191,7 @@ class _RoomGuestTransactionsManageWidgetState
                         isLastItem: isLastItem),
                     _buildInfoRow('Description', transaction.description,
                         isLastItem: isLastItem),
+                    _buildActionButtons(transaction.id),
                   ],
                 ),
               ),
@@ -198,6 +199,35 @@ class _RoomGuestTransactionsManageWidgetState
           ),
         );
       },
+    );
+  }
+
+  Widget _buildActionButtons(int? transactionId) {
+    if (transactionId != null) {
+      return Column(
+        children: [
+          const SizedBox(height: 16),
+          _buildButton(
+              'Delete',
+              () => context
+                  .read<RoomTransactionBloc>()
+                  .add(DeleteRoomTransactionEvent(id: transactionId)),
+              color: Colors.red),
+        ],
+      );
+    }
+    return SizedBox();
+  }
+
+  Widget _buildButton(String text, VoidCallback onPressed,
+      {Color color = Colors.blue}) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(text),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        minimumSize: Size(double.infinity, 50),
+      ),
     );
   }
 
@@ -226,6 +256,7 @@ class _RoomGuestTransactionsManageWidgetState
       ),
     );
   }
+
   String _formatDate(DateTime? date) {
     if (date == null) return 'N/A';
     return DateFormat('MM-dd').format(date);
