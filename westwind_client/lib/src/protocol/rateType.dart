@@ -17,6 +17,12 @@ enum RateType implements _i1.SerializableModel {
   clear,
   global,
   darkstar,
+  devita,
+  massey_mechanical,
+  force_inspection,
+  bullet_well,
+  PWS_Frontier,
+  expedia,
   online,
   staff;
 
@@ -34,6 +40,18 @@ enum RateType implements _i1.SerializableModel {
         return global;
       case 'darkstar':
         return darkstar;
+      case 'devita':
+        return devita;
+      case 'massey_mechanical':
+        return massey_mechanical;
+      case 'force_inspection':
+        return force_inspection;
+      case 'bullet_well':
+        return bullet_well;
+      case 'PWS_Frontier':
+        return PWS_Frontier;
+      case 'expedia':
+        return expedia;
       case 'online':
         return online;
       case 'staff':
