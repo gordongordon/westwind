@@ -238,6 +238,7 @@ class RoomGuestEndpoint extends Endpoint {
     return await RoomGuest.db.find(session,
         //orderBy: (t) => t.roomId,
         orderByList: (t) => [
+          Order( column: t.updateDate, orderDescending: true),
           Order( column: t.roomId, orderDescending : true),
           Order( column: t.stayDay, orderDescending: false),
           Order( column: t.checkOutDate, orderDescending: false),

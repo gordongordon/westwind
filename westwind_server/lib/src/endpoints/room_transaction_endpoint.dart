@@ -22,12 +22,15 @@ class RoomTransactionEndpoint extends Endpoint {
 
   Future<List<RoomTransaction>> list(Session session) async {
     return await RoomTransaction.db.find(session,
+        orderByList: (t) => [
+              Order(column: t.updateDate, orderDescending: true),
+              Order(column: t.transactionDay, orderDescending: true),
+            ],
         include: RoomTransaction.include(
           guest: Guest.include(),
           room: Room.include(),
         ));
   }
-
 
   Future<List<RoomTransaction>> listWithItemTypeRoom(Session session) async {
     return await RoomTransaction.db.find(session,
@@ -38,10 +41,8 @@ class RoomTransactionEndpoint extends Endpoint {
         ));
   }
 
-
-
-
-  Future<List<RoomTransaction>> getTransactionsForRoomGuest(Session session, int roomGuestId) async {
+  Future<List<RoomTransaction>> getTransactionsForRoomGuest(
+      Session session, int roomGuestId) async {
     return await RoomTransaction.db.find(session,
         where: (i) => i.roomGuestId.equals(roomGuestId),
         include: RoomTransaction.include(
@@ -50,9 +51,9 @@ class RoomTransactionEndpoint extends Endpoint {
         ));
   }
 
-
- Future<RoomTransaction> saveRoomTransaciton(Session session, RoomTransaction rt) async {
-    if ( rt.id != null) {
+  Future<RoomTransaction> saveRoomTransaciton(
+      Session session, RoomTransaction rt) async {
+    if (rt.id != null) {
       rt.updateDate = DateTime.now().toLocal();
       return await RoomTransaction.db.updateRow(session, rt);
     }

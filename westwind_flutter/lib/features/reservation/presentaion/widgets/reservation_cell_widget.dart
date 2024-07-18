@@ -196,8 +196,11 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
       return _buildSingleReservationCell(context, item);
     } else if (item is RoomTransaction) {
       return _buildSingleRoomTransactionCell(context, item);
-    } else if (item is RoomGuest) {
-      return _buildSingleRoomGuestCell(context, item);
+    } else if (item is RoomGuest  ) {
+         if ( item.isCheckOut ) {
+           return _buildEmptyCell(context, roomNumber, date);
+         } 
+         return _buildSingleRoomGuestCell(context, item);
     }
     return _buildEmptyCell(context, roomNumber, date);
   }
@@ -220,6 +223,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
       BuildContext context, RoomTransaction transaction) {
     return GestureDetector(
       onTap: () => _showRoomTransactionDetails(context, transaction),
+      onLongPress: () => _openRoomGuestTransactionManagePageByRoomGuestId(context, transaction.roomGuestId),
       child: Container(
         width: 110,
         height: 30,
@@ -605,5 +609,11 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     if (roomGuest.id != null && roomGuest.id! > 0) {
       context.push(RoomGuestTransactionsManagePage.route(roomGuest.id));
     }
+  }
+  void _openRoomGuestTransactionManagePageByRoomGuestId(
+      BuildContext context, int id) {
+  //  if (roomGuest.id != null && roomGuest.id! > 0) {
+      context.push(RoomGuestTransactionsManagePage.route(id));
+   // }
   }
 }

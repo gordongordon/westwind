@@ -45,6 +45,7 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
       _buildSelectColumn('Rate Type', 'rateType', _rateTypeOptions),
       _buildSelectColumn('Rate Reason', 'rateReason', _rateReasonOptions),
       _buildRateColumn(),
+      _buildBooleanColumn('Is C/O', 'isCheckOut'),
       _buildTextColumn('Company', 'companyName'),
       _buildBalanceColumn(),
       _buildNumberColumn('ResId', 'reservationId', width: 80),
@@ -68,6 +69,28 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
           return Center(child: Text(state.message));
         }
         return const Placeholder();
+      },
+    );
+  }
+
+
+    PlutoColumn _buildBooleanColumn(String title, String field,
+      {IconData? icon}) {
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.select(<bool>[true, false]),
+      width: 120,
+      renderer: (rendererContext) {
+        Color textColor =
+            rendererContext.cell.value ? Colors.red : Colors.green;
+        if (icon != null) {
+          return Icon(icon, color: textColor);
+        }
+        return Text(
+          rendererContext.cell.value.toString(),
+          style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+        );
       },
     );
   }
