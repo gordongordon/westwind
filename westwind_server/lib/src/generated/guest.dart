@@ -1,16 +1,16 @@
 /* AUTOMATICALLY GENERATED CODE DO NOT MODIFY */
 /*   To generate run: "serverpod generate"    */
 
-// ignore_for_file: library_private_types_in_public_api
-// ignore_for_file: public_member_api_docs
 // ignore_for_file: implementation_imports
-// ignore_for_file: use_super_parameters
+// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
+// ignore_for_file: use_super_parameters
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'protocol.dart' as _i2;
-import 'package:serverpod_serialization/serverpod_serialization.dart';
 
 abstract class Guest extends _i1.TableRow implements _i1.ProtocolSerialization {
   Guest._({
@@ -283,7 +283,7 @@ class _GuestImpl extends Guest {
       accountBalance: accountBalance ?? this.accountBalance,
       roomGuets: roomGuets is List<_i2.RoomGuest>?
           ? roomGuets
-          : this.roomGuets?.clone(),
+          : this.roomGuets?.map((e0) => e0.copyWith()).toList(),
     );
   }
 }
@@ -656,8 +656,9 @@ class GuestAttachRepository {
   Future<void> roomGuets(
     _i1.Session session,
     Guest guest,
-    List<_i2.RoomGuest> roomGuest,
-  ) async {
+    List<_i2.RoomGuest> roomGuest, {
+    _i1.Transaction? transaction,
+  }) async {
     if (roomGuest.any((e) => e.id == null)) {
       throw ArgumentError.notNull('roomGuest.id');
     }
@@ -670,6 +671,7 @@ class GuestAttachRepository {
     await session.db.update<_i2.RoomGuest>(
       $roomGuest,
       columns: [_i2.RoomGuest.t.guestId],
+      transaction: transaction,
     );
   }
 }
@@ -680,8 +682,9 @@ class GuestAttachRowRepository {
   Future<void> company(
     _i1.Session session,
     Guest guest,
-    _i2.Company company,
-  ) async {
+    _i2.Company company, {
+    _i1.Transaction? transaction,
+  }) async {
     if (guest.id == null) {
       throw ArgumentError.notNull('guest.id');
     }
@@ -693,14 +696,16 @@ class GuestAttachRowRepository {
     await session.db.updateRow<Guest>(
       $guest,
       columns: [Guest.t.companyId],
+      transaction: transaction,
     );
   }
 
   Future<void> roomGuets(
     _i1.Session session,
     Guest guest,
-    _i2.RoomGuest roomGuest,
-  ) async {
+    _i2.RoomGuest roomGuest, {
+    _i1.Transaction? transaction,
+  }) async {
     if (roomGuest.id == null) {
       throw ArgumentError.notNull('roomGuest.id');
     }
@@ -712,6 +717,7 @@ class GuestAttachRowRepository {
     await session.db.updateRow<_i2.RoomGuest>(
       $roomGuest,
       columns: [_i2.RoomGuest.t.guestId],
+      transaction: transaction,
     );
   }
 }
@@ -721,8 +727,9 @@ class GuestDetachRepository {
 
   Future<void> roomGuets(
     _i1.Session session,
-    List<_i2.RoomGuest> roomGuest,
-  ) async {
+    List<_i2.RoomGuest> roomGuest, {
+    _i1.Transaction? transaction,
+  }) async {
     if (roomGuest.any((e) => e.id == null)) {
       throw ArgumentError.notNull('roomGuest.id');
     }
@@ -731,6 +738,7 @@ class GuestDetachRepository {
     await session.db.update<_i2.RoomGuest>(
       $roomGuest,
       columns: [_i2.RoomGuest.t.guestId],
+      transaction: transaction,
     );
   }
 }
@@ -740,8 +748,9 @@ class GuestDetachRowRepository {
 
   Future<void> roomGuets(
     _i1.Session session,
-    _i2.RoomGuest roomGuest,
-  ) async {
+    _i2.RoomGuest roomGuest, {
+    _i1.Transaction? transaction,
+  }) async {
     if (roomGuest.id == null) {
       throw ArgumentError.notNull('roomGuest.id');
     }
@@ -750,6 +759,7 @@ class GuestDetachRowRepository {
     await session.db.updateRow<_i2.RoomGuest>(
       $roomGuest,
       columns: [_i2.RoomGuest.t.guestId],
+      transaction: transaction,
     );
   }
 }

@@ -1,11 +1,12 @@
 /* AUTOMATICALLY GENERATED CODE DO NOT MODIFY */
 /*   To generate run: "serverpod generate"    */
 
-// ignore_for_file: library_private_types_in_public_api
-// ignore_for_file: public_member_api_docs
 // ignore_for_file: implementation_imports
-// ignore_for_file: use_super_parameters
+// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
+// ignore_for_file: use_super_parameters
 
 library protocol; // ignore_for_file: no_leading_underscores_for_library_prefixes
 
@@ -296,12 +297,9 @@ class Protocol extends _i1.SerializationManager {
   }
 
   @override
-  String? getClassNameForObject(Object data) {
-    String? className;
-    className = _i35.Protocol().getClassNameForObject(data);
-    if (className != null) {
-      return 'serverpod_auth.$className';
-    }
+  String? getClassNameForObject(Object? data) {
+    String? className = super.getClassNameForObject(data);
+    if (className != null) return className;
     if (data is _i2.BedType) {
       return 'BedType';
     }
@@ -380,15 +378,15 @@ class Protocol extends _i1.SerializationManager {
     if (data is _i27.TransactionType) {
       return 'TransactionType';
     }
-    return super.getClassNameForObject(data);
+    className = _i35.Protocol().getClassNameForObject(data);
+    if (className != null) {
+      return 'serverpod_auth.$className';
+    }
+    return null;
   }
 
   @override
   dynamic deserializeByClassName(Map<String, dynamic> data) {
-    if (data['className'].startsWith('serverpod_auth.')) {
-      data['className'] = data['className'].substring(15);
-      return _i35.Protocol().deserializeByClassName(data);
-    }
     if (data['className'] == 'BedType') {
       return deserialize<_i2.BedType>(data['data']);
     }
@@ -466,6 +464,10 @@ class Protocol extends _i1.SerializationManager {
     }
     if (data['className'] == 'TransactionType') {
       return deserialize<_i27.TransactionType>(data['data']);
+    }
+    if (data['className'].startsWith('serverpod_auth.')) {
+      data['className'] = data['className'].substring(15);
+      return _i35.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }

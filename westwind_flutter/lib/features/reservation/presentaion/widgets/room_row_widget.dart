@@ -13,12 +13,12 @@ class RoomRowWidget extends StatelessWidget {
   final bool isEvenRow;
 
   const RoomRowWidget({
-    Key? key,
+    super.key,
     required this.state,
     required this.roomNumber,
     required this.roomType,
     required this.isEvenRow,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,16 +1,16 @@
 /* AUTOMATICALLY GENERATED CODE DO NOT MODIFY */
 /*   To generate run: "serverpod generate"    */
 
-// ignore_for_file: library_private_types_in_public_api
-// ignore_for_file: public_member_api_docs
 // ignore_for_file: implementation_imports
-// ignore_for_file: use_super_parameters
+// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
+// ignore_for_file: use_super_parameters
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'protocol.dart' as _i2;
-import 'package:serverpod_serialization/serverpod_serialization.dart';
 
 abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
   Room._({
@@ -325,7 +325,7 @@ class _RoomImpl extends Room {
       roomNumber: roomNumber ?? this.roomNumber,
       reservations: reservations is List<_i2.Reservation>?
           ? reservations
-          : this.reservations?.clone(),
+          : this.reservations?.map((e0) => e0.copyWith()).toList(),
       roomType: roomType ?? this.roomType,
       roomStatus: roomStatus ?? this.roomStatus,
       isAvailable: isAvailable ?? this.isAvailable,
@@ -739,8 +739,9 @@ class RoomAttachRepository {
   Future<void> reservations(
     _i1.Session session,
     Room room,
-    List<_i2.Reservation> reservation,
-  ) async {
+    List<_i2.Reservation> reservation, {
+    _i1.Transaction? transaction,
+  }) async {
     if (reservation.any((e) => e.id == null)) {
       throw ArgumentError.notNull('reservation.id');
     }
@@ -757,6 +758,7 @@ class RoomAttachRepository {
     await session.db.update<_i2.Reservation>(
       $reservation,
       columns: [_i2.Reservation.t.$_roomReservationsRoomId],
+      transaction: transaction,
     );
   }
 }
@@ -767,8 +769,9 @@ class RoomAttachRowRepository {
   Future<void> reservations(
     _i1.Session session,
     Room room,
-    _i2.Reservation reservation,
-  ) async {
+    _i2.Reservation reservation, {
+    _i1.Transaction? transaction,
+  }) async {
     if (reservation.id == null) {
       throw ArgumentError.notNull('reservation.id');
     }
@@ -783,6 +786,7 @@ class RoomAttachRowRepository {
     await session.db.updateRow<_i2.Reservation>(
       $reservation,
       columns: [_i2.Reservation.t.$_roomReservationsRoomId],
+      transaction: transaction,
     );
   }
 }
@@ -792,8 +796,9 @@ class RoomDetachRepository {
 
   Future<void> reservations(
     _i1.Session session,
-    List<_i2.Reservation> reservation,
-  ) async {
+    List<_i2.Reservation> reservation, {
+    _i1.Transaction? transaction,
+  }) async {
     if (reservation.any((e) => e.id == null)) {
       throw ArgumentError.notNull('reservation.id');
     }
@@ -807,6 +812,7 @@ class RoomDetachRepository {
     await session.db.update<_i2.Reservation>(
       $reservation,
       columns: [_i2.Reservation.t.$_roomReservationsRoomId],
+      transaction: transaction,
     );
   }
 }
@@ -816,8 +822,9 @@ class RoomDetachRowRepository {
 
   Future<void> reservations(
     _i1.Session session,
-    _i2.Reservation reservation,
-  ) async {
+    _i2.Reservation reservation, {
+    _i1.Transaction? transaction,
+  }) async {
     if (reservation.id == null) {
       throw ArgumentError.notNull('reservation.id');
     }
@@ -829,6 +836,7 @@ class RoomDetachRowRepository {
     await session.db.updateRow<_i2.Reservation>(
       $reservation,
       columns: [_i2.Reservation.t.$_roomReservationsRoomId],
+      transaction: transaction,
     );
   }
 }
