@@ -10,7 +10,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'room.dart' as _i2;
+import 'guest.dart' as _i3;
+import 'roomTransaction.dart' as _i4;
+import 'rateType.dart' as _i5;
+import 'rateReason.dart' as _i6;
+import 'reservation.dart' as _i7;
+import 'roomStatus.dart' as _i8;
 
 abstract class RoomGuest implements _i1.SerializableModel {
   RoomGuest._({
@@ -39,14 +45,14 @@ abstract class RoomGuest implements _i1.SerializableModel {
     _i2.Room? room,
     required DateTime stayDay,
     required int guestId,
-    _i2.Guest? guest,
-    List<_i2.RoomTransaction>? roomTransactions,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    _i3.Guest? guest,
+    List<_i4.RoomTransaction>? roomTransactions,
+    required _i5.RateType rateType,
+    required _i6.RateReason rateReason,
     required double rate,
     required int reservationId,
-    _i2.Reservation? reservation,
-    required _i2.RoomStatus roomStatus,
+    _i7.Reservation? reservation,
+    required _i8.RoomStatus roomStatus,
     required DateTime checkInDate,
     required DateTime checkOutDate,
     DateTime? updateDate,
@@ -65,24 +71,24 @@ abstract class RoomGuest implements _i1.SerializableModel {
       guestId: jsonSerialization['guestId'] as int,
       guest: jsonSerialization['guest'] == null
           ? null
-          : _i2.Guest.fromJson(
+          : _i3.Guest.fromJson(
               (jsonSerialization['guest'] as Map<String, dynamic>)),
       roomTransactions: (jsonSerialization['roomTransactions'] as List?)
           ?.map(
-              (e) => _i2.RoomTransaction.fromJson((e as Map<String, dynamic>)))
+              (e) => _i4.RoomTransaction.fromJson((e as Map<String, dynamic>)))
           .toList(),
       rateType:
-          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+          _i5.RateType.fromJson((jsonSerialization['rateType'] as String)),
       rateReason:
-          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+          _i6.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
       rate: (jsonSerialization['rate'] as num).toDouble(),
       reservationId: jsonSerialization['reservationId'] as int,
       reservation: jsonSerialization['reservation'] == null
           ? null
-          : _i2.Reservation.fromJson(
+          : _i7.Reservation.fromJson(
               (jsonSerialization['reservation'] as Map<String, dynamic>)),
       roomStatus:
-          _i2.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
+          _i8.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
       checkInDate:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['checkInDate']),
       checkOutDate:
@@ -107,21 +113,21 @@ abstract class RoomGuest implements _i1.SerializableModel {
 
   int guestId;
 
-  _i2.Guest? guest;
+  _i3.Guest? guest;
 
-  List<_i2.RoomTransaction>? roomTransactions;
+  List<_i4.RoomTransaction>? roomTransactions;
 
-  _i2.RateType rateType;
+  _i5.RateType rateType;
 
-  _i2.RateReason rateReason;
+  _i6.RateReason rateReason;
 
   double rate;
 
   int reservationId;
 
-  _i2.Reservation? reservation;
+  _i7.Reservation? reservation;
 
-  _i2.RoomStatus roomStatus;
+  _i8.RoomStatus roomStatus;
 
   DateTime checkInDate;
 
@@ -137,14 +143,14 @@ abstract class RoomGuest implements _i1.SerializableModel {
     _i2.Room? room,
     DateTime? stayDay,
     int? guestId,
-    _i2.Guest? guest,
-    List<_i2.RoomTransaction>? roomTransactions,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.Guest? guest,
+    List<_i4.RoomTransaction>? roomTransactions,
+    _i5.RateType? rateType,
+    _i6.RateReason? rateReason,
     double? rate,
     int? reservationId,
-    _i2.Reservation? reservation,
-    _i2.RoomStatus? roomStatus,
+    _i7.Reservation? reservation,
+    _i8.RoomStatus? roomStatus,
     DateTime? checkInDate,
     DateTime? checkOutDate,
     DateTime? updateDate,
@@ -190,14 +196,14 @@ class _RoomGuestImpl extends RoomGuest {
     _i2.Room? room,
     required DateTime stayDay,
     required int guestId,
-    _i2.Guest? guest,
-    List<_i2.RoomTransaction>? roomTransactions,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    _i3.Guest? guest,
+    List<_i4.RoomTransaction>? roomTransactions,
+    required _i5.RateType rateType,
+    required _i6.RateReason rateReason,
     required double rate,
     required int reservationId,
-    _i2.Reservation? reservation,
-    required _i2.RoomStatus roomStatus,
+    _i7.Reservation? reservation,
+    required _i8.RoomStatus roomStatus,
     required DateTime checkInDate,
     required DateTime checkOutDate,
     DateTime? updateDate,
@@ -231,12 +237,12 @@ class _RoomGuestImpl extends RoomGuest {
     int? guestId,
     Object? guest = _Undefined,
     Object? roomTransactions = _Undefined,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i5.RateType? rateType,
+    _i6.RateReason? rateReason,
     double? rate,
     int? reservationId,
     Object? reservation = _Undefined,
-    _i2.RoomStatus? roomStatus,
+    _i8.RoomStatus? roomStatus,
     DateTime? checkInDate,
     DateTime? checkOutDate,
     Object? updateDate = _Undefined,
@@ -248,15 +254,15 @@ class _RoomGuestImpl extends RoomGuest {
       room: room is _i2.Room? ? room : this.room?.copyWith(),
       stayDay: stayDay ?? this.stayDay,
       guestId: guestId ?? this.guestId,
-      guest: guest is _i2.Guest? ? guest : this.guest?.copyWith(),
-      roomTransactions: roomTransactions is List<_i2.RoomTransaction>?
+      guest: guest is _i3.Guest? ? guest : this.guest?.copyWith(),
+      roomTransactions: roomTransactions is List<_i4.RoomTransaction>?
           ? roomTransactions
           : this.roomTransactions?.map((e0) => e0.copyWith()).toList(),
       rateType: rateType ?? this.rateType,
       rateReason: rateReason ?? this.rateReason,
       rate: rate ?? this.rate,
       reservationId: reservationId ?? this.reservationId,
-      reservation: reservation is _i2.Reservation?
+      reservation: reservation is _i7.Reservation?
           ? reservation
           : this.reservation?.copyWith(),
       roomStatus: roomStatus ?? this.roomStatus,

@@ -73,7 +73,7 @@ class _ReservationListWidgetState extends State<ReservationListWidget> {
 
   Widget _buildDataTable(BuildContext context, List<Reservation> reservations) {
     final rows =
-        reservations.map((reservation) => _createRow(reservation)).toList();
+        reservations.map(_createRow).toList();
 
     return PlutoGrid(
       columns: columns,

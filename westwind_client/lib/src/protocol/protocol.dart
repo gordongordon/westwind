@@ -8,8 +8,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 
-library protocol; // ignore_for_file: no_leading_underscores_for_library_prefixes
-
+// ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'bedType.dart' as _i2;
 import 'company.dart' as _i3;
@@ -37,14 +36,13 @@ import 'roomStatus.dart' as _i24;
 import 'roomTransaction.dart' as _i25;
 import 'staff.dart' as _i26;
 import 'transactionType.dart' as _i27;
-import 'protocol.dart' as _i28;
-import 'package:westwind_client/src/protocol/guest.dart' as _i29;
-import 'package:westwind_client/src/protocol/rateTable.dart' as _i30;
-import 'package:westwind_client/src/protocol/reservation.dart' as _i31;
-import 'package:westwind_client/src/protocol/room.dart' as _i32;
-import 'package:westwind_client/src/protocol/roomGuest.dart' as _i33;
-import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i34;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i35;
+import 'package:westwind_client/src/protocol/guest.dart' as _i28;
+import 'package:westwind_client/src/protocol/rateTable.dart' as _i29;
+import 'package:westwind_client/src/protocol/reservation.dart' as _i30;
+import 'package:westwind_client/src/protocol/room.dart' as _i31;
+import 'package:westwind_client/src/protocol/roomGuest.dart' as _i32;
+import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i33;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i34;
 export 'bedType.dart';
 export 'company.dart';
 export 'errorType.dart';
@@ -242,56 +240,56 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i27.TransactionType?>()) {
       return (data != null ? _i27.TransactionType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<List<_i28.Guest>?>()) {
+    if (t == _i1.getType<List<_i6.Guest>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i28.Guest>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i6.Guest>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i28.RoomGuest>?>()) {
+    if (t == _i1.getType<List<_i21.RoomGuest>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i28.RoomGuest>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i21.RoomGuest>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i28.Reservation>?>()) {
+    if (t == _i1.getType<List<_i18.Reservation>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<_i28.Reservation>(e)).toList()
+          ? (data as List).map((e) => deserialize<_i18.Reservation>(e)).toList()
           : null) as dynamic;
     }
-    if (t == _i1.getType<List<_i28.RoomTransaction>?>()) {
+    if (t == _i1.getType<List<_i25.RoomTransaction>?>()) {
       return (data != null
           ? (data as List)
-              .map((e) => deserialize<_i28.RoomTransaction>(e))
+              .map((e) => deserialize<_i25.RoomTransaction>(e))
               .toList()
           : null) as dynamic;
     }
-    if (t == List<_i29.Guest>) {
-      return (data as List).map((e) => deserialize<_i29.Guest>(e)).toList()
+    if (t == List<_i28.Guest>) {
+      return (data as List).map((e) => deserialize<_i28.Guest>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i30.RateTable>) {
-      return (data as List).map((e) => deserialize<_i30.RateTable>(e)).toList()
+    if (t == List<_i29.RateTable>) {
+      return (data as List).map((e) => deserialize<_i29.RateTable>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i31.Reservation>) {
+    if (t == List<_i30.Reservation>) {
       return (data as List)
-          .map((e) => deserialize<_i31.Reservation>(e))
+          .map((e) => deserialize<_i30.Reservation>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i32.Room>) {
-      return (data as List).map((e) => deserialize<_i32.Room>(e)).toList()
+    if (t == List<_i31.Room>) {
+      return (data as List).map((e) => deserialize<_i31.Room>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i33.RoomGuest>) {
-      return (data as List).map((e) => deserialize<_i33.RoomGuest>(e)).toList()
+    if (t == List<_i32.RoomGuest>) {
+      return (data as List).map((e) => deserialize<_i32.RoomGuest>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i34.RoomTransaction>) {
+    if (t == List<_i33.RoomTransaction>) {
       return (data as List)
-          .map((e) => deserialize<_i34.RoomTransaction>(e))
+          .map((e) => deserialize<_i33.RoomTransaction>(e))
           .toList() as dynamic;
     }
     try {
-      return _i35.Protocol().deserialize<T>(data, t);
+      return _i34.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -378,7 +376,7 @@ class Protocol extends _i1.SerializationManager {
     if (data is _i27.TransactionType) {
       return 'TransactionType';
     }
-    className = _i35.Protocol().getClassNameForObject(data);
+    className = _i34.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth.$className';
     }
@@ -387,87 +385,91 @@ class Protocol extends _i1.SerializationManager {
 
   @override
   dynamic deserializeByClassName(Map<String, dynamic> data) {
-    if (data['className'] == 'BedType') {
+    var dataClassName = data['className'];
+    if (dataClassName is! String) {
+      return super.deserializeByClassName(data);
+    }
+    if (dataClassName == 'BedType') {
       return deserialize<_i2.BedType>(data['data']);
     }
-    if (data['className'] == 'Company') {
+    if (dataClassName == 'Company') {
       return deserialize<_i3.Company>(data['data']);
     }
-    if (data['className'] == 'ErrorType') {
+    if (dataClassName == 'ErrorType') {
       return deserialize<_i4.ErrorType>(data['data']);
     }
-    if (data['className'] == 'Examplekk') {
+    if (dataClassName == 'Examplekk') {
       return deserialize<_i5.Examplekk>(data['data']);
     }
-    if (data['className'] == 'Guest') {
+    if (dataClassName == 'Guest') {
       return deserialize<_i6.Guest>(data['data']);
     }
-    if (data['className'] == 'GuestInOutDate') {
+    if (dataClassName == 'GuestInOutDate') {
       return deserialize<_i7.GuestInOutDate>(data['data']);
     }
-    if (data['className'] == 'GuestTransaction') {
+    if (dataClassName == 'GuestTransaction') {
       return deserialize<_i8.GuestTransaction>(data['data']);
     }
-    if (data['className'] == 'InOutReason') {
+    if (dataClassName == 'InOutReason') {
       return deserialize<_i9.InOutReason>(data['data']);
     }
-    if (data['className'] == 'ItemType') {
+    if (dataClassName == 'ItemType') {
       return deserialize<_i10.ItemType>(data['data']);
     }
-    if (data['className'] == 'MyException') {
+    if (dataClassName == 'MyException') {
       return deserialize<_i11.MyException>(data['data']);
     }
-    if (data['className'] == 'Payment') {
+    if (dataClassName == 'Payment') {
       return deserialize<_i12.Payment>(data['data']);
     }
-    if (data['className'] == 'PaymentType') {
+    if (dataClassName == 'PaymentType') {
       return deserialize<_i13.PaymentType>(data['data']);
     }
-    if (data['className'] == 'PermissionType') {
+    if (dataClassName == 'PermissionType') {
       return deserialize<_i14.PermissionType>(data['data']);
     }
-    if (data['className'] == 'RateReason') {
+    if (dataClassName == 'RateReason') {
       return deserialize<_i15.RateReason>(data['data']);
     }
-    if (data['className'] == 'RateTable') {
+    if (dataClassName == 'RateTable') {
       return deserialize<_i16.RateTable>(data['data']);
     }
-    if (data['className'] == 'RateType') {
+    if (dataClassName == 'RateType') {
       return deserialize<_i17.RateType>(data['data']);
     }
-    if (data['className'] == 'Reservation') {
+    if (dataClassName == 'Reservation') {
       return deserialize<_i18.Reservation>(data['data']);
     }
-    if (data['className'] == 'Room') {
+    if (dataClassName == 'Room') {
       return deserialize<_i19.Room>(data['data']);
     }
-    if (data['className'] == 'RoomChargeType') {
+    if (dataClassName == 'RoomChargeType') {
       return deserialize<_i20.RoomChargeType>(data['data']);
     }
-    if (data['className'] == 'RoomGuest') {
+    if (dataClassName == 'RoomGuest') {
       return deserialize<_i21.RoomGuest>(data['data']);
     }
-    if (data['className'] == 'RoomInOutDate') {
+    if (dataClassName == 'RoomInOutDate') {
       return deserialize<_i22.RoomInOutDate>(data['data']);
     }
-    if (data['className'] == 'RoomNumber') {
+    if (dataClassName == 'RoomNumber') {
       return deserialize<_i23.RoomNumber>(data['data']);
     }
-    if (data['className'] == 'RoomStatus') {
+    if (dataClassName == 'RoomStatus') {
       return deserialize<_i24.RoomStatus>(data['data']);
     }
-    if (data['className'] == 'RoomTransaction') {
+    if (dataClassName == 'RoomTransaction') {
       return deserialize<_i25.RoomTransaction>(data['data']);
     }
-    if (data['className'] == 'Staff') {
+    if (dataClassName == 'Staff') {
       return deserialize<_i26.Staff>(data['data']);
     }
-    if (data['className'] == 'TransactionType') {
+    if (dataClassName == 'TransactionType') {
       return deserialize<_i27.TransactionType>(data['data']);
     }
-    if (data['className'].startsWith('serverpod_auth.')) {
-      data['className'] = data['className'].substring(15);
-      return _i35.Protocol().deserializeByClassName(data);
+    if (dataClassName.startsWith('serverpod_auth.')) {
+      data['className'] = dataClassName.substring(15);
+      return _i34.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }

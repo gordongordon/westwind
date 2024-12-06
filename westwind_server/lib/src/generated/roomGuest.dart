@@ -10,12 +10,17 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'room.dart' as _i2;
+import 'guest.dart' as _i3;
+import 'roomTransaction.dart' as _i4;
+import 'rateType.dart' as _i5;
+import 'rateReason.dart' as _i6;
+import 'reservation.dart' as _i7;
+import 'roomStatus.dart' as _i8;
 
-abstract class RoomGuest extends _i1.TableRow
-    implements _i1.ProtocolSerialization {
+abstract class RoomGuest implements _i1.TableRow, _i1.ProtocolSerialization {
   RoomGuest._({
-    int? id,
+    this.id,
     required this.roomId,
     this.room,
     required this.stayDay,
@@ -32,7 +37,7 @@ abstract class RoomGuest extends _i1.TableRow
     required this.checkOutDate,
     this.updateDate,
     required this.isCheckOut,
-  }) : super(id);
+  });
 
   factory RoomGuest({
     int? id,
@@ -40,14 +45,14 @@ abstract class RoomGuest extends _i1.TableRow
     _i2.Room? room,
     required DateTime stayDay,
     required int guestId,
-    _i2.Guest? guest,
-    List<_i2.RoomTransaction>? roomTransactions,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    _i3.Guest? guest,
+    List<_i4.RoomTransaction>? roomTransactions,
+    required _i5.RateType rateType,
+    required _i6.RateReason rateReason,
     required double rate,
     required int reservationId,
-    _i2.Reservation? reservation,
-    required _i2.RoomStatus roomStatus,
+    _i7.Reservation? reservation,
+    required _i8.RoomStatus roomStatus,
     required DateTime checkInDate,
     required DateTime checkOutDate,
     DateTime? updateDate,
@@ -66,24 +71,24 @@ abstract class RoomGuest extends _i1.TableRow
       guestId: jsonSerialization['guestId'] as int,
       guest: jsonSerialization['guest'] == null
           ? null
-          : _i2.Guest.fromJson(
+          : _i3.Guest.fromJson(
               (jsonSerialization['guest'] as Map<String, dynamic>)),
       roomTransactions: (jsonSerialization['roomTransactions'] as List?)
           ?.map(
-              (e) => _i2.RoomTransaction.fromJson((e as Map<String, dynamic>)))
+              (e) => _i4.RoomTransaction.fromJson((e as Map<String, dynamic>)))
           .toList(),
       rateType:
-          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+          _i5.RateType.fromJson((jsonSerialization['rateType'] as String)),
       rateReason:
-          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+          _i6.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
       rate: (jsonSerialization['rate'] as num).toDouble(),
       reservationId: jsonSerialization['reservationId'] as int,
       reservation: jsonSerialization['reservation'] == null
           ? null
-          : _i2.Reservation.fromJson(
+          : _i7.Reservation.fromJson(
               (jsonSerialization['reservation'] as Map<String, dynamic>)),
       roomStatus:
-          _i2.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
+          _i8.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
       checkInDate:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['checkInDate']),
       checkOutDate:
@@ -99,6 +104,9 @@ abstract class RoomGuest extends _i1.TableRow
 
   static const db = RoomGuestRepository._();
 
+  @override
+  int? id;
+
   int roomId;
 
   _i2.Room? room;
@@ -107,21 +115,21 @@ abstract class RoomGuest extends _i1.TableRow
 
   int guestId;
 
-  _i2.Guest? guest;
+  _i3.Guest? guest;
 
-  List<_i2.RoomTransaction>? roomTransactions;
+  List<_i4.RoomTransaction>? roomTransactions;
 
-  _i2.RateType rateType;
+  _i5.RateType rateType;
 
-  _i2.RateReason rateReason;
+  _i6.RateReason rateReason;
 
   double rate;
 
   int reservationId;
 
-  _i2.Reservation? reservation;
+  _i7.Reservation? reservation;
 
-  _i2.RoomStatus roomStatus;
+  _i8.RoomStatus roomStatus;
 
   DateTime checkInDate;
 
@@ -140,14 +148,14 @@ abstract class RoomGuest extends _i1.TableRow
     _i2.Room? room,
     DateTime? stayDay,
     int? guestId,
-    _i2.Guest? guest,
-    List<_i2.RoomTransaction>? roomTransactions,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.Guest? guest,
+    List<_i4.RoomTransaction>? roomTransactions,
+    _i5.RateType? rateType,
+    _i6.RateReason? rateReason,
     double? rate,
     int? reservationId,
-    _i2.Reservation? reservation,
-    _i2.RoomStatus? roomStatus,
+    _i7.Reservation? reservation,
+    _i8.RoomStatus? roomStatus,
     DateTime? checkInDate,
     DateTime? checkOutDate,
     DateTime? updateDate,
@@ -205,9 +213,9 @@ abstract class RoomGuest extends _i1.TableRow
 
   static RoomGuestInclude include({
     _i2.RoomInclude? room,
-    _i2.GuestInclude? guest,
-    _i2.RoomTransactionIncludeList? roomTransactions,
-    _i2.ReservationInclude? reservation,
+    _i3.GuestInclude? guest,
+    _i4.RoomTransactionIncludeList? roomTransactions,
+    _i7.ReservationInclude? reservation,
   }) {
     return RoomGuestInclude._(
       room: room,
@@ -252,14 +260,14 @@ class _RoomGuestImpl extends RoomGuest {
     _i2.Room? room,
     required DateTime stayDay,
     required int guestId,
-    _i2.Guest? guest,
-    List<_i2.RoomTransaction>? roomTransactions,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    _i3.Guest? guest,
+    List<_i4.RoomTransaction>? roomTransactions,
+    required _i5.RateType rateType,
+    required _i6.RateReason rateReason,
     required double rate,
     required int reservationId,
-    _i2.Reservation? reservation,
-    required _i2.RoomStatus roomStatus,
+    _i7.Reservation? reservation,
+    required _i8.RoomStatus roomStatus,
     required DateTime checkInDate,
     required DateTime checkOutDate,
     DateTime? updateDate,
@@ -293,12 +301,12 @@ class _RoomGuestImpl extends RoomGuest {
     int? guestId,
     Object? guest = _Undefined,
     Object? roomTransactions = _Undefined,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i5.RateType? rateType,
+    _i6.RateReason? rateReason,
     double? rate,
     int? reservationId,
     Object? reservation = _Undefined,
-    _i2.RoomStatus? roomStatus,
+    _i8.RoomStatus? roomStatus,
     DateTime? checkInDate,
     DateTime? checkOutDate,
     Object? updateDate = _Undefined,
@@ -310,15 +318,15 @@ class _RoomGuestImpl extends RoomGuest {
       room: room is _i2.Room? ? room : this.room?.copyWith(),
       stayDay: stayDay ?? this.stayDay,
       guestId: guestId ?? this.guestId,
-      guest: guest is _i2.Guest? ? guest : this.guest?.copyWith(),
-      roomTransactions: roomTransactions is List<_i2.RoomTransaction>?
+      guest: guest is _i3.Guest? ? guest : this.guest?.copyWith(),
+      roomTransactions: roomTransactions is List<_i4.RoomTransaction>?
           ? roomTransactions
           : this.roomTransactions?.map((e0) => e0.copyWith()).toList(),
       rateType: rateType ?? this.rateType,
       rateReason: rateReason ?? this.rateReason,
       rate: rate ?? this.rate,
       reservationId: reservationId ?? this.reservationId,
-      reservation: reservation is _i2.Reservation?
+      reservation: reservation is _i7.Reservation?
           ? reservation
           : this.reservation?.copyWith(),
       roomStatus: roomStatus ?? this.roomStatus,
@@ -393,23 +401,23 @@ class RoomGuestTable extends _i1.Table {
 
   late final _i1.ColumnInt guestId;
 
-  _i2.GuestTable? _guest;
+  _i3.GuestTable? _guest;
 
-  _i2.RoomTransactionTable? ___roomTransactions;
+  _i4.RoomTransactionTable? ___roomTransactions;
 
-  _i1.ManyRelation<_i2.RoomTransactionTable>? _roomTransactions;
+  _i1.ManyRelation<_i4.RoomTransactionTable>? _roomTransactions;
 
-  late final _i1.ColumnEnum<_i2.RateType> rateType;
+  late final _i1.ColumnEnum<_i5.RateType> rateType;
 
-  late final _i1.ColumnEnum<_i2.RateReason> rateReason;
+  late final _i1.ColumnEnum<_i6.RateReason> rateReason;
 
   late final _i1.ColumnDouble rate;
 
   late final _i1.ColumnInt reservationId;
 
-  _i2.ReservationTable? _reservation;
+  _i7.ReservationTable? _reservation;
 
-  late final _i1.ColumnEnum<_i2.RoomStatus> roomStatus;
+  late final _i1.ColumnEnum<_i8.RoomStatus> roomStatus;
 
   late final _i1.ColumnDateTime checkInDate;
 
@@ -432,58 +440,58 @@ class RoomGuestTable extends _i1.Table {
     return _room!;
   }
 
-  _i2.GuestTable get guest {
+  _i3.GuestTable get guest {
     if (_guest != null) return _guest!;
     _guest = _i1.createRelationTable(
       relationFieldName: 'guest',
       field: RoomGuest.t.guestId,
-      foreignField: _i2.Guest.t.id,
+      foreignField: _i3.Guest.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.GuestTable(tableRelation: foreignTableRelation),
+          _i3.GuestTable(tableRelation: foreignTableRelation),
     );
     return _guest!;
   }
 
-  _i2.RoomTransactionTable get __roomTransactions {
+  _i4.RoomTransactionTable get __roomTransactions {
     if (___roomTransactions != null) return ___roomTransactions!;
     ___roomTransactions = _i1.createRelationTable(
       relationFieldName: '__roomTransactions',
       field: RoomGuest.t.id,
-      foreignField: _i2.RoomTransaction.t.roomGuestId,
+      foreignField: _i4.RoomTransaction.t.roomGuestId,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.RoomTransactionTable(tableRelation: foreignTableRelation),
+          _i4.RoomTransactionTable(tableRelation: foreignTableRelation),
     );
     return ___roomTransactions!;
   }
 
-  _i2.ReservationTable get reservation {
+  _i7.ReservationTable get reservation {
     if (_reservation != null) return _reservation!;
     _reservation = _i1.createRelationTable(
       relationFieldName: 'reservation',
       field: RoomGuest.t.reservationId,
-      foreignField: _i2.Reservation.t.id,
+      foreignField: _i7.Reservation.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.ReservationTable(tableRelation: foreignTableRelation),
+          _i7.ReservationTable(tableRelation: foreignTableRelation),
     );
     return _reservation!;
   }
 
-  _i1.ManyRelation<_i2.RoomTransactionTable> get roomTransactions {
+  _i1.ManyRelation<_i4.RoomTransactionTable> get roomTransactions {
     if (_roomTransactions != null) return _roomTransactions!;
     var relationTable = _i1.createRelationTable(
       relationFieldName: 'roomTransactions',
       field: RoomGuest.t.id,
-      foreignField: _i2.RoomTransaction.t.roomGuestId,
+      foreignField: _i4.RoomTransaction.t.roomGuestId,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.RoomTransactionTable(tableRelation: foreignTableRelation),
+          _i4.RoomTransactionTable(tableRelation: foreignTableRelation),
     );
-    _roomTransactions = _i1.ManyRelation<_i2.RoomTransactionTable>(
+    _roomTransactions = _i1.ManyRelation<_i4.RoomTransactionTable>(
       tableWithRelations: relationTable,
-      table: _i2.RoomTransactionTable(
+      table: _i4.RoomTransactionTable(
           tableRelation: relationTable.tableRelation!.lastRelation),
     );
     return _roomTransactions!;
@@ -527,9 +535,9 @@ class RoomGuestTable extends _i1.Table {
 class RoomGuestInclude extends _i1.IncludeObject {
   RoomGuestInclude._({
     _i2.RoomInclude? room,
-    _i2.GuestInclude? guest,
-    _i2.RoomTransactionIncludeList? roomTransactions,
-    _i2.ReservationInclude? reservation,
+    _i3.GuestInclude? guest,
+    _i4.RoomTransactionIncludeList? roomTransactions,
+    _i7.ReservationInclude? reservation,
   }) {
     _room = room;
     _guest = guest;
@@ -539,11 +547,11 @@ class RoomGuestInclude extends _i1.IncludeObject {
 
   _i2.RoomInclude? _room;
 
-  _i2.GuestInclude? _guest;
+  _i3.GuestInclude? _guest;
 
-  _i2.RoomTransactionIncludeList? _roomTransactions;
+  _i4.RoomTransactionIncludeList? _roomTransactions;
 
-  _i2.ReservationInclude? _reservation;
+  _i7.ReservationInclude? _reservation;
 
   @override
   Map<String, _i1.Include?> get includes => {
@@ -746,7 +754,7 @@ class RoomGuestAttachRepository {
   Future<void> roomTransactions(
     _i1.Session session,
     RoomGuest roomGuest,
-    List<_i2.RoomTransaction> roomTransaction, {
+    List<_i4.RoomTransaction> roomTransaction, {
     _i1.Transaction? transaction,
   }) async {
     if (roomTransaction.any((e) => e.id == null)) {
@@ -759,9 +767,9 @@ class RoomGuestAttachRepository {
     var $roomTransaction = roomTransaction
         .map((e) => e.copyWith(roomGuestId: roomGuest.id))
         .toList();
-    await session.db.update<_i2.RoomTransaction>(
+    await session.db.update<_i4.RoomTransaction>(
       $roomTransaction,
-      columns: [_i2.RoomTransaction.t.roomGuestId],
+      columns: [_i4.RoomTransaction.t.roomGuestId],
       transaction: transaction,
     );
   }
@@ -794,7 +802,7 @@ class RoomGuestAttachRowRepository {
   Future<void> guest(
     _i1.Session session,
     RoomGuest roomGuest,
-    _i2.Guest guest, {
+    _i3.Guest guest, {
     _i1.Transaction? transaction,
   }) async {
     if (roomGuest.id == null) {
@@ -815,7 +823,7 @@ class RoomGuestAttachRowRepository {
   Future<void> reservation(
     _i1.Session session,
     RoomGuest roomGuest,
-    _i2.Reservation reservation, {
+    _i7.Reservation reservation, {
     _i1.Transaction? transaction,
   }) async {
     if (roomGuest.id == null) {
@@ -836,7 +844,7 @@ class RoomGuestAttachRowRepository {
   Future<void> roomTransactions(
     _i1.Session session,
     RoomGuest roomGuest,
-    _i2.RoomTransaction roomTransaction, {
+    _i4.RoomTransaction roomTransaction, {
     _i1.Transaction? transaction,
   }) async {
     if (roomTransaction.id == null) {
@@ -847,9 +855,9 @@ class RoomGuestAttachRowRepository {
     }
 
     var $roomTransaction = roomTransaction.copyWith(roomGuestId: roomGuest.id);
-    await session.db.updateRow<_i2.RoomTransaction>(
+    await session.db.updateRow<_i4.RoomTransaction>(
       $roomTransaction,
-      columns: [_i2.RoomTransaction.t.roomGuestId],
+      columns: [_i4.RoomTransaction.t.roomGuestId],
       transaction: transaction,
     );
   }
@@ -860,7 +868,7 @@ class RoomGuestDetachRepository {
 
   Future<void> roomTransactions(
     _i1.Session session,
-    List<_i2.RoomTransaction> roomTransaction, {
+    List<_i4.RoomTransaction> roomTransaction, {
     _i1.Transaction? transaction,
   }) async {
     if (roomTransaction.any((e) => e.id == null)) {
@@ -869,9 +877,9 @@ class RoomGuestDetachRepository {
 
     var $roomTransaction =
         roomTransaction.map((e) => e.copyWith(roomGuestId: null)).toList();
-    await session.db.update<_i2.RoomTransaction>(
+    await session.db.update<_i4.RoomTransaction>(
       $roomTransaction,
-      columns: [_i2.RoomTransaction.t.roomGuestId],
+      columns: [_i4.RoomTransaction.t.roomGuestId],
       transaction: transaction,
     );
   }
@@ -882,7 +890,7 @@ class RoomGuestDetachRowRepository {
 
   Future<void> roomTransactions(
     _i1.Session session,
-    _i2.RoomTransaction roomTransaction, {
+    _i4.RoomTransaction roomTransaction, {
     _i1.Transaction? transaction,
   }) async {
     if (roomTransaction.id == null) {
@@ -890,9 +898,9 @@ class RoomGuestDetachRowRepository {
     }
 
     var $roomTransaction = roomTransaction.copyWith(roomGuestId: null);
-    await session.db.updateRow<_i2.RoomTransaction>(
+    await session.db.updateRow<_i4.RoomTransaction>(
       $roomTransaction,
-      columns: [_i2.RoomTransaction.t.roomGuestId],
+      columns: [_i4.RoomTransaction.t.roomGuestId],
       transaction: transaction,
     );
   }

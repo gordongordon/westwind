@@ -409,11 +409,11 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   Widget _buildButton(String text, VoidCallback onPressed, {Color color = Colors.blue}) {
     return ElevatedButton(
       onPressed: onPressed,
-      child: Text(text),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         minimumSize: Size(double.infinity, 50),
       ),
+      child: Text(text),
     );
   }
 
@@ -554,7 +554,7 @@ void _saveReservation(int guestId) {
 void _guestBlocListener(BuildContext context, GuestManageState state) {
   print('Current guest state: $state');
   if (state is GuestManageStateFailure) {
-    print('${state.message}');
+    print(state.message);
     showSnackbar(context, 'Failed to Guest: ${state.message}');
   } else if (state is GuestManageStateSaveSuccess) {
     print('Guest saved successfully. ID: ${state.guest.id}');

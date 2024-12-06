@@ -164,7 +164,7 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
   Widget buildDataTable(
       BuildContext context, List<RoomTransaction> roomTransactions) {
     final List<PlutoRow> rows = roomTransactions
-        .map((roomTransaction) => _createPlutoRow(roomTransaction))
+        .map(_createPlutoRow)
         .toList();
 
     return PlutoGrid(

@@ -1,6 +1,4 @@
 import 'package:westwind_server/src/core/MyExtension.dart';
-import 'package:westwind_server/src/endpoints/rate_Table_endpoint.dart';
-import 'package:westwind_server/src/endpoints/room_guest_endpoint.dart';
 import 'package:westwind_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 

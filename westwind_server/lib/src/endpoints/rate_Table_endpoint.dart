@@ -1,7 +1,6 @@
 
 import 'package:westwind_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
-import 'package:westwind_server/src/generated/rateReason.dart';
 
 // This is an example endpoint of your server. It's best practice to use the
 // `Endpoint` ending of the class name, but it will be removed when accessing

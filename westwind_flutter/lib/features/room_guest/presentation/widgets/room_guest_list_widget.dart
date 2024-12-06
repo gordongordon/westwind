@@ -96,7 +96,7 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
   }
 
   Widget _buildDataTable(BuildContext context, List<RoomGuest> roomGuests) {
-    final rows = roomGuests.map((roomGuest) => _createRow(roomGuest)).toList();
+    final rows = roomGuests.map(_createRow).toList();
 
     return PlutoGrid(
       columns: columns,

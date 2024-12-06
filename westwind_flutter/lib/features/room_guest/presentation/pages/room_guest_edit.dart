@@ -228,11 +228,11 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   Widget _buildButton(String text, VoidCallback onPressed, {Color color = Colors.blue}) {
     return ElevatedButton(
       onPressed: onPressed,
-      child: Text(text),
       style: ElevatedButton.styleFrom(
         backgroundColor:  color,
         minimumSize: Size(double.infinity, 50),
       ),
+      child: Text(text),
     );
   }
 

@@ -358,11 +358,11 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
       {Color color = Colors.blue}) {
     return ElevatedButton(
       onPressed: onPressed,
-      child: Text(text),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         minimumSize: Size(double.infinity, 50),
       ),
+      child: Text(text),
     );
   }
 

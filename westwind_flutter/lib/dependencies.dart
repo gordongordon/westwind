@@ -74,7 +74,7 @@ final serverLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
   serverLocator.registerLazySingleton<AppUserCubit>(
-    () => AppUserCubit(),
+    AppUserCubit.new,
   );
 
   serverLocator.registerLazySingleton<Client>(
@@ -215,7 +215,7 @@ void _initRoomTransaction() {
 void _initDashboard() {
   // Bloc
   serverLocator.registerFactory<DashboardBloc>(
-    () => DashboardBloc(),
+    DashboardBloc.new,
   );
 }
 
@@ -544,9 +544,7 @@ void _initRoomGuest() {
   );
 
   serverLocator.registerLazySingleton<RoomGuestPolicy>(
-    () => RooGuestPolicyImpl(
-        //  serverLocator<RoomGuestRepository>(),
-        ),
+    RooGuestPolicyImpl.new,
   );
 
   // Policy Services

@@ -553,8 +553,8 @@ class EndpointRoomTransaction extends _i1.EndpointRef {
       );
 }
 
-class _Modules {
-  _Modules(Client client) {
+class Modules {
+  Modules(Client client) {
     auth = _i11.Caller(client);
   }
 
@@ -594,7 +594,7 @@ class Client extends _i1.ServerpodClientShared {
     room = EndpointRoom(this);
     roomGuest = EndpointRoomGuest(this);
     roomTransaction = EndpointRoomTransaction(this);
-    modules = _Modules(this);
+    modules = Modules(this);
   }
 
   late final EndpointExample example;
@@ -611,7 +611,7 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointRoomTransaction roomTransaction;
 
-  late final _Modules modules;
+  late final Modules modules;
 
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {

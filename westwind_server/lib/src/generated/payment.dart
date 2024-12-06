@@ -10,12 +10,12 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'guest.dart' as _i2;
+import 'paymentType.dart' as _i3;
 
-abstract class Payment extends _i1.TableRow
-    implements _i1.ProtocolSerialization {
+abstract class Payment implements _i1.TableRow, _i1.ProtocolSerialization {
   Payment._({
-    int? id,
+    this.id,
     required this.guestId,
     this.guest,
     required this.chargeDate,
@@ -24,7 +24,7 @@ abstract class Payment extends _i1.TableRow
     required this.description,
     required this.paymentType,
     required this.userId,
-  }) : super(id);
+  });
 
   factory Payment({
     int? id,
@@ -34,7 +34,7 @@ abstract class Payment extends _i1.TableRow
     required DateTime dateVoid,
     required double amount,
     required String description,
-    required _i2.PaymentType paymentType,
+    required _i3.PaymentType paymentType,
     required int userId,
   }) = _PaymentImpl;
 
@@ -52,7 +52,7 @@ abstract class Payment extends _i1.TableRow
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateVoid']),
       amount: (jsonSerialization['amount'] as num).toDouble(),
       description: jsonSerialization['description'] as String,
-      paymentType: _i2.PaymentType.fromJson(
+      paymentType: _i3.PaymentType.fromJson(
           (jsonSerialization['paymentType'] as String)),
       userId: jsonSerialization['userId'] as int,
     );
@@ -61,6 +61,9 @@ abstract class Payment extends _i1.TableRow
   static final t = PaymentTable();
 
   static const db = PaymentRepository._();
+
+  @override
+  int? id;
 
   int guestId;
 
@@ -74,7 +77,7 @@ abstract class Payment extends _i1.TableRow
 
   String description;
 
-  _i2.PaymentType paymentType;
+  _i3.PaymentType paymentType;
 
   int userId;
 
@@ -89,7 +92,7 @@ abstract class Payment extends _i1.TableRow
     DateTime? dateVoid,
     double? amount,
     String? description,
-    _i2.PaymentType? paymentType,
+    _i3.PaymentType? paymentType,
     int? userId,
   });
   @override
@@ -163,7 +166,7 @@ class _PaymentImpl extends Payment {
     required DateTime dateVoid,
     required double amount,
     required String description,
-    required _i2.PaymentType paymentType,
+    required _i3.PaymentType paymentType,
     required int userId,
   }) : super._(
           id: id,
@@ -186,7 +189,7 @@ class _PaymentImpl extends Payment {
     DateTime? dateVoid,
     double? amount,
     String? description,
-    _i2.PaymentType? paymentType,
+    _i3.PaymentType? paymentType,
     int? userId,
   }) {
     return Payment(
@@ -248,7 +251,7 @@ class PaymentTable extends _i1.Table {
 
   late final _i1.ColumnString description;
 
-  late final _i1.ColumnEnum<_i2.PaymentType> paymentType;
+  late final _i1.ColumnEnum<_i3.PaymentType> paymentType;
 
   late final _i1.ColumnInt userId;
 

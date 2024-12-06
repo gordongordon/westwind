@@ -17,7 +17,7 @@ class SummaryWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          children: [
+          children: const [
             SizedBox(height: 20),
             Chart(),
             Text(

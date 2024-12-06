@@ -1,4 +1,3 @@
-import 'package:serverpod/serverpod.dart';
 
 // Future calls are calls that will be invoked at a later time. An example is if
 // you want to send a drip-email campaign after a user signs up. You can

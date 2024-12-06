@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:westwind_client/westwind_client.dart';
-import 'package:westwind_flutter/core/error/failure.dart';
 import 'package:westwind_flutter/core/usecases/usecase.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_room_guest.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_Transaction_list_usercase.dart';
@@ -84,7 +83,7 @@ class RoomTransactionBloc
 
     final result = await createRoomTransaction.call(
         CreateRoomTransactionParams(roomTransaction: event.roomTransaction));
-        
+
     result.fold(
         (l) => emit(RoomTransactionStateFailure(message: l.message)), (r) {
       emit(RoomTransactionStateCreatedSuccess(roomTransaction: r));
@@ -108,5 +107,6 @@ class RoomTransactionBloc
       (r) { emit(RoomTransactionStateRetrievedRoomGuestSuccess(roomGuest: r)); }
     );
   }
-  
+
 }
+

@@ -3,7 +3,6 @@ import 'package:westwind_flutter/core/entities/user.dart';
 import 'package:westwind_flutter/core/error/failure.dart';
 import 'package:westwind_flutter/core/usecases/usecase.dart';
 import 'package:westwind_flutter/features/auth/domain/repositories/auth_repository.dart';
-import 'package:westwind_flutter/features/auth/domain/usecases/user_login.dart';
 
 class UserConfirmRegistrationUseCase
     implements UseCase<User, UserConfirmRegistrationParams> {

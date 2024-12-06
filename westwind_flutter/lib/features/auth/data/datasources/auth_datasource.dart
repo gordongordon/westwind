@@ -101,6 +101,7 @@ class AuthDataSourceImpl implements AuthDataSource {
     }
   }
 
+  @override
   Future<UserModel> comfirmRegistration({
     required String email,
     required String verificationCode,

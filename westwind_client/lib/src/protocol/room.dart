@@ -10,7 +10,9 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'reservation.dart' as _i2;
+import 'roomStatus.dart' as _i3;
+import 'bedType.dart' as _i4;
 
 abstract class Room implements _i1.SerializableModel {
   Room._({
@@ -42,10 +44,10 @@ abstract class Room implements _i1.SerializableModel {
     required String roomNumber,
     List<_i2.Reservation>? reservations,
     required String roomType,
-    required _i2.RoomStatus roomStatus,
+    required _i3.RoomStatus roomStatus,
     required bool isAvailable,
     required bool isSmoke,
-    required _i2.BedType bedType,
+    required _i4.BedType bedType,
     required int numOfBeds,
     required bool isNewAC,
     required bool isNewBed,
@@ -70,10 +72,10 @@ abstract class Room implements _i1.SerializableModel {
           .toList(),
       roomType: jsonSerialization['roomType'] as String,
       roomStatus:
-          _i2.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
+          _i3.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
       isAvailable: jsonSerialization['isAvailable'] as bool,
       isSmoke: jsonSerialization['isSmoke'] as bool,
-      bedType: _i2.BedType.fromJson((jsonSerialization['bedType'] as String)),
+      bedType: _i4.BedType.fromJson((jsonSerialization['bedType'] as String)),
       numOfBeds: jsonSerialization['numOfBeds'] as int,
       isNewAC: jsonSerialization['isNewAC'] as bool,
       isNewBed: jsonSerialization['isNewBed'] as bool,
@@ -101,13 +103,13 @@ abstract class Room implements _i1.SerializableModel {
 
   String roomType;
 
-  _i2.RoomStatus roomStatus;
+  _i3.RoomStatus roomStatus;
 
   bool isAvailable;
 
   bool isSmoke;
 
-  _i2.BedType bedType;
+  _i4.BedType bedType;
 
   int numOfBeds;
 
@@ -140,10 +142,10 @@ abstract class Room implements _i1.SerializableModel {
     String? roomNumber,
     List<_i2.Reservation>? reservations,
     String? roomType,
-    _i2.RoomStatus? roomStatus,
+    _i3.RoomStatus? roomStatus,
     bool? isAvailable,
     bool? isSmoke,
-    _i2.BedType? bedType,
+    _i4.BedType? bedType,
     int? numOfBeds,
     bool? isNewAC,
     bool? isNewBed,
@@ -200,10 +202,10 @@ class _RoomImpl extends Room {
     required String roomNumber,
     List<_i2.Reservation>? reservations,
     required String roomType,
-    required _i2.RoomStatus roomStatus,
+    required _i3.RoomStatus roomStatus,
     required bool isAvailable,
     required bool isSmoke,
-    required _i2.BedType bedType,
+    required _i4.BedType bedType,
     required int numOfBeds,
     required bool isNewAC,
     required bool isNewBed,
@@ -247,10 +249,10 @@ class _RoomImpl extends Room {
     String? roomNumber,
     Object? reservations = _Undefined,
     String? roomType,
-    _i2.RoomStatus? roomStatus,
+    _i3.RoomStatus? roomStatus,
     bool? isAvailable,
     bool? isSmoke,
-    _i2.BedType? bedType,
+    _i4.BedType? bedType,
     int? numOfBeds,
     bool? isNewAC,
     bool? isNewBed,

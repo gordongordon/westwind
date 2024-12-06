@@ -10,12 +10,16 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'room.dart' as _i2;
+import 'rateType.dart' as _i3;
+import 'rateReason.dart' as _i4;
+import 'roomStatus.dart' as _i5;
+import 'roomGuest.dart' as _i6;
 
-abstract class GuestTransaction extends _i1.TableRow
-    implements _i1.ProtocolSerialization {
+abstract class GuestTransaction
+    implements _i1.TableRow, _i1.ProtocolSerialization {
   GuestTransaction._({
-    int? id,
+    this.id,
     required this.roomId,
     this.room,
     required this.stateDate,
@@ -26,20 +30,20 @@ abstract class GuestTransaction extends _i1.TableRow
     this.updateDate,
     required this.roomGuestId,
     this.roomGuest,
-  }) : super(id);
+  });
 
   factory GuestTransaction({
     int? id,
     required int roomId,
     _i2.Room? room,
     required DateTime stateDate,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateType rateType,
+    required _i4.RateReason rateReason,
     required double rate,
-    required _i2.RoomStatus roomStatus,
+    required _i5.RoomStatus roomStatus,
     DateTime? updateDate,
     required int roomGuestId,
-    _i2.RoomGuest? roomGuest,
+    _i6.RoomGuest? roomGuest,
   }) = _GuestTransactionImpl;
 
   factory GuestTransaction.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -53,19 +57,19 @@ abstract class GuestTransaction extends _i1.TableRow
       stateDate:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['stateDate']),
       rateType:
-          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+          _i3.RateType.fromJson((jsonSerialization['rateType'] as String)),
       rateReason:
-          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+          _i4.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
       rate: (jsonSerialization['rate'] as num).toDouble(),
       roomStatus:
-          _i2.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
+          _i5.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
       updateDate: jsonSerialization['updateDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updateDate']),
       roomGuestId: jsonSerialization['roomGuestId'] as int,
       roomGuest: jsonSerialization['roomGuest'] == null
           ? null
-          : _i2.RoomGuest.fromJson(
+          : _i6.RoomGuest.fromJson(
               (jsonSerialization['roomGuest'] as Map<String, dynamic>)),
     );
   }
@@ -74,25 +78,28 @@ abstract class GuestTransaction extends _i1.TableRow
 
   static const db = GuestTransactionRepository._();
 
+  @override
+  int? id;
+
   int roomId;
 
   _i2.Room? room;
 
   DateTime stateDate;
 
-  _i2.RateType rateType;
+  _i3.RateType rateType;
 
-  _i2.RateReason rateReason;
+  _i4.RateReason rateReason;
 
   double rate;
 
-  _i2.RoomStatus roomStatus;
+  _i5.RoomStatus roomStatus;
 
   DateTime? updateDate;
 
   int roomGuestId;
 
-  _i2.RoomGuest? roomGuest;
+  _i6.RoomGuest? roomGuest;
 
   @override
   _i1.Table get table => t;
@@ -102,13 +109,13 @@ abstract class GuestTransaction extends _i1.TableRow
     int? roomId,
     _i2.Room? room,
     DateTime? stateDate,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateType? rateType,
+    _i4.RateReason? rateReason,
     double? rate,
-    _i2.RoomStatus? roomStatus,
+    _i5.RoomStatus? roomStatus,
     DateTime? updateDate,
     int? roomGuestId,
-    _i2.RoomGuest? roomGuest,
+    _i6.RoomGuest? roomGuest,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -146,7 +153,7 @@ abstract class GuestTransaction extends _i1.TableRow
 
   static GuestTransactionInclude include({
     _i2.RoomInclude? room,
-    _i2.RoomGuestInclude? roomGuest,
+    _i6.RoomGuestInclude? roomGuest,
   }) {
     return GuestTransactionInclude._(
       room: room,
@@ -188,13 +195,13 @@ class _GuestTransactionImpl extends GuestTransaction {
     required int roomId,
     _i2.Room? room,
     required DateTime stateDate,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateType rateType,
+    required _i4.RateReason rateReason,
     required double rate,
-    required _i2.RoomStatus roomStatus,
+    required _i5.RoomStatus roomStatus,
     DateTime? updateDate,
     required int roomGuestId,
-    _i2.RoomGuest? roomGuest,
+    _i6.RoomGuest? roomGuest,
   }) : super._(
           id: id,
           roomId: roomId,
@@ -215,10 +222,10 @@ class _GuestTransactionImpl extends GuestTransaction {
     int? roomId,
     Object? room = _Undefined,
     DateTime? stateDate,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateType? rateType,
+    _i4.RateReason? rateReason,
     double? rate,
-    _i2.RoomStatus? roomStatus,
+    _i5.RoomStatus? roomStatus,
     Object? updateDate = _Undefined,
     int? roomGuestId,
     Object? roomGuest = _Undefined,
@@ -235,7 +242,7 @@ class _GuestTransactionImpl extends GuestTransaction {
       updateDate: updateDate is DateTime? ? updateDate : this.updateDate,
       roomGuestId: roomGuestId ?? this.roomGuestId,
       roomGuest:
-          roomGuest is _i2.RoomGuest? ? roomGuest : this.roomGuest?.copyWith(),
+          roomGuest is _i6.RoomGuest? ? roomGuest : this.roomGuest?.copyWith(),
     );
   }
 }
@@ -286,19 +293,19 @@ class GuestTransactionTable extends _i1.Table {
 
   late final _i1.ColumnDateTime stateDate;
 
-  late final _i1.ColumnEnum<_i2.RateType> rateType;
+  late final _i1.ColumnEnum<_i3.RateType> rateType;
 
-  late final _i1.ColumnEnum<_i2.RateReason> rateReason;
+  late final _i1.ColumnEnum<_i4.RateReason> rateReason;
 
   late final _i1.ColumnDouble rate;
 
-  late final _i1.ColumnEnum<_i2.RoomStatus> roomStatus;
+  late final _i1.ColumnEnum<_i5.RoomStatus> roomStatus;
 
   late final _i1.ColumnDateTime updateDate;
 
   late final _i1.ColumnInt roomGuestId;
 
-  _i2.RoomGuestTable? _roomGuest;
+  _i6.RoomGuestTable? _roomGuest;
 
   _i2.RoomTable get room {
     if (_room != null) return _room!;
@@ -313,15 +320,15 @@ class GuestTransactionTable extends _i1.Table {
     return _room!;
   }
 
-  _i2.RoomGuestTable get roomGuest {
+  _i6.RoomGuestTable get roomGuest {
     if (_roomGuest != null) return _roomGuest!;
     _roomGuest = _i1.createRelationTable(
       relationFieldName: 'roomGuest',
       field: GuestTransaction.t.roomGuestId,
-      foreignField: _i2.RoomGuest.t.id,
+      foreignField: _i6.RoomGuest.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.RoomGuestTable(tableRelation: foreignTableRelation),
+          _i6.RoomGuestTable(tableRelation: foreignTableRelation),
     );
     return _roomGuest!;
   }
@@ -354,7 +361,7 @@ class GuestTransactionTable extends _i1.Table {
 class GuestTransactionInclude extends _i1.IncludeObject {
   GuestTransactionInclude._({
     _i2.RoomInclude? room,
-    _i2.RoomGuestInclude? roomGuest,
+    _i6.RoomGuestInclude? roomGuest,
   }) {
     _room = room;
     _roomGuest = roomGuest;
@@ -362,7 +369,7 @@ class GuestTransactionInclude extends _i1.IncludeObject {
 
   _i2.RoomInclude? _room;
 
-  _i2.RoomGuestInclude? _roomGuest;
+  _i6.RoomGuestInclude? _roomGuest;
 
   @override
   Map<String, _i1.Include?> get includes => {
@@ -578,7 +585,7 @@ class GuestTransactionAttachRowRepository {
   Future<void> roomGuest(
     _i1.Session session,
     GuestTransaction guestTransaction,
-    _i2.RoomGuest roomGuest, {
+    _i6.RoomGuest roomGuest, {
     _i1.Transaction? transaction,
   }) async {
     if (guestTransaction.id == null) {

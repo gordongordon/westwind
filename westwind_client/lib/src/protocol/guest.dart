@@ -10,7 +10,9 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'rateType.dart' as _i2;
+import 'company.dart' as _i3;
+import 'roomGuest.dart' as _i4;
 
 abstract class Guest implements _i1.SerializableModel {
   Guest._({
@@ -43,10 +45,10 @@ abstract class Guest implements _i1.SerializableModel {
     required _i2.RateType rateType,
     required int staffId,
     required int companyId,
-    _i2.Company? company,
+    _i3.Company? company,
     int? rigNumber,
     required double accountBalance,
-    List<_i2.RoomGuest>? roomGuets,
+    List<_i4.RoomGuest>? roomGuets,
   }) = _GuestImpl;
 
   factory Guest.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -68,12 +70,12 @@ abstract class Guest implements _i1.SerializableModel {
       companyId: jsonSerialization['companyId'] as int,
       company: jsonSerialization['company'] == null
           ? null
-          : _i2.Company.fromJson(
+          : _i3.Company.fromJson(
               (jsonSerialization['company'] as Map<String, dynamic>)),
       rigNumber: jsonSerialization['rigNumber'] as int?,
       accountBalance: (jsonSerialization['accountBalance'] as num).toDouble(),
       roomGuets: (jsonSerialization['roomGuets'] as List?)
-          ?.map((e) => _i2.RoomGuest.fromJson((e as Map<String, dynamic>)))
+          ?.map((e) => _i4.RoomGuest.fromJson((e as Map<String, dynamic>)))
           .toList(),
     );
   }
@@ -103,13 +105,13 @@ abstract class Guest implements _i1.SerializableModel {
 
   int companyId;
 
-  _i2.Company? company;
+  _i3.Company? company;
 
   int? rigNumber;
 
   double accountBalance;
 
-  List<_i2.RoomGuest>? roomGuets;
+  List<_i4.RoomGuest>? roomGuets;
 
   Guest copyWith({
     int? id,
@@ -123,10 +125,10 @@ abstract class Guest implements _i1.SerializableModel {
     _i2.RateType? rateType,
     int? staffId,
     int? companyId,
-    _i2.Company? company,
+    _i3.Company? company,
     int? rigNumber,
     double? accountBalance,
-    List<_i2.RoomGuest>? roomGuets,
+    List<_i4.RoomGuest>? roomGuets,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -171,10 +173,10 @@ class _GuestImpl extends Guest {
     required _i2.RateType rateType,
     required int staffId,
     required int companyId,
-    _i2.Company? company,
+    _i3.Company? company,
     int? rigNumber,
     required double accountBalance,
-    List<_i2.RoomGuest>? roomGuets,
+    List<_i4.RoomGuest>? roomGuets,
   }) : super._(
           id: id,
           firstName: firstName,
@@ -223,10 +225,10 @@ class _GuestImpl extends Guest {
       rateType: rateType ?? this.rateType,
       staffId: staffId ?? this.staffId,
       companyId: companyId ?? this.companyId,
-      company: company is _i2.Company? ? company : this.company?.copyWith(),
+      company: company is _i3.Company? ? company : this.company?.copyWith(),
       rigNumber: rigNumber is int? ? rigNumber : this.rigNumber,
       accountBalance: accountBalance ?? this.accountBalance,
-      roomGuets: roomGuets is List<_i2.RoomGuest>?
+      roomGuets: roomGuets is List<_i4.RoomGuest>?
           ? roomGuets
           : this.roomGuets?.map((e0) => e0.copyWith()).toList(),
     );

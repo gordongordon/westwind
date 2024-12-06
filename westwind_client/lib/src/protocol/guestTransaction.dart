@@ -10,7 +10,11 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'room.dart' as _i2;
+import 'rateType.dart' as _i3;
+import 'rateReason.dart' as _i4;
+import 'roomStatus.dart' as _i5;
+import 'roomGuest.dart' as _i6;
 
 abstract class GuestTransaction implements _i1.SerializableModel {
   GuestTransaction._({
@@ -32,13 +36,13 @@ abstract class GuestTransaction implements _i1.SerializableModel {
     required int roomId,
     _i2.Room? room,
     required DateTime stateDate,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateType rateType,
+    required _i4.RateReason rateReason,
     required double rate,
-    required _i2.RoomStatus roomStatus,
+    required _i5.RoomStatus roomStatus,
     DateTime? updateDate,
     required int roomGuestId,
-    _i2.RoomGuest? roomGuest,
+    _i6.RoomGuest? roomGuest,
   }) = _GuestTransactionImpl;
 
   factory GuestTransaction.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -52,19 +56,19 @@ abstract class GuestTransaction implements _i1.SerializableModel {
       stateDate:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['stateDate']),
       rateType:
-          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+          _i3.RateType.fromJson((jsonSerialization['rateType'] as String)),
       rateReason:
-          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+          _i4.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
       rate: (jsonSerialization['rate'] as num).toDouble(),
       roomStatus:
-          _i2.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
+          _i5.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
       updateDate: jsonSerialization['updateDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updateDate']),
       roomGuestId: jsonSerialization['roomGuestId'] as int,
       roomGuest: jsonSerialization['roomGuest'] == null
           ? null
-          : _i2.RoomGuest.fromJson(
+          : _i6.RoomGuest.fromJson(
               (jsonSerialization['roomGuest'] as Map<String, dynamic>)),
     );
   }
@@ -80,32 +84,32 @@ abstract class GuestTransaction implements _i1.SerializableModel {
 
   DateTime stateDate;
 
-  _i2.RateType rateType;
+  _i3.RateType rateType;
 
-  _i2.RateReason rateReason;
+  _i4.RateReason rateReason;
 
   double rate;
 
-  _i2.RoomStatus roomStatus;
+  _i5.RoomStatus roomStatus;
 
   DateTime? updateDate;
 
   int roomGuestId;
 
-  _i2.RoomGuest? roomGuest;
+  _i6.RoomGuest? roomGuest;
 
   GuestTransaction copyWith({
     int? id,
     int? roomId,
     _i2.Room? room,
     DateTime? stateDate,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateType? rateType,
+    _i4.RateReason? rateReason,
     double? rate,
-    _i2.RoomStatus? roomStatus,
+    _i5.RoomStatus? roomStatus,
     DateTime? updateDate,
     int? roomGuestId,
-    _i2.RoomGuest? roomGuest,
+    _i6.RoomGuest? roomGuest,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -138,13 +142,13 @@ class _GuestTransactionImpl extends GuestTransaction {
     required int roomId,
     _i2.Room? room,
     required DateTime stateDate,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateType rateType,
+    required _i4.RateReason rateReason,
     required double rate,
-    required _i2.RoomStatus roomStatus,
+    required _i5.RoomStatus roomStatus,
     DateTime? updateDate,
     required int roomGuestId,
-    _i2.RoomGuest? roomGuest,
+    _i6.RoomGuest? roomGuest,
   }) : super._(
           id: id,
           roomId: roomId,
@@ -165,10 +169,10 @@ class _GuestTransactionImpl extends GuestTransaction {
     int? roomId,
     Object? room = _Undefined,
     DateTime? stateDate,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateType? rateType,
+    _i4.RateReason? rateReason,
     double? rate,
-    _i2.RoomStatus? roomStatus,
+    _i5.RoomStatus? roomStatus,
     Object? updateDate = _Undefined,
     int? roomGuestId,
     Object? roomGuest = _Undefined,
@@ -185,7 +189,7 @@ class _GuestTransactionImpl extends GuestTransaction {
       updateDate: updateDate is DateTime? ? updateDate : this.updateDate,
       roomGuestId: roomGuestId ?? this.roomGuestId,
       roomGuest:
-          roomGuest is _i2.RoomGuest? ? roomGuest : this.roomGuest?.copyWith(),
+          roomGuest is _i6.RoomGuest? ? roomGuest : this.roomGuest?.copyWith(),
     );
   }
 }

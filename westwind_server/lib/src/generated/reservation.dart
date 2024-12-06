@@ -10,12 +10,14 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'guest.dart' as _i2;
+import 'rateType.dart' as _i3;
+import 'rateReason.dart' as _i4;
+import 'room.dart' as _i5;
 
-abstract class Reservation extends _i1.TableRow
-    implements _i1.ProtocolSerialization {
+abstract class Reservation implements _i1.TableRow, _i1.ProtocolSerialization {
   Reservation._({
-    int? id,
+    this.id,
     required this.checkInDate,
     required this.checkOutDate,
     required this.stayDay,
@@ -32,7 +34,7 @@ abstract class Reservation extends _i1.TableRow
     required this.isNightShift,
     required this.roomId,
     this.room,
-  }) : super(id);
+  });
 
   factory Reservation({
     int? id,
@@ -44,14 +46,14 @@ abstract class Reservation extends _i1.TableRow
     DateTime? dateUpdate,
     required int guestId,
     _i2.Guest? guest,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateType rateType,
+    required _i4.RateReason rateReason,
     required double rate,
     required bool isCheckedIn,
     required bool isCanceled,
     required bool isNightShift,
     required int roomId,
-    _i2.Room? room,
+    _i5.Room? room,
   }) = _ReservationImpl;
 
   factory Reservation.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -74,9 +76,9 @@ abstract class Reservation extends _i1.TableRow
           : _i2.Guest.fromJson(
               (jsonSerialization['guest'] as Map<String, dynamic>)),
       rateType:
-          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+          _i3.RateType.fromJson((jsonSerialization['rateType'] as String)),
       rateReason:
-          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+          _i4.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
       rate: (jsonSerialization['rate'] as num).toDouble(),
       isCheckedIn: jsonSerialization['isCheckedIn'] as bool,
       isCanceled: jsonSerialization['isCanceled'] as bool,
@@ -84,7 +86,7 @@ abstract class Reservation extends _i1.TableRow
       roomId: jsonSerialization['roomId'] as int,
       room: jsonSerialization['room'] == null
           ? null
-          : _i2.Room.fromJson(
+          : _i5.Room.fromJson(
               (jsonSerialization['room'] as Map<String, dynamic>)),
     );
   }
@@ -92,6 +94,9 @@ abstract class Reservation extends _i1.TableRow
   static final t = ReservationTable();
 
   static const db = ReservationRepository._();
+
+  @override
+  int? id;
 
   DateTime checkInDate;
 
@@ -109,9 +114,9 @@ abstract class Reservation extends _i1.TableRow
 
   _i2.Guest? guest;
 
-  _i2.RateType rateType;
+  _i3.RateType rateType;
 
-  _i2.RateReason rateReason;
+  _i4.RateReason rateReason;
 
   double rate;
 
@@ -123,7 +128,7 @@ abstract class Reservation extends _i1.TableRow
 
   int roomId;
 
-  _i2.Room? room;
+  _i5.Room? room;
 
   int? _roomReservationsRoomId;
 
@@ -140,14 +145,14 @@ abstract class Reservation extends _i1.TableRow
     DateTime? dateUpdate,
     int? guestId,
     _i2.Guest? guest,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateType? rateType,
+    _i4.RateReason? rateReason,
     double? rate,
     bool? isCheckedIn,
     bool? isCanceled,
     bool? isNightShift,
     int? roomId,
-    _i2.Room? room,
+    _i5.Room? room,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -199,7 +204,7 @@ abstract class Reservation extends _i1.TableRow
 
   static ReservationInclude include({
     _i2.GuestInclude? guest,
-    _i2.RoomInclude? room,
+    _i5.RoomInclude? room,
   }) {
     return ReservationInclude._(
       guest: guest,
@@ -246,14 +251,14 @@ class _ReservationImpl extends Reservation {
     DateTime? dateUpdate,
     required int guestId,
     _i2.Guest? guest,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateType rateType,
+    required _i4.RateReason rateReason,
     required double rate,
     required bool isCheckedIn,
     required bool isCanceled,
     required bool isNightShift,
     required int roomId,
-    _i2.Room? room,
+    _i5.Room? room,
   }) : super._(
           id: id,
           checkInDate: checkInDate,
@@ -285,8 +290,8 @@ class _ReservationImpl extends Reservation {
     Object? dateUpdate = _Undefined,
     int? guestId,
     Object? guest = _Undefined,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateType? rateType,
+    _i4.RateReason? rateReason,
     double? rate,
     bool? isCheckedIn,
     bool? isCanceled,
@@ -311,7 +316,7 @@ class _ReservationImpl extends Reservation {
       isCanceled: isCanceled ?? this.isCanceled,
       isNightShift: isNightShift ?? this.isNightShift,
       roomId: roomId ?? this.roomId,
-      room: room is _i2.Room? ? room : this.room?.copyWith(),
+      room: room is _i5.Room? ? room : this.room?.copyWith(),
     );
   }
 }
@@ -327,14 +332,14 @@ class ReservationImplicit extends _ReservationImpl {
     DateTime? dateUpdate,
     required int guestId,
     _i2.Guest? guest,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateType rateType,
+    required _i4.RateReason rateReason,
     required double rate,
     required bool isCheckedIn,
     required bool isCanceled,
     required bool isNightShift,
     required int roomId,
-    _i2.Room? room,
+    _i5.Room? room,
     this.$_roomReservationsRoomId,
   }) : super(
           id: id,
@@ -474,9 +479,9 @@ class ReservationTable extends _i1.Table {
 
   _i2.GuestTable? _guest;
 
-  late final _i1.ColumnEnum<_i2.RateType> rateType;
+  late final _i1.ColumnEnum<_i3.RateType> rateType;
 
-  late final _i1.ColumnEnum<_i2.RateReason> rateReason;
+  late final _i1.ColumnEnum<_i4.RateReason> rateReason;
 
   late final _i1.ColumnDouble rate;
 
@@ -488,7 +493,7 @@ class ReservationTable extends _i1.Table {
 
   late final _i1.ColumnInt roomId;
 
-  _i2.RoomTable? _room;
+  _i5.RoomTable? _room;
 
   late final _i1.ColumnInt $_roomReservationsRoomId;
 
@@ -505,15 +510,15 @@ class ReservationTable extends _i1.Table {
     return _guest!;
   }
 
-  _i2.RoomTable get room {
+  _i5.RoomTable get room {
     if (_room != null) return _room!;
     _room = _i1.createRelationTable(
       relationFieldName: 'room',
       field: Reservation.t.roomId,
-      foreignField: _i2.Room.t.id,
+      foreignField: _i5.Room.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.RoomTable(tableRelation: foreignTableRelation),
+          _i5.RoomTable(tableRelation: foreignTableRelation),
     );
     return _room!;
   }
@@ -553,7 +558,7 @@ class ReservationTable extends _i1.Table {
 class ReservationInclude extends _i1.IncludeObject {
   ReservationInclude._({
     _i2.GuestInclude? guest,
-    _i2.RoomInclude? room,
+    _i5.RoomInclude? room,
   }) {
     _guest = guest;
     _room = room;
@@ -561,7 +566,7 @@ class ReservationInclude extends _i1.IncludeObject {
 
   _i2.GuestInclude? _guest;
 
-  _i2.RoomInclude? _room;
+  _i5.RoomInclude? _room;
 
   @override
   Map<String, _i1.Include?> get includes => {
@@ -777,7 +782,7 @@ class ReservationAttachRowRepository {
   Future<void> room(
     _i1.Session session,
     Reservation reservation,
-    _i2.Room room, {
+    _i5.Room room, {
     _i1.Transaction? transaction,
   }) async {
     if (reservation.id == null) {

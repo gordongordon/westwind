@@ -207,10 +207,10 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
   Widget _buildButton(String text, VoidCallback onPressed) {
     return ElevatedButton(
       onPressed: onPressed,
-      child: Text(text),
       style: ElevatedButton.styleFrom(
         minimumSize: Size(double.infinity, 50),
       ),
+      child: Text(text),
     );
   }
 
@@ -265,7 +265,7 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
     transactionTypeController.text = transaction.transactionType.toString();
     itemTypeController.text = transaction.itemType.toString();
     transactionDay = transaction.transactionDay.toLocal();
-    stayDay = transaction.stayDay!;
+    stayDay = transaction.stayDay;
     descriptionController.text = transaction.description;
     
     formKey.currentState?.patchValue({

@@ -10,11 +10,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'reservation.dart' as _i2;
+import 'roomStatus.dart' as _i3;
+import 'bedType.dart' as _i4;
 
-abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
+abstract class Room implements _i1.TableRow, _i1.ProtocolSerialization {
   Room._({
-    int? id,
+    this.id,
     required this.roomNumber,
     this.reservations,
     required this.roomType,
@@ -35,17 +37,17 @@ abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
     required this.numOfStandLamp,
     required this.isNewStandLamp,
     this.note,
-  }) : super(id);
+  });
 
   factory Room({
     int? id,
     required String roomNumber,
     List<_i2.Reservation>? reservations,
     required String roomType,
-    required _i2.RoomStatus roomStatus,
+    required _i3.RoomStatus roomStatus,
     required bool isAvailable,
     required bool isSmoke,
-    required _i2.BedType bedType,
+    required _i4.BedType bedType,
     required int numOfBeds,
     required bool isNewAC,
     required bool isNewBed,
@@ -70,10 +72,10 @@ abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
           .toList(),
       roomType: jsonSerialization['roomType'] as String,
       roomStatus:
-          _i2.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
+          _i3.RoomStatus.fromJson((jsonSerialization['roomStatus'] as String)),
       isAvailable: jsonSerialization['isAvailable'] as bool,
       isSmoke: jsonSerialization['isSmoke'] as bool,
-      bedType: _i2.BedType.fromJson((jsonSerialization['bedType'] as String)),
+      bedType: _i4.BedType.fromJson((jsonSerialization['bedType'] as String)),
       numOfBeds: jsonSerialization['numOfBeds'] as int,
       isNewAC: jsonSerialization['isNewAC'] as bool,
       isNewBed: jsonSerialization['isNewBed'] as bool,
@@ -94,19 +96,22 @@ abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
 
   static const db = RoomRepository._();
 
+  @override
+  int? id;
+
   String roomNumber;
 
   List<_i2.Reservation>? reservations;
 
   String roomType;
 
-  _i2.RoomStatus roomStatus;
+  _i3.RoomStatus roomStatus;
 
   bool isAvailable;
 
   bool isSmoke;
 
-  _i2.BedType bedType;
+  _i4.BedType bedType;
 
   int numOfBeds;
 
@@ -142,10 +147,10 @@ abstract class Room extends _i1.TableRow implements _i1.ProtocolSerialization {
     String? roomNumber,
     List<_i2.Reservation>? reservations,
     String? roomType,
-    _i2.RoomStatus? roomStatus,
+    _i3.RoomStatus? roomStatus,
     bool? isAvailable,
     bool? isSmoke,
-    _i2.BedType? bedType,
+    _i4.BedType? bedType,
     int? numOfBeds,
     bool? isNewAC,
     bool? isNewBed,
@@ -255,10 +260,10 @@ class _RoomImpl extends Room {
     required String roomNumber,
     List<_i2.Reservation>? reservations,
     required String roomType,
-    required _i2.RoomStatus roomStatus,
+    required _i3.RoomStatus roomStatus,
     required bool isAvailable,
     required bool isSmoke,
-    required _i2.BedType bedType,
+    required _i4.BedType bedType,
     required int numOfBeds,
     required bool isNewAC,
     required bool isNewBed,
@@ -302,10 +307,10 @@ class _RoomImpl extends Room {
     String? roomNumber,
     Object? reservations = _Undefined,
     String? roomType,
-    _i2.RoomStatus? roomStatus,
+    _i3.RoomStatus? roomStatus,
     bool? isAvailable,
     bool? isSmoke,
-    _i2.BedType? bedType,
+    _i4.BedType? bedType,
     int? numOfBeds,
     bool? isNewAC,
     bool? isNewBed,
@@ -438,13 +443,13 @@ class RoomTable extends _i1.Table {
 
   late final _i1.ColumnString roomType;
 
-  late final _i1.ColumnEnum<_i2.RoomStatus> roomStatus;
+  late final _i1.ColumnEnum<_i3.RoomStatus> roomStatus;
 
   late final _i1.ColumnBool isAvailable;
 
   late final _i1.ColumnBool isSmoke;
 
-  late final _i1.ColumnEnum<_i2.BedType> bedType;
+  late final _i1.ColumnEnum<_i4.BedType> bedType;
 
   late final _i1.ColumnInt numOfBeds;
 

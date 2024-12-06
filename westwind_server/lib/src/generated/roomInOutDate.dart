@@ -10,19 +10,20 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'guest.dart' as _i2;
+import 'roomNumber.dart' as _i3;
 
-abstract class RoomInOutDate extends _i1.TableRow
-    implements _i1.ProtocolSerialization {
+abstract class RoomInOutDate
+    implements _i1.TableRow, _i1.ProtocolSerialization {
   RoomInOutDate._({
-    int? id,
+    this.id,
     this.checkInDate,
     this.checkOutDate,
     required this.guestId,
     this.guest,
     required this.roomNumber,
     required this.dateCreate,
-  }) : super(id);
+  });
 
   factory RoomInOutDate({
     int? id,
@@ -30,7 +31,7 @@ abstract class RoomInOutDate extends _i1.TableRow
     DateTime? checkOutDate,
     required int guestId,
     _i2.Guest? guest,
-    required _i2.RoomNumber roomNumber,
+    required _i3.RoomNumber roomNumber,
     required DateTime dateCreate,
   }) = _RoomInOutDateImpl;
 
@@ -51,7 +52,7 @@ abstract class RoomInOutDate extends _i1.TableRow
           : _i2.Guest.fromJson(
               (jsonSerialization['guest'] as Map<String, dynamic>)),
       roomNumber:
-          _i2.RoomNumber.fromJson((jsonSerialization['roomNumber'] as String)),
+          _i3.RoomNumber.fromJson((jsonSerialization['roomNumber'] as String)),
       dateCreate:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateCreate']),
     );
@@ -61,6 +62,9 @@ abstract class RoomInOutDate extends _i1.TableRow
 
   static const db = RoomInOutDateRepository._();
 
+  @override
+  int? id;
+
   DateTime? checkInDate;
 
   DateTime? checkOutDate;
@@ -69,7 +73,7 @@ abstract class RoomInOutDate extends _i1.TableRow
 
   _i2.Guest? guest;
 
-  _i2.RoomNumber roomNumber;
+  _i3.RoomNumber roomNumber;
 
   DateTime dateCreate;
 
@@ -82,7 +86,7 @@ abstract class RoomInOutDate extends _i1.TableRow
     DateTime? checkOutDate,
     int? guestId,
     _i2.Guest? guest,
-    _i2.RoomNumber? roomNumber,
+    _i3.RoomNumber? roomNumber,
     DateTime? dateCreate,
   });
   @override
@@ -150,7 +154,7 @@ class _RoomInOutDateImpl extends RoomInOutDate {
     DateTime? checkOutDate,
     required int guestId,
     _i2.Guest? guest,
-    required _i2.RoomNumber roomNumber,
+    required _i3.RoomNumber roomNumber,
     required DateTime dateCreate,
   }) : super._(
           id: id,
@@ -169,7 +173,7 @@ class _RoomInOutDateImpl extends RoomInOutDate {
     Object? checkOutDate = _Undefined,
     int? guestId,
     Object? guest = _Undefined,
-    _i2.RoomNumber? roomNumber,
+    _i3.RoomNumber? roomNumber,
     DateTime? dateCreate,
   }) {
     return RoomInOutDate(
@@ -219,7 +223,7 @@ class RoomInOutDateTable extends _i1.Table {
 
   _i2.GuestTable? _guest;
 
-  late final _i1.ColumnEnum<_i2.RoomNumber> roomNumber;
+  late final _i1.ColumnEnum<_i3.RoomNumber> roomNumber;
 
   late final _i1.ColumnDateTime dateCreate;
 

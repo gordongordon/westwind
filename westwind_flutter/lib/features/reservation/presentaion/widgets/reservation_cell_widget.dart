@@ -264,7 +264,27 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     );
   }
 
+
+  /**
+   * Mixed Multiple Guests 
+   */
   Widget _buildMultiItemCell(BuildContext context, List<dynamic> items) {
+
+    /** 
+     * If RoomTransaction (Paid), field's color is Orange  
+     * but second cell can be unpaid, but still Orange!  
+    */
+    final int itemCount =  items.length;
+    final item = items[0];
+    Color fieldColor; 
+ 
+    if (item is RoomTransaction) {
+       fieldColor = Colors.orange;
+    } else {
+       fieldColor = Colors.purple;
+    }
+    /** End of Orange */
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -277,7 +297,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         height: isExpanded ? items.length * 35.0 : 30,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
-          color: Colors.purple,
+          color: fieldColor,
         ),
         child: isExpanded
             ? _buildExpandedContent(context, items)
@@ -304,6 +324,8 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   }
 
   Widget _buildCollapsedContent(BuildContext context, List<dynamic> items) {
+   // return _buildExpandedContent(context, items);
+    
     return Center(
       child: Text(
         '${items.length} Guests',
@@ -315,6 +337,8 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         textAlign: TextAlign.center,
       ),
     );
+    
+    
   }
 
   Widget _buildReservationContent(
@@ -413,11 +437,16 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     );
   }
 
+
+  /**
+   * For expended listing on calendar.
+   */
   Widget _buildRoomTransactionListItem(
       BuildContext context, RoomTransaction transaction) {
     return GestureDetector(
       onTap: () => _showRoomTransactionDetails(context, transaction),
       child: Container(
+        color: Colors.orange,
         height: 35,
         padding: const EdgeInsets.symmetric(horizontal: 4),
         child: Row(
@@ -429,7 +458,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const Icon(Icons.attach_money, size: 16, color: Colors.white),
+            const Icon(Icons.paid, size: 16, color: Colors.white),
           ],
         ),
       ),

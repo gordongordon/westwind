@@ -10,7 +10,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'rateType.dart' as _i2;
+import 'rateReason.dart' as _i3;
 
 abstract class RateTable implements _i1.SerializableModel {
   RateTable._({
@@ -23,7 +24,7 @@ abstract class RateTable implements _i1.SerializableModel {
   factory RateTable({
     int? id,
     required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateReason rateReason,
     required double rate,
   }) = _RateTableImpl;
 
@@ -33,7 +34,7 @@ abstract class RateTable implements _i1.SerializableModel {
       rateType:
           _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
       rateReason:
-          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+          _i3.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
       rate: (jsonSerialization['rate'] as num).toDouble(),
     );
   }
@@ -45,14 +46,14 @@ abstract class RateTable implements _i1.SerializableModel {
 
   _i2.RateType rateType;
 
-  _i2.RateReason rateReason;
+  _i3.RateReason rateReason;
 
   double rate;
 
   RateTable copyWith({
     int? id,
     _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateReason? rateReason,
     double? rate,
   });
   @override
@@ -77,7 +78,7 @@ class _RateTableImpl extends RateTable {
   _RateTableImpl({
     int? id,
     required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateReason rateReason,
     required double rate,
   }) : super._(
           id: id,
@@ -90,7 +91,7 @@ class _RateTableImpl extends RateTable {
   RateTable copyWith({
     Object? id = _Undefined,
     _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateReason? rateReason,
     double? rate,
   }) {
     return RateTable(

@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:westwind_client/westwind_client.dart';
-import 'package:westwind_flutter/core/error/failure.dart';
-import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/calculate_rate_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/charge_and_extend_stay_day.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/charge_room_guest.dart';

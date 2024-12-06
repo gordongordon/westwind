@@ -10,7 +10,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'guest.dart' as _i2;
+import 'paymentType.dart' as _i3;
 
 abstract class Payment implements _i1.SerializableModel {
   Payment._({
@@ -33,7 +34,7 @@ abstract class Payment implements _i1.SerializableModel {
     required DateTime dateVoid,
     required double amount,
     required String description,
-    required _i2.PaymentType paymentType,
+    required _i3.PaymentType paymentType,
     required int userId,
   }) = _PaymentImpl;
 
@@ -51,7 +52,7 @@ abstract class Payment implements _i1.SerializableModel {
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateVoid']),
       amount: (jsonSerialization['amount'] as num).toDouble(),
       description: jsonSerialization['description'] as String,
-      paymentType: _i2.PaymentType.fromJson(
+      paymentType: _i3.PaymentType.fromJson(
           (jsonSerialization['paymentType'] as String)),
       userId: jsonSerialization['userId'] as int,
     );
@@ -74,7 +75,7 @@ abstract class Payment implements _i1.SerializableModel {
 
   String description;
 
-  _i2.PaymentType paymentType;
+  _i3.PaymentType paymentType;
 
   int userId;
 
@@ -86,7 +87,7 @@ abstract class Payment implements _i1.SerializableModel {
     DateTime? dateVoid,
     double? amount,
     String? description,
-    _i2.PaymentType? paymentType,
+    _i3.PaymentType? paymentType,
     int? userId,
   });
   @override
@@ -121,7 +122,7 @@ class _PaymentImpl extends Payment {
     required DateTime dateVoid,
     required double amount,
     required String description,
-    required _i2.PaymentType paymentType,
+    required _i3.PaymentType paymentType,
     required int userId,
   }) : super._(
           id: id,
@@ -144,7 +145,7 @@ class _PaymentImpl extends Payment {
     DateTime? dateVoid,
     double? amount,
     String? description,
-    _i2.PaymentType? paymentType,
+    _i3.PaymentType? paymentType,
     int? userId,
   }) {
     return Payment(

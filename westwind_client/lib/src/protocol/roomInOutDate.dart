@@ -10,7 +10,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'guest.dart' as _i2;
+import 'roomNumber.dart' as _i3;
 
 abstract class RoomInOutDate implements _i1.SerializableModel {
   RoomInOutDate._({
@@ -29,7 +30,7 @@ abstract class RoomInOutDate implements _i1.SerializableModel {
     DateTime? checkOutDate,
     required int guestId,
     _i2.Guest? guest,
-    required _i2.RoomNumber roomNumber,
+    required _i3.RoomNumber roomNumber,
     required DateTime dateCreate,
   }) = _RoomInOutDateImpl;
 
@@ -50,7 +51,7 @@ abstract class RoomInOutDate implements _i1.SerializableModel {
           : _i2.Guest.fromJson(
               (jsonSerialization['guest'] as Map<String, dynamic>)),
       roomNumber:
-          _i2.RoomNumber.fromJson((jsonSerialization['roomNumber'] as String)),
+          _i3.RoomNumber.fromJson((jsonSerialization['roomNumber'] as String)),
       dateCreate:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dateCreate']),
     );
@@ -69,7 +70,7 @@ abstract class RoomInOutDate implements _i1.SerializableModel {
 
   _i2.Guest? guest;
 
-  _i2.RoomNumber roomNumber;
+  _i3.RoomNumber roomNumber;
 
   DateTime dateCreate;
 
@@ -79,7 +80,7 @@ abstract class RoomInOutDate implements _i1.SerializableModel {
     DateTime? checkOutDate,
     int? guestId,
     _i2.Guest? guest,
-    _i2.RoomNumber? roomNumber,
+    _i3.RoomNumber? roomNumber,
     DateTime? dateCreate,
   });
   @override
@@ -110,7 +111,7 @@ class _RoomInOutDateImpl extends RoomInOutDate {
     DateTime? checkOutDate,
     required int guestId,
     _i2.Guest? guest,
-    required _i2.RoomNumber roomNumber,
+    required _i3.RoomNumber roomNumber,
     required DateTime dateCreate,
   }) : super._(
           id: id,
@@ -129,7 +130,7 @@ class _RoomInOutDateImpl extends RoomInOutDate {
     Object? checkOutDate = _Undefined,
     int? guestId,
     Object? guest = _Undefined,
-    _i2.RoomNumber? roomNumber,
+    _i3.RoomNumber? roomNumber,
     DateTime? dateCreate,
   }) {
     return RoomInOutDate(

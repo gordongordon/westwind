@@ -6,9 +6,6 @@ import 'package:westwind_flutter/features/dashboard/widgets/bar_graph_widget.dar
 import 'package:westwind_flutter/features/dashboard/widgets/header_widget.dart';
 import 'package:westwind_flutter/features/dashboard/widgets/line_chart_card.dart';
 import 'package:westwind_flutter/features/dashboard/widgets/summary_widget.dart';
-import 'package:westwind_flutter/features/guest/presentation/pages/guest_list_page.dart';
-import 'package:westwind_flutter/features/guest/presentation/widgets/guest_list_widget.dart';
-import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_list_page.dart';
 
 class DashboardWidget extends StatelessWidget {
   const DashboardWidget({super.key});

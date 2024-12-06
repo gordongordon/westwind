@@ -10,7 +10,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'guest.dart' as _i2;
+import 'rateType.dart' as _i3;
+import 'rateReason.dart' as _i4;
+import 'room.dart' as _i5;
 
 abstract class Reservation implements _i1.SerializableModel {
   Reservation._({
@@ -43,14 +46,14 @@ abstract class Reservation implements _i1.SerializableModel {
     DateTime? dateUpdate,
     required int guestId,
     _i2.Guest? guest,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateType rateType,
+    required _i4.RateReason rateReason,
     required double rate,
     required bool isCheckedIn,
     required bool isCanceled,
     required bool isNightShift,
     required int roomId,
-    _i2.Room? room,
+    _i5.Room? room,
   }) = _ReservationImpl;
 
   factory Reservation.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -73,9 +76,9 @@ abstract class Reservation implements _i1.SerializableModel {
           : _i2.Guest.fromJson(
               (jsonSerialization['guest'] as Map<String, dynamic>)),
       rateType:
-          _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
+          _i3.RateType.fromJson((jsonSerialization['rateType'] as String)),
       rateReason:
-          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+          _i4.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
       rate: (jsonSerialization['rate'] as num).toDouble(),
       isCheckedIn: jsonSerialization['isCheckedIn'] as bool,
       isCanceled: jsonSerialization['isCanceled'] as bool,
@@ -83,7 +86,7 @@ abstract class Reservation implements _i1.SerializableModel {
       roomId: jsonSerialization['roomId'] as int,
       room: jsonSerialization['room'] == null
           ? null
-          : _i2.Room.fromJson(
+          : _i5.Room.fromJson(
               (jsonSerialization['room'] as Map<String, dynamic>)),
     );
   }
@@ -109,9 +112,9 @@ abstract class Reservation implements _i1.SerializableModel {
 
   _i2.Guest? guest;
 
-  _i2.RateType rateType;
+  _i3.RateType rateType;
 
-  _i2.RateReason rateReason;
+  _i4.RateReason rateReason;
 
   double rate;
 
@@ -123,7 +126,7 @@ abstract class Reservation implements _i1.SerializableModel {
 
   int roomId;
 
-  _i2.Room? room;
+  _i5.Room? room;
 
   Reservation copyWith({
     int? id,
@@ -135,14 +138,14 @@ abstract class Reservation implements _i1.SerializableModel {
     DateTime? dateUpdate,
     int? guestId,
     _i2.Guest? guest,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateType? rateType,
+    _i4.RateReason? rateReason,
     double? rate,
     bool? isCheckedIn,
     bool? isCanceled,
     bool? isNightShift,
     int? roomId,
-    _i2.Room? room,
+    _i5.Room? room,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -186,14 +189,14 @@ class _ReservationImpl extends Reservation {
     DateTime? dateUpdate,
     required int guestId,
     _i2.Guest? guest,
-    required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateType rateType,
+    required _i4.RateReason rateReason,
     required double rate,
     required bool isCheckedIn,
     required bool isCanceled,
     required bool isNightShift,
     required int roomId,
-    _i2.Room? room,
+    _i5.Room? room,
   }) : super._(
           id: id,
           checkInDate: checkInDate,
@@ -225,8 +228,8 @@ class _ReservationImpl extends Reservation {
     Object? dateUpdate = _Undefined,
     int? guestId,
     Object? guest = _Undefined,
-    _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateType? rateType,
+    _i4.RateReason? rateReason,
     double? rate,
     bool? isCheckedIn,
     bool? isCanceled,
@@ -251,7 +254,7 @@ class _ReservationImpl extends Reservation {
       isCanceled: isCanceled ?? this.isCanceled,
       isNightShift: isNightShift ?? this.isNightShift,
       roomId: roomId ?? this.roomId,
-      room: room is _i2.Room? ? room : this.room?.copyWith(),
+      room: room is _i5.Room? ? room : this.room?.copyWith(),
     );
   }
 }

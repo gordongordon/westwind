@@ -181,8 +181,7 @@ class _GuestEditPageState extends State<GuestEditPage> {
   Widget _buildTextFieldOptionalEmail(
       String name, String label, TextEditingController controller,
       {TextInputType keyboardType = TextInputType.text,
-      int? maxLength,
-      Function(String)? onChanged}) {
+      int? maxLength}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: FormBuilderTextField(
@@ -204,8 +203,7 @@ class _GuestEditPageState extends State<GuestEditPage> {
   Widget _buildTextFieldOptional(
       String name, String label, TextEditingController controller,
       {TextInputType keyboardType = TextInputType.text,
-      int? maxLength,
-      Function(String)? onChanged}) {
+      int? maxLength}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: FormBuilderTextField(
@@ -276,11 +274,11 @@ class _GuestEditPageState extends State<GuestEditPage> {
               .read<GuestManageBloc>()
               .add(GuestManageDeleteEvent(id: widget.guestId!));
         },
-        child: Text('Delete Guest'),
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           backgroundColor: Colors.red,
         ),
+        child: Text('Delete Guest'),
       ),
     );
   }
@@ -293,7 +291,7 @@ class _GuestEditPageState extends State<GuestEditPage> {
 
     formState.fields.forEach((key, formFieldState) {
       if (formFieldState.hasError) {
-        print("Field '${key}' error: ${formFieldState.errorText}");
+        print("Field '$key' error: ${formFieldState.errorText}");
       }
     });
   }

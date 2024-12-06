@@ -11,7 +11,7 @@ import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/gue
 import 'package:westwind_flutter/features/guest/presentation/pages/guest_edit_page.dart';
 
 class GuestListWidget extends StatefulWidget {
-  const GuestListWidget({Key? key}) : super(key: key);
+  const GuestListWidget({super.key});
 
   @override
   State<GuestListWidget> createState() => _GuestListWidgetState();
@@ -72,7 +72,7 @@ class _GuestListWidgetState extends State<GuestListWidget> {
 
 PlutoColumn _buildTextColumn(String title, String field, {double? width}) {
  
-  final double defaultWidth = 80;
+  const double defaultWidth = 80;
 
   return PlutoColumn(
     title: title,
@@ -162,7 +162,7 @@ PlutoColumn _buildTextColumn(String title, String field, {double? width}) {
   }
 
   Widget _buildDataTable(BuildContext context, List<Guest> guests) {
-    final List<PlutoRow> rows = guests.map((guest) => _createPlutoRow(guest)).toList();
+    final List<PlutoRow> rows = guests.map(_createPlutoRow).toList();
 
     return PlutoGrid(
       columns: columns,
@@ -184,7 +184,7 @@ PlutoColumn _buildTextColumn(String title, String field, {double? width}) {
         'phone': PlutoCell(value: guest.phone),
         'email': PlutoCell(value: guest.email),
         'isInHouse': PlutoCell(value: guest.isInHouse),
-        'rateType': PlutoCell(value: guest.rateType?.toString() ?? ''),
+        'rateType': PlutoCell(value: guest.rateType.toString() ?? ''),
         'createAt': PlutoCell(value: guest.dateCreate),
         'updateAt': PlutoCell(value: guest.dateUpdate),
         'stuffId': PlutoCell(value: guest.staffId),

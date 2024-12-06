@@ -10,19 +10,21 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'roomNumber.dart' as _i2;
+import 'guest.dart' as _i3;
+import 'inOutReason.dart' as _i4;
 
-abstract class GuestInOutDate extends _i1.TableRow
-    implements _i1.ProtocolSerialization {
+abstract class GuestInOutDate
+    implements _i1.TableRow, _i1.ProtocolSerialization {
   GuestInOutDate._({
-    int? id,
+    this.id,
     required this.roomNumber,
     required this.dateCreate,
     this.dateUpdate,
     required this.guestId,
     this.guest,
     required this.inOutReason,
-  }) : super(id);
+  });
 
   factory GuestInOutDate({
     int? id,
@@ -30,8 +32,8 @@ abstract class GuestInOutDate extends _i1.TableRow
     required DateTime dateCreate,
     DateTime? dateUpdate,
     required int guestId,
-    _i2.Guest? guest,
-    required _i2.InOutReason inOutReason,
+    _i3.Guest? guest,
+    required _i4.InOutReason inOutReason,
   }) = _GuestInOutDateImpl;
 
   factory GuestInOutDate.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -47,9 +49,9 @@ abstract class GuestInOutDate extends _i1.TableRow
       guestId: jsonSerialization['guestId'] as int,
       guest: jsonSerialization['guest'] == null
           ? null
-          : _i2.Guest.fromJson(
+          : _i3.Guest.fromJson(
               (jsonSerialization['guest'] as Map<String, dynamic>)),
-      inOutReason: _i2.InOutReason.fromJson(
+      inOutReason: _i4.InOutReason.fromJson(
           (jsonSerialization['inOutReason'] as String)),
     );
   }
@@ -57,6 +59,9 @@ abstract class GuestInOutDate extends _i1.TableRow
   static final t = GuestInOutDateTable();
 
   static const db = GuestInOutDateRepository._();
+
+  @override
+  int? id;
 
   _i2.RoomNumber roomNumber;
 
@@ -66,9 +71,9 @@ abstract class GuestInOutDate extends _i1.TableRow
 
   int guestId;
 
-  _i2.Guest? guest;
+  _i3.Guest? guest;
 
-  _i2.InOutReason inOutReason;
+  _i4.InOutReason inOutReason;
 
   @override
   _i1.Table get table => t;
@@ -79,8 +84,8 @@ abstract class GuestInOutDate extends _i1.TableRow
     DateTime? dateCreate,
     DateTime? dateUpdate,
     int? guestId,
-    _i2.Guest? guest,
-    _i2.InOutReason? inOutReason,
+    _i3.Guest? guest,
+    _i4.InOutReason? inOutReason,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -108,7 +113,7 @@ abstract class GuestInOutDate extends _i1.TableRow
     };
   }
 
-  static GuestInOutDateInclude include({_i2.GuestInclude? guest}) {
+  static GuestInOutDateInclude include({_i3.GuestInclude? guest}) {
     return GuestInOutDateInclude._(guest: guest);
   }
 
@@ -147,8 +152,8 @@ class _GuestInOutDateImpl extends GuestInOutDate {
     required DateTime dateCreate,
     DateTime? dateUpdate,
     required int guestId,
-    _i2.Guest? guest,
-    required _i2.InOutReason inOutReason,
+    _i3.Guest? guest,
+    required _i4.InOutReason inOutReason,
   }) : super._(
           id: id,
           roomNumber: roomNumber,
@@ -167,7 +172,7 @@ class _GuestInOutDateImpl extends GuestInOutDate {
     Object? dateUpdate = _Undefined,
     int? guestId,
     Object? guest = _Undefined,
-    _i2.InOutReason? inOutReason,
+    _i4.InOutReason? inOutReason,
   }) {
     return GuestInOutDate(
       id: id is int? ? id : this.id,
@@ -175,7 +180,7 @@ class _GuestInOutDateImpl extends GuestInOutDate {
       dateCreate: dateCreate ?? this.dateCreate,
       dateUpdate: dateUpdate is DateTime? ? dateUpdate : this.dateUpdate,
       guestId: guestId ?? this.guestId,
-      guest: guest is _i2.Guest? ? guest : this.guest?.copyWith(),
+      guest: guest is _i3.Guest? ? guest : this.guest?.copyWith(),
       inOutReason: inOutReason ?? this.inOutReason,
     );
   }
@@ -216,19 +221,19 @@ class GuestInOutDateTable extends _i1.Table {
 
   late final _i1.ColumnInt guestId;
 
-  _i2.GuestTable? _guest;
+  _i3.GuestTable? _guest;
 
-  late final _i1.ColumnEnum<_i2.InOutReason> inOutReason;
+  late final _i1.ColumnEnum<_i4.InOutReason> inOutReason;
 
-  _i2.GuestTable get guest {
+  _i3.GuestTable get guest {
     if (_guest != null) return _guest!;
     _guest = _i1.createRelationTable(
       relationFieldName: 'guest',
       field: GuestInOutDate.t.guestId,
-      foreignField: _i2.Guest.t.id,
+      foreignField: _i3.Guest.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.GuestTable(tableRelation: foreignTableRelation),
+          _i3.GuestTable(tableRelation: foreignTableRelation),
     );
     return _guest!;
   }
@@ -253,11 +258,11 @@ class GuestInOutDateTable extends _i1.Table {
 }
 
 class GuestInOutDateInclude extends _i1.IncludeObject {
-  GuestInOutDateInclude._({_i2.GuestInclude? guest}) {
+  GuestInOutDateInclude._({_i3.GuestInclude? guest}) {
     _guest = guest;
   }
 
-  _i2.GuestInclude? _guest;
+  _i3.GuestInclude? _guest;
 
   @override
   Map<String, _i1.Include?> get includes => {'guest': _guest};
@@ -449,7 +454,7 @@ class GuestInOutDateAttachRowRepository {
   Future<void> guest(
     _i1.Session session,
     GuestInOutDate guestInOutDate,
-    _i2.Guest guest, {
+    _i3.Guest guest, {
     _i1.Transaction? transaction,
   }) async {
     if (guestInOutDate.id == null) {

@@ -10,21 +10,21 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'rateType.dart' as _i2;
+import 'rateReason.dart' as _i3;
 
-abstract class RateTable extends _i1.TableRow
-    implements _i1.ProtocolSerialization {
+abstract class RateTable implements _i1.TableRow, _i1.ProtocolSerialization {
   RateTable._({
-    int? id,
+    this.id,
     required this.rateType,
     required this.rateReason,
     required this.rate,
-  }) : super(id);
+  });
 
   factory RateTable({
     int? id,
     required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateReason rateReason,
     required double rate,
   }) = _RateTableImpl;
 
@@ -34,7 +34,7 @@ abstract class RateTable extends _i1.TableRow
       rateType:
           _i2.RateType.fromJson((jsonSerialization['rateType'] as String)),
       rateReason:
-          _i2.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
+          _i3.RateReason.fromJson((jsonSerialization['rateReason'] as String)),
       rate: (jsonSerialization['rate'] as num).toDouble(),
     );
   }
@@ -43,9 +43,12 @@ abstract class RateTable extends _i1.TableRow
 
   static const db = RateTableRepository._();
 
+  @override
+  int? id;
+
   _i2.RateType rateType;
 
-  _i2.RateReason rateReason;
+  _i3.RateReason rateReason;
 
   double rate;
 
@@ -55,7 +58,7 @@ abstract class RateTable extends _i1.TableRow
   RateTable copyWith({
     int? id,
     _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateReason? rateReason,
     double? rate,
   });
   @override
@@ -114,7 +117,7 @@ class _RateTableImpl extends RateTable {
   _RateTableImpl({
     int? id,
     required _i2.RateType rateType,
-    required _i2.RateReason rateReason,
+    required _i3.RateReason rateReason,
     required double rate,
   }) : super._(
           id: id,
@@ -127,7 +130,7 @@ class _RateTableImpl extends RateTable {
   RateTable copyWith({
     Object? id = _Undefined,
     _i2.RateType? rateType,
-    _i2.RateReason? rateReason,
+    _i3.RateReason? rateReason,
     double? rate,
   }) {
     return RateTable(
@@ -159,7 +162,7 @@ class RateTableTable extends _i1.Table {
 
   late final _i1.ColumnEnum<_i2.RateType> rateType;
 
-  late final _i1.ColumnEnum<_i2.RateReason> rateReason;
+  late final _i1.ColumnEnum<_i3.RateReason> rateReason;
 
   late final _i1.ColumnDouble rate;
 

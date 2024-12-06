@@ -10,11 +10,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'rateType.dart' as _i2;
+import 'company.dart' as _i3;
+import 'roomGuest.dart' as _i4;
 
-abstract class Guest extends _i1.TableRow implements _i1.ProtocolSerialization {
+abstract class Guest implements _i1.TableRow, _i1.ProtocolSerialization {
   Guest._({
-    int? id,
+    this.id,
     required this.firstName,
     required this.lastName,
     required this.phone,
@@ -29,7 +31,7 @@ abstract class Guest extends _i1.TableRow implements _i1.ProtocolSerialization {
     this.rigNumber,
     required this.accountBalance,
     this.roomGuets,
-  }) : super(id);
+  });
 
   factory Guest({
     int? id,
@@ -43,10 +45,10 @@ abstract class Guest extends _i1.TableRow implements _i1.ProtocolSerialization {
     required _i2.RateType rateType,
     required int staffId,
     required int companyId,
-    _i2.Company? company,
+    _i3.Company? company,
     int? rigNumber,
     required double accountBalance,
-    List<_i2.RoomGuest>? roomGuets,
+    List<_i4.RoomGuest>? roomGuets,
   }) = _GuestImpl;
 
   factory Guest.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -68,12 +70,12 @@ abstract class Guest extends _i1.TableRow implements _i1.ProtocolSerialization {
       companyId: jsonSerialization['companyId'] as int,
       company: jsonSerialization['company'] == null
           ? null
-          : _i2.Company.fromJson(
+          : _i3.Company.fromJson(
               (jsonSerialization['company'] as Map<String, dynamic>)),
       rigNumber: jsonSerialization['rigNumber'] as int?,
       accountBalance: (jsonSerialization['accountBalance'] as num).toDouble(),
       roomGuets: (jsonSerialization['roomGuets'] as List?)
-          ?.map((e) => _i2.RoomGuest.fromJson((e as Map<String, dynamic>)))
+          ?.map((e) => _i4.RoomGuest.fromJson((e as Map<String, dynamic>)))
           .toList(),
     );
   }
@@ -81,6 +83,9 @@ abstract class Guest extends _i1.TableRow implements _i1.ProtocolSerialization {
   static final t = GuestTable();
 
   static const db = GuestRepository._();
+
+  @override
+  int? id;
 
   String firstName;
 
@@ -102,13 +107,13 @@ abstract class Guest extends _i1.TableRow implements _i1.ProtocolSerialization {
 
   int companyId;
 
-  _i2.Company? company;
+  _i3.Company? company;
 
   int? rigNumber;
 
   double accountBalance;
 
-  List<_i2.RoomGuest>? roomGuets;
+  List<_i4.RoomGuest>? roomGuets;
 
   @override
   _i1.Table get table => t;
@@ -125,10 +130,10 @@ abstract class Guest extends _i1.TableRow implements _i1.ProtocolSerialization {
     _i2.RateType? rateType,
     int? staffId,
     int? companyId,
-    _i2.Company? company,
+    _i3.Company? company,
     int? rigNumber,
     double? accountBalance,
-    List<_i2.RoomGuest>? roomGuets,
+    List<_i4.RoomGuest>? roomGuets,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -176,8 +181,8 @@ abstract class Guest extends _i1.TableRow implements _i1.ProtocolSerialization {
   }
 
   static GuestInclude include({
-    _i2.CompanyInclude? company,
-    _i2.RoomGuestIncludeList? roomGuets,
+    _i3.CompanyInclude? company,
+    _i4.RoomGuestIncludeList? roomGuets,
   }) {
     return GuestInclude._(
       company: company,
@@ -226,10 +231,10 @@ class _GuestImpl extends Guest {
     required _i2.RateType rateType,
     required int staffId,
     required int companyId,
-    _i2.Company? company,
+    _i3.Company? company,
     int? rigNumber,
     required double accountBalance,
-    List<_i2.RoomGuest>? roomGuets,
+    List<_i4.RoomGuest>? roomGuets,
   }) : super._(
           id: id,
           firstName: firstName,
@@ -278,10 +283,10 @@ class _GuestImpl extends Guest {
       rateType: rateType ?? this.rateType,
       staffId: staffId ?? this.staffId,
       companyId: companyId ?? this.companyId,
-      company: company is _i2.Company? ? company : this.company?.copyWith(),
+      company: company is _i3.Company? ? company : this.company?.copyWith(),
       rigNumber: rigNumber is int? ? rigNumber : this.rigNumber,
       accountBalance: accountBalance ?? this.accountBalance,
-      roomGuets: roomGuets is List<_i2.RoomGuest>?
+      roomGuets: roomGuets is List<_i4.RoomGuest>?
           ? roomGuets
           : this.roomGuets?.map((e0) => e0.copyWith()).toList(),
     );
@@ -361,55 +366,55 @@ class GuestTable extends _i1.Table {
 
   late final _i1.ColumnInt companyId;
 
-  _i2.CompanyTable? _company;
+  _i3.CompanyTable? _company;
 
   late final _i1.ColumnInt rigNumber;
 
   late final _i1.ColumnDouble accountBalance;
 
-  _i2.RoomGuestTable? ___roomGuets;
+  _i4.RoomGuestTable? ___roomGuets;
 
-  _i1.ManyRelation<_i2.RoomGuestTable>? _roomGuets;
+  _i1.ManyRelation<_i4.RoomGuestTable>? _roomGuets;
 
-  _i2.CompanyTable get company {
+  _i3.CompanyTable get company {
     if (_company != null) return _company!;
     _company = _i1.createRelationTable(
       relationFieldName: 'company',
       field: Guest.t.companyId,
-      foreignField: _i2.Company.t.id,
+      foreignField: _i3.Company.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.CompanyTable(tableRelation: foreignTableRelation),
+          _i3.CompanyTable(tableRelation: foreignTableRelation),
     );
     return _company!;
   }
 
-  _i2.RoomGuestTable get __roomGuets {
+  _i4.RoomGuestTable get __roomGuets {
     if (___roomGuets != null) return ___roomGuets!;
     ___roomGuets = _i1.createRelationTable(
       relationFieldName: '__roomGuets',
       field: Guest.t.id,
-      foreignField: _i2.RoomGuest.t.guestId,
+      foreignField: _i4.RoomGuest.t.guestId,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.RoomGuestTable(tableRelation: foreignTableRelation),
+          _i4.RoomGuestTable(tableRelation: foreignTableRelation),
     );
     return ___roomGuets!;
   }
 
-  _i1.ManyRelation<_i2.RoomGuestTable> get roomGuets {
+  _i1.ManyRelation<_i4.RoomGuestTable> get roomGuets {
     if (_roomGuets != null) return _roomGuets!;
     var relationTable = _i1.createRelationTable(
       relationFieldName: 'roomGuets',
       field: Guest.t.id,
-      foreignField: _i2.RoomGuest.t.guestId,
+      foreignField: _i4.RoomGuest.t.guestId,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.RoomGuestTable(tableRelation: foreignTableRelation),
+          _i4.RoomGuestTable(tableRelation: foreignTableRelation),
     );
-    _roomGuets = _i1.ManyRelation<_i2.RoomGuestTable>(
+    _roomGuets = _i1.ManyRelation<_i4.RoomGuestTable>(
       tableWithRelations: relationTable,
-      table: _i2.RoomGuestTable(
+      table: _i4.RoomGuestTable(
           tableRelation: relationTable.tableRelation!.lastRelation),
     );
     return _roomGuets!;
@@ -446,16 +451,16 @@ class GuestTable extends _i1.Table {
 
 class GuestInclude extends _i1.IncludeObject {
   GuestInclude._({
-    _i2.CompanyInclude? company,
-    _i2.RoomGuestIncludeList? roomGuets,
+    _i3.CompanyInclude? company,
+    _i4.RoomGuestIncludeList? roomGuets,
   }) {
     _company = company;
     _roomGuets = roomGuets;
   }
 
-  _i2.CompanyInclude? _company;
+  _i3.CompanyInclude? _company;
 
-  _i2.RoomGuestIncludeList? _roomGuets;
+  _i4.RoomGuestIncludeList? _roomGuets;
 
   @override
   Map<String, _i1.Include?> get includes => {
@@ -656,7 +661,7 @@ class GuestAttachRepository {
   Future<void> roomGuets(
     _i1.Session session,
     Guest guest,
-    List<_i2.RoomGuest> roomGuest, {
+    List<_i4.RoomGuest> roomGuest, {
     _i1.Transaction? transaction,
   }) async {
     if (roomGuest.any((e) => e.id == null)) {
@@ -668,9 +673,9 @@ class GuestAttachRepository {
 
     var $roomGuest =
         roomGuest.map((e) => e.copyWith(guestId: guest.id)).toList();
-    await session.db.update<_i2.RoomGuest>(
+    await session.db.update<_i4.RoomGuest>(
       $roomGuest,
-      columns: [_i2.RoomGuest.t.guestId],
+      columns: [_i4.RoomGuest.t.guestId],
       transaction: transaction,
     );
   }
@@ -682,7 +687,7 @@ class GuestAttachRowRepository {
   Future<void> company(
     _i1.Session session,
     Guest guest,
-    _i2.Company company, {
+    _i3.Company company, {
     _i1.Transaction? transaction,
   }) async {
     if (guest.id == null) {
@@ -703,7 +708,7 @@ class GuestAttachRowRepository {
   Future<void> roomGuets(
     _i1.Session session,
     Guest guest,
-    _i2.RoomGuest roomGuest, {
+    _i4.RoomGuest roomGuest, {
     _i1.Transaction? transaction,
   }) async {
     if (roomGuest.id == null) {
@@ -714,9 +719,9 @@ class GuestAttachRowRepository {
     }
 
     var $roomGuest = roomGuest.copyWith(guestId: guest.id);
-    await session.db.updateRow<_i2.RoomGuest>(
+    await session.db.updateRow<_i4.RoomGuest>(
       $roomGuest,
-      columns: [_i2.RoomGuest.t.guestId],
+      columns: [_i4.RoomGuest.t.guestId],
       transaction: transaction,
     );
   }
@@ -727,7 +732,7 @@ class GuestDetachRepository {
 
   Future<void> roomGuets(
     _i1.Session session,
-    List<_i2.RoomGuest> roomGuest, {
+    List<_i4.RoomGuest> roomGuest, {
     _i1.Transaction? transaction,
   }) async {
     if (roomGuest.any((e) => e.id == null)) {
@@ -735,9 +740,9 @@ class GuestDetachRepository {
     }
 
     var $roomGuest = roomGuest.map((e) => e.copyWith(guestId: null)).toList();
-    await session.db.update<_i2.RoomGuest>(
+    await session.db.update<_i4.RoomGuest>(
       $roomGuest,
-      columns: [_i2.RoomGuest.t.guestId],
+      columns: [_i4.RoomGuest.t.guestId],
       transaction: transaction,
     );
   }
@@ -748,7 +753,7 @@ class GuestDetachRowRepository {
 
   Future<void> roomGuets(
     _i1.Session session,
-    _i2.RoomGuest roomGuest, {
+    _i4.RoomGuest roomGuest, {
     _i1.Transaction? transaction,
   }) async {
     if (roomGuest.id == null) {
@@ -756,9 +761,9 @@ class GuestDetachRowRepository {
     }
 
     var $roomGuest = roomGuest.copyWith(guestId: null);
-    await session.db.updateRow<_i2.RoomGuest>(
+    await session.db.updateRow<_i4.RoomGuest>(
       $roomGuest,
-      columns: [_i2.RoomGuest.t.guestId],
+      columns: [_i4.RoomGuest.t.guestId],
       transaction: transaction,
     );
   }

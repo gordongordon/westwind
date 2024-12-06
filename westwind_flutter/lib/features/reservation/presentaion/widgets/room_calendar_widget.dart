@@ -69,7 +69,7 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
 class _TopBarWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
-  const _TopBarWidget({Key? key, required this.state}) : super(key: key);
+  const _TopBarWidget({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +159,7 @@ class _TopBarWidget extends StatelessWidget {
 // ... [Rest of the widget code remains the same]
 
 class LegendWidget extends StatelessWidget {
-  const LegendWidget({Key? key}) : super(key: key);
+  const LegendWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +183,7 @@ class _LegendItem extends StatelessWidget {
   final String label;
   final Color color;
 
-  const _LegendItem(this.label, this.color, {Key? key}) : super(key: key);
+  const _LegendItem(this.label, this.color, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +198,7 @@ class _LegendItem extends StatelessWidget {
 class CalendarGridWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
-  const CalendarGridWidget({Key? key, required this.state}) : super(key: key);
+  const CalendarGridWidget({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -228,7 +228,7 @@ class CalendarGridWidget extends StatelessWidget {
 class DateHeaderWidget extends StatelessWidget {
   final RoomCalendarLoaded state;
 
-  const DateHeaderWidget({Key? key, required this.state}) : super(key: key);
+  const DateHeaderWidget({super.key, required this.state});
 
   @override
   Widget build(BuildContext context) {

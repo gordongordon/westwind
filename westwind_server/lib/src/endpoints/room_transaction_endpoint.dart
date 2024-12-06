@@ -1,7 +1,5 @@
 import 'package:serverpod/serverpod.dart';
-import 'package:westwind_server/src/generated/itemType.dart';
 import 'package:westwind_server/src/generated/protocol.dart';
-import 'package:westwind_server/src/generated/roomTransaction.dart';
 
 class RoomTransactionEndpoint extends Endpoint {
   Future<bool> hasBeenRoomChargedToday(Session session, int guestId) async {

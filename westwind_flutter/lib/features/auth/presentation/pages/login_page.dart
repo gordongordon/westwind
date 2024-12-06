@@ -85,10 +85,10 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: _attemptLogin,
-              child: const Text('Login'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
+              child: const Text('Login'),
             ),
             const SizedBox(height: 24),
             _buildSignUpLink(),

@@ -10,7 +10,11 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'guest.dart' as _i2;
+import 'room.dart' as _i3;
+import 'roomGuest.dart' as _i4;
+import 'transactionType.dart' as _i5;
+import 'itemType.dart' as _i6;
 
 abstract class RoomTransaction implements _i1.SerializableModel {
   RoomTransaction._({
@@ -38,19 +42,19 @@ abstract class RoomTransaction implements _i1.SerializableModel {
     required int guestId,
     _i2.Guest? guest,
     required int roomId,
-    _i2.Room? room,
+    _i3.Room? room,
     required int roomGuestId,
-    _i2.RoomGuest? roomGuest,
+    _i4.RoomGuest? roomGuest,
     required DateTime stayDay,
     required DateTime transactionDay,
-    required _i2.TransactionType transactionType,
+    required _i5.TransactionType transactionType,
     DateTime? updateDate,
     required double amount,
     required double tax1,
     required double tax2,
     required double total,
     required String description,
-    required _i2.ItemType itemType,
+    required _i6.ItemType itemType,
   }) = _RoomTransactionImpl;
 
   factory RoomTransaction.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -64,17 +68,17 @@ abstract class RoomTransaction implements _i1.SerializableModel {
       roomId: jsonSerialization['roomId'] as int,
       room: jsonSerialization['room'] == null
           ? null
-          : _i2.Room.fromJson(
+          : _i3.Room.fromJson(
               (jsonSerialization['room'] as Map<String, dynamic>)),
       roomGuestId: jsonSerialization['roomGuestId'] as int,
       roomGuest: jsonSerialization['roomGuest'] == null
           ? null
-          : _i2.RoomGuest.fromJson(
+          : _i4.RoomGuest.fromJson(
               (jsonSerialization['roomGuest'] as Map<String, dynamic>)),
       stayDay: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['stayDay']),
       transactionDay: _i1.DateTimeJsonExtension.fromJson(
           jsonSerialization['transactionDay']),
-      transactionType: _i2.TransactionType.fromJson(
+      transactionType: _i5.TransactionType.fromJson(
           (jsonSerialization['transactionType'] as String)),
       updateDate: jsonSerialization['updateDate'] == null
           ? null
@@ -85,7 +89,7 @@ abstract class RoomTransaction implements _i1.SerializableModel {
       total: (jsonSerialization['total'] as num).toDouble(),
       description: jsonSerialization['description'] as String,
       itemType:
-          _i2.ItemType.fromJson((jsonSerialization['itemType'] as String)),
+          _i6.ItemType.fromJson((jsonSerialization['itemType'] as String)),
     );
   }
 
@@ -100,17 +104,17 @@ abstract class RoomTransaction implements _i1.SerializableModel {
 
   int roomId;
 
-  _i2.Room? room;
+  _i3.Room? room;
 
   int roomGuestId;
 
-  _i2.RoomGuest? roomGuest;
+  _i4.RoomGuest? roomGuest;
 
   DateTime stayDay;
 
   DateTime transactionDay;
 
-  _i2.TransactionType transactionType;
+  _i5.TransactionType transactionType;
 
   DateTime? updateDate;
 
@@ -124,26 +128,26 @@ abstract class RoomTransaction implements _i1.SerializableModel {
 
   String description;
 
-  _i2.ItemType itemType;
+  _i6.ItemType itemType;
 
   RoomTransaction copyWith({
     int? id,
     int? guestId,
     _i2.Guest? guest,
     int? roomId,
-    _i2.Room? room,
+    _i3.Room? room,
     int? roomGuestId,
-    _i2.RoomGuest? roomGuest,
+    _i4.RoomGuest? roomGuest,
     DateTime? stayDay,
     DateTime? transactionDay,
-    _i2.TransactionType? transactionType,
+    _i5.TransactionType? transactionType,
     DateTime? updateDate,
     double? amount,
     double? tax1,
     double? tax2,
     double? total,
     String? description,
-    _i2.ItemType? itemType,
+    _i6.ItemType? itemType,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -182,19 +186,19 @@ class _RoomTransactionImpl extends RoomTransaction {
     required int guestId,
     _i2.Guest? guest,
     required int roomId,
-    _i2.Room? room,
+    _i3.Room? room,
     required int roomGuestId,
-    _i2.RoomGuest? roomGuest,
+    _i4.RoomGuest? roomGuest,
     required DateTime stayDay,
     required DateTime transactionDay,
-    required _i2.TransactionType transactionType,
+    required _i5.TransactionType transactionType,
     DateTime? updateDate,
     required double amount,
     required double tax1,
     required double tax2,
     required double total,
     required String description,
-    required _i2.ItemType itemType,
+    required _i6.ItemType itemType,
   }) : super._(
           id: id,
           guestId: guestId,
@@ -226,24 +230,24 @@ class _RoomTransactionImpl extends RoomTransaction {
     Object? roomGuest = _Undefined,
     DateTime? stayDay,
     DateTime? transactionDay,
-    _i2.TransactionType? transactionType,
+    _i5.TransactionType? transactionType,
     Object? updateDate = _Undefined,
     double? amount,
     double? tax1,
     double? tax2,
     double? total,
     String? description,
-    _i2.ItemType? itemType,
+    _i6.ItemType? itemType,
   }) {
     return RoomTransaction(
       id: id is int? ? id : this.id,
       guestId: guestId ?? this.guestId,
       guest: guest is _i2.Guest? ? guest : this.guest?.copyWith(),
       roomId: roomId ?? this.roomId,
-      room: room is _i2.Room? ? room : this.room?.copyWith(),
+      room: room is _i3.Room? ? room : this.room?.copyWith(),
       roomGuestId: roomGuestId ?? this.roomGuestId,
       roomGuest:
-          roomGuest is _i2.RoomGuest? ? roomGuest : this.roomGuest?.copyWith(),
+          roomGuest is _i4.RoomGuest? ? roomGuest : this.roomGuest?.copyWith(),
       stayDay: stayDay ?? this.stayDay,
       transactionDay: transactionDay ?? this.transactionDay,
       transactionType: transactionType ?? this.transactionType,

@@ -10,11 +10,11 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import 'protocol.dart' as _i2;
+import 'permissionType.dart' as _i2;
 
-abstract class Staff extends _i1.TableRow implements _i1.ProtocolSerialization {
+abstract class Staff implements _i1.TableRow, _i1.ProtocolSerialization {
   Staff._({
-    int? id,
+    this.id,
     required this.firstName,
     required this.lastName,
     required this.phone,
@@ -25,7 +25,7 @@ abstract class Staff extends _i1.TableRow implements _i1.ProtocolSerialization {
     required this.permissionType,
     required this.dateCreate,
     this.dateUpdate,
-  }) : super(id);
+  });
 
   factory Staff({
     int? id,
@@ -67,6 +67,9 @@ abstract class Staff extends _i1.TableRow implements _i1.ProtocolSerialization {
   static final t = StaffTable();
 
   static const db = StaffRepository._();
+
+  @override
+  int? id;
 
   String firstName;
 
