@@ -203,6 +203,9 @@ class RoomGuestEndpoint extends Endpoint {
 
 
 
+  /**
+   * Note: retrieve roommate but checkout
+   */
   Future<List<RoomGuest>> retrieveRoommatesSameStayDayById(Session session,
       {required int id}) async {
   
@@ -221,7 +224,7 @@ class RoomGuestEndpoint extends Endpoint {
     final stayDay = roomGuest.stayDay;
 
     final result = await RoomGuest.db.find(session,
-        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDay.equals(stayDay),
+        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDay.equals(stayDay) & roomGuest.isCheckOut.equals(false),
         include: RoomGuest.include(
           guest: Guest.include(),
           room: Room.include(),
@@ -244,6 +247,7 @@ class RoomGuestEndpoint extends Endpoint {
           Order( column: t.checkOutDate, orderDescending: false),
           Order( column: t.guest.lastName, orderDescending: false),
         ],
+       // where: (t) => t.isCheckOut.equals(false),
         include: RoomGuest.include(
           guest: Guest.include(company: Company.include()),
           room: Room.include(),
@@ -251,6 +255,26 @@ class RoomGuestEndpoint extends Endpoint {
           roomTransactions: RoomTransaction.includeList(),
         ));
   }
+
+  Future<List<RoomGuest>> getAllRoomGuestButCheckOut(Session session) async {
+    return await RoomGuest.db.find(session,
+        //orderBy: (t) => t.roomId,
+        orderByList: (t) => [
+          Order( column: t.updateDate, orderDescending: true),
+          Order( column: t.roomId, orderDescending : true),
+          Order( column: t.stayDay, orderDescending: false),
+          Order( column: t.checkOutDate, orderDescending: false),
+          Order( column: t.guest.lastName, orderDescending: false),
+        ],
+        where: (t) => t.isCheckOut.equals(false),
+        include: RoomGuest.include(
+          guest: Guest.include(company: Company.include()),
+          room: Room.include(),
+          reservation: Reservation.include(),
+          roomTransactions: RoomTransaction.includeList(),
+        ));
+  }
+
 
   Future<List<RoomGuest>> getAllRoomGuestByDay(
       Session session, DateTime datetime) async {

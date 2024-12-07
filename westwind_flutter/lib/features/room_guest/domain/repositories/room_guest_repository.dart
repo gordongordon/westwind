@@ -8,6 +8,7 @@ import 'package:westwind_flutter/core/error/failure.dart';
 abstract interface class RoomGuestRepository {
 
    Future<Either<Failure,List<RoomGuest>>> list();
+   Future<Either<Failure,List<RoomGuest>>> listButCheckOut();
    Future<Either<Failure,RoomGuest>> save({required RoomGuest roomGuest});
    Future<Either<Failure,bool>> delete(int id);
    Future<Either<Failure,RoomGuest>> retrieve( int id);

@@ -65,9 +65,11 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         if (items.isEmpty) {
           cellContent = _buildEmptyCell(context, roomNumber, date);
         } else if (items.length == 1) {
+          
           cellContent = _buildSingleItemCell(context, items.first, roomNumber, date);
         } else {
           cellContent = _buildMultiItemCell(context, items);
+      //            cellContent = _buildSingleItemCell(context, items.first, roomNumber, date);
         }
 
         return Stack(
@@ -197,6 +199,10 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     } else if (item is RoomTransaction) {
       return _buildSingleRoomTransactionCell(context, item);
     } else if (item is RoomGuest  ) {
+
+         /**
+          * This logic should be moved into Blog
+          */
          if ( item.isCheckOut ) {
            return _buildEmptyCell(context, roomNumber, date);
          } 
@@ -274,16 +280,37 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
      * If RoomTransaction (Paid), field's color is Orange  
      * but second cell can be unpaid, but still Orange!  
     */
-    final int itemCount =  items.length;
-    final item = items[0];
+    //final int itemCount =  items.length;
+    dynamic item = items[0];
     Color fieldColor; 
  
     if (item is RoomTransaction) {
        fieldColor = Colors.orange;
+  
+  
     } else {
        fieldColor = Colors.purple;
     }
+    
     /** End of Orange */
+
+    /*
+    if ( item is RoomGuest ) {
+       if ( item.isCheckOut ) {
+          items.remove(item);
+           return _buildSingleRoomGuestCell(context, item);
+       }
+    }
+
+    item = items[1];
+
+    if ( item is RoomGuest ) {
+       if ( item.isCheckOut ) {
+          items.remove(item);
+           return _buildSingleRoomGuestCell(context, item);
+       }
+    }
+    */
 
     return GestureDetector(
       onTap: () {
@@ -316,6 +343,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         } else if (item is RoomTransaction) {
           return _buildRoomTransactionListItem(context, item);
         } else if (item is RoomGuest) {
+          
           return _buildRoomGuestListItem(context, item);
         }
         return const SizedBox.shrink();
@@ -325,6 +353,8 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
 
   Widget _buildCollapsedContent(BuildContext context, List<dynamic> items) {
    // return _buildExpandedContent(context, items);
+
+   //! handle add gueset name on cells, if possilbe, not too longe. by item[0] == RoomGuest ..?
     
     return Center(
       child: Text(

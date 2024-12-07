@@ -24,6 +24,7 @@ class RoomGuestTransactionsManageWidget extends StatefulWidget {
 class _RoomGuestTransactionsManageWidgetState
     extends State<RoomGuestTransactionsManageWidget> {
   double _total = 0;
+  double _amount = 0;
   double _gst = 0;
   double _levy = 0;
 
@@ -50,6 +51,7 @@ class _RoomGuestTransactionsManageWidgetState
                 return Center(child: CircularProgressIndicator());
               } else if (state is RoomGuestTransactionsLoaded) {
                 _total = _computeTotal(state.transactions);
+                _amount = _computeAmount(state.transactions);
                 _gst = _computeGST(state.transactions);
                 _levy = _computeLevy(state.transactions);
                 // Use Future.microtask to schedule setState for the next frame
@@ -77,7 +79,7 @@ class _RoomGuestTransactionsManageWidgetState
           padding: const EdgeInsets.all(16.0),
           child: Text(
            // 'Add New Transaction - total of {$_total}      / GST of $_gst      / Levy of $_levy',
-             'Add New Transaction - total of ${_total.toStringAsFixed(2)} / GST of ${_gst.toStringAsFixed(2)} / Levy of ${_levy.toStringAsFixed(2)}',
+             'Amount ${ _total > 0 ? 'Owning ' : 'Credit '} of \$${_amount.toStringAsFixed(2)} + GST of \$${_gst.toStringAsFixed(2)} + Levy of \$${_levy.toStringAsFixed(2)} = total of \$${_total.toStringAsFixed(2)}',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
         ),
@@ -126,6 +128,12 @@ class _RoomGuestTransactionsManageWidgetState
     return transactions.fold(
         0.0, (sum, transaction) => sum + transaction.total);
   }
+
+  double _computeAmount(List<RoomTransaction> transactions) {
+    return transactions.fold(
+        0.0, (sum, transaction) => sum + transaction.amount);
+  }
+
 
   double _computeGST(List<RoomTransaction> transactions) {
     return transactions.fold(0.0, (sum, transaction) => sum + transaction.tax1);

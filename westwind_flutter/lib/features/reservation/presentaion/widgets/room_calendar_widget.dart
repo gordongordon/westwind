@@ -171,7 +171,7 @@ class LegendWidget extends StatelessWidget {
           _LegendItem('Reservation', Colors.green),
           _LegendItem('RoomGuest - Checked In', Colors.blue),
           _LegendItem('Cancelled', Colors.grey),
-          _LegendItem('Mixed Multiple Guests', Colors.purple),
+          _LegendItem(' Guests', Colors.purple),
           _LegendItem('Room Transaction - Posted', Colors.orange),
         ],
       ),
@@ -207,6 +207,7 @@ class CalendarGridWidget extends StatelessWidget {
         DateHeaderWidget(state: state),
         Expanded(
           child: ListView.builder(
+            padding:  EdgeInsets.all(1),
             itemCount: state.roomNumbers.length,
             itemBuilder: (context, index) {
               final roomNumber = state.roomNumbers[index];
@@ -235,8 +236,8 @@ class DateHeaderWidget extends StatelessWidget {
     return Row(
       children: [
         const SizedBox(
-            width: 80,
-            child: Text('Room/Type', style: TextStyle(fontSize: 12))),
+            width: 110,
+            child: Text('Room/Type/HH', style: TextStyle(fontSize: 12))),
         ...List.generate(state.daysToShow, (index) {
           final date = state.startDate.add(Duration(days: index));
           return SizedBox(

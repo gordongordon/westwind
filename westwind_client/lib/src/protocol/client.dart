@@ -366,6 +366,9 @@ class EndpointRoomGuest extends _i1.EndpointRef {
         },
       );
 
+/**
+   * Note: retrieve roommate but checkout
+   */
   _i2.Future<List<_i9.RoomGuest>> retrieveRoommatesSameStayDayById(
           {required int id}) =>
       caller.callServerEndpoint<List<_i9.RoomGuest>>(
@@ -378,6 +381,13 @@ class EndpointRoomGuest extends _i1.EndpointRef {
       caller.callServerEndpoint<List<_i9.RoomGuest>>(
         'roomGuest',
         'getAllRoomGuest',
+        {},
+      );
+
+  _i2.Future<List<_i9.RoomGuest>> getAllRoomGuestButCheckOut() =>
+      caller.callServerEndpoint<List<_i9.RoomGuest>>(
+        'roomGuest',
+        'getAllRoomGuestButCheckOut',
         {},
       );
 

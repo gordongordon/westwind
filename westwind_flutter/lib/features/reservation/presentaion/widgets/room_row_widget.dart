@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
@@ -28,20 +27,28 @@ class RoomRowWidget extends StatelessWidget {
 
     return Container(
       color: isEvenRow ? Colors.grey[200] : Colors.white,
+      padding: EdgeInsets.all(.5),
       child: Row(
         children: [
           SizedBox(
-            width: 40,
+            width: 35,
             child: Text(
               roomNumber,
               style: const TextStyle(fontSize: 14, color: Colors.black),
             ),
           ),
           SizedBox(
-            width: 40,
+            width: 35,
             child: Text(
               roomType,
               style: const TextStyle(fontSize: 13, color: Colors.blue),
+            ),
+          ),
+          SizedBox(
+            width: 25,
+            child: Text(
+              'MM',
+              style: const TextStyle(fontSize: 13, color: Colors.red),
             ),
           ),
           ...List.generate(state.daysToShow, (index) {
@@ -83,4 +90,3 @@ class RoomRowWidget extends StatelessWidget {
     }).toList();
   }
 }
-

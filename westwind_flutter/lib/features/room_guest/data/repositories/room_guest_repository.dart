@@ -37,6 +37,15 @@ class RoomGuestRepositoryImpl implements RoomGuestRepository {
     }
   }
 
+
+  @override
+  Future<Either<Failure, List<RoomGuest>>> listButCheckOut() async {
+    try {
+      return Right(await roomGuestDatasource.listButCheckOut());
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    }
+  }
   @override
   Future<Either<Failure, RoomGuest>> retrieve(int id) async {
     try {
