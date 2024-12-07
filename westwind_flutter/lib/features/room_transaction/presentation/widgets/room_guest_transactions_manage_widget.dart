@@ -79,7 +79,7 @@ class _RoomGuestTransactionsManageWidgetState
           padding: const EdgeInsets.all(16.0),
           child: Text(
            // 'Add New Transaction - total of {$_total}      / GST of $_gst      / Levy of $_levy',
-             'Amount ${ _total > 0 ? 'Owning ' : 'Credit '} of \$${_amount.toStringAsFixed(2)} + GST of \$${_gst.toStringAsFixed(2)} + Levy of \$${_levy.toStringAsFixed(2)} = total of \$${_total.toStringAsFixed(2)}',
+             '${ _total > 0 ? 'Owning' : 'Credit'} of \$${_amount.toStringAsFixed(2)} + GST of \$${_gst.toStringAsFixed(2)} + Levy of \$${_levy.toStringAsFixed(2)} = total of \$${_total.toStringAsFixed(2)}',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
         ),

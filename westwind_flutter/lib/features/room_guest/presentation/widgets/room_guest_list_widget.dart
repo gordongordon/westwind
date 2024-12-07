@@ -292,7 +292,7 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
       title: 'Balance',
       field: 'balance',
       type: PlutoColumnType.number(
-          negative: false, format: "#.##", applyFormatOnInit: true),
+          negative: true, format: "#.##", applyFormatOnInit: true),
       width: 70,
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(

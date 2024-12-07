@@ -171,7 +171,7 @@ class LegendWidget extends StatelessWidget {
           _LegendItem('Reservation', Colors.green),
           _LegendItem('RoomGuest - Checked In', Colors.blue),
           _LegendItem('Cancelled', Colors.grey),
-          _LegendItem(' Guests', Colors.purple),
+          _LegendItem('Sharing RM - Guests', Colors.purple),
           _LegendItem('Room Transaction - Posted', Colors.orange),
         ],
       ),
