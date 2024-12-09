@@ -25,18 +25,22 @@ class RoomTransactionEndpoint extends Endpoint {
               Order(column: t.transactionDay, orderDescending: true),
             ],
         include: RoomTransaction.include(
-          guest: Guest.include(),
-          room: Room.include(),
-        ));
+            guest: Guest.include(),
+            room: Room.include(),
+            roomGuest: RoomGuest.include(
+              guest: Guest.include(),
+            )));
   }
 
   Future<List<RoomTransaction>> listWithItemTypeRoom(Session session) async {
     return await RoomTransaction.db.find(session,
         where: (i) => i.itemType.equals(ItemType.room),
         include: RoomTransaction.include(
-          guest: Guest.include(),
-          room: Room.include(),
-        ));
+            guest: Guest.include(),
+            room: Room.include(),
+            roomGuest: RoomGuest.include(
+              guest: Guest.include(),
+            )));
   }
 
   Future<List<RoomTransaction>> getTransactionsForRoomGuest(
@@ -44,9 +48,11 @@ class RoomTransactionEndpoint extends Endpoint {
     return await RoomTransaction.db.find(session,
         where: (i) => i.roomGuestId.equals(roomGuestId),
         include: RoomTransaction.include(
-          guest: Guest.include(),
-          room: Room.include(),
-        ));
+            guest: Guest.include(),
+            room: Room.include(),
+            roomGuest: RoomGuest.include(
+              guest: Guest.include(),
+            )));
   }
 
   Future<RoomTransaction> saveRoomTransaciton(
@@ -74,10 +80,14 @@ class RoomTransactionEndpoint extends Endpoint {
   }
  */
   Future<RoomTransaction?> retrieve(Session session, int id) async {
-    return await RoomTransaction.db.findFirstRow(
-      session,
-      where: (item) => item.id.equals(id),
-    );
+    return await RoomTransaction.db.findFirstRow(session,
+        where: (item) => item.id.equals(id),
+        include: RoomTransaction.include(
+            guest: Guest.include(),
+            room: Room.include(),
+            roomGuest: RoomGuest.include(
+              guest: Guest.include(),
+            )));
   }
 
   Future<bool> delete(Session session, int id) async {

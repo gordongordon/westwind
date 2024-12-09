@@ -108,7 +108,13 @@ class RoomGuestEndpoint extends Endpoint {
 
   Future<RoomGuest?> findRoomGuest(Session session,
       {required int roomGuestId}) async {
-    RoomGuest? res = await RoomGuest.db.findById(session, roomGuestId);
+    RoomGuest? res = await RoomGuest.db.findById(session, 
+            roomGuestId,
+            include: RoomGuest.include(
+             guest : Guest.include(),
+          )
+          
+          );
 
     //   RoomGuest.db.findFirstRow(session,
     //   where: (t) => t.id.equals(RoomGuestId),

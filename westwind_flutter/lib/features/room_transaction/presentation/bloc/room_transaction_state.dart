@@ -48,3 +48,9 @@ final class RoomTransactionStateRetrieveGuestByRoomGuestSuccess extends RoomTran
 
      RoomTransactionStateRetrieveGuestByRoomGuestSuccess ( this.roomGuest );
 }
+
+final class RoomTransactionStateRetrieveGuestSuccess extends RoomTransactionState {
+    final Guest guest;
+
+    RoomTransactionStateRetrieveGuestSuccess ( this.guest );
+}

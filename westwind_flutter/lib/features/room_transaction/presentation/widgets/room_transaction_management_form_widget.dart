@@ -50,6 +50,7 @@ class _RoomTransactionManagementFormWidgetState
     super.initState();
     if (widget.roomTransaction != null) {
       _populateFields(widget.roomTransaction!);
+      
     } else if (widget.roomGuest != null) {
       final roomGuest = widget.roomGuest!;
       roomGuestIdController.text = roomGuest.id.toString();
@@ -155,7 +156,7 @@ class _RoomTransactionManagementFormWidgetState
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _saveRoomTransaction,
-                child: const Text('Save Room Transaction'),
+                child: const Text('Save Room 33 Transaction'),
               ),
             ],
           ),
@@ -163,6 +164,7 @@ class _RoomTransactionManagementFormWidgetState
       ),
     );
   }
+
 
   Widget _buildRoomGuestDetailsSection() {
     return Column(
@@ -200,12 +202,14 @@ class _RoomTransactionManagementFormWidgetState
       ],
     );
   }
+  
 
   Widget _buildTransactionDetailsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Transaction Details',
+        //! This can be null //
+        Text('Transaction Details -  ${widget.roomTransaction!.guest != null ? "${widget.roomTransaction!.guest!.firstName} ${widget.roomTransaction!.guest!.lastName} - Room # ${widget.roomTransaction!.roomId}"  : "Unknow Guest Name"}',
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('id', 'Transaction ID', idController, enabled: false),

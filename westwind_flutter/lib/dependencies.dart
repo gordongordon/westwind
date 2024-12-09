@@ -207,6 +207,7 @@ void _initRoomTransaction() {
       retrieveRoomTransaction: serverLocator<RetrieveRoomTransactionUseCase>(),
       createRoomTransaction: serverLocator<CreateRoomTransactionUseCase>(), 
       retrieveRoomGuest: serverLocator<RetrieveRoomGuestUseCase>(),
+      retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
       
     ),
   );

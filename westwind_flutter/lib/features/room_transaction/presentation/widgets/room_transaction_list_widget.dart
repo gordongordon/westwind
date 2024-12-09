@@ -28,9 +28,7 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<RoomTransactionBloc>()
-        .add(FetchRoomTransactionsEvent());
+    context.read<RoomTransactionBloc>().add(FetchRoomTransactionsEvent());
     _initializeColumns();
   }
 
@@ -38,23 +36,20 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
     columns.addAll([
       _buildIdColumn(),
       _buildNumberColumn('Room Id', 'roomId', 120),
-     _buildDateColumn('StayDay', 'stayDay'),
-
+      _buildDateColumn('StayDay', 'stayDay'),
       _buildSelectColumn(
           'Transaction Type', 'transactionType', _transactionTypeOptions, 120),
-                _buildSelectColumn('Item Type', 'itemType', _itemTypeOptions, 120),
+      _buildSelectColumn('Item Type', 'itemType', _itemTypeOptions, 120),
       _buildTextColumn('Description', 'description', 120),
-        _buildAmountColumn('Amount', 'amount'),
+      _buildAmountColumn('Amount', 'amount'),
       _buildAmountColumn('GST', 'tax1'),
       _buildAmountColumn('Levy', 'tax2'),
-    //  _buildAmountColumn('Tax3', 'tax3'),
+      //  _buildAmountColumn('Tax3', 'tax3'),
       _buildAmountColumn('Total', 'total'),
- 
       _buildDateColumn('Transaction Day', 'transactionDay'),
-    
-
-            _buildNumberColumn('RoomGuest Id', 'roomGuestId', 120),
-      _buildNumberColumn('Guest Id', 'guestId', 80),    ]);
+      _buildNumberColumn('RoomGuest Id', 'roomGuestId', 120),
+      _buildNumberColumn('Guest Id', 'guestId', 80),
+    ]);
   }
 
   PlutoColumn _buildIdColumn() {
@@ -163,9 +158,7 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
 
   Widget buildDataTable(
       BuildContext context, List<RoomTransaction> roomTransactions) {
-    final List<PlutoRow> rows = roomTransactions
-        .map(_createPlutoRow)
-        .toList();
+    final List<PlutoRow> rows = roomTransactions.map(_createPlutoRow).toList();
 
     return PlutoGrid(
       columns: columns,
@@ -216,7 +209,7 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
         'amount': PlutoCell(value: roomTransaction.amount),
         'tax1': PlutoCell(value: roomTransaction.tax1),
         'tax2': PlutoCell(value: roomTransaction.tax2),
-       // 'tax3': PlutoCell(value: roomTransaction.tax3),
+        // 'tax3': PlutoCell(value: roomTransaction.tax3),
         'total': PlutoCell(value: roomTransaction.total),
         'transactionDay': PlutoCell(value: roomTransaction.transactionDay),
         'description': PlutoCell(value: roomTransaction.description),

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/usecases/usecase.dart';
+import 'package:westwind_flutter/features/guest/domain/usecases/retrieve_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_room_guest.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_Transaction_list_usercase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_create_usecase.dart';
@@ -18,6 +19,7 @@ class RoomTransactionBloc
   final RetrieveRoomTransactionUseCase retrieveRoomTransaction;
   final CreateRoomTransactionUseCase createRoomTransaction;
   final RetrieveRoomGuestUseCase retrieveRoomGuest;
+  final RetrieveGuestUseCase retrieveGuest;
 
   RoomTransactionBloc({
     required this.listRoomTransactions,
@@ -25,6 +27,7 @@ class RoomTransactionBloc
     required this.retrieveRoomTransaction,
     required this.createRoomTransaction,
     required this.retrieveRoomGuest,
+    required this.retrieveGuest,
   }) : super(RoomTransactionListStateInitial()) {
     on<FetchRoomTransactionsEvent>(_onFetchRoomTransactions);
     on<DeleteRoomTransactionEvent>((_onDeleteRoomTransaction));
@@ -32,6 +35,8 @@ class RoomTransactionBloc
     on<CreateRoomTransactionEvent>((_onCreateRoomTransaction));
     on<RetrieveRoomGuestEvent>(
         (_onRetrieveRoomGuest));
+     on<RetrieveGuestEvent>((_onRetrieveGuestRoomTransaction)); 
+  
   }
 
   Future<void> _onFetchRoomTransactions(RoomTransactionEvent event,
@@ -108,5 +113,43 @@ class RoomTransactionBloc
     );
   }
 
+
+   Future<void> _onRetrieveGuestRoomTransaction(RetrieveGuestEvent event,
+      Emitter<RoomTransactionState> emit) async {
+
+    emit(RoomTransactionListStateLoading());
+   await Future.delayed(Duration(seconds: 1));
+
+    final result = await retrieveGuest(
+        RetrieveGuestParams(id: event.guestId));
+
+    result.fold(
+      (failure) => emit(RoomTransactionStateFailure(message : failure.message)),
+      (guest) => emit(RoomTransactionStateRetrieveGuestSuccess(guest)),
+    );
+  }
+
+
+/*
+
+  Future<void> _onRetrieveGuestByPhoneForReservation(
+      RetrieveGuestByPhoneForReservation event,
+      Emitter<ReservationManageState> emit) async {
+    emit(ReservationManageStateLoading());
+  //  await Future.delayed(Duration(seconds: 1));
+    final result = await retrieveGuestByPhone(
+        RetrieveGuestByPhoneParams(phone: event.phone));
+
+    result.fold(
+      (failure) => emit(ReservationManageStateFailure(failure.message)),
+      (guest) => emit(ReservationManageStateRetrieveGuestByPhoneSuccess(guest)),
+    );
+  }
+  */
+
+
 }
+
+
+
 

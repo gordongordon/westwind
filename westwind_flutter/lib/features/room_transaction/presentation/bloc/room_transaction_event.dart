@@ -28,3 +28,11 @@ final class RetrieveRoomGuestEvent extends RoomTransactionEvent {
 
   RetrieveRoomGuestEvent({required this.roomGuestId});
 }
+
+
+
+final class RetrieveGuestEvent extends RoomTransactionEvent {
+  final int guestId;
+
+  RetrieveGuestEvent({required this.guestId});
+}
