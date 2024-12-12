@@ -503,6 +503,16 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['reservation'] as _i5.ReservationEndpoint)
                   .list(session),
         ),
+        'listButCanceled': _i1.MethodConnector(
+          name: 'listButCanceled',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['reservation'] as _i5.ReservationEndpoint)
+                  .listButCanceled(session),
+        ),
         'checkIn': _i1.MethodConnector(
           name: 'checkIn',
           params: {

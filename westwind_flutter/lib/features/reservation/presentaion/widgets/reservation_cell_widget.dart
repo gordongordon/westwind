@@ -195,6 +195,9 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
 
   Widget _buildSingleItemCell(BuildContext context, dynamic item, String roomNumber, DateTime date) {
     if (item is Reservation) {
+  //    if ( item.isCanceled ) {
+  //      return _buildEmptyCell(context, roomNumber, date);
+  //    }
       return _buildSingleReservationCell(context, item);
     } else if (item is RoomTransaction) {
       return _buildSingleRoomTransactionCell(context, item);
@@ -203,9 +206,9 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
          /**
           * This logic should be moved into Blog
           */
-         if ( item.isCheckOut ) {
-           return _buildEmptyCell(context, roomNumber, date);
-         } 
+     //    if ( item.isCheckOut ) {
+     //      return _buildEmptyCell(context, roomNumber, date);
+     //    } 
          return _buildSingleRoomGuestCell(context, item);
     }
     return _buildEmptyCell(context, roomNumber, date);
@@ -291,7 +294,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     } else {
        fieldColor = Colors.purple;
     }
-    
+
     /** End of Orange */
 
     /*

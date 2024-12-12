@@ -29,6 +29,15 @@ class ReservationRepositoryImp implements ReservationRepository {
     }
   }
 
+    @override
+  Future<Either<Failure, List<Reservation>>> listButCanceled() async {
+    try {
+      return Right(await datasource.listButCanceled());
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    }
+  }
+
   @override
   Future<Either<Failure, Reservation>> retrieve(int id) async {
     try {

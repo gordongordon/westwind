@@ -75,13 +75,19 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     emit(RoomCalendarLoading());
 
     try {
-      final reservationResult = await reservationRepository.list();
+      /**
+       * Fixed canceled reservation don't display on calendar
+       */
+      final reservationResult = await reservationRepository.listButCanceled();
+
+
       final roomTransactionResult = await roomTransactionRepository.list();
 
       /**
        * Fixed Checkout, not remove from Calendar
        */
       final roomGuestResult = await roomGuestRepository.listButCheckOut();
+  //          final roomGuestResult = await roomGuestRepository.list();
 
       final failureOrLoaded = await reservationResult.fold(
         (failure) async => RoomCalendarError(message: failure.message),

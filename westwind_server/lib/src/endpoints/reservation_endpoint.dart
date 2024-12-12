@@ -137,6 +137,24 @@ class ReservationEndpoint extends Endpoint {
     );
   }
 
+
+  Future<List<Reservation>> listButCanceled(Session session) async {
+    return await Reservation.db.find(
+      session,
+      limit: 20,
+     where: (reservation) => reservation.isCanceled.equals(false),
+      include: Reservation.include(
+        guest: Guest.include(),
+        room: Room.include(),
+      ),
+      orderByList: (t) => [
+        Order(column: t.isCheckedIn, orderDescending: false),
+        Order(column: t.id, orderDescending: true),
+        Order(column: t.checkInDate),
+      ],
+    );
+  }
+
 /*
   Future<List<Reservation>> getNullCheckInReservations(Session session) async {
     return await Reservation.db.find(

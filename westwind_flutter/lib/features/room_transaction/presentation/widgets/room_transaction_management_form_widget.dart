@@ -351,23 +351,29 @@ class _RoomTransactionManagementFormWidgetState
       late double levy;
       late double total;
       late double sign;
+      late double cost;
 
       switch (transactionType) {
         case TransactionType.deposit:
         case TransactionType.pay:
         case TransactionType.refund:
         case TransactionType.adjustCredit:
-          sign = -1;
+          sign = 1;
         case TransactionType.charge:
         case TransactionType.adjustDebit:
-          sign = 1;
+          sign = -1;
       }
 
       switch (itemType) {
         case ItemType.room:
         case ItemType.room_adjust:
-          gst = amount * 0.05;
-          levy = amount * 0.04;
+          cost = amount / 1.09;
+          gst = amount - cost - cost * 1.04 ;
+          levy = amount - cost - cost * 1.05;
+
+         //  gst = amount * 0.05; gst + levy + cost = amount
+         //  gst = amount - 
+         // levy = amount * 0.04;
         case ItemType.food:
         case ItemType.laundry:
         case ItemType.pet:
@@ -388,7 +394,13 @@ class _RoomTransactionManagementFormWidgetState
           levy = 0;
       }
 
-      total = amount + gst + levy;
+      if ( itemType == ItemType.room_adjust) {
+          total = amount;
+          amount = cost;
+      }
+      else { 
+          total = amount + gst + levy;
+      }
       final totalFinal = total * sign;
       final amountFinal = amount * sign;
 

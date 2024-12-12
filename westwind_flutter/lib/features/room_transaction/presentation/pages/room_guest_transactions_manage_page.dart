@@ -26,13 +26,14 @@ class _RoomGuestTransactionsManagePage extends State<RoomGuestTransactionsManage
    
   late String firstName;
   late String lastName; 
-  late String roomNumber;
+  late int roomNumber;
 
   @override
   void initState() {
     super.initState();
     firstName = "Gordon";
     lastName = "Wong";
+    roomNumber = 0;
     if (widget.roomGuestId != null) {
       context.read<RoomGuestManageBloc>().add(
         RetrieveRoomGuest( widget.roomGuestId! ),
@@ -45,7 +46,7 @@ class _RoomGuestTransactionsManagePage extends State<RoomGuestTransactionsManage
    //  final auth = serverLocator<Client>().modules.auth;
     return Scaffold(
       appBar: AppBar(
-        title:  Text("Room Transaction - ${firstName} ${lastName} - Room # ${widget.roomGuestId ?? 0}"),
+        title:  Text("Room Transaction - ${firstName} ${lastName} - Room # ${roomNumber.toString}"),
         actions: const [
             AppUserDropdown(),
         ],
@@ -76,7 +77,7 @@ class _RoomGuestTransactionsManagePage extends State<RoomGuestTransactionsManage
       setState(() {
          firstName = state.roomGuest.guest!.firstName;
          lastName = state.roomGuest.guest!.lastName;
-         roomNumber = state.roomGuest!.roomId.toString();
+         roomNumber = state.roomGuest.roomId;
       });
     }
   }

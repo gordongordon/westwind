@@ -3,6 +3,7 @@ import 'package:westwind_flutter/core/error/exception.dart';
 
 abstract interface class ReservationDatasource {
   Future<List<Reservation>> list();
+  Future<List<Reservation>> listButCanceled();
   Future<Reservation> retrieve(int id);
   Future<bool> delete(int id);
   Future<Reservation> save(Reservation reservation);
@@ -33,6 +34,15 @@ class ReservationDatasourceImp implements ReservationDatasource {
   Future<List<Reservation>> list() async {
     try {
       return await client.reservation.list();
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+    @override
+  Future<List<Reservation>> listButCanceled() async {
+    try {
+      return await client.reservation.listButCanceled();
     } catch (e) {
       throw ServerException(e.toString());
     }
