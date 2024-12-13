@@ -354,10 +354,15 @@ class _RoomTransactionManagementFormWidgetState
       late double cost;
 
       switch (transactionType) {
+        case TransactionType.refund:
+           {
+            sign = 1; 
+           }
+           break;
+        // break;
         case TransactionType.deposit:
         case TransactionType.pay:
-        case TransactionType.refund:
-        // break;
+
         case TransactionType.adjustCredit:
           sign = -1;
         case TransactionType.charge:
