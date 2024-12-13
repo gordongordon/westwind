@@ -358,10 +358,10 @@ class _RoomTransactionManagementFormWidgetState
         case TransactionType.pay:
         case TransactionType.refund:
         case TransactionType.adjustCredit:
-          sign = 1;
+          sign = -1;
         case TransactionType.charge:
         case TransactionType.adjustDebit:
-          sign = -1;
+          sign = 1;
       }
 
       switch (itemType) {
