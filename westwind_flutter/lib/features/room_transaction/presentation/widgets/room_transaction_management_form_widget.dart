@@ -357,6 +357,7 @@ class _RoomTransactionManagementFormWidgetState
         case TransactionType.deposit:
         case TransactionType.pay:
         case TransactionType.refund:
+          break;
         case TransactionType.adjustCredit:
           sign = -1;
         case TransactionType.charge:
