@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/features/app_user/presentation/cubits/cubit/app_user_cubit.dart';
 import 'package:westwind_flutter/features/auth/data/datasources/auth_datasource.dart';
 import 'package:westwind_flutter/features/auth/data/repositories/auth_repository_imp.dart';
@@ -90,9 +91,12 @@ Future<void> initDependencies() async {
     ),
   );
 
-  await serverLocator<SessionManager>().initialize();
+  // central time manager 
+  serverLocator.registerLazySingleton<TimeManager>(
+    TimeManager.new,
+  );
 
-  
+  await serverLocator<SessionManager>().initialize();
 
   _initAuth();
 
@@ -112,7 +116,6 @@ Future<void> initDependencies() async {
 }
 
 void _initRoomGuestTransactions() {
-
 /*
   // Repositories
   serverLocator.registerLazySingleton<RoomTransactionRepository>(
@@ -131,11 +134,10 @@ void _initRoomGuestTransactions() {
   serverLocator.registerFactory<RoomGuestTransactionsBloc>(
     () => RoomGuestTransactionsBloc(
       roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
-      createRoomTransactionUseCase: serverLocator<CreateRoomTransactionUseCase>(),
+      createRoomTransactionUseCase:
+          serverLocator<CreateRoomTransactionUseCase>(),
     ),
   );
-
-
 }
 
 void _initRoomTransaction() {
@@ -152,7 +154,6 @@ void _initRoomTransaction() {
     ),
   );
 
-
   // Repositories
   serverLocator.registerLazySingleton<RoomTransactionRepository>(
     () => RoomTransactionRepositoryImp(
@@ -160,7 +161,7 @@ void _initRoomTransaction() {
     ),
   );
 
-    // Repositories
+  // Repositories
   serverLocator.registerLazySingleton<RoomRepository>(
     () => RoomRepositoryImp(
       serverLocator<RoomDatasource>(),
@@ -195,8 +196,8 @@ void _initRoomTransaction() {
   serverLocator.registerFactory<RoomCalendarBloc>(() => RoomCalendarBloc(
         reservationRepository: serverLocator<ReservationRepository>(),
         roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
-         roomGuestRepository:  serverLocator<RoomGuestRepository>(),
-         roomRepository: serverLocator<RoomRepository>(),
+        roomGuestRepository: serverLocator<RoomGuestRepository>(),
+        roomRepository: serverLocator<RoomRepository>(),
       ));
 
   // bloc
@@ -205,10 +206,9 @@ void _initRoomTransaction() {
       listRoomTransactions: serverLocator<ListRoomTransactionsUseCase>(),
       deleteRoomTransaction: serverLocator<DeleteRoomTransactionUseCase>(),
       retrieveRoomTransaction: serverLocator<RetrieveRoomTransactionUseCase>(),
-      createRoomTransaction: serverLocator<CreateRoomTransactionUseCase>(), 
+      createRoomTransaction: serverLocator<CreateRoomTransactionUseCase>(),
       retrieveRoomGuest: serverLocator<RetrieveRoomGuestUseCase>(),
       retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
-      
     ),
   );
 }
@@ -381,7 +381,6 @@ void _initReservation() {
       serverLocator<ReservationDatasource>(),
     ),
   );
-
 
   // Use Cases
   //! register as Singleton base on Reso coder, for cacheing .

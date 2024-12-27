@@ -27,6 +27,7 @@ reservation:
   - findReservationById:
   - list:
   - listButCanceled:
+  - listButCanceledAndCheckIn:
   - checkIn:
   - delete:
 room:

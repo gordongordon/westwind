@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
+import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
@@ -36,9 +37,9 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   final TextEditingController rateReasonController = TextEditingController();
   final TextEditingController reservationIdController = TextEditingController();
 
-  DateTime stayDay= DateTime.now();
-  DateTime updatedDate = DateTime.now();
-  DateTime checkOutDate = DateTime.now();
+  DateTime stayDay=   TimeManager.instance.today();
+  DateTime updatedDate = TimeManager.instance.today();
+  DateTime checkOutDate = TimeManager.instance.today(); 
   bool isCheckOut = false;
 
   final List<String> _rateTypeOptions = RateType.values.map((e) => e.name).toList();

@@ -5,6 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
+import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
@@ -38,8 +39,8 @@ class _RoomTransactionEditPageState extends State<RoomTransactionCreatePage> {
   final TextEditingController totalController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
-  DateTime stayDay = DateTime.now();
-  DateTime transactionDay = DateTime.now();
+  DateTime stayDay = TimeManager.instance.today();
+  DateTime transactionDay = TimeManager.instance.today();
 
   final List<String> _transactionTypeOptions = TransactionType.values.map((e) => e.name).toList();
   final List<String> _itemTypeOptions = ItemType.values.map((e) => e.name).toList();

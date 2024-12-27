@@ -69,7 +69,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
           cellContent = _buildSingleItemCell(context, items.first, roomNumber, date);
         } else {
           cellContent = _buildMultiItemCell(context, items);
-      //            cellContent = _buildSingleItemCell(context, items.first, roomNumber, date);
+       //          cellContent = _buildSingleItemCell(context, items.first, roomNumber, date);
         }
 
         return Stack(
@@ -291,14 +291,13 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     if (item is RoomTransaction) {
        fieldColor = Colors.orange;
   
-  
     } else {
        fieldColor = Colors.purple;
     }
 
     /** End of Orange */
 
-    /*
+    /* 
     if ( item is RoomGuest ) {
        if ( item.isCheckOut ) {
           items.remove(item);
@@ -315,6 +314,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
        }
     }
     */
+    
 
     return GestureDetector(
       onTap: () {

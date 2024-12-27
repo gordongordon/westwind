@@ -67,6 +67,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       ));
 
       add(FetchReservationsAndTransactions(startDate));
+
     } catch (e) {
       emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
     }
@@ -79,9 +80,9 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
 
     try {
       /**
-       * Fixed canceled reservation don't display on calendar
+       * Fixed canceled and checked In reservation don't display on calendar
        */
-      final reservationResult = await reservationRepository.listButCanceled();
+      final reservationResult = await reservationRepository.listButCanceledAndCheckIn();
 
 
       final roomTransactionResult = await roomTransactionRepository.list();

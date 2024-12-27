@@ -58,12 +58,14 @@ class ReservationEndpoint extends Endpoint {
         throw TimeValidationException('check-in time must be in UTC');
       }
 
+      print( 'Save Reservation ${reservation}');
+
       return await Reservation.db.updateRow(session, reservation);
     } else {
       reservation.dateCreate = DateTime.now().toUtc();
-      reservation.checkInDate.toUtc().getDateOnly();
-      reservation.stayDay.toUtc().getDateOnly();
-      reservation.checkOutDate.toUtc().getDateOnly();
+    //  reservation.checkInDate.toUtc().getDateOnly();
+    //  reservation.stayDay.toUtc().getDateOnly();
+    //  reservation.checkOutDate.toUtc().getDateOnly();
       return Reservation.db.insertRow(session, reservation);
     }
   }
@@ -192,7 +194,26 @@ class ReservationEndpoint extends Endpoint {
     return await Reservation.db.find(
       session,
       limit: 20,
-      where: (reservation) => reservation.isCanceled.equals(false),
+     // where: (reservation) => reservation.isCanceled.equals(false) & reservation.isCheckedIn.equals(false),
+      where: (reservation) => reservation.isCanceled.equals(false) ,
+      include: Reservation.include(
+        guest: Guest.include(),
+        room: Room.include(),
+      ),
+      orderByList: (t) => [
+        Order(column: t.isCheckedIn, orderDescending: false),
+        Order(column: t.id, orderDescending: true),
+        Order(column: t.checkInDate),
+      ],
+    );
+  }
+
+  Future<List<Reservation>> listButCanceledAndCheckIn(Session session) async {
+    return await Reservation.db.find(
+      session,
+      limit: 20,
+      where: (reservation) => reservation.isCanceled.equals(false) & reservation.isCheckedIn.equals(false),
+      //where: (reservation) => reservation.isCanceled.equals(false) ,
       include: Reservation.include(
         guest: Guest.include(),
         room: Room.include(),
@@ -264,7 +285,7 @@ class ReservationEndpoint extends Endpoint {
           errorType: ErrorType.NotFound);
     }
 
-    reservation.checkInDate = DateTime.now().toUtc().getDateOnly();
+    reservation.checkInDate = DateTime.now().toUtc();
 
     if (!reservation.dateCreate.isUtc) {
       throw TimeValidationException('date-create time must be in UTC');
@@ -311,7 +332,7 @@ class ReservationEndpoint extends Endpoint {
       rate: reservation.rate,
       reservationId: reservation.id!,
       roomStatus: RoomStatus.make,
-      checkInDate: DateTime.now().toUtc(),
+      checkInDate: reservation.checkInDate,
       checkOutDate: reservation.checkOutDate,
       isCheckOut: false,
     );

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
+import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
@@ -39,12 +40,12 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
   final TextEditingController rateReasonController =
       TextEditingController(text: RateReason.single.toString());
 
-
-  DateTime dateCreate = DateTime.now();
-  DateTime dateUpdate = DateTime.now();
-  DateTime checkInDate = DateTime.now().getDateOnly();
-  DateTime stayDay = DateTime.now().getDateOnly();
-  DateTime checkOutDate = DateTime.now().getDateOnly().add(Duration(days: 1));
+  DateTime dateCreate = TimeManager.instance.now();
+  DateTime dateUpdate = TimeManager.instance.now();
+  DateTime checkInDate = TimeManager.instance.today();
+  DateTime stayDay = TimeManager.instance.today();
+  // DateTime checkOutDate = DateTime.now().getDateOnly().add(Duration(days: 1));
+  DateTime checkOutDate = TimeManager.instance.today().add(Duration(days: 1));
 
   bool isCheckedIn = false;
   bool isCanceled = false;
@@ -165,8 +166,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             initialValue: checkInDate),
         _buildDateTimePicker('checkOutDate', 'Check Out Date',
             initialValue: checkOutDate),
-                _buildDateTimePicker('stayDay', 'Stay Day',
-            initialValue: stayDay),
+        _buildDateTimePicker('stayDay', 'Stay Day', initialValue: stayDay),
         _buildTextField('roomId', 'Room ID', roomIdController, null,
             keyboardType: TextInputType.number),
         FormBuilderSwitch(
@@ -379,7 +379,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
         dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
         checkInDate: formKey.currentState!.fields['checkInDate']!.value,
         checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
-              stayDay: formKey.currentState!.fields['stayDay']!.value,
+        stayDay: formKey.currentState!.fields['stayDay']!.value,
         rateType: RateType.values
             .byName(formKey.currentState!.fields['rateType']!.value),
         rate: double.parse(rateController.text),

@@ -4,14 +4,14 @@ import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-  /// Gets the current date in Edmonton timezone, stripped of time components
+/// Gets the current date in Edmonton timezone, stripped of time components
 DateTime getCurrentEdmontonDate() {
   tz.initializeTimeZones();
   final edmonton = tz.getLocation('America/Edmonton');
-  
+
   // Get current time in Edmonton
   final edmontonNow = tz.TZDateTime.now(edmonton);
-  
+
   // Create new DateTime with just the date components in Edmonton timezone
   final edmontonDate = tz.TZDateTime(
     edmonton,
@@ -19,11 +19,10 @@ DateTime getCurrentEdmontonDate() {
     edmontonNow.month,
     edmontonNow.day,
   );
-  
+
   // Convert to UTC for storage/comparison
   return edmontonDate.toUtc();
 }
-
 
 extension MyDateExtension on DateTime {
   String getDDMM() {
@@ -33,6 +32,7 @@ extension MyDateExtension on DateTime {
   String getMonthName() {
     return DateFormat('MMM').format(this);
   }
+
 /**  
   DateTime getDateOnly() {
     final time =  DateTime(year, month, day);
@@ -46,7 +46,7 @@ extension MyDateExtension on DateTime {
   }
 
   DateTime getSystemDate() {
-   // final time =  DateTime.now().getDateOnly();
+    // final time =  DateTime.now().getDateOnly();
 
     return edmontonToUtc(DateTime.now().getDateOnly());
 
@@ -102,16 +102,15 @@ extension MyDateExtension on DateTime {
     print('Check-in time (Edmonton): $localTime');
   }
 
-
 // Should be   DateTime getEdmontonDateOnly() {
 
   DateTime getDateOnly() {
     tz.initializeTimeZones();
     final edmonton = tz.getLocation('America/Edmonton');
-    
+
     // Convert this DateTime to Edmonton timezone first
     final edmontonTime = tz.TZDateTime.from(this, edmonton);
-    
+
     // Create new DateTime with just the date components
     final edmontonDate = tz.TZDateTime(
       edmonton,
@@ -119,7 +118,7 @@ extension MyDateExtension on DateTime {
       edmontonTime.month,
       edmontonTime.day,
     );
-    
+
     // Convert back to UTC for storage/comparison
     // return edmontonDate.toUtc();
     return edmontonDate;

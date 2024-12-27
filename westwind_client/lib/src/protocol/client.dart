@@ -233,6 +233,13 @@ class EndpointReservation extends _i1.EndpointRef {
         {},
       );
 
+  _i2.Future<List<_i7.Reservation>> listButCanceledAndCheckIn() =>
+      caller.callServerEndpoint<List<_i7.Reservation>>(
+        'reservation',
+        'listButCanceledAndCheckIn',
+        {},
+      );
+
   _i2.Future<bool> checkIn({required int reservationId}) =>
       caller.callServerEndpoint<bool>(
         'reservation',
