@@ -38,12 +38,13 @@ import 'roomStatus.dart' as _i26;
 import 'roomTransaction.dart' as _i27;
 import 'staff.dart' as _i28;
 import 'transactionType.dart' as _i29;
-import 'package:westwind_server/src/generated/guest.dart' as _i30;
-import 'package:westwind_server/src/generated/rateTable.dart' as _i31;
-import 'package:westwind_server/src/generated/reservation.dart' as _i32;
-import 'package:westwind_server/src/generated/room.dart' as _i33;
-import 'package:westwind_server/src/generated/roomGuest.dart' as _i34;
-import 'package:westwind_server/src/generated/roomTransaction.dart' as _i35;
+import 'system_time.dart' as _i30;
+import 'package:westwind_server/src/generated/guest.dart' as _i31;
+import 'package:westwind_server/src/generated/rateTable.dart' as _i32;
+import 'package:westwind_server/src/generated/reservation.dart' as _i33;
+import 'package:westwind_server/src/generated/room.dart' as _i34;
+import 'package:westwind_server/src/generated/roomGuest.dart' as _i35;
+import 'package:westwind_server/src/generated/roomTransaction.dart' as _i36;
 export 'bedType.dart';
 export 'company.dart';
 export 'errorType.dart';
@@ -70,6 +71,7 @@ export 'roomStatus.dart';
 export 'roomTransaction.dart';
 export 'staff.dart';
 export 'transactionType.dart';
+export 'system_time.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -1407,6 +1409,44 @@ class Protocol extends _i1.SerializationManagerServer {
       ],
       managed: true,
     ),
+    _i2.TableDefinition(
+      name: 'system_time',
+      dartName: 'SystemTime',
+      schema: 'public',
+      module: 'westwind',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int?',
+          columnDefault: 'nextval(\'system_time_id_seq\'::regclass)',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastAuditDate',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'system_time_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        )
+      ],
+      managed: true,
+    ),
     ..._i3.Protocol.targetTableDefinitions,
     ..._i2.Protocol.targetTableDefinitions,
   ];
@@ -1495,6 +1535,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i29.TransactionType) {
       return _i29.TransactionType.fromJson(data) as T;
     }
+    if (t == _i30.SystemTime) {
+      return _i30.SystemTime.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i4.BedType?>()) {
       return (data != null ? _i4.BedType.fromJson(data) : null) as T;
     }
@@ -1573,6 +1616,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i29.TransactionType?>()) {
       return (data != null ? _i29.TransactionType.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<_i30.SystemTime?>()) {
+      return (data != null ? _i30.SystemTime.fromJson(data) : null) as T;
+    }
     if (t == _i1.getType<List<_i8.Guest>?>()) {
       return (data != null
           ? (data as List).map((e) => deserialize<_i8.Guest>(e)).toList()
@@ -1595,30 +1641,30 @@ class Protocol extends _i1.SerializationManagerServer {
               .toList()
           : null) as dynamic;
     }
-    if (t == List<_i30.Guest>) {
-      return (data as List).map((e) => deserialize<_i30.Guest>(e)).toList()
+    if (t == List<_i31.Guest>) {
+      return (data as List).map((e) => deserialize<_i31.Guest>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i31.RateTable>) {
-      return (data as List).map((e) => deserialize<_i31.RateTable>(e)).toList()
+    if (t == List<_i32.RateTable>) {
+      return (data as List).map((e) => deserialize<_i32.RateTable>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i32.Reservation>) {
+    if (t == List<_i33.Reservation>) {
       return (data as List)
-          .map((e) => deserialize<_i32.Reservation>(e))
+          .map((e) => deserialize<_i33.Reservation>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i33.Room>) {
-      return (data as List).map((e) => deserialize<_i33.Room>(e)).toList()
+    if (t == List<_i34.Room>) {
+      return (data as List).map((e) => deserialize<_i34.Room>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i34.RoomGuest>) {
-      return (data as List).map((e) => deserialize<_i34.RoomGuest>(e)).toList()
+    if (t == List<_i35.RoomGuest>) {
+      return (data as List).map((e) => deserialize<_i35.RoomGuest>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i35.RoomTransaction>) {
+    if (t == List<_i36.RoomTransaction>) {
       return (data as List)
-          .map((e) => deserialize<_i35.RoomTransaction>(e))
+          .map((e) => deserialize<_i36.RoomTransaction>(e))
           .toList() as dynamic;
     }
     try {
@@ -1711,6 +1757,9 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (data is _i29.TransactionType) {
       return 'TransactionType';
+    }
+    if (data is _i30.SystemTime) {
+      return 'SystemTime';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -1807,6 +1856,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'TransactionType') {
       return deserialize<_i29.TransactionType>(data['data']);
     }
+    if (dataClassName == 'SystemTime') {
+      return deserialize<_i30.SystemTime>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
       return _i2.Protocol().deserializeByClassName(data);
@@ -1857,6 +1909,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i27.RoomTransaction.t;
       case _i28.Staff:
         return _i28.Staff.t;
+      case _i30.SystemTime:
+        return _i30.SystemTime.t;
     }
     return null;
   }

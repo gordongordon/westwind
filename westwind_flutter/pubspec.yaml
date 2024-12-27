@@ -25,9 +25,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  serverpod_flutter: 2.2.2
-  serverpod_auth_shared_flutter: 2.2.2  
-  serverpod_auth_email_flutter : 2.2.2
+  serverpod_flutter: 2.3.0
+  serverpod_auth_shared_flutter: 2.3.0
+  serverpod_auth_email_flutter : 2.3.0
   westwind_client:
     path: ../westwind_client
   get_it: ^7.6.7
@@ -48,6 +48,7 @@ dependencies:
   flutter_svg: ^2.0.10+1 
   equatable: ^2.0.5
   intl : ^0.19.0
+  timezone: ^0.9.1
 
 dev_dependencies:
   build_runner: ^2.4.4

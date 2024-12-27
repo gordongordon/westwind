@@ -58,7 +58,7 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
           icon: const Icon(Icons.refresh),
           onPressed: () => context
               .read<RoomCalendarBloc>()
-              .add(FetchReservationsAndTransactions(DateTime.now())),
+              .add(FetchReservationsAndTransactions(DateTime.now().toUtc())),
           tooltip: 'Fetch latest data',
         ),
       ],
@@ -147,8 +147,8 @@ class _TopBarWidget extends StatelessWidget {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: state.startDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      firstDate: DateTime(2024),
+      lastDate: DateTime(2100),
     );
     if (picked != null && picked != state.startDate) {
       context.read<RoomCalendarBloc>().add(SelectSpecificDate(picked));

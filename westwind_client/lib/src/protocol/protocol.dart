@@ -36,13 +36,14 @@ import 'roomStatus.dart' as _i24;
 import 'roomTransaction.dart' as _i25;
 import 'staff.dart' as _i26;
 import 'transactionType.dart' as _i27;
-import 'package:westwind_client/src/protocol/guest.dart' as _i28;
-import 'package:westwind_client/src/protocol/rateTable.dart' as _i29;
-import 'package:westwind_client/src/protocol/reservation.dart' as _i30;
-import 'package:westwind_client/src/protocol/room.dart' as _i31;
-import 'package:westwind_client/src/protocol/roomGuest.dart' as _i32;
-import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i33;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i34;
+import 'system_time.dart' as _i28;
+import 'package:westwind_client/src/protocol/guest.dart' as _i29;
+import 'package:westwind_client/src/protocol/rateTable.dart' as _i30;
+import 'package:westwind_client/src/protocol/reservation.dart' as _i31;
+import 'package:westwind_client/src/protocol/room.dart' as _i32;
+import 'package:westwind_client/src/protocol/roomGuest.dart' as _i33;
+import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i34;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i35;
 export 'bedType.dart';
 export 'company.dart';
 export 'errorType.dart';
@@ -69,6 +70,7 @@ export 'roomStatus.dart';
 export 'roomTransaction.dart';
 export 'staff.dart';
 export 'transactionType.dart';
+export 'system_time.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
@@ -162,6 +164,9 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i27.TransactionType) {
       return _i27.TransactionType.fromJson(data) as T;
     }
+    if (t == _i28.SystemTime) {
+      return _i28.SystemTime.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i2.BedType?>()) {
       return (data != null ? _i2.BedType.fromJson(data) : null) as T;
     }
@@ -240,6 +245,9 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i27.TransactionType?>()) {
       return (data != null ? _i27.TransactionType.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<_i28.SystemTime?>()) {
+      return (data != null ? _i28.SystemTime.fromJson(data) : null) as T;
+    }
     if (t == _i1.getType<List<_i6.Guest>?>()) {
       return (data != null
           ? (data as List).map((e) => deserialize<_i6.Guest>(e)).toList()
@@ -262,34 +270,34 @@ class Protocol extends _i1.SerializationManager {
               .toList()
           : null) as dynamic;
     }
-    if (t == List<_i28.Guest>) {
-      return (data as List).map((e) => deserialize<_i28.Guest>(e)).toList()
+    if (t == List<_i29.Guest>) {
+      return (data as List).map((e) => deserialize<_i29.Guest>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i29.RateTable>) {
-      return (data as List).map((e) => deserialize<_i29.RateTable>(e)).toList()
+    if (t == List<_i30.RateTable>) {
+      return (data as List).map((e) => deserialize<_i30.RateTable>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i30.Reservation>) {
+    if (t == List<_i31.Reservation>) {
       return (data as List)
-          .map((e) => deserialize<_i30.Reservation>(e))
+          .map((e) => deserialize<_i31.Reservation>(e))
           .toList() as dynamic;
     }
-    if (t == List<_i31.Room>) {
-      return (data as List).map((e) => deserialize<_i31.Room>(e)).toList()
+    if (t == List<_i32.Room>) {
+      return (data as List).map((e) => deserialize<_i32.Room>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i32.RoomGuest>) {
-      return (data as List).map((e) => deserialize<_i32.RoomGuest>(e)).toList()
+    if (t == List<_i33.RoomGuest>) {
+      return (data as List).map((e) => deserialize<_i33.RoomGuest>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i33.RoomTransaction>) {
+    if (t == List<_i34.RoomTransaction>) {
       return (data as List)
-          .map((e) => deserialize<_i33.RoomTransaction>(e))
+          .map((e) => deserialize<_i34.RoomTransaction>(e))
           .toList() as dynamic;
     }
     try {
-      return _i34.Protocol().deserialize<T>(data, t);
+      return _i35.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -376,7 +384,10 @@ class Protocol extends _i1.SerializationManager {
     if (data is _i27.TransactionType) {
       return 'TransactionType';
     }
-    className = _i34.Protocol().getClassNameForObject(data);
+    if (data is _i28.SystemTime) {
+      return 'SystemTime';
+    }
+    className = _i35.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth.$className';
     }
@@ -467,9 +478,12 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'TransactionType') {
       return deserialize<_i27.TransactionType>(data['data']);
     }
+    if (dataClassName == 'SystemTime') {
+      return deserialize<_i28.SystemTime>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod_auth.')) {
       data['className'] = dataClassName.substring(15);
-      return _i34.Protocol().deserializeByClassName(data);
+      return _i35.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }

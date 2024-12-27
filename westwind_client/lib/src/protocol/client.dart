@@ -19,8 +19,9 @@ import 'package:westwind_client/src/protocol/reservation.dart' as _i7;
 import 'package:westwind_client/src/protocol/room.dart' as _i8;
 import 'package:westwind_client/src/protocol/roomGuest.dart' as _i9;
 import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i10;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i11;
-import 'protocol.dart' as _i12;
+import 'package:westwind_client/src/protocol/system_time.dart' as _i11;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i12;
+import 'protocol.dart' as _i13;
 
 /// {@category Endpoint}
 class EndpointExample extends _i1.EndpointRef {
@@ -570,12 +571,33 @@ class EndpointRoomTransaction extends _i1.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointSystemTime extends _i1.EndpointRef {
+  EndpointSystemTime(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'systemTime';
+
+  _i2.Future<_i11.SystemTime?> retrieve(int id) =>
+      caller.callServerEndpoint<_i11.SystemTime?>(
+        'systemTime',
+        'retrieve',
+        {'id': id},
+      );
+
+  _i2.Future<DateTime> getServerTime() => caller.callServerEndpoint<DateTime>(
+        'systemTime',
+        'getServerTime',
+        {},
+      );
+}
+
 class Modules {
   Modules(Client client) {
-    auth = _i11.Caller(client);
+    auth = _i12.Caller(client);
   }
 
-  late final _i11.Caller auth;
+  late final _i12.Caller auth;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -594,7 +616,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i12.Protocol(),
+          _i13.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
@@ -611,6 +633,7 @@ class Client extends _i1.ServerpodClientShared {
     room = EndpointRoom(this);
     roomGuest = EndpointRoomGuest(this);
     roomTransaction = EndpointRoomTransaction(this);
+    systemTime = EndpointSystemTime(this);
     modules = Modules(this);
   }
 
@@ -628,6 +651,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointRoomTransaction roomTransaction;
 
+  late final EndpointSystemTime systemTime;
+
   late final Modules modules;
 
   @override
@@ -639,6 +664,7 @@ class Client extends _i1.ServerpodClientShared {
         'room': room,
         'roomGuest': roomGuest,
         'roomTransaction': roomTransaction,
+        'systemTime': systemTime,
       };
 
   @override

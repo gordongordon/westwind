@@ -19,7 +19,7 @@ class RoomGuestEndpoint extends Endpoint {
 
   Future<RoomGuest> saveRoomGuest(Session session, RoomGuest res) async {
     if ( res.id != null) {
-      res.updateDate = DateTime.now().toLocal();
+      res.updateDate = DateTime.now().toUtc();
       return await RoomGuest.db.updateRow(session, res);
     }
 
@@ -291,7 +291,7 @@ class RoomGuestEndpoint extends Endpoint {
   }
 
   Future<List<RoomGuest>> getTodayRoomGuest(Session session) async {
-    final DateTime now = DateTime.now();
+    final DateTime now = DateTime.now().toUtc();
     return await getAllRoomGuestByDay(session, now);
   }
 

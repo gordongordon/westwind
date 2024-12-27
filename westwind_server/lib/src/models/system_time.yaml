@@ -1,0 +1,6 @@
+## System Time
+class : SystemTime
+table : system_time
+fields : 
+  lastAuditDate :  DateTime
+

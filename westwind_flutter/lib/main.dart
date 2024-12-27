@@ -18,12 +18,13 @@ import 'package:westwind_flutter/features/room_transaction/presentation/bloc/roo
 
 void main() async {
   // Bloc.observer = AppBlocObserver();
+
+  
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => serverLocator<AppUserCubit>()),
-    
       BlocProvider(create: (_) => serverLocator<GuestListBloc>()),
       BlocProvider(create: (_) => serverLocator<GuestDetailBloc>()),
       BlocProvider(

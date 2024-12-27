@@ -68,3 +68,6 @@ roomTransaction:
   - saveRoomTransaciton:
   - retrieve:
   - delete:
+systemTime:
+  - retrieve:
+  - getServerTime:

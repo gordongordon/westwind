@@ -95,6 +95,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
 
   bool _canAcceptReservation(Reservation reservation) {
     final currentDate = DateTime.now().getDateOnly();
+
     return widget.date.isAtSameMomentAs(currentDate) ||
         widget.date.isAfter(currentDate);
   }

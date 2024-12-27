@@ -7,6 +7,15 @@ import 'package:serverpod/serverpod.dart';
 // the endpoint from the client. I.e., this endpoint can be accessed through
 // `client.example` on the client side.
 
+// Custom exceptions for time handling
+class TimeValidationException implements Exception {
+  final String message;
+  TimeValidationException(this.message);
+
+  @override
+  String toString() => message;
+}
+
 // After adding or modifying an endpoint, you will need to run
 // `serverpod generate` to update the server and client code.
 class ReservationEndpoint extends Endpoint {
@@ -22,28 +31,39 @@ class ReservationEndpoint extends Endpoint {
   //  return Reservation.db.findById(session, id);
   // }
 
-
-
-
   Future<Reservation> save(Session session, Reservation reservation) async {
     if (reservation.id != null) {
-     // if ( reservation.isCheckedIn ) {
-         // check day can't change
-       //  final result = await Reservation.db.findById(session, reservation.id! );
-       //  if ( result!= null ) {
-       //       final diffDay = reservation.checkOutDate.day - reservation.checkInDate.day;
-       //       reservation.checkInDate = result.checkInDate;
-       //       reservation.checkOutDate = result.checkInDate
-       //  }
+      // if ( reservation.isCheckedIn ) {
+      // check day can't change
+      //  final result = await Reservation.db.findById(session, reservation.id! );
+      //  if ( result!= null ) {
+      //       final diffDay = reservation.checkOutDate.day - reservation.checkInDate.day;
+      //       reservation.checkInDate = result.checkInDate;
+      //       reservation.checkOutDate = result.checkInDate
+      //  }
       //}
 
-      reservation.dateUpdate = DateTime.now().toLocal();
+      reservation.dateUpdate = DateTime.now().toUtc();
+
+      if (!reservation.dateCreate.isUtc) {
+        throw TimeValidationException('date-create time must be in UTC');
+      }
+      if (!reservation.stayDay.isUtc) {
+        throw TimeValidationException('stay-date time must be in UTC');
+      }
+      if (!reservation.checkOutDate.isUtc) {
+        throw TimeValidationException('check-out time must be in UTC');
+      }
+      if (!reservation.checkInDate.isUtc) {
+        throw TimeValidationException('check-in time must be in UTC');
+      }
+
       return await Reservation.db.updateRow(session, reservation);
     } else {
-      reservation.dateCreate = DateTime.now().toLocal();
-      reservation.checkInDate.getDateOnly();
-      reservation.stayDay.getDateOnly();
-      reservation.checkOutDate.getDateOnly();
+      reservation.dateCreate = DateTime.now().toUtc();
+      reservation.checkInDate.toUtc().getDateOnly();
+      reservation.stayDay.toUtc().getDateOnly();
+      reservation.checkOutDate.toUtc().getDateOnly();
       return Reservation.db.insertRow(session, reservation);
     }
   }
@@ -71,7 +91,6 @@ class ReservationEndpoint extends Endpoint {
 
   Future<Reservation?> retrieve(Session session, {required int id}) async {
     final res = await Reservation.db.findById(session, id,
-  
         include: Reservation.include(
           guest: Guest.include(),
           room: Room.include(),
@@ -88,7 +107,23 @@ class ReservationEndpoint extends Endpoint {
 
     if (reservation != null) {
       reservation.isCanceled = true;
-      reservation.dateUpdate = DateTime.now();
+      reservation.dateUpdate = DateTime.now().toUtc();
+
+      if (!reservation.dateCreate.isUtc) {
+        throw TimeValidationException('date-create time must be in UTC');
+      }
+      if (!reservation.stayDay.isUtc) {
+        throw TimeValidationException('stay-date time must be in UTC');
+      }
+      if (!reservation.checkOutDate.isUtc) {
+        throw TimeValidationException('check-out time must be in UTC');
+      }
+      if (!reservation.checkInDate.isUtc) {
+        throw TimeValidationException('check-in time must be in UTC');
+      }
+      if (!reservation.dateUpdate!.isUtc) {
+        throw TimeValidationException('date-update time must be in UTC');
+      }
       return await Reservation.db.updateRow(session, reservation);
     }
 
@@ -99,7 +134,23 @@ class ReservationEndpoint extends Endpoint {
 
   Future<bool> updateReservation(Session session,
       {required Reservation reservation}) async {
-    reservation.dateUpdate = DateTime.now();
+    reservation.dateUpdate = DateTime.now().toUtc();
+
+    if (!reservation.dateCreate.isUtc) {
+      throw TimeValidationException('date-create time must be in UTC');
+    }
+    if (!reservation.stayDay.isUtc) {
+      throw TimeValidationException('stay-date time must be in UTC');
+    }
+    if (!reservation.checkOutDate.isUtc) {
+      throw TimeValidationException('check-out time must be in UTC');
+    }
+    if (!reservation.checkInDate.isUtc) {
+      throw TimeValidationException('check-in time must be in UTC');
+    }
+    if (!reservation.dateUpdate!.isUtc) {
+      throw TimeValidationException('date-update time must be in UTC');
+    }
 
     final res = await Reservation.db.updateRow(session, reservation);
 
@@ -124,7 +175,7 @@ class ReservationEndpoint extends Endpoint {
     return await Reservation.db.find(
       session,
       limit: 20,
-     where: (reservation) => reservation.isCheckedIn.equals(false),
+      where: (reservation) => reservation.isCheckedIn.equals(false),
       include: Reservation.include(
         guest: Guest.include(),
         room: Room.include(),
@@ -137,12 +188,11 @@ class ReservationEndpoint extends Endpoint {
     );
   }
 
-
   Future<List<Reservation>> listButCanceled(Session session) async {
     return await Reservation.db.find(
       session,
       limit: 20,
-     where: (reservation) => reservation.isCanceled.equals(false),
+      where: (reservation) => reservation.isCanceled.equals(false),
       include: Reservation.include(
         guest: Guest.include(),
         room: Room.include(),
@@ -214,7 +264,23 @@ class ReservationEndpoint extends Endpoint {
           errorType: ErrorType.NotFound);
     }
 
-    reservation.checkInDate = DateTime.now().getDateOnly();
+    reservation.checkInDate = DateTime.now().toUtc().getDateOnly();
+
+    if (!reservation.dateCreate.isUtc) {
+      throw TimeValidationException('date-create time must be in UTC');
+    }
+    if (!reservation.stayDay.isUtc) {
+      throw TimeValidationException('stay-date time must be in UTC');
+    }
+    if (!reservation.checkOutDate.isUtc) {
+      throw TimeValidationException('check-out time must be in UTC');
+    }
+    if (!reservation.checkInDate.isUtc) {
+      throw TimeValidationException('check-in time must be in UTC');
+    }
+    if (!reservation.dateUpdate!.isUtc) {
+      throw TimeValidationException('date-update time must be in UTC');
+    }
 
     final roomGuest = createRoomGuest(reservation);
 
@@ -231,20 +297,23 @@ class ReservationEndpoint extends Endpoint {
   }
 
   RoomGuest createRoomGuest(Reservation reservation) {
-    
+    if (!reservation.checkOutDate.isUtc) {
+      throw TimeValidationException('Check-in time must be in UTC');
+    }
+
     final roomGuest = RoomGuest(
       roomId: reservation.roomId,
       stayDay: reservation.checkInDate,
       guestId: reservation.guestId,
-   //   roomTransactions: null,
+      //   roomTransactions: null,
       rateType: reservation.rateType,
       rateReason: RateReason.single,
       rate: reservation.rate,
       reservationId: reservation.id!,
       roomStatus: RoomStatus.make,
-      checkInDate : DateTime.now(),
+      checkInDate: DateTime.now().toUtc(),
       checkOutDate: reservation.checkOutDate,
-      isCheckOut : false,
+      isCheckOut: false,
     );
 
     return roomGuest;
@@ -386,7 +455,6 @@ class ReservationEndpoint extends Endpoint {
 
     return false;
   }
-  
 
 /*
   Future<bool> checkInReservationSecondVersion(Session session,

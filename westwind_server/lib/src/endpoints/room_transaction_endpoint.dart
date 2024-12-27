@@ -11,7 +11,7 @@ class RoomTransactionEndpoint extends Endpoint {
             item.guestId.equals(guestId) & item.itemType.equals(ItemType.room));
 
     return transactionHistory.any((transaction) {
-      DateTime today = DateTime.now().toLocal();
+      DateTime today = DateTime.now().toUtc();
       return transaction.transactionDay.year == today.year &&
           transaction.transactionDay.month == today.month &&
           transaction.transactionDay.day == today.day;
@@ -58,7 +58,7 @@ class RoomTransactionEndpoint extends Endpoint {
   Future<RoomTransaction> saveRoomTransaciton(
       Session session, RoomTransaction rt) async {
     if (rt.id != null) {
-      rt.updateDate = DateTime.now().toLocal();
+      rt.updateDate = DateTime.now().toUtc();
       return await RoomTransaction.db.updateRow(session, rt);
     }
     return await RoomTransaction.db.insertRow(session, rt);
