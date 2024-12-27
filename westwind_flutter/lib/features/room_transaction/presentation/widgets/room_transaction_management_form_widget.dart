@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/core/utils/timeManager.dart';
 
 class RoomTransactionManagementFormWidget extends StatefulWidget {
   final RoomTransaction? roomTransaction;
@@ -36,8 +37,8 @@ class _RoomTransactionManagementFormWidgetState
   final TextEditingController totalController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
-  DateTime stayDay = DateTime.now();
-  DateTime transactionDay = DateTime.now().toLocal();
+  DateTime stayDay = TimeManager.instance.today();
+  DateTime transactionDay = TimeManager.instance.today();
 
   final List<String> _transactionTypeOptions =
       TransactionType.values.map((e) => e.name).toList();

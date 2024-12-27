@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
+import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
 import 'package:westwind_flutter/features/room/domain/repositories/room_repository.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
@@ -47,7 +48,8 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       final roomTypes = rooms.map((room) => room.roomType.toString()).toList();
       final roomNumbers = rooms.map((room) => room.id!.toString()).toList();
 
-      final DateTime startDate = DateTime.now().getDateOnly().subtract(Duration( days : 1));
+     // final DateTime startDate = DateTime.now().getDateOnly().subtract(Duration( days : 1));
+      final startDate = TimeManager.instance.today().subtract(Duration( days : 1));
 
       //print('Current Time ${DateTime.now().getDateOnly()}' );
 

@@ -165,8 +165,8 @@ class _RoomGuestTransactionFormWidgetState
           tax2: levy,
           total: totalFinal,
           description: formData['description'],
-          stayDay: DateTime.now(),
-          transactionDay: DateTime.now(),
+          stayDay: TimeManager.instance.today(),
+          transactionDay: TimeManager.instance.today(),
         );
 
         print('New Transaction: $newTransaction'); // Debug print

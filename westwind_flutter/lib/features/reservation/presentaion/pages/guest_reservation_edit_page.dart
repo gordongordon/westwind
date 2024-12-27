@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
+import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_events.dart';
@@ -51,11 +52,11 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   final TextEditingController rateReasonController = TextEditingController(text: RateReason.single.toString());
 
   // Date-related variables
-  DateTime dateCreate = DateTime.now();
-  DateTime dateUpdate = DateTime.now();
-  DateTime checkInDate = DateTime.now().getDateOnly();
-  DateTime stayDay = DateTime.now().getDateOnly();
-  DateTime checkOutDate = DateTime.now().getDateOnly().add(Duration(days: 1));
+  DateTime dateCreate = TimeManager.instance.now();
+  DateTime dateUpdate = TimeManager.instance.now();
+  DateTime checkInDate = TimeManager.instance.today();
+  DateTime stayDay = TimeManager.instance.today();
+  DateTime checkOutDate = TimeManager.instance.today().add(Duration(days: 1));
 
   // Boolean flags
   bool isInHouse = false;
@@ -512,11 +513,11 @@ void _saveReservation(int guestId) {
       print('Is Checked In: ${formKey.currentState?.fields['isCheckedIn']?.value ?? false}');
       print('Is Canceled: ${formKey.currentState?.fields['isCanceled']?.value ?? false}');
       print('Is Night Shift: ${formKey.currentState?.fields['isNightShift']?.value ?? false}');
-      print('Date Create: ${formKey.currentState?.fields['dateCreate']?.value ?? DateTime.now()}');
-      print('Date Update: ${formKey.currentState?.fields['dateUpdate']?.value ?? DateTime.now()}');
-      print('Check In Date: ${formKey.currentState?.fields['checkInDate']?.value ?? DateTime.now()}');
-      print('Check Out Date: ${formKey.currentState?.fields['checkOutDate']?.value ?? DateTime.now().add(Duration(days: 1))}');
-      print('Stay Day: ${formKey.currentState?.fields['stayDay']?.value ?? DateTime.now()}');
+      print('Date Create: ${formKey.currentState?.fields['dateCreate']?.value ?? TimeManager.instance.now()}');
+      print('Date Update: ${formKey.currentState?.fields['dateUpdate']?.value ?? TimeManager.instance.now()}');
+      print('Check In Date: ${formKey.currentState?.fields['checkInDate']?.value ?? TimeManager.instance.today()}');
+      print('Check Out Date: ${formKey.currentState?.fields['checkOutDate']?.value ?? TimeManager.instance.today().add(Duration(days: 1))}');
+      print('Stay Day: ${formKey.currentState?.fields['stayDay']?.value ?? TimeManager.instance.today()}');
       print('Rate Type: ${formKey.currentState?.fields['rateType']?.value ?? RateType.standard.name}');
       print('Rate: ${rateController.text}');
       print('Rate Reason: ${formKey.currentState?.fields['rateReason']?.value ?? RateReason.single.name}');
@@ -528,11 +529,11 @@ void _saveReservation(int guestId) {
         isCheckedIn: formKey.currentState?.fields['isCheckedIn']?.value ?? false,
         isCanceled: formKey.currentState?.fields['isCanceled']?.value ?? false,
         isNightShift: formKey.currentState?.fields['isNightShift']?.value ?? false,
-        dateCreate: formKey.currentState?.fields['dateCreate']?.value ?? DateTime.now(),
-        dateUpdate: formKey.currentState?.fields['dateUpdate']?.value ?? DateTime.now(),
-        checkInDate: formKey.currentState?.fields['checkInDate']?.value ?? DateTime.now(),
-        checkOutDate: formKey.currentState?.fields['checkOutDate']?.value ?? DateTime.now().add(Duration(days: 1)),
-        stayDay: formKey.currentState?.fields['stayDay']?.value ?? DateTime.now(),
+        dateCreate: formKey.currentState?.fields['dateCreate']?.value ?? TimeManager.instance.now(),
+        dateUpdate: formKey.currentState?.fields['dateUpdate']?.value ??TimeManager.instance.now(),
+        checkInDate: formKey.currentState?.fields['checkInDate']?.value ?? TimeManager.instance.today(),
+        checkOutDate: formKey.currentState?.fields['checkOutDate']?.value ?? TimeManager.instance.today().add(Duration(days: 1)),
+        stayDay: formKey.currentState?.fields['stayDay']?.value ?? TimeManager.instance.today(),
         rateType: RateType.values.byName(formKey.currentState?.fields['rateType']?.value ?? RateType.standard.name),
         rate: double.tryParse(rateController.text) ?? 0.0,
         rateReason: RateReason.values.byName(formKey.currentState?.fields['rateReason']?.value ?? RateReason.single.name),
@@ -603,7 +604,7 @@ void _reservationBlocListener(BuildContext context, ReservationManageState state
     setState(() {
       isInHouse = guest.isInHouse;
       dateCreate = guest.dateCreate;
-      dateUpdate = guest.dateUpdate ?? DateTime.now();
+      dateUpdate = guest.dateUpdate ?? TimeManager.instance.now();
     });
 
     formKey.currentState?.patchValue({
@@ -626,7 +627,7 @@ void _reservationBlocListener(BuildContext context, ReservationManageState state
       isCanceled = reservation.isCanceled;
       isNightShift = reservation.isNightShift;
       dateCreate = reservation.dateCreate;
-      dateUpdate = reservation.dateUpdate ?? DateTime.now();
+      dateUpdate = reservation.dateUpdate ?? TimeManager.instance.now();
     });
 
     formKey.currentState?.patchValue({

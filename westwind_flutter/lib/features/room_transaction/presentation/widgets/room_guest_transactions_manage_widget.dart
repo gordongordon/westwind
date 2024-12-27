@@ -266,8 +266,10 @@ class _RoomGuestTransactionsManageWidgetState
     );
   }
 
+/*
   String _formatDate(DateTime? date) {
     if (date == null) return 'N/A';
     return DateFormat('MM-dd').format(date);
   }
+  */
 }
