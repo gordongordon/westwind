@@ -73,6 +73,10 @@ extension MyDateExtension on DateTime {
     return DateFormat('MMMM d ha').format(this);
   }
 
+    String getMonthDayHourMinute() {
+    return DateFormat('MMMM d h:mm a').format(this);
+  }
+
   static String getMonthNameFromNumber(int monthNumber) {
     if (monthNumber < 1 || monthNumber > 12) {
       throw ArgumentError('Month number must be between 1 and 12');

@@ -184,7 +184,7 @@ class _RoomGuestTransactionsManageWidgetState
                         'Stay Day', transaction.stayDay.getMonthNameDD(),
                         isLastItem: isLastItem),
                     _buildInfoRow('Transaction Day',
-                        transaction.transactionDay.getDDDMMAndHoursMinutes(),
+                        transaction.transactionDay.getMonthDayHourMinute(),
                         isLastItem: isLastItem),
                     _buildInfoRow(
                         'Amount', '\$${transaction.amount.toStringAsFixed(2)}',
