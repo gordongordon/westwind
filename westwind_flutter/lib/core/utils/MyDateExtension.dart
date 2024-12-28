@@ -65,6 +65,10 @@ extension MyDateExtension on DateTime {
     return DateFormat('DD MMM HH').format(this);
   }
 
+  String getDDDMMAndHoursMinutes() {
+    return DateFormat('DD MMM HH:mm').format(this);
+  }
+
   String getMonthDayHour() {
     return DateFormat('MMMM d ha').format(this);
   }
