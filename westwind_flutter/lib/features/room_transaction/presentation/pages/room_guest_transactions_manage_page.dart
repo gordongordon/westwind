@@ -46,7 +46,7 @@ class _RoomGuestTransactionsManagePage extends State<RoomGuestTransactionsManage
    //  final auth = serverLocator<Client>().modules.auth;
     return Scaffold(
       appBar: AppBar(
-        title:  Text("Room Transaction - $firstName $lastName - Room # ${roomNumber.toString}"),
+        title:  Text("Room Transaction - $firstName $lastName - Room # ${roomNumber.toString()}"),
         actions: const [
             AppUserDropdown(),
         ],
