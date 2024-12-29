@@ -291,10 +291,10 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
 
     if (item is RoomTransaction) {
        fieldColor = Colors.orange;
-    } else if (item is Reservation ) { 
+    } else if (item is Reservation) { 
        fieldColor = Colors.green; 
     } else {
-       fieldColor = Colors.purple;
+       fieldColor = Colors.blue;
     }
 
     /** End of Orange */
