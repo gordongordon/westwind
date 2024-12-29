@@ -288,9 +288,11 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     dynamic item = items[0];
     Color fieldColor; 
  
+
     if (item is RoomTransaction) {
        fieldColor = Colors.orange;
-  
+    } else if (item is Reservation ) { 
+       fieldColor = Colors.green; 
     } else {
        fieldColor = Colors.purple;
     }
