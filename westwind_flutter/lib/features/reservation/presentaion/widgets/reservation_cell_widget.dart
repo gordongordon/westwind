@@ -285,14 +285,17 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
      * but second cell can be unpaid, but still Orange!  
     */
     //final int itemCount =  items.length;
-    dynamic item = items[0];
+    dynamic first = items[0];
+    dynamic second = items[1];
     Color fieldColor; 
  
 
-    if (item is RoomTransaction) {
+    if (first is RoomTransaction) {
        fieldColor = Colors.orange;
-    } else if (item is Reservation) { 
+    } else if (first is Reservation && second is Reservation ) { 
        fieldColor = Colors.green; 
+    } else if ( first is Reservation || second is Reservation ) {
+       fieldColor = Colors.blueGrey;
     } else {
        fieldColor = Colors.blue;
     }
