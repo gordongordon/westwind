@@ -290,6 +290,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     Color fieldColor; 
  
 
+    //! Handle records more 2 items 
     if (first is RoomTransaction) {
        fieldColor = Colors.orange;
     } else if (first is Reservation && second is Reservation ) { 
@@ -484,6 +485,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
       BuildContext context, RoomTransaction transaction) {
     return GestureDetector(
       onTap: () => _showRoomTransactionDetails(context, transaction),
+      onLongPress: () => _openRoomGuestTransactionManagePageByRoomGuestId(context, transaction.roomGuestId),
       child: Container(
         color: Colors.orange,
         height: 35,
