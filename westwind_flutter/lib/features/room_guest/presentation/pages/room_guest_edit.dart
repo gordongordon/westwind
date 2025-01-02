@@ -348,8 +348,11 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   void _blocListener(BuildContext context, RoomGuestManageState state) {
     if (state is RoomGuestManageStateFailure) {
       showSnackbar(context, state.message);
-    } else if (state is RoomGuestManageStateSaveSuccess ||
-        state is RoomGuestManageStateCalculateRateSuccess ||
+    } else if (state is RoomGuestManageStateSaveSuccess) {
+      context
+          .read<RoomGuestManageBloc>()
+          .add(CalculateRateRoomGuest(widget.roomGuestId!));
+    } else if (state is RoomGuestManageStateCalculateRateSuccess ||
         state is RoomGuestManageStateDeleteSuccess ||
         state is RoomGuestManageStateChargeAndExtendStayDaySuccess) {
       context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
