@@ -1252,9 +1252,19 @@ class Endpoints extends _i1.EndpointDispatch {
       methodConnectors: {
         'retrieve': _i1.MethodConnector(
           name: 'retrieve',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['systemTime'] as _i9.SystemTimeEndpoint)
+                  .retrieve(session),
+        ),
+        'extendByDay': _i1.MethodConnector(
+          name: 'extendByDay',
           params: {
-            'id': _i1.ParameterDescription(
-              name: 'id',
+            'days': _i1.ParameterDescription(
+              name: 'days',
               type: _i1.getType<int>(),
               nullable: false,
             )
@@ -1263,9 +1273,9 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['systemTime'] as _i9.SystemTimeEndpoint).retrieve(
+              (endpoints['systemTime'] as _i9.SystemTimeEndpoint).extendByDay(
             session,
-            params['id'],
+            params['days'],
           ),
         ),
         'getServerTime': _i1.MethodConnector(

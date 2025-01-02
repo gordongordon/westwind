@@ -16,12 +16,23 @@ class SystemTimeEndpoint extends Endpoint {
   // The methods should return a typed future; the same types as for the parameters are
   // supported. The `session` object provides access to the database, logging,
   // passwords, and information about the request being made to the server.
-  Future<SystemTime?> retrieve(Session session, int id) async {
-    return await SystemTime.db.findById(session, id);
+  Future<SystemTime?> retrieve(Session session) async {
+    return await SystemTime.db.findFirstRow(session);
+  }
+
+  Future<SystemTime?> extendByDay(Session session, int days) async {
+    final time = await retrieve(session);
+
+    if (time != null) {
+      int daysToAdd = days;  // calculate the correct number of days to add here;
+          time.lastAuditDate.add(Duration(days: daysToAdd));
+      return SystemTime.db.updateRow(session, time);
+    }
+
+    return null;
   }
 
   Future<DateTime> getServerTime(Session session) async {
     return DateTime.now().toUtc(); // Return the server time in UTC
   }
-
 }

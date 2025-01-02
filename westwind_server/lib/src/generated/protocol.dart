@@ -37,8 +37,8 @@ import 'roomNumber.dart' as _i25;
 import 'roomStatus.dart' as _i26;
 import 'roomTransaction.dart' as _i27;
 import 'staff.dart' as _i28;
-import 'transactionType.dart' as _i29;
-import 'system_time.dart' as _i30;
+import 'system_time.dart' as _i29;
+import 'transactionType.dart' as _i30;
 import 'package:westwind_server/src/generated/guest.dart' as _i31;
 import 'package:westwind_server/src/generated/rateTable.dart' as _i32;
 import 'package:westwind_server/src/generated/reservation.dart' as _i33;
@@ -70,8 +70,8 @@ export 'roomNumber.dart';
 export 'roomStatus.dart';
 export 'roomTransaction.dart';
 export 'staff.dart';
-export 'transactionType.dart';
 export 'system_time.dart';
+export 'transactionType.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -1532,11 +1532,11 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i28.Staff) {
       return _i28.Staff.fromJson(data) as T;
     }
-    if (t == _i29.TransactionType) {
-      return _i29.TransactionType.fromJson(data) as T;
+    if (t == _i29.SystemTime) {
+      return _i29.SystemTime.fromJson(data) as T;
     }
-    if (t == _i30.SystemTime) {
-      return _i30.SystemTime.fromJson(data) as T;
+    if (t == _i30.TransactionType) {
+      return _i30.TransactionType.fromJson(data) as T;
     }
     if (t == _i1.getType<_i4.BedType?>()) {
       return (data != null ? _i4.BedType.fromJson(data) : null) as T;
@@ -1613,11 +1613,11 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i28.Staff?>()) {
       return (data != null ? _i28.Staff.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i29.TransactionType?>()) {
-      return (data != null ? _i29.TransactionType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i29.SystemTime?>()) {
+      return (data != null ? _i29.SystemTime.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i30.SystemTime?>()) {
-      return (data != null ? _i30.SystemTime.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i30.TransactionType?>()) {
+      return (data != null ? _i30.TransactionType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<List<_i8.Guest>?>()) {
       return (data != null
@@ -1755,11 +1755,11 @@ class Protocol extends _i1.SerializationManagerServer {
     if (data is _i28.Staff) {
       return 'Staff';
     }
-    if (data is _i29.TransactionType) {
-      return 'TransactionType';
-    }
-    if (data is _i30.SystemTime) {
+    if (data is _i29.SystemTime) {
       return 'SystemTime';
+    }
+    if (data is _i30.TransactionType) {
+      return 'TransactionType';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -1853,11 +1853,11 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Staff') {
       return deserialize<_i28.Staff>(data['data']);
     }
-    if (dataClassName == 'TransactionType') {
-      return deserialize<_i29.TransactionType>(data['data']);
-    }
     if (dataClassName == 'SystemTime') {
-      return deserialize<_i30.SystemTime>(data['data']);
+      return deserialize<_i29.SystemTime>(data['data']);
+    }
+    if (dataClassName == 'TransactionType') {
+      return deserialize<_i30.TransactionType>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -1909,8 +1909,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i27.RoomTransaction.t;
       case _i28.Staff:
         return _i28.Staff.t;
-      case _i30.SystemTime:
-        return _i30.SystemTime.t;
+      case _i29.SystemTime:
+        return _i29.SystemTime.t;
     }
     return null;
   }

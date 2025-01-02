@@ -585,11 +585,18 @@ class EndpointSystemTime extends _i1.EndpointRef {
   @override
   String get name => 'systemTime';
 
-  _i2.Future<_i11.SystemTime?> retrieve(int id) =>
+  _i2.Future<_i11.SystemTime?> retrieve() =>
       caller.callServerEndpoint<_i11.SystemTime?>(
         'systemTime',
         'retrieve',
-        {'id': id},
+        {},
+      );
+
+  _i2.Future<_i11.SystemTime?> extendByDay(int days) =>
+      caller.callServerEndpoint<_i11.SystemTime?>(
+        'systemTime',
+        'extendByDay',
+        {'days': days},
       );
 
   _i2.Future<DateTime> getServerTime() => caller.callServerEndpoint<DateTime>(

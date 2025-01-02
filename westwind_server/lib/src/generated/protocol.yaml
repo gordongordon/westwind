@@ -71,4 +71,5 @@ roomTransaction:
   - delete:
 systemTime:
   - retrieve:
+  - extendByDay:
   - getServerTime:
