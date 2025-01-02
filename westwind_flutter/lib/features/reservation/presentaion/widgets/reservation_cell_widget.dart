@@ -460,6 +460,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         child: Container(
           height: 35,
           padding: const EdgeInsets.symmetric(horizontal: 4),
+          color: Colors.green,
           child: Row(
             children: [
               Expanded(
@@ -467,9 +468,10 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
                   '${reservation.guest?.firstName} ${reservation.guest?.lastName}',
                   style: const TextStyle(fontSize: 10, color: Colors.white),
                   overflow: TextOverflow.ellipsis,
+    
                 ),
               ),
-              const Icon(Icons.drag_handle, size: 16, color: Colors.white),
+              const Icon(Icons.phone, size: 16, color: Colors.white),
             ],
           ),
         ),
@@ -519,6 +521,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         child: Container(
           height: 35,
           padding: const EdgeInsets.symmetric(horizontal: 4),
+          color : Colors.blue,
           child: Row(
             children: [
               Expanded(
