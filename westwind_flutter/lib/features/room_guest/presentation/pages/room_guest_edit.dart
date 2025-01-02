@@ -35,9 +35,13 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   final TextEditingController rigNumberController = TextEditingController();
   final TextEditingController rateController = TextEditingController();
   final TextEditingController rateReasonController = TextEditingController();
-  final TextEditingController reservationIdController = TextEditingController();
-  final TextEditingController noteController = TextEditingController(text: "write messages to room guest state only");
+  final TextEditingController reservationIdController =
+      TextEditingController(); //
+  final TextEditingController noteController =
+      TextEditingController(text: "write messages to room guest state only");
+  // final TextEditingController noteController = TextEditingController();
 
+  late DateTime checkInDate;
   DateTime stayDay = TimeManager.instance.today();
   DateTime updatedDate = TimeManager.instance.today();
   DateTime checkOutDate = TimeManager.instance.today();
@@ -119,9 +123,11 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('id', 'ID', idController, enabled: false),
-        _buildTextField('lastName', 'Last Name', enabled: false, lastNameController),
-        _buildTextField('firstName', 'First Name', enabled: false,firstNameController),
-        //    _buildTextField('guestId', 'Guest ID', guestIdController, keyboardType: TextInputType.number),
+        _buildTextField('lastName', 'Last Name', lastNameController,
+            enabled: false),
+        _buildTextField('firstName', 'First Name', firstNameController,
+            enabled: false),
+        //   _buildTextField('guestId', 'Guest ID', guestIdController, keyboardType: TextInputType.number),
         _buildTextField('rigNumber', 'Rig Number', rigNumberController,
             keyboardType: TextInputType.number),
       ],
@@ -320,7 +326,9 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
         roomId: int.parse(roomIdController.text),
         stayDay: formKey.currentState!.fields['stayDay']!.value,
         updateDate: formKey.currentState!.fields['updateDate']!.value,
-        checkInDate: formKey.currentState!.fields['checkInDate']!.value,
+        // checkInDate: TimeManager.instance.now(),
+
+        checkInDate: checkInDate,
         checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
         rateType: RateType.values
             .byName(formKey.currentState!.fields['rateType']!.value),
@@ -366,6 +374,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
     reservationIdController.text = roomGuest.reservationId.toString();
     rigNumberController.text = roomGuest.guest!.rigNumber.toString();
     noteController.text = roomGuest.note;
+    checkInDate = roomGuest.checkInDate;
 
     setState(() {
       checkOutDate = roomGuest.checkOutDate;
