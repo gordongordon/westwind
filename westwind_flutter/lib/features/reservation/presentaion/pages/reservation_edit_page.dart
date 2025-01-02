@@ -143,17 +143,46 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('id', 'ID', idController, null, enabled: false),
-        _buildTextField('firstName', 'First Name', firstNameController, null),
-        _buildTextField('lastName', 'Last Name', lastNameController, null),
         _buildTextFieldPhone('phone', 'Phone', phoneController, onChangedPhone,
             keyboardType: TextInputType.phone),
+        _buildTextField('firstName', 'First Name', firstNameController, null),
+        _buildTextField('lastName', 'Last Name', lastNameController, null),
         _buildTextField(
             'guestId', 'Guest ID', guestIdController, onChangedGuestId,
             keyboardType: TextInputType.number),
         _buildTextField('rigNumber', 'Rig Number', rigNumberController, null,
             keyboardType: TextInputType.number),
-        _buildTextFieldOptional('note', 'Note to Guest', noteController),
+        _buildTextFieldMultiline('note', 'Note to Guest', noteController,
+            keyboardType: TextInputType.multiline),
       ],
+    );
+  }
+
+  Widget _buildTextFieldMultiline(
+    String name,
+    String label,
+    TextEditingController controller, {
+    bool enabled = true,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        maxLines: keyboardType == TextInputType.multiline
+            ? null
+            : 1, // Allow multiple lines for multiline input
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(),
+        ]),
+      ),
     );
   }
 
@@ -189,7 +218,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             initialValue: checkInDate),
         _buildDateTimePicker('checkOutDate', 'Check Out Date',
             initialValue: checkOutDate),
-        _buildDateTimePicker('stayDay', 'Stay Day', initialValue: stayDay),
+         _buildDateTimePicker('stayDay', 'Stay Day', initialValue: stayDay, enabled: false),
         _buildTextField('roomId', 'Room ID', roomIdController, null,
             keyboardType: TextInputType.number),
         FormBuilderSwitch(
@@ -392,23 +421,24 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
   void _saveReservation() {
     if (formKey.currentState?.saveAndValidate() ?? false) {
       final reservation = Reservation(
-        id: widget.reservationId,
-        guestId: int.parse(guestIdController.text),
-        roomId: int.parse(roomIdController.text),
-        isCheckedIn: formKey.currentState!.fields['isCheckedIn']!.value,
-        isCanceled: formKey.currentState!.fields['isCanceled']!.value,
-        isNightShift: formKey.currentState!.fields['isNightShift']!.value,
-        dateCreate: formKey.currentState!.fields['dateCreate']!.value,
-        dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
-        checkInDate: formKey.currentState!.fields['checkInDate']!.value,
-        checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
-        stayDay: formKey.currentState!.fields['stayDay']!.value,
-        rateType: RateType.values
-            .byName(formKey.currentState!.fields['rateType']!.value),
-        rate: double.parse(rateController.text),
-        rateReason: RateReason.values
-            .byName(formKey.currentState!.fields['rateReason']!.value)
-      );
+          id: widget.reservationId,
+          guestId: int.parse(guestIdController.text),
+          roomId: int.parse(roomIdController.text),
+          isCheckedIn: formKey.currentState!.fields['isCheckedIn']!.value,
+          isCanceled: formKey.currentState!.fields['isCanceled']!.value,
+          isNightShift: formKey.currentState!.fields['isNightShift']!.value,
+          dateCreate: formKey.currentState!.fields['dateCreate']!.value,
+          dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
+          checkInDate: formKey.currentState!.fields['checkInDate']!.value,
+          checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
+          //! stayDay should equal to checkIn Day
+          //! haved been handled in server side also every we save reservation.
+          stayDay: formKey.currentState!.fields['checkInDate']!.value,
+          rateType: RateType.values
+              .byName(formKey.currentState!.fields['rateType']!.value),
+          rate: double.parse(rateController.text),
+          rateReason: RateReason.values
+              .byName(formKey.currentState!.fields['rateReason']!.value));
 
       context
           .read<ReservationManageBloc>()
@@ -442,11 +472,19 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
     rateController.text = reservation.rate.toString();
     rateReasonController.text = reservation.rateReason.toString();
     rateTypeController.text = reservation.rateType.toString();
-    firstNameController.text = reservation.guest!.firstName;
-    lastNameController.text = reservation.guest!.lastName;
-    phoneController.text = reservation.guest!.phone;
-    rigNumberController.text = reservation.guest!.rigNumber.toString();
-    noteController.text = reservation.guest!.note;
+    firstNameController.text = reservation.guest == null
+        ? "no name given"
+        : reservation.guest!.firstName;
+    lastNameController.text = reservation.guest == null
+        ? "no last name given"
+        : reservation.guest!.lastName;
+    phoneController.text =
+        reservation.guest == null ? '0000000000' : reservation.guest!.phone;
+    rigNumberController.text = reservation.guest == null
+        ? "no rig given"
+        : reservation.guest!.rigNumber.toString();
+    noteController.text =
+        reservation.guest == null ? "no note given" : reservation.guest!.note;
 
     setState(() {
       checkInDate = reservation.checkInDate;

@@ -166,9 +166,12 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         _buildTextFieldOptionalEmail('email', 'Email', emailController),
         _buildTextFieldPhone('phone', 'Phone', phoneController, _onPhoneChanged),
         _buildTextFieldOptional('rigNumber', 'Rig Number', rigNumberController, keyboardType: TextInputType.number),
+
         _buildRateTypeDropdown(),
+
         _buildInHouseSwitch(),
-        _buildTextFieldOptional('note', 'Note', noteController, keyboardType: TextInputType.multiline),
+
+         _buildTextFieldMultiline('note', 'Note', noteController, keyboardType: TextInputType.multiline),
       ],
     );
   }
@@ -286,6 +289,33 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       ),
     );
   }
+
+
+Widget _buildTextFieldMultiline(
+  String name,
+  String label,
+  TextEditingController controller, {
+  bool enabled = true,
+  TextInputType keyboardType = TextInputType.text,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16.0),
+    child: FormBuilderTextField(
+      name: name,
+      controller: controller,
+      enabled: enabled,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: keyboardType,
+      maxLines: keyboardType == TextInputType.multiline ? null : 1, // Allow multiple lines for multiline input
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(),
+      ]),
+    ),
+  );
+}
 
   Widget _buildTextFieldOptional(String name, String label, TextEditingController controller,
       {TextInputType keyboardType = TextInputType.text}) {
@@ -596,6 +626,7 @@ void _reservationBlocListener(BuildContext context, ReservationManageState state
 }
 
   void _populateGuestFields(Guest guest) {
+
     guestIdController.text = guest.id.toString();
     firstNameController.text = guest.firstName;
     lastNameController.text = guest.lastName;
@@ -603,6 +634,8 @@ void _reservationBlocListener(BuildContext context, ReservationManageState state
     emailController.text = guest.email ?? '';
     rigNumberController.text = guest.rigNumber?.toString() ?? '';
     rateTypeController.text = guest.rateType.name;
+    noteController.text = guest.note;
+
 
     setState(() {
       isInHouse = guest.isInHouse;
@@ -621,6 +654,7 @@ void _reservationBlocListener(BuildContext context, ReservationManageState state
     roomIdController.text = reservation.roomId.toString();
     rateController.text = reservation.rate.toString();
     rateReasonController.text = reservation.rateReason.toString();
+    noteController.text = reservation.guest == null ? "no note given" : reservation.guest!.note ; 
 
     setState(() {
       checkInDate = reservation.checkInDate;

@@ -16,3 +16,4 @@ VALUES
 (12,'Woodland', 'Mark', '12@gmailxx.com','00000000012',false, '03/03/2014', '03/04/2014','horizon',1,1,4,0,'write messages here'),
 (13,'Sunny', 'White', '13@gmailxx.com',  '00000000013',false, '03/03/2014', '03/04/2014','global',1,44,4,0,'write messages here'),
 (14,'Game', 'Chard', '14@gmailxx.com',   '00000000014',false, '03/03/2014', '03/04/2014','global',1,44,5,0,'write messages here');
+ALTER SEQUENCE guest_id_seq RESTART WITH 15;

@@ -58,14 +58,36 @@ class ReservationEndpoint extends Endpoint {
         throw TimeValidationException('check-in time must be in UTC');
       }
 
-      print( 'Save Reservation ${reservation}');
+      print('Save Reservation ${reservation}');
+      DateTime checkInDate = reservation.checkInDate;
+      DateTime checkOutDate = reservation.checkOutDate;
 
+// Ensure checkOutDate is at least 1 day after checkInDate
+      if (checkInDate.isAfter(checkOutDate) ||
+          checkInDate.isAtSameMomentAs(checkOutDate)) {
+          checkOutDate = checkInDate.add(const Duration(days: 1));
+      }
+
+      reservation.checkOutDate = checkOutDate;
+      reservation.stayDay = reservation.checkInDate;
       return await Reservation.db.updateRow(session, reservation);
     } else {
+      DateTime checkInDate = reservation.checkInDate;
+      DateTime checkOutDate = reservation.checkOutDate;
+
+// Ensure checkOutDate is at least 1 day after checkInDate
+      if (checkInDate.isAfter(checkOutDate) ||
+          checkInDate.isAtSameMomentAs(checkOutDate)) {
+        checkOutDate = checkInDate.add(const Duration(days: 1));
+      }
+
+      reservation.checkOutDate = checkOutDate;
       reservation.dateCreate = DateTime.now().toUtc();
-    //  reservation.checkInDate.toUtc().getDateOnly();
-    //  reservation.stayDay.toUtc().getDateOnly();
-    //  reservation.checkOutDate.toUtc().getDateOnly();
+
+      //  reservation.checkInDate.toUtc().getDateOnly();
+      //  reservation.stayDay.toUtc().getDateOnly();
+      //  reservation.checkOutDate.toUtc().getDateOnly();
+      reservation.stayDay = reservation.checkInDate;
       return Reservation.db.insertRow(session, reservation);
     }
   }
@@ -194,8 +216,8 @@ class ReservationEndpoint extends Endpoint {
     return await Reservation.db.find(
       session,
       limit: 20,
-     // where: (reservation) => reservation.isCanceled.equals(false) & reservation.isCheckedIn.equals(false),
-      where: (reservation) => reservation.isCanceled.equals(false) ,
+      // where: (reservation) => reservation.isCanceled.equals(false) & reservation.isCheckedIn.equals(false),
+      where: (reservation) => reservation.isCanceled.equals(false),
       include: Reservation.include(
         guest: Guest.include(),
         room: Room.include(),
@@ -212,7 +234,9 @@ class ReservationEndpoint extends Endpoint {
     return await Reservation.db.find(
       session,
       limit: 20,
-      where: (reservation) => reservation.isCanceled.equals(false) & reservation.isCheckedIn.equals(false),
+      where: (reservation) =>
+          reservation.isCanceled.equals(false) &
+          reservation.isCheckedIn.equals(false),
       //where: (reservation) => reservation.isCanceled.equals(false) ,
       include: Reservation.include(
         guest: Guest.include(),
@@ -335,7 +359,7 @@ class ReservationEndpoint extends Endpoint {
       checkInDate: reservation.checkInDate,
       checkOutDate: reservation.checkOutDate,
       isCheckOut: false,
-      note: reservation.guest == null ? "" : reservation.guest!.note ,
+      note: reservation.guest == null ? "" : reservation.guest!.note,
     );
 
     return roomGuest;

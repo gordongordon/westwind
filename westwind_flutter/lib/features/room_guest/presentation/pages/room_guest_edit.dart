@@ -38,14 +38,15 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   final TextEditingController reservationIdController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
 
-
-  DateTime stayDay=   TimeManager.instance.today();
+  DateTime stayDay = TimeManager.instance.today();
   DateTime updatedDate = TimeManager.instance.today();
-  DateTime checkOutDate = TimeManager.instance.today(); 
+  DateTime checkOutDate = TimeManager.instance.today();
   bool isCheckOut = false;
 
-  final List<String> _rateTypeOptions = RateType.values.map((e) => e.name).toList();
-  final List<String> _rateReasonOptions = RateReason.values.map((e) => e.name).toList();
+  final List<String> _rateTypeOptions =
+      RateType.values.map((e) => e.name).toList();
+  final List<String> _rateReasonOptions =
+      RateReason.values.map((e) => e.name).toList();
 
   bool get isEditing => widget.roomGuestId != null && widget.roomGuestId! > 0;
 
@@ -53,7 +54,9 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   void initState() {
     super.initState();
     if (isEditing) {
-      context.read<RoomGuestManageBloc>().add(RetrieveRoomGuest(widget.roomGuestId!));
+      context
+          .read<RoomGuestManageBloc>()
+          .add(RetrieveRoomGuest(widget.roomGuestId!));
     }
   }
 
@@ -107,18 +110,20 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
-        Text('Note to Room Guest State only', style: Theme.of(context).textTheme.headlineMedium),
+        Text('Note to Room Guest State only',
+            style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
-          _buildTextField('note', 'Note to Room Guest', noteController),
-        Text('Guest Information', style: Theme.of(context).textTheme.headlineMedium),
+        _buildTextFieldMultiline('note', 'Note to Room Guest', noteController,
+            keyboardType: TextInputType.multiline),
+        Text('Guest Information',
+            style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('id', 'ID', idController, enabled: false),
-        _buildTextField('lastName', 'Last Name', lastNameController),
-        _buildTextField('firstName', 'First Name', firstNameController),
-        _buildTextField('guestId', 'Guest ID', guestIdController, keyboardType: TextInputType.number),
-        _buildTextField('rigNumber', 'Rig Number', rigNumberController, keyboardType: TextInputType.number),
-
+        _buildTextField('lastName', 'Last Name', enabled: false, lastNameController),
+        _buildTextField('firstName', 'First Name', enabled: false,firstNameController),
+        //    _buildTextField('guestId', 'Guest ID', guestIdController, keyboardType: TextInputType.number),
+        _buildTextField('rigNumber', 'Rig Number', rigNumberController,
+            keyboardType: TextInputType.number),
       ],
     );
   }
@@ -128,12 +133,17 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 24),
-        Text('Stay Information', style: Theme.of(context).textTheme.headlineMedium),
+        Text('Stay Information',
+            style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildDateTimePicker('stayDay', 'Stay Day', initialValue: stayDay),
-        _buildDateTimePicker('checkOutDate', 'Check Out Date', initialValue: checkOutDate),
-        _buildTextField('roomId', 'Room ID', roomIdController, keyboardType: TextInputType.number),
-        _buildTextField('reservationId', 'Reservation ID', reservationIdController, keyboardType: TextInputType.number),
+        _buildDateTimePicker('checkOutDate', 'Check Out Date',
+            initialValue: checkOutDate),
+        _buildTextField('roomId', 'Room ID', roomIdController,
+            keyboardType: TextInputType.number),
+        _buildTextField(
+            'reservationId', 'Reservation ID', reservationIdController,
+            enabled: false),
         FormBuilderSwitch(
           name: 'isCheckOut',
           title: const Text('Is Check Out'),
@@ -149,11 +159,15 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 24),
-        Text('Rate Information', style: Theme.of(context).textTheme.headlineMedium),
+        Text('Rate Information',
+            style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
-        _buildDropdown('rateType', 'Rate Type', _rateTypeOptions, initialValue: rateTypeController.text),
-        _buildDropdown('rateReason', 'Rate Reason', _rateReasonOptions, initialValue: rateReasonController.text),
-        _buildTextField('rate', 'Rate', rateController, keyboardType: TextInputType.number),
+        _buildDropdown('rateType', 'Rate Type', _rateTypeOptions,
+            initialValue: rateTypeController.text),
+        _buildDropdown('rateReason', 'Rate Reason', _rateReasonOptions,
+            initialValue: rateReasonController.text),
+        _buildTextField('rate', 'Rate', rateController,
+            keyboardType: TextInputType.number),
       ],
     );
   }
@@ -163,10 +177,11 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 24),
-        Text('Additional Information', style: Theme.of(context).textTheme.headlineMedium),
+        Text('Additional Information',
+            style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
-        _buildDateTimePicker('updateDate', 'Update Date', initialValue: updatedDate, enabled: false),
-
+        _buildDateTimePicker('updateDate', 'Update Date',
+            initialValue: updatedDate, enabled: false),
       ],
     );
   }
@@ -175,16 +190,31 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
     return Column(
       children: [
         const SizedBox(height: 24),
-        _buildButton('Charge & Extend', () => context.read<RoomGuestManageBloc>().add(ChargeAndExtendStayDay(id: widget.roomGuestId!))),
+        _buildButton(
+            'Charge & Extend',
+            () => context
+                .read<RoomGuestManageBloc>()
+                .add(ChargeAndExtendStayDay(id: widget.roomGuestId!))),
         const SizedBox(height: 16),
-        _buildButton('Calculate Rate', () => context.read<RoomGuestManageBloc>().add(CalculateRateRoomGuest(widget.roomGuestId!))),
+        _buildButton(
+            'Calculate Rate',
+            () => context
+                .read<RoomGuestManageBloc>()
+                .add(CalculateRateRoomGuest(widget.roomGuestId!))),
         const SizedBox(height: 16),
-        _buildButton('Delete', () => context.read<RoomGuestManageBloc>().add(DeleteRoomGuest(widget.roomGuestId!)), color: Colors.red),
+        _buildButton(
+            'Delete',
+            () => context
+                .read<RoomGuestManageBloc>()
+                .add(DeleteRoomGuest(widget.roomGuestId!)),
+            color: Colors.red),
       ],
     );
   }
 
-  Widget _buildTextField(String name, String label, TextEditingController controller, {bool enabled = true, TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildTextField(
+      String name, String label, TextEditingController controller,
+      {bool enabled = true, TextInputType keyboardType = TextInputType.text}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: FormBuilderTextField(
@@ -196,12 +226,42 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
           border: OutlineInputBorder(),
         ),
         keyboardType: keyboardType,
-        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+        validator:
+            FormBuilderValidators.compose([FormBuilderValidators.required()]),
       ),
     );
   }
 
-  Widget _buildDateTimePicker(String name, String label, {required DateTime initialValue, bool enabled = true}) {
+  Widget _buildTextFieldMultiline(
+    String name,
+    String label,
+    TextEditingController controller, {
+    bool enabled = true,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        maxLines: keyboardType == TextInputType.multiline
+            ? null
+            : 1, // Allow multiple lines for multiline input
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildDateTimePicker(String name, String label,
+      {required DateTime initialValue, bool enabled = true}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: FormBuilderDateTimePicker(
@@ -213,12 +273,14 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
         ),
         initialValue: initialValue,
         inputType: InputType.date,
-        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+        validator:
+            FormBuilderValidators.compose([FormBuilderValidators.required()]),
       ),
     );
   }
 
-  Widget _buildDropdown(String name, String label, List<String> options, {required String initialValue}) {
+  Widget _buildDropdown(String name, String label, List<String> options,
+      {required String initialValue}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: FormBuilderDropdown<String>(
@@ -228,17 +290,22 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
           border: OutlineInputBorder(),
         ),
         initialValue: initialValue,
-        items: options.map((option) => DropdownMenuItem(value: option, child: Text(option))).toList(),
-        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+        items: options
+            .map((option) =>
+                DropdownMenuItem(value: option, child: Text(option)))
+            .toList(),
+        validator:
+            FormBuilderValidators.compose([FormBuilderValidators.required()]),
       ),
     );
   }
 
-  Widget _buildButton(String text, VoidCallback onPressed, {Color color = Colors.blue}) {
+  Widget _buildButton(String text, VoidCallback onPressed,
+      {Color color = Colors.blue}) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor:  color,
+        backgroundColor: color,
         minimumSize: Size(double.infinity, 50),
       ),
       child: Text(text),
@@ -255,13 +322,15 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
         updateDate: formKey.currentState!.fields['updateDate']!.value,
         checkInDate: DateTime.now().getDateOnly(),
         checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
-        rateType: RateType.values.byName(formKey.currentState!.fields['rateType']!.value),
+        rateType: RateType.values
+            .byName(formKey.currentState!.fields['rateType']!.value),
         rate: double.parse(rateController.text),
-        rateReason: RateReason.values.byName(formKey.currentState!.fields['rateReason']!.value),
+        rateReason: RateReason.values
+            .byName(formKey.currentState!.fields['rateReason']!.value),
         roomStatus: RoomStatus.change,
         reservationId: int.parse(reservationIdController.text),
         isCheckOut: isCheckOut,
-        note : noteController.text,
+        note: noteController.text,
       );
 
       context.read<RoomGuestManageBloc>().add(SaveRoomGuest(roomGuest));
@@ -272,13 +341,13 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
     if (state is RoomGuestManageStateFailure) {
       showSnackbar(context, state.message);
     } else if (state is RoomGuestManageStateSaveSuccess ||
-               state is RoomGuestManageStateCalculateRateSuccess ||
-               state is RoomGuestManageStateDeleteSuccess ||
-               state is RoomGuestManageStateChargeAndExtendStayDaySuccess) {
+        state is RoomGuestManageStateCalculateRateSuccess ||
+        state is RoomGuestManageStateDeleteSuccess ||
+        state is RoomGuestManageStateChargeAndExtendStayDaySuccess) {
       context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
 
-      //! Handle exit to Calendar 
-         context.read<RoomCalendarBloc>().add(InitializeCalendar());
+      //! Handle exit to Calendar
+      context.read<RoomCalendarBloc>().add(InitializeCalendar());
       context.pop();
     } else if (state is RoomGuestManageStateRetrieveSuccess) {
       _populateFields(state.roomGuest);
@@ -297,7 +366,6 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
     reservationIdController.text = roomGuest.reservationId.toString();
     rigNumberController.text = roomGuest.guest!.rigNumber.toString();
     noteController.text = roomGuest.note;
-   
 
     setState(() {
       checkOutDate = roomGuest.checkOutDate;

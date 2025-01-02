@@ -149,7 +149,9 @@ class _GuestEditPageState extends State<GuestEditPage> {
         const SizedBox(height: 16),
         _buildDateField('dateCreate', 'Date Created', dateCreate),
         _buildDateField('dateUpdate', 'Date Updated', dateUpdate),
-        _buildTextFieldOptional('note', 'Note to Guest', noteController ),
+//
+
+        _buildTextFieldMultiline('note', 'Note to Guest', noteController, keyboardType:  TextInputType.multiline),
       //  _buildDateField('note', 'Note', note),
       ],
     );
@@ -204,28 +206,31 @@ class _GuestEditPageState extends State<GuestEditPage> {
     );
   }
 
-/*
 Widget _buildTextFieldMultiline(
-      String name, String label, TextEditingController controller,
-      {TextInputType keyboardType = TextInputType.text,
-      int? maxLength}) {
+  String name,
+  String label,
+  TextEditingController controller, {
+  bool enabled = true,
+  TextInputType keyboardType = TextInputType.text,
+}) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 16.0),
     child: FormBuilderTextField(
       name: name,
       controller: controller,
-      maxLines: null,
-      expands: true,
+      enabled: enabled,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(),
       ),
       keyboardType: keyboardType,
-      maxLength: maxLength,
+      maxLines: keyboardType == TextInputType.multiline ? null : 1, // Allow multiple lines for multiline input
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(),
+      ]),
     ),
   );
 }
-*/
 
 
   Widget _buildTextFieldOptional(
