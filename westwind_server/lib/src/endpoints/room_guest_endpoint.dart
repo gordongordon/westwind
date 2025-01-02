@@ -18,25 +18,17 @@ class RoomGuestEndpoint extends Endpoint {
   // passwords, and information about the request being made to the server.
 
   Future<RoomGuest> saveRoomGuest(Session session, RoomGuest res) async {
-    if ( res.id != null) {
+    if (res.id != null) {
       res.updateDate = DateTime.now().toUtc();
       return await RoomGuest.db.updateRow(session, res);
     }
 
-    
     return await RoomGuest.db.insertRow(session, res);
   }
 
-
-
   Future<RoomGuest> insertGuestByReservation(
-      Session session,
-      RoomGuest checkInGuest,
-      Reservation reservation) async {
-
-    final result =
-        await session.db.transaction<RoomGuest>((transaction) async {
-
+      Session session, RoomGuest checkInGuest, Reservation reservation) async {
+    final result = await session.db.transaction<RoomGuest>((transaction) async {
       reservation.isCheckedIn = true;
       await Reservation.db.updateRow(session, reservation);
       // Insert New Room Guest
@@ -51,7 +43,6 @@ class RoomGuestEndpoint extends Endpoint {
     }
     return result;
   }
-
 
 /*
   Future<RoomGuest> createRoomGuestByReservation(
@@ -108,13 +99,10 @@ class RoomGuestEndpoint extends Endpoint {
 
   Future<RoomGuest?> findRoomGuest(Session session,
       {required int roomGuestId}) async {
-    RoomGuest? res = await RoomGuest.db.findById(session, 
-            roomGuestId,
-            include: RoomGuest.include(
-             guest : Guest.include(),
-          )
-          
-          );
+    RoomGuest? res = await RoomGuest.db.findById(session, roomGuestId,
+        include: RoomGuest.include(
+          guest: Guest.include(),
+        ));
 
     //   RoomGuest.db.findFirstRow(session,
     //   where: (t) => t.id.equals(RoomGuestId),
@@ -128,13 +116,12 @@ class RoomGuestEndpoint extends Endpoint {
     return true;
   }
 
-  Future<List<RoomGuest>> updateRoomGuests( Session session, { required List<RoomGuest> roomGuests }) async {
-
-       return await RoomGuest.db.update(session, roomGuests);
-
+  Future<List<RoomGuest>> updateRoomGuests(Session session,
+      {required List<RoomGuest> roomGuests}) async {
+    return await RoomGuest.db.update(session, roomGuests);
   }
 
-  Future<List<RoomGuest>> findRoomGuestByRoomId   (Session session,
+  Future<List<RoomGuest>> findRoomGuestByRoomId(Session session,
       {required int id}) async {
     return await RoomGuest.db.find(session,
         where: (roomGuest) => roomGuest.roomId.equals(id),
@@ -144,116 +131,136 @@ class RoomGuestEndpoint extends Endpoint {
         ));
   }
 
-
-  Future<List<RoomGuest>> retrieveRoommatesSameStayDayWithOutGoHomeById(Session session,
+  Future<List<RoomGuest>> retrieveRoommatesSameStayDayWithOutGoHomeById(
+      Session session,
       {required int id}) async {
-  
-    
     final roomGuest = await RoomGuest.db.findById(session, id);
 
-  //  int roomId = 0;
-        print( "retrieveRoommatesSameStayDaybyId $roomGuest");
-    if ( roomGuest == null || roomGuest.id == null ) {
-        print( "retrieveRoommatesSameStayDaybyId return []");
-        return [];
+    //  int roomId = 0;
+    print("retrieveRoommatesSameStayDaybyId $roomGuest");
+    if (roomGuest == null || roomGuest.id == null) {
+      print("retrieveRoommatesSameStayDaybyId return []");
+      return [];
     }
 
-    final roomId = roomGuest.roomId; 
+    final roomId = roomGuest.roomId;
     final roomGuestId = roomGuest.id;
     final stayDay = roomGuest.stayDay;
 
     final result = await RoomGuest.db.find(session,
-        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDay.equals(stayDay) & roomGuest.rateReason.notEquals(RateReason.gohome),
+        where: (roomGuest) =>
+            roomGuest.roomId.equals(roomId) &
+            roomGuest.stayDay.equals(stayDay) &
+            roomGuest.rateReason.notEquals(RateReason.gohome),
         include: RoomGuest.include(
           guest: Guest.include(),
           room: Room.include(),
         ));
-     
-   final size = result.length;
-   print( "retrieveRoommatesSameStayDaybyId size $size");
+
+    final size = result.length;
+    print("retrieveRoommatesSameStayDaybyId size $size");
     return result;
   }
 
+  Future<List<RoomGuest>> updateRateSameStayDayByReasonAndId(
+      Session session, int id, RateReason reason, double rate) async {
+    final roomGuest = await RoomGuest.db.findById(session, id);
 
-  Future<List<RoomGuest>> updateRateSameStayDayByReasonAndId(Session session, int id, RateReason reason, double rate) async {
-    
-        final roomGuest = await RoomGuest.db.findById(session, id);
-
-  //  int roomId = 0;
-        print( "updateRateSameStayDayByReasonAndId $roomGuest");
-    if ( roomGuest == null || roomGuest.id == null ) {
-        print( "updateRateSameStayDayByReasonAndId return []");
-        return [];
+    //  int roomId = 0;
+    print("updateRateSameStayDayByReasonAndId $roomGuest");
+    if (roomGuest == null || roomGuest.id == null) {
+      print("updateRateSameStayDayByReasonAndId return []");
+      return [];
     }
 
-    final roomId = roomGuest.roomId; 
+    final roomId = roomGuest.roomId;
     final roomGuestId = roomGuest.id;
     final stayDay = roomGuest.stayDay;
 
     final roommates = await RoomGuest.db.find(session,
-        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDay.equals(stayDay) & roomGuest.rateReason.equals(reason),
+        where: (roomGuest) =>
+            roomGuest.roomId.equals(roomId) &
+            roomGuest.stayDay.equals(stayDay) &
+            roomGuest.rateReason.equals(reason),
         include: RoomGuest.include(
           guest: Guest.include(),
           room: Room.include(),
         ));
-     
-  
-   final result =  roommates.map((roomGuest) => roomGuest..rate = 0).toList();
 
-   final size = roommates.length;
-   print( "updateRateSameStayDayByReasonAndId size $size");
+    final result = roommates.map((roomGuest) => roomGuest..rate = 0).toList();
+
+    final size = roommates.length;
+    print("updateRateSameStayDayByReasonAndId size $size");
 
     RoomGuest.db.update(session, result);
     return result;
-  }  
-
-
+  }
 
   /**
    * Note: retrieve roommate but checkout
    */
   Future<List<RoomGuest>> retrieveRoommatesSameStayDayById(Session session,
       {required int id}) async {
-  
-    
     final roomGuest = await RoomGuest.db.findById(session, id);
 
-  //  int roomId = 0;
-        print( "retrieveRoommatesSameStayDaybyId $roomGuest");
-    if ( roomGuest == null || roomGuest.id == null ) {
-        print( "retrieveRoommatesSameStayDaybyId return []");
-        return [];
+    //  int roomId = 0;
+    print("retrieveRoommatesSameStayDaybyId $roomGuest");
+    if (roomGuest == null || roomGuest.id == null) {
+      print("retrieveRoommatesSameStayDaybyId return []");
+      return [];
     }
 
-    final roomId = roomGuest.roomId; 
-    final roomGuestId = roomGuest.id;
+    final roomId = roomGuest.roomId;
+   // final roomGuestId = roomGuest.id;
     final stayDay = roomGuest.stayDay;
 
+    // Normalize both DateTime objects to the same time (00:00:00)
+   // DateTime normalizedStayDate =
+   //     DateTime(stayDay.year, stayDay.month, stayDay.day);
+
     final result = await RoomGuest.db.find(session,
-        where: (roomGuest) => roomGuest.roomId.equals(roomId) & roomGuest.stayDay.equals(stayDay) & roomGuest.isCheckOut.equals(false),
+        where: (roomGuest) =>
+            roomGuest.roomId.equals(roomId) &
+            //     roomGuest.stayDay.equals(stayDay)
+            //     &
+            //    isSameStayDay()
+            //   &
+            roomGuest.isCheckOut.equals(false),
         include: RoomGuest.include(
           guest: Guest.include(),
           room: Room.include(),
         ));
-     
-   final size = result.length;
-   print( "retrieveRoommatesSameStayDaybyId size $size");
-    return result;
+
+    // Add a method to compare the date part only
+    bool isSameStayDay(DateTime stayDay, DateTime roomGuestStayDay) {
+      final DateTime roomGuestStayDate =
+          DateTime(stayDay.year, stayDay.month, stayDay.day);
+      final DateTime normalizedStayDateNormalized = DateTime(roomGuestStayDay.year,
+          roomGuestStayDay.month, roomGuestStayDay.day);
+
+      return roomGuestStayDate.isAtSameMomentAs(normalizedStayDateNormalized);
+    }
+
+// Filter the results based on the `isSameStayDay` method
+    final filteredResult =
+        result.where((roomGuest) => isSameStayDay(stayDay, roomGuest.stayDay)).toList();
+
+    final size = filteredResult.length;
+    print("retrieveRoommatesSameStayDaybyId size $size");
+    return filteredResult;
   }
-
-
 
   Future<List<RoomGuest>> getAllRoomGuest(Session session) async {
     return await RoomGuest.db.find(session,
         //orderBy: (t) => t.roomId,
         orderByList: (t) => [
-          Order( column: t.updateDate, orderDescending: true),
-          Order( column: t.roomId, orderDescending : true),
-          Order( column: t.stayDay, orderDescending: false),
-          Order( column: t.checkOutDate, orderDescending: false),
-          Order( column: t.guest.lastName, orderDescending: false),
-        ],
-       // where: (t) => t.isCheckOut.equals(false),
+              Order(column: t.updateDate, orderDescending: true),
+              Order(column: t.roomId, orderDescending: true),
+              Order(column: t.stayDay, orderDescending: false),
+              Order(column: t.checkOutDate, orderDescending: false),
+              Order(column: t.guest.lastName, orderDescending: false),
+            ],
+        // where: (t) => t.isCheckOut.equals(false),
         include: RoomGuest.include(
           guest: Guest.include(company: Company.include()),
           room: Room.include(),
@@ -266,12 +273,12 @@ class RoomGuestEndpoint extends Endpoint {
     return await RoomGuest.db.find(session,
         //orderBy: (t) => t.roomId,
         orderByList: (t) => [
-          Order( column: t.updateDate, orderDescending: true),
-          Order( column: t.roomId, orderDescending : true),
-          Order( column: t.stayDay, orderDescending: false),
-          Order( column: t.checkOutDate, orderDescending: false),
-          Order( column: t.guest.lastName, orderDescending: false),
-        ],
+              Order(column: t.updateDate, orderDescending: true),
+              Order(column: t.roomId, orderDescending: true),
+              Order(column: t.stayDay, orderDescending: false),
+              Order(column: t.checkOutDate, orderDescending: false),
+              Order(column: t.guest.lastName, orderDescending: false),
+            ],
         where: (t) => t.isCheckOut.equals(false),
         include: RoomGuest.include(
           guest: Guest.include(company: Company.include()),
@@ -280,7 +287,6 @@ class RoomGuestEndpoint extends Endpoint {
           roomTransactions: RoomTransaction.includeList(),
         ));
   }
-
 
   Future<List<RoomGuest>> getAllRoomGuestByDay(
       Session session, DateTime datetime) async {
@@ -362,11 +368,11 @@ class RoomGuestEndpoint extends Endpoint {
   }
 
   Future<RoomGuest?> findById(Session session, {required int id}) async {
-    return await RoomGuest.db.findById(session, id, 
-            include: RoomGuest.include(
+    return await RoomGuest.db.findById(session, id,
+        include: RoomGuest.include(
           guest: Guest.include(),
           room: Room.include(),
-                    roomTransactions: RoomTransaction.includeList(),
+          roomTransactions: RoomTransaction.includeList(),
         ));
   }
 
@@ -460,5 +466,4 @@ class RoomGuestEndpoint extends Endpoint {
 
     return await RoomGuest.db.updateRow(session, roomGuest);
   }
-  
 }

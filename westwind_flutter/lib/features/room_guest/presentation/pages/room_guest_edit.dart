@@ -36,7 +36,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   final TextEditingController rateController = TextEditingController();
   final TextEditingController rateReasonController = TextEditingController();
   final TextEditingController reservationIdController = TextEditingController();
-  final TextEditingController noteController = TextEditingController();
+  final TextEditingController noteController = TextEditingController(text: "write messages to room guest state only");
 
   DateTime stayDay = TimeManager.instance.today();
   DateTime updatedDate = TimeManager.instance.today();
@@ -320,7 +320,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
         roomId: int.parse(roomIdController.text),
         stayDay: formKey.currentState!.fields['stayDay']!.value,
         updateDate: formKey.currentState!.fields['updateDate']!.value,
-        checkInDate: DateTime.now().getDateOnly(),
+        checkInDate: formKey.currentState!.fields['checkInDate']!.value,
         checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
         rateType: RateType.values
             .byName(formKey.currentState!.fields['rateType']!.value),
