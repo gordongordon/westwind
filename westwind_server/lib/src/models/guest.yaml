@@ -14,6 +14,7 @@ fields:
       rigNumber : int?
       accountBalance : double 
       roomGuets : List<RoomGuest>?, relation(name=guest_room_guest)
+      note: String
 
 indexes:
    guest_index_idx: 

@@ -92,6 +92,7 @@ class GuestRepositoryImp implements GuestRepository {
       staffId: data.staffId,
       companyId: data.companyId,
       accountBalance: data.accountBalance,
+      note: data.note,
     );
   }
 
@@ -114,6 +115,7 @@ class GuestRepositoryImp implements GuestRepository {
       staffId: data.staffId,
       companyId: data.companyId,
       accountBalance: data.accountBalance,
+      note: data.note,
     );
   }
 }

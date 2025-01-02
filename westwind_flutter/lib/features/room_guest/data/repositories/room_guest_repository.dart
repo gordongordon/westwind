@@ -207,6 +207,7 @@ class RoomGuestRepositoryImpl implements RoomGuestRepository {
       checkInDate: TimeManager.instance.toServer(data.checkInDate),
       checkOutDate: TimeManager.instance.toServer(data.checkOutDate),
       isCheckOut: data.isCheckOut,
+      note: data.note,
     );
   }
 
@@ -230,6 +231,7 @@ class RoomGuestRepositoryImpl implements RoomGuestRepository {
       checkInDate: TimeManager.instance.fromServer(data.checkInDate),
       checkOutDate: TimeManager.instance.fromServer(data.checkOutDate),
       isCheckOut: data.isCheckOut,
+      note: data.note,
     );
   }
 }

@@ -36,6 +36,8 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   final TextEditingController rateController = TextEditingController();
   final TextEditingController rateReasonController = TextEditingController();
   final TextEditingController reservationIdController = TextEditingController();
+  final TextEditingController noteController = TextEditingController();
+
 
   DateTime stayDay=   TimeManager.instance.today();
   DateTime updatedDate = TimeManager.instance.today();
@@ -105,6 +107,10 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
+        Text('Note to Room Guest State only', style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+          _buildTextField('note', 'Note to Room Guest', noteController),
         Text('Guest Information', style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('id', 'ID', idController, enabled: false),
@@ -112,6 +118,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
         _buildTextField('firstName', 'First Name', firstNameController),
         _buildTextField('guestId', 'Guest ID', guestIdController, keyboardType: TextInputType.number),
         _buildTextField('rigNumber', 'Rig Number', rigNumberController, keyboardType: TextInputType.number),
+
       ],
     );
   }
@@ -159,6 +166,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
         Text('Additional Information', style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildDateTimePicker('updateDate', 'Update Date', initialValue: updatedDate, enabled: false),
+
       ],
     );
   }
@@ -253,6 +261,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
         roomStatus: RoomStatus.change,
         reservationId: int.parse(reservationIdController.text),
         isCheckOut: isCheckOut,
+        note : noteController.text,
       );
 
       context.read<RoomGuestManageBloc>().add(SaveRoomGuest(roomGuest));
@@ -287,6 +296,8 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
     lastNameController.text = roomGuest.guest!.lastName;
     reservationIdController.text = roomGuest.reservationId.toString();
     rigNumberController.text = roomGuest.guest!.rigNumber.toString();
+    noteController.text = roomGuest.note;
+   
 
     setState(() {
       checkOutDate = roomGuest.checkOutDate;

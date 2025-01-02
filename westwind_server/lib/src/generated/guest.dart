@@ -31,6 +31,7 @@ abstract class Guest implements _i1.TableRow, _i1.ProtocolSerialization {
     this.rigNumber,
     required this.accountBalance,
     this.roomGuets,
+    required this.note,
   });
 
   factory Guest({
@@ -49,6 +50,7 @@ abstract class Guest implements _i1.TableRow, _i1.ProtocolSerialization {
     int? rigNumber,
     required double accountBalance,
     List<_i4.RoomGuest>? roomGuets,
+    required String note,
   }) = _GuestImpl;
 
   factory Guest.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -77,6 +79,7 @@ abstract class Guest implements _i1.TableRow, _i1.ProtocolSerialization {
       roomGuets: (jsonSerialization['roomGuets'] as List?)
           ?.map((e) => _i4.RoomGuest.fromJson((e as Map<String, dynamic>)))
           .toList(),
+      note: jsonSerialization['note'] as String,
     );
   }
 
@@ -115,6 +118,8 @@ abstract class Guest implements _i1.TableRow, _i1.ProtocolSerialization {
 
   List<_i4.RoomGuest>? roomGuets;
 
+  String note;
+
   @override
   _i1.Table get table => t;
 
@@ -134,6 +139,7 @@ abstract class Guest implements _i1.TableRow, _i1.ProtocolSerialization {
     int? rigNumber,
     double? accountBalance,
     List<_i4.RoomGuest>? roomGuets,
+    String? note,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -154,6 +160,7 @@ abstract class Guest implements _i1.TableRow, _i1.ProtocolSerialization {
       'accountBalance': accountBalance,
       if (roomGuets != null)
         'roomGuets': roomGuets?.toJson(valueToJson: (v) => v.toJson()),
+      'note': note,
     };
   }
 
@@ -177,6 +184,7 @@ abstract class Guest implements _i1.TableRow, _i1.ProtocolSerialization {
       if (roomGuets != null)
         'roomGuets':
             roomGuets?.toJson(valueToJson: (v) => v.toJsonForProtocol()),
+      'note': note,
     };
   }
 
@@ -235,6 +243,7 @@ class _GuestImpl extends Guest {
     int? rigNumber,
     required double accountBalance,
     List<_i4.RoomGuest>? roomGuets,
+    required String note,
   }) : super._(
           id: id,
           firstName: firstName,
@@ -251,6 +260,7 @@ class _GuestImpl extends Guest {
           rigNumber: rigNumber,
           accountBalance: accountBalance,
           roomGuets: roomGuets,
+          note: note,
         );
 
   @override
@@ -270,6 +280,7 @@ class _GuestImpl extends Guest {
     Object? rigNumber = _Undefined,
     double? accountBalance,
     Object? roomGuets = _Undefined,
+    String? note,
   }) {
     return Guest(
       id: id is int? ? id : this.id,
@@ -289,6 +300,7 @@ class _GuestImpl extends Guest {
       roomGuets: roomGuets is List<_i4.RoomGuest>?
           ? roomGuets
           : this.roomGuets?.map((e0) => e0.copyWith()).toList(),
+      note: note ?? this.note,
     );
   }
 }
@@ -344,6 +356,10 @@ class GuestTable extends _i1.Table {
       'accountBalance',
       this,
     );
+    note = _i1.ColumnString(
+      'note',
+      this,
+    );
   }
 
   late final _i1.ColumnString firstName;
@@ -375,6 +391,8 @@ class GuestTable extends _i1.Table {
   _i4.RoomGuestTable? ___roomGuets;
 
   _i1.ManyRelation<_i4.RoomGuestTable>? _roomGuets;
+
+  late final _i1.ColumnString note;
 
   _i3.CompanyTable get company {
     if (_company != null) return _company!;
@@ -435,6 +453,7 @@ class GuestTable extends _i1.Table {
         companyId,
         rigNumber,
         accountBalance,
+        note,
       ];
 
   @override

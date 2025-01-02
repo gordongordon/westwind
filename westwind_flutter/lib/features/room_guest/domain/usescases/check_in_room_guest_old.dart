@@ -63,6 +63,7 @@ RoomGuest createRoomGuestObject(Reservation reservation, double rate, RateReason
       checkInDate: DateTime.now(),
       checkOutDate: reservation.checkOutDate,
       isCheckOut: false,
+      note: "Write messages to room guest!"
       );
 }
 

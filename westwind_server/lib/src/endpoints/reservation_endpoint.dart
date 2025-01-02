@@ -335,6 +335,7 @@ class ReservationEndpoint extends Endpoint {
       checkInDate: reservation.checkInDate,
       checkOutDate: reservation.checkOutDate,
       isCheckOut: false,
+      note: reservation.guest == null ? "" : reservation.guest!.note ,
     );
 
     return roomGuest;

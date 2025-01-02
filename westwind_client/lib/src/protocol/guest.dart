@@ -31,6 +31,7 @@ abstract class Guest implements _i1.SerializableModel {
     this.rigNumber,
     required this.accountBalance,
     this.roomGuets,
+    required this.note,
   });
 
   factory Guest({
@@ -49,6 +50,7 @@ abstract class Guest implements _i1.SerializableModel {
     int? rigNumber,
     required double accountBalance,
     List<_i4.RoomGuest>? roomGuets,
+    required String note,
   }) = _GuestImpl;
 
   factory Guest.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -77,6 +79,7 @@ abstract class Guest implements _i1.SerializableModel {
       roomGuets: (jsonSerialization['roomGuets'] as List?)
           ?.map((e) => _i4.RoomGuest.fromJson((e as Map<String, dynamic>)))
           .toList(),
+      note: jsonSerialization['note'] as String,
     );
   }
 
@@ -113,6 +116,8 @@ abstract class Guest implements _i1.SerializableModel {
 
   List<_i4.RoomGuest>? roomGuets;
 
+  String note;
+
   Guest copyWith({
     int? id,
     String? firstName,
@@ -129,6 +134,7 @@ abstract class Guest implements _i1.SerializableModel {
     int? rigNumber,
     double? accountBalance,
     List<_i4.RoomGuest>? roomGuets,
+    String? note,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -149,6 +155,7 @@ abstract class Guest implements _i1.SerializableModel {
       'accountBalance': accountBalance,
       if (roomGuets != null)
         'roomGuets': roomGuets?.toJson(valueToJson: (v) => v.toJson()),
+      'note': note,
     };
   }
 
@@ -177,6 +184,7 @@ class _GuestImpl extends Guest {
     int? rigNumber,
     required double accountBalance,
     List<_i4.RoomGuest>? roomGuets,
+    required String note,
   }) : super._(
           id: id,
           firstName: firstName,
@@ -193,6 +201,7 @@ class _GuestImpl extends Guest {
           rigNumber: rigNumber,
           accountBalance: accountBalance,
           roomGuets: roomGuets,
+          note: note,
         );
 
   @override
@@ -212,6 +221,7 @@ class _GuestImpl extends Guest {
     Object? rigNumber = _Undefined,
     double? accountBalance,
     Object? roomGuets = _Undefined,
+    String? note,
   }) {
     return Guest(
       id: id is int? ? id : this.id,
@@ -231,6 +241,7 @@ class _GuestImpl extends Guest {
       roomGuets: roomGuets is List<_i4.RoomGuest>?
           ? roomGuets
           : this.roomGuets?.map((e0) => e0.copyWith()).toList(),
+      note: note ?? this.note,
     );
   }
 }

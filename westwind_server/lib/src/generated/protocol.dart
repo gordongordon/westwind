@@ -253,6 +253,12 @@ class Protocol extends _i1.SerializationManagerServer {
           isNullable: false,
           dartType: 'double',
         ),
+        _i2.ColumnDefinition(
+          name: 'note',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
       ],
       foreignKeys: [
         _i2.ForeignKeyDefinition(
@@ -1005,6 +1011,12 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.boolean,
           isNullable: false,
           dartType: 'bool',
+        ),
+        _i2.ColumnDefinition(
+          name: 'note',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
         ),
       ],
       foreignKeys: [

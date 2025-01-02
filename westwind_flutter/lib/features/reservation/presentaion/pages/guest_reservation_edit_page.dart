@@ -44,6 +44,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController rateTypeController = TextEditingController(text: RateType.standard.name);
   final TextEditingController rigNumberController = TextEditingController();
+  final TextEditingController noteController = TextEditingController();
 
   // Reservation-related controllers
   final TextEditingController reservationIdController = TextEditingController(text: "0");
@@ -167,6 +168,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         _buildTextFieldOptional('rigNumber', 'Rig Number', rigNumberController, keyboardType: TextInputType.number),
         _buildRateTypeDropdown(),
         _buildInHouseSwitch(),
+        _buildTextFieldOptional('note', 'Note', noteController, keyboardType: TextInputType.multiline),
       ],
     );
   }
@@ -499,6 +501,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       companyId: 1,
       rigNumber: rigNumberController.text.isNotEmpty ? int.parse(rigNumberController.text) : null,
       accountBalance: 0,
+      note: noteController.text,
     );
 
     context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));

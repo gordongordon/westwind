@@ -1,4 +1,3 @@
-
 import 'package:fpdart/fpdart.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/error/failure.dart';
@@ -14,71 +13,71 @@ class CheckInRoomGuestUseCase
 
   CheckInRoomGuestUseCase(this.roomGuestRepository, this.rateTableRepository);
 
-@override
-Future<Either<Failure, RoomGuest>> call(CheckInRoomGuestParams params) async {
-  
-  final reservation = params.reservation;
-  
-  // Calculate rate
-  final rate = await computeRate(reservation);
-  
-  // Retrieve roommates
-  final roommates = await handleRetrieveByRoomId(reservation.roomId);
+  @override
+  Future<Either<Failure, RoomGuest>> call(CheckInRoomGuestParams params) async {
+    final reservation = params.reservation;
 
-  // Determine the RateReason based on whether there are any roommates
-  final reason = roommates.isEmpty ? RateReason.single : RateReason.share;
-  
-  // Update each roommate's rate and rate reason
-  _updateRoomMatesRateAndReason(roommates, rate, reason);
+    // Calculate rate
+    final rate = await computeRate(reservation);
 
-  // Create RoomGuest object with calculated values
-  final roomGuest = createRoomGuestObject(reservation, rate, reason);
+    // Retrieve roommates
+    final roommates = await handleRetrieveByRoomId(reservation.roomId);
 
-  
-  return await roomGuestRepository.checkIn(
-    checkInRoomGuest: roomGuest,
-   // roommates: roommates,
-    reservation: reservation,
+    // Determine the RateReason based on whether there are any roommates
+    final reason = roommates.isEmpty ? RateReason.single : RateReason.share;
+
+    // Update each roommate's rate and rate reason
+    _updateRoomMatesRateAndReason(roommates, rate, reason);
+
+    // Create RoomGuest object with calculated values
+    final roomGuest = createRoomGuestObject(reservation, rate, reason);
+
+    return await roomGuestRepository.checkIn(
+      checkInRoomGuest: roomGuest,
+      // roommates: roommates,
+      reservation: reservation,
     );
-}
+  }
 
 // New method to update the rate and rate reason for each roommate
-void _updateRoomMatesRateAndReason(List<RoomGuest> roommates, double rate, RateReason reason) {
-  for (var roommate in roommates) {
-    roommate.rate = rate;
-    roommate.rateReason = reason;
+  void _updateRoomMatesRateAndReason(
+      List<RoomGuest> roommates, double rate, RateReason reason) {
+    for (var roommate in roommates) {
+      roommate.rate = rate;
+      roommate.rateReason = reason;
+    }
   }
-}
 
 // New method to create a RoomGuest object with the given parameters
-RoomGuest createRoomGuestObject(Reservation reservation, double rate, RateReason reason) {
-  return RoomGuest(
-      roomId: reservation.roomId,
-      stayDay: DateTime.now().getDateOnly(),
-      guestId: reservation.guestId,
-      rateType: reservation.rateType,
-      rateReason: reason,
-      rate: rate,
-      reservationId: reservation.id!,
-      roomStatus: RoomStatus.change,
-      checkInDate: DateTime.now(),
-      checkOutDate: reservation.checkOutDate,
-      isCheckOut: false,
-      );
-}
+  RoomGuest createRoomGuestObject(
+      Reservation reservation, double rate, RateReason reason) {
+    return RoomGuest(
+        roomId: reservation.roomId,
+        stayDay: DateTime.now().getDateOnly(),
+        guestId: reservation.guestId,
+        rateType: reservation.rateType,
+        rateReason: reason,
+        rate: rate,
+        reservationId: reservation.id!,
+        roomStatus: RoomStatus.change,
+        checkInDate: DateTime.now(),
+        checkOutDate: reservation.checkOutDate,
+        isCheckOut: false,
+        note: "Write messages to room guest!");
+  }
 
 // New methods to handle errors and return the results of asynchronous operations
   bool handleHasRoommate(Either<Failure, bool> input) {
     return input.fold(
-    (failure) => throw failure, // Throw the error if it exists
-    (r) => r, // Return the result if there is no error
+      (failure) => throw failure, // Throw the error if it exists
+      (r) => r, // Return the result if there is no error
     );
   }
 
   double handleRate(Either<Failure, double> input) {
     return input.fold(
-    (failure) => throw failure, // Throw the error if it exists
-    (r) => r, // Return the result if there is no error
+      (failure) => throw failure, // Throw the error if it exists
+      (r) => r, // Return the result if there is no error
     );
   }
 
@@ -105,8 +104,8 @@ RoomGuest createRoomGuestObject(Reservation reservation, double rate, RateReason
     final result = await roomGuestRepository.retrieveByRoomId(id);
 
     return result.fold(
-    (failure) => throw failure, // Throw the error if it exists
-    (r) => r, // Return the result if there is no error
+      (failure) => throw failure, // Throw the error if it exists
+      (r) => r, // Return the result if there is no error
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
+import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_events.dart';
@@ -32,9 +33,10 @@ class _GuestEditPageState extends State<GuestEditPage> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController rateTypeController = TextEditingController();
   final TextEditingController rigNumberController = TextEditingController();
+  final TextEditingController noteController = TextEditingController();
 
-  DateTime dateCreate = DateTime.now();
-  DateTime dateUpdate = DateTime.now();
+  DateTime dateCreate = TimeManager.instance.now();
+  DateTime dateUpdate = TimeManager.instance.now();
   bool isInHouse = false;
 
   final List<String> _rateTypeOptions =
@@ -147,6 +149,8 @@ class _GuestEditPageState extends State<GuestEditPage> {
         const SizedBox(height: 16),
         _buildDateField('dateCreate', 'Date Created', dateCreate),
         _buildDateField('dateUpdate', 'Date Updated', dateUpdate),
+        _buildTextFieldOptional('note', 'Note to Guest', noteController ),
+      //  _buildDateField('note', 'Note', note),
       ],
     );
   }
@@ -199,6 +203,30 @@ class _GuestEditPageState extends State<GuestEditPage> {
       ),
     );
   }
+
+/*
+Widget _buildTextFieldMultiline(
+      String name, String label, TextEditingController controller,
+      {TextInputType keyboardType = TextInputType.text,
+      int? maxLength}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16.0),
+    child: FormBuilderTextField(
+      name: name,
+      controller: controller,
+      maxLines: null,
+      expands: true,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: keyboardType,
+      maxLength: maxLength,
+    ),
+  );
+}
+*/
+
 
   Widget _buildTextFieldOptional(
       String name, String label, TextEditingController controller,
@@ -319,6 +347,7 @@ class _GuestEditPageState extends State<GuestEditPage> {
               ? int.parse(rigNumberController.text)
               : null,
           accountBalance: 0,
+          note: noteController.text,
         );
 
         context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
@@ -383,5 +412,6 @@ class _GuestEditPageState extends State<GuestEditPage> {
     }
 
       formKey.currentState?.patchValue({'rateType': guest.rateType.name});
+    noteController.text = guest.note;
   }
 }

@@ -35,10 +35,12 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
   final TextEditingController rateTypeController =
       TextEditingController(text: RateType.standard.toString());
   final TextEditingController rigNumberController = TextEditingController();
+
   final TextEditingController rateController =
       TextEditingController(text: "86");
   final TextEditingController rateReasonController =
       TextEditingController(text: RateReason.single.toString());
+  final TextEditingController noteController = TextEditingController();
 
   DateTime dateCreate = TimeManager.instance.now();
   DateTime dateUpdate = TimeManager.instance.now();
@@ -150,7 +152,28 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             keyboardType: TextInputType.number),
         _buildTextField('rigNumber', 'Rig Number', rigNumberController, null,
             keyboardType: TextInputType.number),
+        _buildTextFieldOptional('note', 'Note to Guest', noteController),
       ],
+    );
+  }
+
+  Widget _buildTextFieldOptional(
+      String name, String label, TextEditingController controller,
+      {TextInputType keyboardType = TextInputType.text, int? maxLength}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        keyboardType: keyboardType,
+        maxLength: maxLength,
+        // onChanged: ,
+        // validator: FormBuilderValidators.compose([]),
+      ),
     );
   }
 
@@ -384,7 +407,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             .byName(formKey.currentState!.fields['rateType']!.value),
         rate: double.parse(rateController.text),
         rateReason: RateReason.values
-            .byName(formKey.currentState!.fields['rateReason']!.value),
+            .byName(formKey.currentState!.fields['rateReason']!.value)
       );
 
       context
@@ -423,6 +446,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
     lastNameController.text = reservation.guest!.lastName;
     phoneController.text = reservation.guest!.phone;
     rigNumberController.text = reservation.guest!.rigNumber.toString();
+    noteController.text = reservation.guest!.note;
 
     setState(() {
       checkInDate = reservation.checkInDate;
@@ -452,5 +476,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
     formKey.currentState?.patchValue({
       'rateType': guest.rateType.name,
     });
+
+    noteController.text = guest.note;
   }
 }

@@ -37,6 +37,7 @@ abstract class RoomGuest implements _i1.SerializableModel {
     required this.checkOutDate,
     this.updateDate,
     required this.isCheckOut,
+    required this.note,
   });
 
   factory RoomGuest({
@@ -57,6 +58,7 @@ abstract class RoomGuest implements _i1.SerializableModel {
     required DateTime checkOutDate,
     DateTime? updateDate,
     required bool isCheckOut,
+    required String note,
   }) = _RoomGuestImpl;
 
   factory RoomGuest.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -97,6 +99,7 @@ abstract class RoomGuest implements _i1.SerializableModel {
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updateDate']),
       isCheckOut: jsonSerialization['isCheckOut'] as bool,
+      note: jsonSerialization['note'] as String,
     );
   }
 
@@ -137,6 +140,8 @@ abstract class RoomGuest implements _i1.SerializableModel {
 
   bool isCheckOut;
 
+  String note;
+
   RoomGuest copyWith({
     int? id,
     int? roomId,
@@ -155,6 +160,7 @@ abstract class RoomGuest implements _i1.SerializableModel {
     DateTime? checkOutDate,
     DateTime? updateDate,
     bool? isCheckOut,
+    String? note,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -178,6 +184,7 @@ abstract class RoomGuest implements _i1.SerializableModel {
       'checkOutDate': checkOutDate.toJson(),
       if (updateDate != null) 'updateDate': updateDate?.toJson(),
       'isCheckOut': isCheckOut,
+      'note': note,
     };
   }
 
@@ -208,6 +215,7 @@ class _RoomGuestImpl extends RoomGuest {
     required DateTime checkOutDate,
     DateTime? updateDate,
     required bool isCheckOut,
+    required String note,
   }) : super._(
           id: id,
           roomId: roomId,
@@ -226,6 +234,7 @@ class _RoomGuestImpl extends RoomGuest {
           checkOutDate: checkOutDate,
           updateDate: updateDate,
           isCheckOut: isCheckOut,
+          note: note,
         );
 
   @override
@@ -247,6 +256,7 @@ class _RoomGuestImpl extends RoomGuest {
     DateTime? checkOutDate,
     Object? updateDate = _Undefined,
     bool? isCheckOut,
+    String? note,
   }) {
     return RoomGuest(
       id: id is int? ? id : this.id,
@@ -270,6 +280,7 @@ class _RoomGuestImpl extends RoomGuest {
       checkOutDate: checkOutDate ?? this.checkOutDate,
       updateDate: updateDate is DateTime? ? updateDate : this.updateDate,
       isCheckOut: isCheckOut ?? this.isCheckOut,
+      note: note ?? this.note,
     );
   }
 }

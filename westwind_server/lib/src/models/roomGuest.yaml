@@ -14,6 +14,7 @@ fields:
   checkOutDate : DateTime
   updateDate   : DateTime?
   isCheckOut   : bool
+  note : String
 
   
 indexes: 
