@@ -138,7 +138,7 @@ VALUES
 ,('element','double',112)
 ,('element','gohome',0)
 ,('element','other',0)
-,('spectre','single'86)
+,('spectre','single',86)
 ,('spectre','share',56)
 ,('spectre','double',112)
 ,('spectre','gohome',0)
@@ -159,5 +159,5 @@ VALUES
 ,('other','share',56)
 ,('other','double',112)
 ,('other','gohome',0)
-,('other','other',0)
+,('other','other',0);
 
