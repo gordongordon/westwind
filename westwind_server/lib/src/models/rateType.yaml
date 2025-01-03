@@ -1,17 +1,34 @@
 enum: RateType
 serialized: byName
 values:
- - standard
- - ironhand
- - horizon
+ - acp
+ - bullitt
  - clear
- - global
  - darkstar
  - devita
- - massey_mechanical
- - force_inspection
- - bullet_well
- - PWS_Frontier
+ - element
+ - ensign
  - expedia
+ - fmt
+ - force_inspection
+ - global
+ - horizon
+ - ironhand
+ - kurgeon
+ - k_rite
+ - markhoe
+ - massey_mechanical
+ - maxx_north
  - online
+ - other
+ - paragon
+ - performance
+ - PWS_Frontier
+ - savanah
+ - spectre
  - staff
+ - standard
+ - strike
+ - team_snb
+ - wsk
+

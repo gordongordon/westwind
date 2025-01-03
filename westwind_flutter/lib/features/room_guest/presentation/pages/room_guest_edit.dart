@@ -48,7 +48,11 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   bool isCheckOut = false;
 
   final List<String> _rateTypeOptions =
-      RateType.values.map((e) => e.name).toList();
+      RateType.values.map((e) => e.name).toSet().toList();
+
+  
+
+
   final List<String> _rateReasonOptions =
       RateReason.values.map((e) => e.name).toList();
 
@@ -161,6 +165,10 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   }
 
   Widget _buildRateInfoSection() {
+
+    print('print rateTypeOptions $_rateTypeOptions');
+    print('RateTable ${RateType.values}');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -290,6 +298,10 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
 
   Widget _buildDropdown(String name, String label, List<String> options,
       {required String initialValue}) {
+
+        print('** Print Options : $options');
+
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: FormBuilderDropdown<String>(
