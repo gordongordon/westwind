@@ -158,14 +158,13 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       children: [
         Text('Guest Information', style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
-        _buildTextFieldPhone('phone', 'Phone', phoneController, _onPhoneChanged),
                 _buildTextField('guestId', 'Guest ID', guestIdController, null, enabled: false),
         _buildTextField('firstName', 'First Name', firstNameController, null,
           validator: FormBuilderValidators.compose([FormBuilderValidators.required()])),
         _buildTextField('lastName', 'Last Name', lastNameController, null,
           validator: FormBuilderValidators.compose([FormBuilderValidators.required()])),
         _buildTextFieldOptionalEmail('email', 'Email', emailController),
-
+        _buildTextFieldPhone('phone', 'Phone', phoneController, _onPhoneChanged),
         _buildTextFieldOptional('rigNumber', 'Rig Number', rigNumberController, keyboardType: TextInputType.number),
 
         _buildRateTypeDropdown(),
