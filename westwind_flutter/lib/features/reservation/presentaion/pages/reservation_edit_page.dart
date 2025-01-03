@@ -186,6 +186,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
     );
   }
 
+/*
   Widget _buildTextFieldOptional(
       String name, String label, TextEditingController controller,
       {TextInputType keyboardType = TextInputType.text, int? maxLength}) {
@@ -205,6 +206,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
       ),
     );
   }
+  */
 
   Widget _buildReservationInfoSection() {
     return Column(
@@ -297,6 +299,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
     );
   }
 
+/*
   Widget _buildTextFieldGuestId(String name, String label,
       TextEditingController controller, void Function(String?)? onChanged,
       {bool enabled = true, TextInputType keyboardType = TextInputType.text}) {
@@ -319,7 +322,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
       ),
     );
   }
-
+*/
   Widget _buildTextFieldPhone(String name, String label,
       TextEditingController controller, void Function(String?)? onChanged,
       {bool enabled = true, TextInputType keyboardType = TextInputType.text}) {

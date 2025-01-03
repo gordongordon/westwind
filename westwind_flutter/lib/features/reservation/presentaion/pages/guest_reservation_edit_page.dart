@@ -158,13 +158,14 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       children: [
         Text('Guest Information', style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
-        _buildTextField('guestId', 'Guest ID', guestIdController, null, enabled: false),
+        _buildTextFieldPhone('phone', 'Phone', phoneController, _onPhoneChanged),
+                _buildTextField('guestId', 'Guest ID', guestIdController, null, enabled: false),
         _buildTextField('firstName', 'First Name', firstNameController, null,
           validator: FormBuilderValidators.compose([FormBuilderValidators.required()])),
         _buildTextField('lastName', 'Last Name', lastNameController, null,
           validator: FormBuilderValidators.compose([FormBuilderValidators.required()])),
         _buildTextFieldOptionalEmail('email', 'Email', emailController),
-        _buildTextFieldPhone('phone', 'Phone', phoneController, _onPhoneChanged),
+
         _buildTextFieldOptional('rigNumber', 'Rig Number', rigNumberController, keyboardType: TextInputType.number),
 
         _buildRateTypeDropdown(),
@@ -564,7 +565,9 @@ void _saveReservation(int guestId) {
         isNightShift: formKey.currentState?.fields['isNightShift']?.value ?? false,
         dateCreate: formKey.currentState?.fields['dateCreate']?.value ?? TimeManager.instance.now(),
         dateUpdate: formKey.currentState?.fields['dateUpdate']?.value ??TimeManager.instance.now(),
+        //! should I use now()
         checkInDate: formKey.currentState?.fields['checkInDate']?.value ?? TimeManager.instance.today(),
+        //! May have a bug checkOutDate
         checkOutDate: formKey.currentState?.fields['checkOutDate']?.value ?? TimeManager.instance.today().add(Duration(days: 1)),
         stayDay: formKey.currentState?.fields['stayDay']?.value ?? TimeManager.instance.today(),
         rateType: RateType.values.byName(formKey.currentState?.fields['rateType']?.value ?? RateType.standard.name),
