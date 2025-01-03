@@ -201,12 +201,15 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
             () => context
                 .read<RoomGuestManageBloc>()
                 .add(ChargeAndExtendStayDay(id: widget.roomGuestId!))),
+/*
         const SizedBox(height: 16),
         _buildButton(
             'Calculate Rate',
             () => context
                 .read<RoomGuestManageBloc>()
                 .add(CalculateRateRoomGuest(widget.roomGuestId!))),
+*/
+
         const SizedBox(height: 16),
         _buildButton(
             'Delete',
