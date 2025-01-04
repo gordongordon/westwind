@@ -15,7 +15,7 @@ abstract interface class RoomGuestDatasource {
   Future<List<RoomGuest>> update({required List<RoomGuest> roomGuests});
   Future<List<RoomGuest>> retrieveRoommatesSameStayDayById(int roomGuestId);
   Future<List<RoomGuest>> retrieveRoommatesSameStayDayWithOutGoHomeById( int roomGuestId );
-    Future<List<RoomGuest>> updateRateSameStayDayByReasonAndId( int roomGuestId, RateReason rearson, double rate); 
+  Future<List<RoomGuest>> updateRateSameStayDayByReasonAndId( int roomGuestId, RateReason rearson, double rate); 
 }
 
 class RoomGuestDatasourceImpl implements RoomGuestDatasource {

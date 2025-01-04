@@ -250,15 +250,19 @@ class RoomGuestEndpoint extends Endpoint {
     return filteredResult;
   }
 
+  /**
+   * will be call from list() datasource layer
+   */
   Future<List<RoomGuest>> getAllRoomGuest(Session session) async {
     return await RoomGuest.db.find(session,
         //orderBy: (t) => t.roomId,
         orderByList: (t) => [
+              Order(column: t.roomId, orderDescending: false),
+              Order(column: t.guest.lastName, orderDescending: false),
               Order(column: t.updateDate, orderDescending: true),
-              Order(column: t.roomId, orderDescending: true),
               Order(column: t.stayDay, orderDescending: false),
               Order(column: t.checkOutDate, orderDescending: false),
-              Order(column: t.guest.lastName, orderDescending: false),
+
             ],
         // where: (t) => t.isCheckOut.equals(false),
         include: RoomGuest.include(
@@ -273,11 +277,11 @@ class RoomGuestEndpoint extends Endpoint {
     return await RoomGuest.db.find(session,
         //orderBy: (t) => t.roomId,
         orderByList: (t) => [
+              Order(column: t.roomId, orderDescending: false),
+              Order(column: t.guest.lastName, orderDescending: false),
               Order(column: t.updateDate, orderDescending: true),
-              Order(column: t.roomId, orderDescending: true),
               Order(column: t.stayDay, orderDescending: false),
               Order(column: t.checkOutDate, orderDescending: false),
-              Order(column: t.guest.lastName, orderDescending: false),
             ],
         where: (t) => t.isCheckOut.equals(false),
         include: RoomGuest.include(

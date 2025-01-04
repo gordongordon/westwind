@@ -392,6 +392,9 @@ class EndpointRoomGuest extends _i1.EndpointRef {
         {'id': id},
       );
 
+/**
+   * will be call from list() datasource layer
+   */
   _i2.Future<List<_i9.RoomGuest>> getAllRoomGuest() =>
       caller.callServerEndpoint<List<_i9.RoomGuest>>(
         'roomGuest',
