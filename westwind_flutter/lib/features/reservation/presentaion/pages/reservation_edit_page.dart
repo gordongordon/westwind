@@ -152,7 +152,8 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             keyboardType: TextInputType.number),
         _buildTextField('rigNumber', 'Rig Number', rigNumberController, null,
             keyboardType: TextInputType.number),
-        _buildTextFieldMultiline('note', 'Note to Guest', noteController,
+        _buildTextFieldMultiline(
+            'note', 'Note to Room Guest State only', noteController,
             keyboardType: TextInputType.multiline),
       ],
     );
@@ -220,7 +221,8 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
             initialValue: checkInDate),
         _buildDateTimePicker('checkOutDate', 'Check Out Date',
             initialValue: checkOutDate),
-         _buildDateTimePicker('stayDay', 'Stay Day', initialValue: stayDay, enabled: false),
+        _buildDateTimePicker('stayDay', 'Stay Day',
+            initialValue: stayDay, enabled: false),
         _buildTextField('roomId', 'Room ID', roomIdController, null,
             keyboardType: TextInputType.number),
         FormBuilderSwitch(
@@ -424,24 +426,26 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
   void _saveReservation() {
     if (formKey.currentState?.saveAndValidate() ?? false) {
       final reservation = Reservation(
-          id: widget.reservationId,
-          guestId: int.parse(guestIdController.text),
-          roomId: int.parse(roomIdController.text),
-          isCheckedIn: formKey.currentState!.fields['isCheckedIn']!.value,
-          isCanceled: formKey.currentState!.fields['isCanceled']!.value,
-          isNightShift: formKey.currentState!.fields['isNightShift']!.value,
-          dateCreate: formKey.currentState!.fields['dateCreate']!.value,
-          dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
-          checkInDate: formKey.currentState!.fields['checkInDate']!.value,
-          checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
-          //! stayDay should equal to checkIn Day
-          //! haved been handled in server side also every we save reservation.
-          stayDay: formKey.currentState!.fields['checkInDate']!.value,
-          rateType: RateType.values
-              .byName(formKey.currentState!.fields['rateType']!.value),
-          rate: double.parse(rateController.text),
-          rateReason: RateReason.values
-              .byName(formKey.currentState!.fields['rateReason']!.value));
+        id: widget.reservationId,
+        guestId: int.parse(guestIdController.text),
+        roomId: int.parse(roomIdController.text),
+        isCheckedIn: formKey.currentState!.fields['isCheckedIn']!.value,
+        isCanceled: formKey.currentState!.fields['isCanceled']!.value,
+        isNightShift: formKey.currentState!.fields['isNightShift']!.value,
+        dateCreate: formKey.currentState!.fields['dateCreate']!.value,
+        dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
+        checkInDate: formKey.currentState!.fields['checkInDate']!.value,
+        checkOutDate: formKey.currentState!.fields['checkOutDate']!.value,
+        //! stayDay should equal to checkIn Day
+        //! haved been handled in server side also every we save reservation.
+        stayDay: formKey.currentState!.fields['checkInDate']!.value,
+        rateType: RateType.values
+            .byName(formKey.currentState!.fields['rateType']!.value),
+        rate: double.parse(rateController.text),
+        rateReason: RateReason.values
+            .byName(formKey.currentState!.fields['rateReason']!.value),
+        note: noteController.text,
+      );
 
       context
           .read<ReservationManageBloc>()
@@ -487,7 +491,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
         ? "no rig given"
         : reservation.guest!.rigNumber.toString();
     noteController.text =
-        reservation.guest == null ? "no note given" : reservation.guest!.note;
+        reservation.note == null ? "no note given" : reservation.note!;
 
     setState(() {
       checkInDate = reservation.checkInDate;
@@ -518,6 +522,6 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
       'rateType': guest.rateType.name,
     });
 
-    noteController.text = guest.note;
+    // noteController.text = guest.note;
   }
 }

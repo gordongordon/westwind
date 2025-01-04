@@ -309,7 +309,7 @@ class ReservationEndpoint extends Endpoint {
           errorType: ErrorType.NotFound);
     }
 
-    reservation.checkInDate = DateTime.now().toUtc();
+   // reservation.checkInDate = DateTime.now().toUtc();
 
     if (!reservation.dateCreate.isUtc) {
       throw TimeValidationException('date-create time must be in UTC');
@@ -348,6 +348,7 @@ class ReservationEndpoint extends Endpoint {
 
     final roomGuest = RoomGuest(
       roomId: reservation.roomId,
+      // ! Not sure yet, should stayDay or not. 
       stayDay: reservation.checkInDate,
       guestId: reservation.guestId,
       //   roomTransactions: null,
@@ -359,7 +360,7 @@ class ReservationEndpoint extends Endpoint {
       checkInDate: reservation.checkInDate,
       checkOutDate: reservation.checkOutDate,
       isCheckOut: false,
-      note: reservation.guest == null ? "" : reservation.guest!.note,
+      note: reservation.note == null ? "no message given" : reservation.note!,
     );
 
     return roomGuest;

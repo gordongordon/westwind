@@ -12,51 +12,99 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 
 enum RateType implements _i1.SerializableModel {
-  standard,
-  ironhand,
-  horizon,
+  acp,
+  bullitt,
   clear,
-  global,
   darkstar,
   devita,
-  massey_mechanical,
-  force_inspection,
-  bullet_well,
-  PWS_Frontier,
+  element,
+  ensign,
   expedia,
+  fmt,
+  force_inspection,
+  global,
+  horizon,
+  ironhand,
+  kurgeon,
+  k_rite,
+  markhoe,
+  massey_mechanical,
+  maxx_north,
   online,
-  staff;
+  other,
+  paragon,
+  performance,
+  PWS_Frontier,
+  savanah,
+  spectre,
+  staff,
+  standard,
+  strike,
+  team_snb,
+  wsk;
 
   static RateType fromJson(String name) {
     switch (name) {
-      case 'standard':
-        return standard;
-      case 'ironhand':
-        return ironhand;
-      case 'horizon':
-        return horizon;
+      case 'acp':
+        return acp;
+      case 'bullitt':
+        return bullitt;
       case 'clear':
         return clear;
-      case 'global':
-        return global;
       case 'darkstar':
         return darkstar;
       case 'devita':
         return devita;
-      case 'massey_mechanical':
-        return massey_mechanical;
-      case 'force_inspection':
-        return force_inspection;
-      case 'bullet_well':
-        return bullet_well;
-      case 'PWS_Frontier':
-        return PWS_Frontier;
+      case 'element':
+        return element;
+      case 'ensign':
+        return ensign;
       case 'expedia':
         return expedia;
+      case 'fmt':
+        return fmt;
+      case 'force_inspection':
+        return force_inspection;
+      case 'global':
+        return global;
+      case 'horizon':
+        return horizon;
+      case 'ironhand':
+        return ironhand;
+      case 'kurgeon':
+        return kurgeon;
+      case 'k_rite':
+        return k_rite;
+      case 'markhoe':
+        return markhoe;
+      case 'massey_mechanical':
+        return massey_mechanical;
+      case 'maxx_north':
+        return maxx_north;
       case 'online':
         return online;
+      case 'other':
+        return other;
+      case 'paragon':
+        return paragon;
+      case 'performance':
+        return performance;
+      case 'PWS_Frontier':
+        return PWS_Frontier;
+      case 'savanah':
+        return savanah;
+      case 'spectre':
+        return spectre;
       case 'staff':
         return staff;
+      case 'standard':
+        return standard;
+      case 'strike':
+        return strike;
+      case 'team_snb':
+        return team_snb;
+      case 'wsk':
+        return wsk;
       default:
         throw ArgumentError('Value "$name" cannot be converted to "RateType"');
     }
