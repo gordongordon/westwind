@@ -58,14 +58,14 @@ class _RoomTransactionManagementFormWidgetState
       roomIdController.text = roomGuest.roomId.toString();
       stayDay = roomGuest.stayDay;
       itemTypeController.text = ItemType.other.name;
-      transactionTypeController.text = TransactionType.payment.name;
+      transactionTypeController.text = TransactionType.pay.name;
     }
     _updateItemTypeOptions(transactionTypeController.text);
   }
 
   void _updateItemTypeOptions(String transactionType) {
     setState(() {
-      if (transactionType == TransactionType.payment.name) {
+      if (transactionType == TransactionType.pay.name) {
         _currentItemTypeOptions = [
           ItemType.debit.name,
           ItemType.cash.name,
@@ -365,7 +365,7 @@ class _RoomTransactionManagementFormWidgetState
           break;
         // break;
         case TransactionType.deposit:
-        case TransactionType.payment:
+        case TransactionType.pay:
         case TransactionType.adjustCredit:
           sign = -1;
         case TransactionType.charge:
