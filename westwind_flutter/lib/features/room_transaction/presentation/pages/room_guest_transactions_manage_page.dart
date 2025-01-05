@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/features/app_user/presentation/widgets/app_user_dropdown.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
@@ -27,6 +29,8 @@ class _RoomGuestTransactionsManagePage extends State<RoomGuestTransactionsManage
   late String firstName;
   late String lastName; 
   late int roomNumber;
+
+  final TextEditingController noteController = TextEditingController();
 
   @override
   void initState() {
@@ -60,7 +64,29 @@ class _RoomGuestTransactionsManagePage extends State<RoomGuestTransactionsManage
       body: BlocConsumer<RoomGuestManageBloc, RoomGuestManageState>(
         listener: _blocListener,
         builder: (context, state) {
-          return RoomGuestTransactionsManageWidget(roomGuestId: widget.roomGuestId ?? 0 );
+
+       // _buildTextFieldMultiline('note', 'Note', noteController, keyboardType: TextInputType.multiline),
+
+          return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+                  const SizedBox(height: 24),
+          // Left side: Transaction List
+            _buildTextFieldMultiline('note', 'Note to Room Guest State only', noteController, keyboardType: TextInputType.multiline),
+
+    
+          // Right side: Transaction Form
+          Expanded(
+            flex: 1,
+            child: RoomGuestTransactionsManageWidget(roomGuestId: widget.roomGuestId ?? 0 ),
+          ),
+        ],
+      );
+          
+          
+          
+          
+        //  RoomGuestTransactionsManageWidget(roomGuestId: widget.roomGuestId ?? 0 );
         },
       ),
 
@@ -70,6 +96,34 @@ class _RoomGuestTransactionsManagePage extends State<RoomGuestTransactionsManage
     
   }
 
+
+Widget _buildTextFieldMultiline(
+  String name,
+  String label,
+  TextEditingController controller, {
+  bool enabled = true,
+  TextInputType keyboardType = TextInputType.text,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16.0),
+    child: FormBuilderTextField(
+      name: name,
+      controller: controller,
+      enabled: enabled,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: keyboardType,
+      maxLines: keyboardType == TextInputType.multiline ? null : 1, // Allow multiple lines for multiline input
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(),
+      ]),
+    ),
+  );
+}
+
+
   void _blocListener(BuildContext context, RoomGuestManageState state) {
     if (state is RoomGuestManageStateFailure) {
       showSnackbar(context, state.message );
@@ -78,6 +132,7 @@ class _RoomGuestTransactionsManagePage extends State<RoomGuestTransactionsManage
          firstName = state.roomGuest.guest!.firstName;
          lastName = state.roomGuest.guest!.lastName;
          roomNumber = state.roomGuest.roomId;
+         noteController.text = state.roomGuest.note;
       });
     }
   }

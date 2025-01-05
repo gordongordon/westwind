@@ -34,7 +34,7 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
 
   void _initializeColumns() {
     columns.addAll([
-      _buildIdColumn(),
+ 
       _buildNumberColumn('Room Id', 'roomId', 120),
       _buildDateColumn('StayDay', 'stayDay'),
       _buildSelectColumn(
@@ -49,6 +49,7 @@ class _RoomTransactionListWidgetState extends State<RoomTransactionListWidget> {
       _buildDateColumn('Transaction Day', 'transactionDay'),
       _buildNumberColumn('RoomGuest Id', 'roomGuestId', 120),
       _buildNumberColumn('Guest Id', 'guestId', 80),
+      _buildIdColumn(),
     ]);
   }
 

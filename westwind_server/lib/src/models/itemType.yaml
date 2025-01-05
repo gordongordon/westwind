@@ -12,6 +12,7 @@ values:
   - other
   - visa
   - master
+  - amex
   - cash
   - eTransfer
   - gift_card

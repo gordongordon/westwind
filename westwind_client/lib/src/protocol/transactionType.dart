@@ -13,9 +13,9 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 enum TransactionType implements _i1.SerializableModel {
   deposit,
-  pay,
-  charge,
+  payment,
   refund,
+  charge,
   adjustDebit,
   adjustCredit;
 
@@ -23,12 +23,12 @@ enum TransactionType implements _i1.SerializableModel {
     switch (name) {
       case 'deposit':
         return deposit;
-      case 'pay':
-        return pay;
-      case 'charge':
-        return charge;
+      case 'payment':
+        return payment;
       case 'refund':
         return refund;
+      case 'charge':
+        return charge;
       case 'adjustDebit':
         return adjustDebit;
       case 'adjustCredit':

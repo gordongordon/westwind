@@ -144,9 +144,11 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
               _buildGuestInfoSection(),
               _buildReservationInfoSection(),
               _buildRateInfoSection(),
+              _buildActionButtons(),
+              
               _buildAdditionalInfoSection(),
           //    if (isGuestEditing || isReservationEditing) _buildActionButtons(),
-              _buildActionButtons(),
+
             ],
           ),
         ),
@@ -176,7 +178,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
             initialValue: rateTypeController.text),
 
 
-        // _buildInHouseSwitch(),
+        /*
 
         FormBuilderSwitch(
           name: 'isInHouse',
@@ -184,6 +186,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           initialValue: isCanceled,
           onChanged: (val) => setState(() => isInHouse = val ?? false),
         ),
+        */
 
          _buildTextFieldMultiline('note', 'Note', noteController, keyboardType: TextInputType.multiline),
       ],
@@ -207,6 +210,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
             FormBuilderValidators.required(),
             FormBuilderValidators.integer(),
           ])),
+          /*
         FormBuilderSwitch(
           name: 'isCheckedIn',
           title: const Text('Is Checked In'),
@@ -219,6 +223,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           initialValue: isCanceled,
           onChanged: (val) => setState(() => isCanceled = val ?? false),
         ),
+        */
         FormBuilderSwitch(
           name: 'isNightShift',
           title: const Text('Is Night Shift'),

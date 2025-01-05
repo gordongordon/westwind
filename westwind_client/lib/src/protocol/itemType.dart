@@ -23,6 +23,7 @@ enum ItemType implements _i1.SerializableModel {
   other,
   visa,
   master,
+  amex,
   cash,
   eTransfer,
   gift_card,
@@ -53,6 +54,8 @@ enum ItemType implements _i1.SerializableModel {
         return visa;
       case 'master':
         return master;
+      case 'amex':
+        return amex;
       case 'cash':
         return cash;
       case 'eTransfer':

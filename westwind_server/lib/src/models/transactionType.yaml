@@ -2,8 +2,8 @@ enum: TransactionType
 serialized: byName
 values:
   - deposit
-  - pay
-  - charge
+  - payment
   - refund
+  - charge
   - adjustDebit
   - adjustCredit

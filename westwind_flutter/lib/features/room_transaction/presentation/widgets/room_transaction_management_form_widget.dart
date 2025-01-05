@@ -59,21 +59,23 @@ class _RoomTransactionManagementFormWidgetState
       roomIdController.text = roomGuest.roomId.toString();
       stayDay = roomGuest.stayDay;
       itemTypeController.text = ItemType.other.name;
-      transactionTypeController.text = TransactionType.pay.name;
+      transactionTypeController.text = TransactionType.payment.name;
     }
     _updateItemTypeOptions(transactionTypeController.text);
   }
 
   void _updateItemTypeOptions(String transactionType) {
     setState(() {
-      if (transactionType == TransactionType.pay.name) {
+      if (transactionType == TransactionType.payment.name) {
         _currentItemTypeOptions = [
           ItemType.debit.name,
           ItemType.cash.name,
           ItemType.visa.name,
           ItemType.master.name,
+          ItemType.amex.name,
           ItemType.eTransfer.name,
           ItemType.gift_card.name,
+  
         ];
       } else if (transactionType == TransactionType.charge.name) {
         _currentItemTypeOptions = [
@@ -92,6 +94,7 @@ class _RoomTransactionManagementFormWidgetState
           ItemType.cash.name,
           ItemType.visa.name,
           ItemType.master.name,
+          ItemType.amex.name,
           ItemType.eTransfer.name,
           ItemType.gift_card.name,
         ];
@@ -101,6 +104,7 @@ class _RoomTransactionManagementFormWidgetState
           ItemType.cash.name,
           ItemType.visa.name,
           ItemType.master.name,
+          ItemType.amex.name,
           ItemType.eTransfer.name,
           ItemType.gift_card.name,
         ];
@@ -157,7 +161,7 @@ class _RoomTransactionManagementFormWidgetState
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _saveRoomTransaction,
-                child: const Text('Save Room 33 Transaction'),
+                child: const Text('Save Room Transaction'),
               ),
             ],
           ),
@@ -171,7 +175,7 @@ class _RoomTransactionManagementFormWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Transaction Details',
+        Text('Create a new transaction details',
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildDropdown(
@@ -362,7 +366,7 @@ class _RoomTransactionManagementFormWidgetState
            break;
         // break;
         case TransactionType.deposit:
-        case TransactionType.pay:
+        case TransactionType.payment:
 
         case TransactionType.adjustCredit:
           sign = -1;
@@ -393,6 +397,7 @@ class _RoomTransactionManagementFormWidgetState
         case ItemType.other:
         case ItemType.visa:
         case ItemType.master:
+        case ItemType.amex:
         case ItemType.cash:
         case ItemType.eTransfer:
         case ItemType.gift_card:
