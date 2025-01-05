@@ -51,7 +51,6 @@ class _RoomTransactionManagementFormWidgetState
     super.initState();
     if (widget.roomTransaction != null) {
       _populateFields(widget.roomTransaction!);
-      
     } else if (widget.roomGuest != null) {
       final roomGuest = widget.roomGuest!;
       roomGuestIdController.text = roomGuest.id.toString();
@@ -75,18 +74,18 @@ class _RoomTransactionManagementFormWidgetState
           ItemType.amex.name,
           ItemType.eTransfer.name,
           ItemType.gift_card.name,
-  
         ];
       } else if (transactionType == TransactionType.charge.name) {
         _currentItemTypeOptions = [
           ItemType.laundry.name,
-          ItemType.room_adjust.name,
+   //       ItemType.room_adjust.name,
           ItemType.pet.name,
           ItemType.atm.name,
           ItemType.demage.name,
           ItemType.food.name,
           ItemType.other.name,
           ItemType.vending.name,
+          ItemType.room.name,
         ];
       } else if (transactionType == TransactionType.deposit.name) {
         _currentItemTypeOptions = [
@@ -170,7 +169,6 @@ class _RoomTransactionManagementFormWidgetState
     );
   }
 
-
   Widget _buildRoomGuestDetailsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,6 +197,7 @@ class _RoomTransactionManagementFormWidgetState
           if (value != null) {
             setState(() {
               itemTypeController.text = value;
+              _updateItemTypeOptions(value);
             });
           }
         }),
@@ -207,14 +206,14 @@ class _RoomTransactionManagementFormWidgetState
       ],
     );
   }
-  
 
   Widget _buildTransactionDetailsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         //! This can be null //
-        Text('Transaction Details -  ${widget.roomTransaction!.guest != null ? "${widget.roomTransaction!.guest!.firstName} ${widget.roomTransaction!.guest!.lastName} - Room # ${widget.roomTransaction!.roomId}"  : "Unknow Guest Name"}',
+        Text(
+            'Transaction Details -  ${widget.roomTransaction!.guest != null ? "${widget.roomTransaction!.guest!.firstName} ${widget.roomTransaction!.guest!.lastName} - Room # ${widget.roomTransaction!.roomId}" : "Unknow Guest Name"}',
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
         _buildTextField('id', 'Transaction ID', idController, enabled: false),
@@ -360,14 +359,13 @@ class _RoomTransactionManagementFormWidgetState
 
       switch (transactionType) {
         case TransactionType.refund:
-           {
-            sign = 1; 
-           }
-           break;
+          {
+            sign = 1;
+          }
+          break;
         // break;
         case TransactionType.deposit:
         case TransactionType.payment:
-
         case TransactionType.adjustCredit:
           sign = -1;
         case TransactionType.charge:
@@ -379,12 +377,12 @@ class _RoomTransactionManagementFormWidgetState
         case ItemType.room:
         case ItemType.room_adjust:
           cost = amount / 1.09;
-          gst = amount - cost - cost * 1.04 ;
+          gst = amount - cost - cost * 1.04;
           levy = amount - cost - cost * 1.05;
 
-         //  gst = amount * 0.05; gst + levy + cost = amount
-         //  gst = amount - 
-         // levy = amount * 0.04;
+        //  gst = amount * 0.05; gst + levy + cost = amount
+        //  gst = amount -
+        // levy = amount * 0.04;
         case ItemType.food:
         case ItemType.laundry:
         case ItemType.pet:
@@ -406,12 +404,11 @@ class _RoomTransactionManagementFormWidgetState
           levy = 0;
       }
 
-      if ( itemType == ItemType.room_adjust) {
-          total = amount;
-          amount = cost;
-      }
-      else { 
-          total = amount + gst + levy;
+      if (itemType == ItemType.room_adjust) {
+        total = amount;
+        amount = cost;
+      } else {
+        total = amount + gst + levy;
       }
       final totalFinal = total * sign;
       final amountFinal = amount * sign;
@@ -447,9 +444,11 @@ class _RoomTransactionManagementFormWidgetState
     totalController.text = transaction.total.abs().toString();
     transactionTypeController.text = transaction.transactionType.name;
     itemTypeController.text = transaction.itemType.name;
-    transactionDay = transaction.transactionDay.toLocal();
+    //   transactionDay = transaction.transactionDay.toLocal();
+    transactionDay = transaction.transactionDay;
     stayDay = transaction.stayDay;
     descriptionController.text = transaction.description;
+    // transactionTypeController.text = transaction.transactionType;
 
     _updateItemTypeOptions(transaction.transactionType.name);
   }
