@@ -16,6 +16,7 @@ enum PaymentType implements _i1.SerializableModel {
   master,
   debit,
   cash,
+  amex,
   eTransfer,
   cheque,
   bill,
@@ -31,6 +32,8 @@ enum PaymentType implements _i1.SerializableModel {
         return debit;
       case 'cash':
         return cash;
+      case 'amex':
+        return amex;
       case 'eTransfer':
         return eTransfer;
       case 'cheque':

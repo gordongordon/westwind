@@ -5,6 +5,7 @@ values:
  - master
  - debit
  - cash
+ - amex
  - eTransfer
  - cheque
  - bill 

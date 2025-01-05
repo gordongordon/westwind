@@ -22,10 +22,10 @@ class GuestReservationEditPage extends StatefulWidget {
   
   static String route([int? guestId, int? reservationId]) => 
       "/guest-reservation/edit/${guestId ?? ':guestId'}/${reservationId ?? ':reservationId'}";
+
   static String routeNew() => "/guest-reservation/new";
 
   static String routeCalendar([int? roomId, DateTime? date]) =>  "/guest-reservation/calendar/${roomId ?? ':roomId'}/${date ?? ':date'}";
-
 
   const GuestReservationEditPage({super.key, this.guestId, this.reservationId, this.roomId, this.date});
 
@@ -64,6 +64,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   bool isCheckedIn = false;
   bool isCanceled = false;
   bool isNightShift = false;
+  bool isSaveAndCheckIn = false;
 
   // Dropdown options
   final List<String> _rateTypeOptions = RateType.values.map((e) => e.name).toList();
@@ -144,7 +145,8 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
               _buildReservationInfoSection(),
               _buildRateInfoSection(),
               _buildAdditionalInfoSection(),
-              if (isGuestEditing || isReservationEditing) _buildActionButtons(),
+          //    if (isGuestEditing || isReservationEditing) _buildActionButtons(),
+              _buildActionButtons(),
             ],
           ),
         ),
@@ -168,9 +170,20 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
 
         _buildTextFieldOptional('rigNumber', 'Rig Number', rigNumberController, keyboardType: TextInputType.number),
 
-        _buildRateTypeDropdown(),
+    //    _buildRateTypeDropdown(),
 
-        _buildInHouseSwitch(),
+        _buildDropdown('rateType', 'Rate Type', _rateTypeOptions,
+            initialValue: rateTypeController.text),
+
+
+        // _buildInHouseSwitch(),
+
+        FormBuilderSwitch(
+          name: 'isInHouse',
+          title: const Text('Is in House '),
+          initialValue: isCanceled,
+          onChanged: (val) => setState(() => isInHouse = val ?? false),
+        ),
 
          _buildTextFieldMultiline('note', 'Note', noteController, keyboardType: TextInputType.multiline),
       ],
@@ -187,7 +200,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         _buildTextField('reservationId', 'Reservation ID', reservationIdController, null, enabled: false),
         _buildDateTimePicker('checkInDate', 'Check In Date', initialValue: checkInDate),
         _buildDateTimePicker('checkOutDate', 'Check Out Date', initialValue: checkOutDate),
-        _buildDateTimePicker('stayDay', 'Stay Day', initialValue: stayDay),
+       // _buildDateTimePicker('stayDay', 'Stay Day', initialValue: stayDay),
         _buildTextField('roomId', 'Room ID', roomIdController, null, 
           keyboardType: TextInputType.number,
           validator: FormBuilderValidators.compose([
@@ -251,6 +264,38 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     return Column(
       children: [
         const SizedBox(height: 24),
+        _buildButton(
+            'Save & Check In',
+            () {
+            isSaveAndCheckIn = true;
+            _saveGuest();
+          /*  context
+                .read<ReservationManageBloc>()
+                .add(CheckInReservation(id: int.parse(reservationIdController.text))); */
+
+
+                })
+  ,
+  
+        const SizedBox(height: 16),
+        /*
+        _buildButton(
+            'Delete',
+            () => context
+                .read<ReservationManageBloc>()
+                .add(DeleteReservation(id: widget.reservationId!)),
+            color: Colors.red),
+            */
+      ],
+      
+    );
+  }
+
+/*
+  Widget _buildActionButtons() {
+    return Column(
+      children: [
+        const SizedBox(height: 24),
         if (isReservationEditing) _buildButton(
           'Check In',
           () => context.read<ReservationManageBloc>().add(CheckInReservation(id: widget.reservationId!))
@@ -271,7 +316,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       ],
     );
   }
-
+*/
   Widget _buildTextField(String name, String label, TextEditingController controller, void Function(String?)? onChanged,
       {bool enabled = true, TextInputType keyboardType = TextInputType.text, String? Function(String?)? validator}) {
     return Padding(
@@ -429,16 +474,40 @@ Widget _buildTextFieldMultiline(
     );
   }
 
+/*
+  Widget _buildRateInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+        Text('Rate Information',
+            style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 16),
+        _buildDropdown('rateType', 'Rate Type', _rateTypeOptions,
+            initialValue: rateTypeController.text),
+        _buildDropdown('rateReason', 'Rate Reason', _rateReasonOptions,
+            initialValue: rateReasonController.text),
+        _buildTextField('rate', 'Rate', rateController, null,
+            keyboardType: TextInputType.number),
+      ],
+    );
+  }
+  */
+
+  /*
+
   Widget _buildInHouseSwitch() {
     return FormBuilderSwitch(
       name: 'isInHouse',
-      title: Text('Currently In House'),
+      title: const  Text('Currently In House'),
       initialValue: isInHouse,
       decoration: InputDecoration(
         border: OutlineInputBorder(),
       ),
     );
   }
+\*/
+
 
   Widget _buildButton(String text, VoidCallback onPressed, {Color color = Colors.blue}) {
     return ElevatedButton(
@@ -457,6 +526,7 @@ Widget _buildTextFieldMultiline(
     //  context.read<ReservationManageBloc>().add(RetrieveGuestByPhoneForReservation(phone: value.trim()));
     }
   }
+
 
   void _saveGuestReservation() {
     if (_validateGuestForm()) {
@@ -482,7 +552,7 @@ Widget _buildTextFieldMultiline(
       'roomId',
       'checkInDate',
       'checkOutDate',
-      'stayDay',
+   //   'stayDay',
       'rate',
       'rateReason',
     ];
@@ -569,7 +639,8 @@ void _saveReservation(int guestId) {
         checkInDate: formKey.currentState?.fields['checkInDate']?.value ?? TimeManager.instance.today(),
         //! May have a bug checkOutDate
         checkOutDate: formKey.currentState?.fields['checkOutDate']?.value ?? TimeManager.instance.today().add(Duration(days: 1)),
-        stayDay: formKey.currentState?.fields['stayDay']?.value ?? TimeManager.instance.today(),
+        //! stayDay == checkInDay the first day. 
+        stayDay: formKey.currentState?.fields['checkInDate']?.value ?? TimeManager.instance.today(),
         rateType: RateType.values.byName(formKey.currentState?.fields['rateType']?.value ?? RateType.standard.name),
         rate: double.tryParse(rateController.text) ?? 0.0,
         rateReason: RateReason.values.byName(formKey.currentState?.fields['rateReason']?.value ?? RateReason.single.name),
@@ -603,6 +674,8 @@ void _guestBlocListener(BuildContext context, GuestManageState state) {
   }
 }
 
+
+
 void _reservationBlocListener(BuildContext context, ReservationManageState state) {
   print('Current reservation state: $state');
   if (state is ReservationManageStateFailure) {
@@ -614,8 +687,19 @@ void _reservationBlocListener(BuildContext context, ReservationManageState state
    // context.read<GuestListBloc>().add(FetchGuestsEvent());
    // context.read<ReservationListBloc>().add(FetchReservationsEvent());
    // context.pop();
+       _populateReservationFields(state.reservation);
+
+      if ( isSaveAndCheckIn == true ) {
+       context
+                .read<ReservationManageBloc>()
+                .add(CheckInReservation(id: int.parse(reservationIdController.text)));
+      }
   } else if (state is ReservationManageStateRetrieveSuccess) {
     _populateReservationFields(state.reservation);
+  } else if (state is ReservationManageStateCheckInSuccess) {
+        showSnackbar(context, 'Check in successfull ');
+ //           context.read<RoomCalendarBloc>().add(InitializeCalendar());
+ //     context.pop();
   }
   /*
    else if (state is ReservationManageStateRetrieveGuestSuccess ||
@@ -627,6 +711,8 @@ void _reservationBlocListener(BuildContext context, ReservationManageState state
   }
   */
 }
+
+
 
   void _populateGuestFields(Guest guest) {
 
@@ -662,7 +748,8 @@ void _reservationBlocListener(BuildContext context, ReservationManageState state
     setState(() {
       checkInDate = reservation.checkInDate;
       checkOutDate = reservation.checkOutDate;
-      stayDay = reservation.stayDay;
+      //! stayDay == reservation.CheckInDate
+      stayDay = reservation.checkInDate;
       isCheckedIn = reservation.isCheckedIn;
       isCanceled = reservation.isCanceled;
       isNightShift = reservation.isNightShift;
