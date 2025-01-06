@@ -13,6 +13,7 @@ import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/gue
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_manage/guest_manage_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
+import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
 
 class GuestReservationEditPage extends StatefulWidget {
   final int? guestId;
@@ -179,7 +180,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
 
 
         
-
+        //! when remove, the form wan't validiated
         FormBuilderSwitch(
           name: 'isInHouse',
           title: const Text('Is in House '),
@@ -703,8 +704,8 @@ void _reservationBlocListener(BuildContext context, ReservationManageState state
     _populateReservationFields(state.reservation);
   } else if (state is ReservationManageStateCheckInSuccess) {
         showSnackbar(context, 'Check in successfull ');
- //           context.read<RoomCalendarBloc>().add(InitializeCalendar());
- //     context.pop();
+           context.read<RoomCalendarBloc>().add(InitializeCalendar());
+    context.pop();
   }
   /*
    else if (state is ReservationManageStateRetrieveGuestSuccess ||
