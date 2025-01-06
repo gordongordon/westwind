@@ -458,6 +458,7 @@ Widget _buildTextFieldMultiline(
     );
   }
 
+  /*
   Widget _buildRateTypeDropdown() {
     return FormBuilderDropdown<String>(
       name: 'rateType',
@@ -479,6 +480,7 @@ Widget _buildTextFieldMultiline(
       validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
     );
   }
+ */
 
 /*
   Widget _buildRateInfoSection() {
@@ -600,7 +602,7 @@ Widget _buildTextFieldMultiline(
       lastName: lastNameController.text,
       phone: phoneController.text,
       email: emailController.text.isNotEmpty ? emailController.text : null,
-      isInHouse: formKey.currentState!.fields['isInHouse']!.value,
+      isInHouse:  formKey.currentState!.fields['isInHouse']!.value,
       dateCreate: formKey.currentState!.fields['dateCreate']!.value,
       dateUpdate: formKey.currentState!.fields['dateUpdate']!.value,
       rateType: RateType.values.byName(formKey.currentState!.fields['rateType']!.value),

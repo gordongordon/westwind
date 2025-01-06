@@ -30,7 +30,7 @@ class ReservationCellWidget extends StatefulWidget {
 }
 
 class ReservationCellWidgetState extends State<ReservationCellWidget> {
-  bool isExpanded = false;
+  bool isExpanded = true;
   bool isHovering = false;
 
   @override
