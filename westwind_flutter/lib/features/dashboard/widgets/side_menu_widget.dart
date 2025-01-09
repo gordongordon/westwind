@@ -4,6 +4,11 @@ import 'package:westwind_flutter/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:westwind_flutter/features/dashboard/const/constant.dart';
 import 'package:westwind_flutter/features/dashboard/screens/side_menu_data.dart';
 
+
+/*
+   To add menu button, go edit file of screens/main_screen.dart
+*/
+
 class SideMenuWidget extends StatefulWidget {
   const SideMenuWidget({super.key});
 

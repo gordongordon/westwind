@@ -108,7 +108,10 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
       onSelected: _handleRowSelected,
       //! Testing 
       onRowDoubleTap: _handleRowDoubleTap,
-     // onRowDoubleTap: _handleRowDoubleTapRoomGuestTransactioin,
+      onRowChecked:  _handleRowDoubleTapRoomGuestTransactioin,
+    //  onRowSecondaryTap:  _handleRowDoubleTap,
+
+     // onRowSecondaryTap: _handleRowDoubleTapRoomGuestTransactioin,
 
       configuration: PlutoGridConfiguration(
         columnFilter: _buildColumnFilterConfig(),
@@ -151,6 +154,7 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
     );
   }
 
+/*
   void _handleRowDoubleTapRoomGuestTransactioin(PlutoGridOnRowDoubleTapEvent event) {
     final field = event.row.cells['id'];
     if (field == null) {
@@ -159,7 +163,23 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
       context.push(RoomGuestTransactionsManagePage.route(field.value));
     }
   }
+*/
+   
+  void _handleRowDoubleTapRoomGuestTransactioin(PlutoGridOnRowCheckedEvent event) {
+ 
+    if ( event.isRow ) {
+          final field = event.row?.cells['id'];
+    
 
+    // final field = event.row.cells['id'];
+    if (field == null) {
+      showSnackbar(context, 'Cell id cannot be found!');
+    } else {
+      context.push(RoomGuestTransactionsManagePage.route(field.value));
+    }
+    }
+  }
+  
 
   void _handleRowSelected(PlutoGridOnSelectedEvent event) {
     context.push(RoomTransactionCreatePage.route(1));
@@ -197,8 +217,9 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
     return PlutoColumn(
       title: 'Id',
       field: 'id',
+      enableRowChecked: true,
       type: PlutoColumnType.number(),
-      width: 50,
+      width: 70,
       enableDropToResize: true,
       readOnly: true,
       titlePadding: const EdgeInsets.all(8),

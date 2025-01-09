@@ -30,7 +30,8 @@ class ReservationCellWidget extends StatefulWidget {
 }
 
 class ReservationCellWidgetState extends State<ReservationCellWidget> {
-  bool isExpanded = true;
+  // want that to be always expanded the cell, easy to manage while more than one guest in a cell.
+  bool isExpanded = true;  
   bool isHovering = false;
 
   @override
