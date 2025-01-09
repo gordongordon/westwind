@@ -30,18 +30,22 @@ enum RateType implements _i1.SerializableModel {
   markhoe,
   massey_mechanical,
   maxx_north,
+  no_meal,
   online,
   other,
   paragon,
   performance,
   PWS_Frontier,
+  precision_drilling,
   savanah,
   spectre,
+  stampede,
   staff,
   standard,
   strike,
   team_snb,
-  wsk;
+  wsk,
+  walk_in;
 
   static RateType fromJson(String name) {
     switch (name) {
@@ -81,6 +85,8 @@ enum RateType implements _i1.SerializableModel {
         return massey_mechanical;
       case 'maxx_north':
         return maxx_north;
+      case 'no_meal':
+        return no_meal;
       case 'online':
         return online;
       case 'other':
@@ -91,10 +97,14 @@ enum RateType implements _i1.SerializableModel {
         return performance;
       case 'PWS_Frontier':
         return PWS_Frontier;
+      case 'precision_drilling':
+        return precision_drilling;
       case 'savanah':
         return savanah;
       case 'spectre':
         return spectre;
+      case 'stampede':
+        return stampede;
       case 'staff':
         return staff;
       case 'standard':
@@ -105,6 +115,8 @@ enum RateType implements _i1.SerializableModel {
         return team_snb;
       case 'wsk':
         return wsk;
+      case 'walk_in':
+        return walk_in;
       default:
         throw ArgumentError('Value "$name" cannot be converted to "RateType"');
     }
