@@ -65,6 +65,7 @@ class RoomCalendarLoaded extends RoomCalendarState {
   RoomCalendarLoaded copyWith({
     List<String>? roomTypes,
     List<String>? roomNumbers,
+    List<String>? roomStatus,
     DateTime? startDate,
     int? daysToShow,
     List<Reservation>? reservations,

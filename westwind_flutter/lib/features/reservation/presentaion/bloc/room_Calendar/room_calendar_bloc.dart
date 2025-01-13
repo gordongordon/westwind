@@ -34,7 +34,37 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     on<NavigateCalendarDays>(_onNavigateCalendarDays);
     on<NavigateCalendarWeeks>(_onNavigateCalendarWeeks);
     on<SelectSpecificDate>(_onSelectSpecificDate);
+    on<ToggleRoomStatus>(_onToggleRoomStatus);
   }
+
+  void _onToggleRoomStatus(
+      ToggleRoomStatus event, Emitter<RoomCalendarState> emit) async {
+ 
+          if (state is RoomCalendarLoaded) {
+      final currentState = state as RoomCalendarLoaded;
+
+      final saveResult = await roomRepository.toggleRoomStatus(event.roomId);
+
+      await saveResult.fold(
+        (failure) async => emit(RoomCalendarError(
+            message: "Failed to toggle room status: ${failure.message}")),
+        (savedRoom) async {
+
+                final rooms = (await roomRepository.list()).foldResult();
+                      final roomStatus =
+          rooms.map((room) => room.roomStatus.toString()).toList();
+       //   final updatedState = _updateStateAfterReservationMove(
+       //       currentState, event.reservation, savedReservation);
+       //   emit(updatedState);
+       //   add(FetchReservationsAndTransactions(currentState.startDate));
+
+         emit( currentState.copyWith( roomStatus: roomStatus ));       
+        },
+      );
+    }
+
+
+      }
 
   void _onInitializeCalendar(
       InitializeCalendar event, Emitter<RoomCalendarState> emit) async {
@@ -47,23 +77,21 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       final rooms = (await roomRepository.list()).foldResult();
       final roomTypes = rooms.map((room) => room.roomType.toString()).toList();
       final roomNumbers = rooms.map((room) => room.id!.toString()).toList();
-      final roomStatus = rooms.map((room) => room.roomStatus.toString()).toList();
+      final roomStatus =
+          rooms.map((room) => room.roomStatus.toString()).toList();
 
-     // final DateTime startDate = DateTime.now().getDateOnly().subtract(Duration( days : 1));
-      final startDate = TimeManager.instance.today().subtract(Duration( days : 1));
-
-
+      // final DateTime startDate = DateTime.now().getDateOnly().subtract(Duration( days : 1));
+      final startDate =
+          TimeManager.instance.today().subtract(Duration(days: 1));
 
       //print('Current Time ${DateTime.now().getDateOnly()}' );
 
       const int daysToShow = 14;
 
- 
-
       emit(RoomCalendarLoaded(
         roomTypes: roomTypes,
         roomNumbers: roomNumbers,
-        roomStatus : roomStatus,
+        roomStatus: roomStatus,
         startDate: startDate,
         daysToShow: daysToShow,
         reservations: const [],
@@ -75,7 +103,6 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       ));
 
       add(FetchReservationsAndTransactions(startDate));
-
     } catch (e) {
       emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
     }
@@ -90,8 +117,8 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       /**
        * Fixed canceled and checked In reservation don't display on calendar
        */
-      final reservationResult = await reservationRepository.listButCanceledAndCheckIn();
-
+      final reservationResult =
+          await reservationRepository.listButCanceledAndCheckIn();
 
       final roomTransactionResult = await roomTransactionRepository.list();
 
@@ -99,7 +126,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
        * Fixed Checkout, not remove from Calendar
        */
       final roomGuestResult = await roomGuestRepository.listButCheckOut();
-  //          final roomGuestResult = await roomGuestRepository.list();
+      //          final roomGuestResult = await roomGuestRepository.list();
 
       final failureOrLoaded = await reservationResult.fold(
         (failure) async => RoomCalendarError(message: failure.message),
@@ -134,12 +161,13 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
                         rooms.map((room) => room.id!.toString()).toList();
                     final roomTypes =
                         rooms.map((room) => room.roomType.toString()).toList();
-                                            final roomStatus =
-                        rooms.map((room) => room.roomStatus.toString()).toList();
+                    final roomStatus = rooms
+                        .map((room) => room.roomStatus.toString())
+                        .toList();
                     return RoomCalendarLoaded(
                       roomTypes: roomTypes,
                       roomNumbers: roomNumbers,
-                      roomStatus:  roomStatus,
+                      roomStatus: roomStatus,
                       startDate: event.startDate,
                       daysToShow: 14,
                       reservations: reservations,

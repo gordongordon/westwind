@@ -21,19 +21,54 @@ class RoomEndpoint extends Endpoint {
   }
 
   Future<List<Room>> list(Session session) async {
-    return await Room.db.find(session);
+    return await Room.db.find(
+      session,
+      orderByList: (t) => [
+        Order(column: t.id, orderDescending: false),
+      ],
+    );
   }
 
   Future<Room?> toggleRoomStatus(Session session, int roomId) async {
-
     final result = await Room.db.findById(session, roomId);
 
-    if ( result != null ) {
-       
-       result.roomStatus = RoomStatus.BLK;
-       return await Room.db.updateRow(session, result );
+    if (result != null) {
+      switch (result.roomStatus) {
+        case RoomStatus.CO:
+          result.roomStatus = RoomStatus.M;
+          break;
+
+        case RoomStatus.M:
+          result.roomStatus = RoomStatus.MM;
+          break;
+
+        case RoomStatus.MM:
+          result.roomStatus = RoomStatus.CH;
+          break;
+
+        case RoomStatus.DDD:
+          result.roomStatus = RoomStatus.DRT;
+          break;
+
+        case RoomStatus.DRT:
+          result.roomStatus = RoomStatus.BLK;
+          break;
+
+        case RoomStatus.VCC:
+          result.roomStatus = RoomStatus.M;
+          break;
+        case RoomStatus.CH:
+          result.roomStatus = RoomStatus.DDD;
+          break;
+
+        case RoomStatus.BLK:
+          result.roomStatus = RoomStatus.VCC;
+          break;
+
+      }
+      return await Room.db.updateRow(session, result);
     }
 
     return null;
-  }  
+  }
 }
