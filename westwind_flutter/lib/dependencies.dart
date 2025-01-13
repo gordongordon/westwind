@@ -43,6 +43,7 @@ import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Cale
 import 'package:westwind_flutter/features/room/data/datasources/room_datasource.dart';
 import 'package:westwind_flutter/features/room/data/repositories/room_repository_imp.dart';
 import 'package:westwind_flutter/features/room/domain/repositories/room_repository.dart';
+import 'package:westwind_flutter/features/room/domain/usecases/room_toggle_roomstatus.dart';
 import 'package:westwind_flutter/features/room_guest/data/datasources/room_guest_datasource.dart';
 import 'package:westwind_flutter/features/room_guest/data/repositories/room_guest_repository.dart';
 import 'package:westwind_flutter/features/room_guest/domain/policies/room_guest_policy.dart';
@@ -98,6 +99,9 @@ Future<void> initDependencies() async {
 
   await serverLocator<SessionManager>().initialize();
 
+
+  _initRoom();
+
   _initAuth();
 
   _initGuest();
@@ -113,6 +117,35 @@ Future<void> initDependencies() async {
   _initRoomTransaction();
 
   _initRoomGuestTransactions();
+
+}
+
+
+void _initRoom() {
+
+  // datatsoruce
+  serverLocator.registerLazySingleton<RoomDatasource>(
+    () => RoomDatasourceImpl(
+      serverLocator<Client>(),
+    ),
+  );
+  
+  // Repository
+  serverLocator.registerLazySingleton<RoomRepository>(
+    () => RoomRepositoryImp(
+      serverLocator<RoomDatasource>(),
+    ),
+  );
+
+  // Bloc
+
+  // Usecase
+  serverLocator.registerLazySingleton<ToggleRoomStatusUseCase>(
+    () => ToggleRoomStatusUseCase(
+      serverLocator<RoomRepository>(),
+    ),
+  );
+
 }
 
 void _initRoomGuestTransactions() {
@@ -148,11 +181,6 @@ void _initRoomTransaction() {
     ),
   );
 
-  serverLocator.registerLazySingleton<RoomDatasource>(
-    () => RoomDatasourceImpl(
-      serverLocator<Client>(),
-    ),
-  );
 
   // Repositories
   serverLocator.registerLazySingleton<RoomTransactionRepository>(
@@ -162,11 +190,13 @@ void _initRoomTransaction() {
   );
 
   // Repositories
+  /*
   serverLocator.registerLazySingleton<RoomRepository>(
     () => RoomRepositoryImp(
       serverLocator<RoomDatasource>(),
     ),
   );
+  */
 
   // Use Case
   serverLocator.registerLazySingleton<ListRoomTransactionsUseCase>(
@@ -383,7 +413,11 @@ void _initReservation() {
   );
 
   // Use Cases
+
   //! register as Singleton base on Reso coder, for cacheing .
+
+
+
   serverLocator.registerLazySingleton<ListReservationUseCase>(
     () => ListReservationUseCase(
       serverLocator<ReservationRepository>(),

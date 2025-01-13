@@ -29,5 +29,16 @@ class RoomRepositoryImp implements RoomRepository {
     }
   }
   
+  @override
+  Future<Either<Failure, Room>> toggleRoomStatus(int roomId) async {
+    try {
+      return right(await datasource.toggleRoomStatus(roomId) );
+    } on ServerException catch (e)  {
+      return left( Failure( e.message ) );
+    }
+  }
+
+  
+  
   
 }

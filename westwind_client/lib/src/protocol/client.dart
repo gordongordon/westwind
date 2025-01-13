@@ -274,6 +274,13 @@ class EndpointRoom extends _i1.EndpointRef {
         'list',
         {},
       );
+
+  _i2.Future<_i8.Room?> toggleRoomStatus(int roomId) =>
+      caller.callServerEndpoint<_i8.Room?>(
+        'room',
+        'toggleRoomStatus',
+        {'roomId': roomId},
+      );
 }
 
 /// {@category Endpoint}

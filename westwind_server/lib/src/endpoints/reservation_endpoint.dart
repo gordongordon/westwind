@@ -356,7 +356,7 @@ class ReservationEndpoint extends Endpoint {
       rateReason: RateReason.single,
       rate: reservation.rate,
       reservationId: reservation.id!,
-      roomStatus: RoomStatus.make,
+      roomStatus: RoomStatus.M,
       checkInDate: reservation.checkInDate,
       checkOutDate: reservation.checkOutDate,
       isCheckOut: false,

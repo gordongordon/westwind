@@ -12,36 +12,33 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 
 enum RoomStatus implements _i1.SerializableModel {
-  vacancy,
-  empty,
-  checkout,
-  clean,
-  dirty,
-  make,
-  makemake,
-  change,
-  ddd;
+  CO,
+  M,
+  MM,
+  CH,
+  DDD,
+  DRT,
+  BLK,
+  VCC;
 
   static RoomStatus fromJson(String name) {
     switch (name) {
-      case 'vacancy':
-        return vacancy;
-      case 'empty':
-        return empty;
-      case 'checkout':
-        return checkout;
-      case 'clean':
-        return clean;
-      case 'dirty':
-        return dirty;
-      case 'make':
-        return make;
-      case 'makemake':
-        return makemake;
-      case 'change':
-        return change;
-      case 'ddd':
-        return ddd;
+      case 'CO':
+        return CO;
+      case 'M':
+        return M;
+      case 'MM':
+        return MM;
+      case 'CH':
+        return CH;
+      case 'DDD':
+        return DDD;
+      case 'DRT':
+        return DRT;
+      case 'BLK':
+        return BLK;
+      case 'VCC':
+        return VCC;
       default:
         throw ArgumentError(
             'Value "$name" cannot be converted to "RoomStatus"');

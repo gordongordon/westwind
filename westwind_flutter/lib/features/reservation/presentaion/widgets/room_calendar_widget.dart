@@ -27,7 +27,7 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
       appBar: _buildAppBar(),
       body: BlocConsumer<RoomCalendarBloc, RoomCalendarState>(
         listener: (context, state) {
-          if (state is RoomCalendarError) {   
+          if (state is RoomCalendarError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
@@ -53,7 +53,7 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: const Text('Westwind Motor Inn'),
+     title: const Text('Westwind Motor Inn'),
       actions: [
         IconButton(
           icon: const Icon(Icons.refresh),
@@ -75,14 +75,15 @@ class _TopBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.lightBlue[100],
-      padding: const EdgeInsets.all(8.0),
-      height: 60,
+      color: Colors.blue,
+      padding: const EdgeInsets.all(6.0),
+      height: 40,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '${state.startDate.day}.${state.startDate.month}.${state.startDate.year}',
+            '${state.startDate.getMonthNameDD()}',
+            //       '${state.startDate.day}.${state.startDate.month}.${state.startDate.year}',
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           Row(
@@ -209,7 +210,7 @@ class CalendarGridWidget extends StatelessWidget {
         DateHeaderWidget(state: state),
         Expanded(
           child: ListView.builder(
-            padding:  EdgeInsets.all(1),
+            padding: EdgeInsets.all(1),
             itemCount: state.roomNumbers.length,
             itemBuilder: (context, index) {
               final roomNumber = state.roomNumbers[index];
@@ -219,6 +220,7 @@ class CalendarGridWidget extends StatelessWidget {
                 roomNumber: roomNumber,
                 roomType: roomType,
                 isEvenRow: index % 2 == 0,
+                roomStatus: "MM",
               );
             },
           ),
@@ -247,7 +249,8 @@ class DateHeaderWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(4),
               child: Text(
-                '${date.day}/${date.month}',
+                '${date.getDDMonthName()}',
+                //'${date.day}/${date.getDDMonthName()}',
                 style: const TextStyle(fontSize: 12),
                 textAlign: TextAlign.center,
               ),

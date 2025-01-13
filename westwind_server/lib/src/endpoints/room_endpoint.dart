@@ -23,4 +23,17 @@ class RoomEndpoint extends Endpoint {
   Future<List<Room>> list(Session session) async {
     return await Room.db.find(session);
   }
+
+  Future<Room?> toggleRoomStatus(Session session, int roomId) async {
+
+    final result = await Room.db.findById(session, roomId);
+
+    if ( result != null ) {
+       
+       result.roomStatus = RoomStatus.BLK;
+       return await Room.db.updateRow(session, result );
+    }
+
+    return null;
+  }  
 }

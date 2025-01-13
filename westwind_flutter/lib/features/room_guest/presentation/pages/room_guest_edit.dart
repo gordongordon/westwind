@@ -51,8 +51,6 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
       RateType.values.map((e) => e.name).toSet().toList();
 
   
-
-
   final List<String> _rateReasonOptions =
       RateReason.values.map((e) => e.name).toList();
 
@@ -72,7 +70,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? "Edit Room Guest" : "New Room Guest"),
+        title: Text(isEditing ? "Edit Room Guest : ${firstNameController.text} ${lastNameController.text}" : "New Room Guest"),
         actions: [
           IconButton(
             onPressed: _saveRoomGuest,
@@ -350,7 +348,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
         rate: double.parse(rateController.text),
         rateReason: RateReason.values
             .byName(formKey.currentState!.fields['rateReason']!.value),
-        roomStatus: RoomStatus.change,
+        roomStatus: RoomStatus.VCC,
         reservationId: int.parse(reservationIdController.text),
         isCheckOut: isCheckOut,
         note: noteController.text,

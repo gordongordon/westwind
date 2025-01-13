@@ -937,50 +937,50 @@ packages:
     dependency: transitive
     description:
       name: serverpod_auth_client
-      sha256: "1f0254b6efe8283a9dbc363cf215e0a407be1bf18224d6a44475f4c631c35595"
+      sha256: "96c551d06fcbc350d0a162a9e72aa1e3234e5aa0976922789e3b0c9fd3a69805"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   serverpod_auth_email_flutter:
     dependency: "direct main"
     description:
       name: serverpod_auth_email_flutter
-      sha256: "0ba821be296547a0db7e37077af50815ab38afbd30650f911c94033cb31e794f"
+      sha256: ec9137245ce95fc3a2efae0b540afae0a837891273e2506f0c7a59f9025e4f26
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   serverpod_auth_shared_flutter:
     dependency: "direct main"
     description:
       name: serverpod_auth_shared_flutter
-      sha256: "106317df3e85c15fc2e8d6d1e5c9bde37e75053bacf3cfd9ae6e7dbba495b95b"
+      sha256: "80840f8970900a19ba564006edf3c1fed178bf05d42842c2c06b91d782fd528f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   serverpod_client:
     dependency: transitive
     description:
       name: serverpod_client
-      sha256: d5ca5bebb3812da1e55f09a4acb8b51c7559efc27342355b78fdae11b478141a
+      sha256: "32d3d919b64f01d840c8064ce62c2bed3c12aeaeb507302c196857e9e75fad9a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   serverpod_flutter:
     dependency: "direct main"
     description:
       name: serverpod_flutter
-      sha256: "375ead122967e4fb8725968015275fd7d0c421ef9c1938b77b0b08897bd14f4f"
+      sha256: b720c45d0af77418c8f6da1435db5ff54afb64ffb393b46deaa7cc9bb6c85b9f
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   serverpod_serialization:
     dependency: transitive
     description:
       name: serverpod_serialization
-      sha256: "93fc428786acfd825238f6d10145cc9befc5e53e374ab9498c75c88e7dee8550"
+      sha256: e5d195f42a19c178bb4a0a2c11ba0512e7421e42760c4856d88a561d2e416de1
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   shared_preferences:
     dependency: transitive
     description:

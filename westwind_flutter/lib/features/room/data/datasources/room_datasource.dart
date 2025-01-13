@@ -5,6 +5,7 @@ import 'package:westwind_flutter/core/error/exception.dart';
 abstract interface class RoomDatasource {
   Future<List<Room>> list();
   Future<Room> retrieve( int id);
+  Future<Room> toggleRoomStatus( int roomId);
 }
 
 class RoomDatasourceImpl implements RoomDatasource {
@@ -30,6 +31,21 @@ class RoomDatasourceImpl implements RoomDatasource {
 
       if ( result == null)  {
         throw  ServerException("Room with ID : $id not found ");
+      }
+      return result;
+        
+    } catch (e) {
+      throw ServerException( e.toString() );
+    }
+  }
+
+    @override
+  Future<Room> toggleRoomStatus(int roomId) async {
+    try { 
+      final result = await _client.room.toggleRoomStatus(roomId);
+
+      if ( result == null)  {
+        throw  ServerException("Room with ID : $roomId not found ");
       }
       return result;
         

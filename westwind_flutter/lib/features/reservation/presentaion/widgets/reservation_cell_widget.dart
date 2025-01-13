@@ -33,6 +33,8 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   // want that to be always expanded the cell, easy to manage while more than one guest in a cell.
   bool isExpanded = true;  
   bool isHovering = false;
+  static const double _fontSize = 12;
+
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +249,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
             '${transaction.guest!.firstName} ${transaction.guest!.lastName}',
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 10,
+              fontSize: _fontSize,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
@@ -372,7 +374,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         '${items.length} Guests',
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 10,
+          fontSize: _fontSize,
           fontWeight: FontWeight.bold,
         ),
         textAlign: TextAlign.center,
@@ -400,7 +402,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
           displayText,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 10,
+            fontSize: _fontSize,
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
@@ -428,7 +430,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
           displayText,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 10,
+            fontSize: _fontSize,
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.center,
@@ -467,7 +469,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
               Expanded(
                 child: Text(
                   '${reservation.guest?.firstName} ${reservation.guest?.lastName}',
-                  style: const TextStyle(fontSize: 10, color: Colors.white),
+                  style: const TextStyle(fontSize: _fontSize, color: Colors.white),
                   overflow: TextOverflow.ellipsis,
     
                 ),
@@ -498,7 +500,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
             Expanded(
               child: Text(
                 '${transaction.guest!.firstName} ${transaction.guest!.lastName}',
-                style: const TextStyle(fontSize: 10, color: Colors.white),
+                style: const TextStyle(fontSize: _fontSize, color: Colors.white),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -528,7 +530,7 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
               Expanded(
                 child: Text(
                   '${roomGuest.guest?.firstName} ${roomGuest.guest?.lastName}',
-                  style: const TextStyle(fontSize: 10, color: Colors.white),
+                  style: const TextStyle(fontSize: _fontSize, color: Colors.white),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

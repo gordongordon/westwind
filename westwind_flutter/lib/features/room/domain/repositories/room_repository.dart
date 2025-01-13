@@ -5,5 +5,6 @@ import 'package:westwind_flutter/core/error/failure.dart';
 abstract interface class RoomRepository {
    Future<Either<Failure, List<Room>>> list();
    Future<Either<Failure, Room>> retrieve(int id);
+   Future<Either<Failure, Room>> toggleRoomStatus(int roomId);
 }
 

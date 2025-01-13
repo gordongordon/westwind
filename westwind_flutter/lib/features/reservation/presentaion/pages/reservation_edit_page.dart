@@ -40,7 +40,7 @@ class _ReservationEditPageState extends State<ReservationEditPage> {
       TextEditingController(text: "86");
   final TextEditingController rateReasonController =
       TextEditingController(text: RateReason.single.toString());
-  final TextEditingController noteController = TextEditingController();
+  final TextEditingController noteController = TextEditingController( text : "Write notes to Room Guest only");
 
   DateTime dateCreate = TimeManager.instance.now();
   DateTime dateUpdate = TimeManager.instance.now();

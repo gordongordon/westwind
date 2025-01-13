@@ -33,6 +33,7 @@ reservation:
 room:
   - retrieve:
   - list:
+  - toggleRoomStatus:
 roomGuest:
   - saveRoomGuest:
   - insertGuestByReservation:

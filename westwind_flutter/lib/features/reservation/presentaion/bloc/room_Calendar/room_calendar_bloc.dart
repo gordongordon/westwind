@@ -55,6 +55,8 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
 
       const int daysToShow = 14;
 
+ 
+
       emit(RoomCalendarLoaded(
         roomTypes: roomTypes,
         roomNumbers: roomNumbers,

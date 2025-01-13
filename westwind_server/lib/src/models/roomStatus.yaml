@@ -1,12 +1,12 @@
 enum: RoomStatus
 serialized: byName
 values:
- - vacancy
- - empty
- - checkout
- - clean
- - dirty
- - make
- - makemake
- - change
- - ddd
+ - CO
+ - M
+ - MM
+ - CH
+ - DDD
+ - DRT
+ - BLK
+ - VCC
+

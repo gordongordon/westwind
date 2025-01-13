@@ -23,4 +23,3 @@ freezed:
 delete_db:
 	cd westwind_server && docker compose down -v 
    
-

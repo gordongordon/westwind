@@ -59,7 +59,7 @@ class CheckInRoomGuestUseCase
         rateReason: reason,
         rate: rate,
         reservationId: reservation.id!,
-        roomStatus: RoomStatus.change,
+        roomStatus: RoomStatus.M,
         checkInDate: DateTime.now(),
         checkOutDate: reservation.checkOutDate,
         isCheckOut: false,

@@ -1,1 +1,1 @@
-ALTER SEQUENCE guest_id_seq RESTART WITH 15;
+SET client_min_messages TO DEBUG;

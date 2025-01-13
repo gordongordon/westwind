@@ -9,6 +9,7 @@ class RoomRowWidget extends StatelessWidget {
   final String roomNumber;
   final String roomType;
   final bool isEvenRow;
+  final String roomStatus;
 
   const RoomRowWidget({
     super.key,
@@ -16,6 +17,7 @@ class RoomRowWidget extends StatelessWidget {
     required this.roomNumber,
     required this.roomType,
     required this.isEvenRow,
+    required this.roomStatus,
   });
 
   @override
@@ -47,7 +49,7 @@ class RoomRowWidget extends StatelessWidget {
           SizedBox(
             width: 25,
             child: Text(
-              'MM',
+              roomStatus,
               style: const TextStyle(fontSize: 13, color: Colors.red),
             ),
           ),
