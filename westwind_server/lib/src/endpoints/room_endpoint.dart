@@ -45,7 +45,9 @@ class RoomEndpoint extends Endpoint {
         case RoomStatus.MM:
           result.roomStatus = RoomStatus.CH;
           break;
-
+        case RoomStatus.CH:
+          result.roomStatus = RoomStatus.DDD;
+          break;
         case RoomStatus.DDD:
           result.roomStatus = RoomStatus.DRT;
           break;
@@ -54,17 +56,12 @@ class RoomEndpoint extends Endpoint {
           result.roomStatus = RoomStatus.BLK;
           break;
 
-        case RoomStatus.VCC:
-          result.roomStatus = RoomStatus.M;
-          break;
-        case RoomStatus.CH:
-          result.roomStatus = RoomStatus.DDD;
-          break;
-
         case RoomStatus.BLK:
           result.roomStatus = RoomStatus.VCC;
           break;
-
+        case RoomStatus.VCC:
+          result.roomStatus = RoomStatus.CO;
+          break;
       }
       return await Room.db.updateRow(session, result);
     }

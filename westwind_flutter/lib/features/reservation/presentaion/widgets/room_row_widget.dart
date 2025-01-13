@@ -36,6 +36,8 @@ class _RoomRowWidgetState extends State<RoomRowWidget> {
       break;
           case 'DRT' : result = Colors.black;
       break;
+      case 'CO' : result = Colors.orange;
+      break;
       default : result =  Colors.blue; 
     }
 
