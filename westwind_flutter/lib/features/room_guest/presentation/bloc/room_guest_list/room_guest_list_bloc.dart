@@ -22,7 +22,7 @@ class RoomGuestListBloc extends Bloc<RoomGuestListEvent, RoomGuestListState> {
   Future<void> _onFetchRoomGuests(
       FetchRoomGuestsEvent event, Emitter<RoomGuestListState> emit) async {
     emit(RoomGuestListStateLoading());
-       await Future.delayed(Duration(seconds: 1));
+     // await Future.delayed(Duration(seconds: 1));
     final result = await listRoomGuests(NoParams());
 
     result.fold(

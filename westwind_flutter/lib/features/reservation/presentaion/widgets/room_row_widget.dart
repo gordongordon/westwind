@@ -46,11 +46,12 @@ class RoomRowWidget extends StatelessWidget {
               style: const TextStyle(fontSize: 13, color: Colors.blue),
             ),
           ),
+          //! Handle MM RoomStatus
           SizedBox(
             width: 25,
             child: Text(
               roomStatus,
-              style: const TextStyle(fontSize: 13, color: Colors.red),
+              style: const TextStyle(fontSize: 12, color: Colors.red),
             ),
           ),
           ...List.generate(state.daysToShow, (index) {

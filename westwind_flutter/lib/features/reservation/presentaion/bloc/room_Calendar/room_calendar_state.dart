@@ -23,6 +23,7 @@ class RoomCalendarError extends RoomCalendarState {
 class RoomCalendarLoaded extends RoomCalendarState {
   final List<String> roomTypes;
   final List<String> roomNumbers;
+  final List<String> roomStatus;
   final DateTime startDate;
   final int daysToShow;
   final List<Reservation> reservations;
@@ -35,6 +36,7 @@ class RoomCalendarLoaded extends RoomCalendarState {
   const RoomCalendarLoaded({
     required this.roomTypes,
     required this.roomNumbers,
+    required this.roomStatus,
     required this.startDate,
     required this.daysToShow,
     required this.reservations,
@@ -49,6 +51,7 @@ class RoomCalendarLoaded extends RoomCalendarState {
   List<Object?> get props => [
     roomTypes,
     roomNumbers,
+    roomStatus,
     startDate,
     daysToShow,
     reservations,
@@ -74,6 +77,7 @@ class RoomCalendarLoaded extends RoomCalendarState {
     return RoomCalendarLoaded(
       roomTypes: roomTypes ?? this.roomTypes,
       roomNumbers: roomNumbers ?? this.roomNumbers,
+      roomStatus: roomStatus ?? this.roomStatus,
       startDate: startDate ?? this.startDate,
       daysToShow: daysToShow ?? this.daysToShow,
       reservations: reservations ?? this.reservations,

@@ -82,7 +82,7 @@ class _TopBarWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '${state.startDate.getMonthNameDD()}',
+            state.startDate.getMonthNameDD(),
             //       '${state.startDate.day}.${state.startDate.month}.${state.startDate.year}',
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
@@ -220,7 +220,7 @@ class CalendarGridWidget extends StatelessWidget {
                 roomNumber: roomNumber,
                 roomType: roomType,
                 isEvenRow: index % 2 == 0,
-                roomStatus: "MM",
+                roomStatus: state.roomStatus[index],
               );
             },
           ),

@@ -53,7 +53,7 @@ class RoomGuestManageBloc
     Emitter<RoomGuestManageState> emit,
   ) async {
     emit(RoomGuestManageStateLoading());
-    await Future.delayed(Duration(seconds: 1));
+   // await Future.delayed(Duration(seconds: 1));
 
     final result =
         await saveRoomGuest(SaveRoomGuestParams(roomGuest: event.roomGuest));
@@ -62,9 +62,6 @@ class RoomGuestManageBloc
       (failure) => emit(RoomGuestManageStateFailure(failure.message)),
       (roomGuest) => emit(RoomGuestManageStateSaveSuccess(roomGuest)),
     );
-
-
-
 
     return;
   }

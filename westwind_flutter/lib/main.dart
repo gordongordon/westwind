@@ -12,6 +12,7 @@ import 'package:westwind_flutter/features/guest/presentation/bloc/guest_manage/g
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
+import 'package:westwind_flutter/features/room/presentation/bloc/room_toggle/room_toggle_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_guest_transactions/room_guest_transactions_bloc.dart';
@@ -41,6 +42,7 @@ void main() async {
       BlocProvider(create: (_) => serverLocator<RoomTransactionBloc>()),
       BlocProvider(create: (_) => serverLocator<RoomCalendarBloc>()),
       BlocProvider(create: (_) => serverLocator<RoomGuestTransactionsBloc>()),
+      BlocProvider(create: (_) => serverLocator<RoomToggleBloc>()),
     ],
     child: const MyApp(),
   ));

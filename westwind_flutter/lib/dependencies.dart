@@ -43,7 +43,8 @@ import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Cale
 import 'package:westwind_flutter/features/room/data/datasources/room_datasource.dart';
 import 'package:westwind_flutter/features/room/data/repositories/room_repository_imp.dart';
 import 'package:westwind_flutter/features/room/domain/repositories/room_repository.dart';
-import 'package:westwind_flutter/features/room/domain/usecases/room_toggle_roomstatus.dart';
+import 'package:westwind_flutter/features/room/domain/usecases/room_toggle_roomstatus_usecase.dart';
+import 'package:westwind_flutter/features/room/presentation/bloc/room_toggle/room_toggle_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/data/datasources/room_guest_datasource.dart';
 import 'package:westwind_flutter/features/room_guest/data/repositories/room_guest_repository.dart';
 import 'package:westwind_flutter/features/room_guest/domain/policies/room_guest_policy.dart';
@@ -138,6 +139,14 @@ void _initRoom() {
   );
 
   // Bloc
+  serverLocator.registerFactory<RoomToggleBloc>(
+    () => RoomToggleBloc(
+      roomRepository: serverLocator<RoomRepository>(),
+      toggleRoomStatus:
+          serverLocator<ToggleRoomStatusUseCase>(),
+    ),
+  );
+
 
   // Usecase
   serverLocator.registerLazySingleton<ToggleRoomStatusUseCase>(

@@ -47,9 +47,12 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       final rooms = (await roomRepository.list()).foldResult();
       final roomTypes = rooms.map((room) => room.roomType.toString()).toList();
       final roomNumbers = rooms.map((room) => room.id!.toString()).toList();
+      final roomStatus = rooms.map((room) => room.roomStatus.toString()).toList();
 
      // final DateTime startDate = DateTime.now().getDateOnly().subtract(Duration( days : 1));
       final startDate = TimeManager.instance.today().subtract(Duration( days : 1));
+
+
 
       //print('Current Time ${DateTime.now().getDateOnly()}' );
 
@@ -60,6 +63,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       emit(RoomCalendarLoaded(
         roomTypes: roomTypes,
         roomNumbers: roomNumbers,
+        roomStatus : roomStatus,
         startDate: startDate,
         daysToShow: daysToShow,
         reservations: const [],
@@ -130,9 +134,12 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
                         rooms.map((room) => room.id!.toString()).toList();
                     final roomTypes =
                         rooms.map((room) => room.roomType.toString()).toList();
+                                            final roomStatus =
+                        rooms.map((room) => room.roomStatus.toString()).toList();
                     return RoomCalendarLoaded(
                       roomTypes: roomTypes,
                       roomNumbers: roomNumbers,
+                      roomStatus:  roomStatus,
                       startDate: event.startDate,
                       daysToShow: 14,
                       reservations: reservations,
