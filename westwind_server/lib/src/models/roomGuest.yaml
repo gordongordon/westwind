@@ -17,8 +17,8 @@ fields:
   note : String
 
   
-indexes: 
-   room_guest_index_idx: 
-       fields: roomId, guestId
-       unique: true
+#indexes: 
+#  room_guest_index_idx: 
+#       fields: roomId, guestId
+#       unique: true
   
