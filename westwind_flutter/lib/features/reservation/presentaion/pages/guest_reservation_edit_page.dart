@@ -59,7 +59,6 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       TextEditingController(text: "86");
   final TextEditingController rateReasonController =
       TextEditingController(text: RateReason.single.toString());
-  // final TextEditingController rateTypeController = TextEditingController();
 
   // Date-related variables
   DateTime dateCreate = TimeManager.instance.now();
@@ -67,6 +66,8 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   DateTime checkInDate = TimeManager.instance.today();
   DateTime stayDay = TimeManager.instance.today();
   DateTime checkOutDate = TimeManager.instance.today().add(Duration(days: 1));
+
+  // formKey.currentState?.fields['checkOutDate']?.value = checkOutDate;
 
   // Boolean flags
   bool isInHouse = false;
@@ -305,7 +306,8 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         const SizedBox(height: 24),
         _buildButton('Save & Check In', () {
           isSaveAndCheckIn = true;
-          _saveGuest();
+          _saveGuestReservation();
+    //      _saveGuest();
           /*  context
                 .read<ReservationManageBloc>()
                 .add(CheckInReservation(id: int.parse(reservationIdController.text))); */
@@ -469,12 +471,10 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         ),
         initialValue: initialValue,
         inputType: InputType.date,
-        validator: 
-        FormBuilderValidators.compose(
+        validator: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(),
-           // FormBuilderValidators.
-
+            FormBuilderValidators.dateTime(errorText: 'invalid datatime')
           ],
         ),
       ),
@@ -595,6 +595,10 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       'lastName',
       'phone',
       'rateType',
+      'roomId',
+      'checkInDate',
+      'checkOutDate',
+      'roomId',
     ];
 
     return _validateFields(guestFields);
@@ -616,9 +620,13 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   bool _validateFields(List<String> fields) {
     bool isValid = true;
     for (var field in fields) {
-      if (formKey.currentState?.fields[field]?.validate() == false) {
+         if (formKey.currentState?.fields[field]?.validate() == false) {
+  //    if (formKey.currentState?.fields[field]?.value == null) {
         isValid = false;
         print('Validation failed for field: $field');
+    //    showSnackbar(context, 'Validation failed for field: $field');
+      } else {
+     //   showSnackbar(context, 'Validation for field: $field');
       }
     }
     return isValid;
@@ -658,17 +666,24 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       note: noteController.text,
     );
 
+    
+    // checkOutDate = formKey.currentState!.fields['checkOutDate']!.value;
+
+
     context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
   }
 
   void _saveReservation(int guestId) {
     print('Attempting to save reservation for guest ID: $guestId');
+
     if (_validateReservationForm()) {
+      /*
       final checkOutDate = formKey.currentState?.fields['checkOutDate']?.value;
       if (checkOutDate == null) {
         showSnackbar(context, 'Please provide a valid Check Out Date');
         return;
       }
+      */
 
       try {
         // Log each field separately with null checks
@@ -713,12 +728,12 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           dateUpdate: formKey.currentState?.fields['dateUpdate']?.value ??
               TimeManager.instance.now(),
           //! should I use now()
-          //  checkInDate: formKey.currentState?.fields['checkInDate']?.value ?? TimeManager.instance.today(),
-          checkInDate: formKey.currentState?.fields['checkInDate']?.value,
+          checkInDate: formKey.currentState?.fields['checkInDate']?.value ?? TimeManager.instance.today(),
+       //   checkInDate: formKey.currentState?.fields['checkInDate']?.value,
           //! May have a bug checkOutDate
-          //   checkOutDate: formKey.currentState?.fields['checkOutDate']?.value ?? TimeManager.instance.today().add(Duration(days: 1)),
+             checkOutDate: formKey.currentState?.fields['checkOutDate']?.value ?? TimeManager.instance.today().add(Duration(days: 1)),
 
-          checkOutDate: checkOutDate,
+    //      checkOutDate: checkOutDate,
           //! stayDay == checkInDay the first day.
           stayDay: formKey.currentState?.fields['checkInDate']?.value ??
               TimeManager.instance.today(),
@@ -752,6 +767,8 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       showSnackbar(context, 'Failed to Guest: ${state.message}');
     } else if (state is GuestManageStateSaveSuccess) {
       print('Guest saved successfully. ID: ${state.guest.id}');
+      showSnackbar(context,
+          'Guest saved success : ${state.guest.lastName} ${state.guest.firstName}');
       _saveReservation(state.guest.id!);
     } else if (state is GuestManageStateRetrieveSuccess) {
       _populateGuestFields(state.guest);
