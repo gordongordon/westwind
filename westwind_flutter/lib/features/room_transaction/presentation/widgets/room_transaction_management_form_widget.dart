@@ -35,7 +35,7 @@ class _RoomTransactionManagementFormWidgetState
   final TextEditingController tax1Controller = TextEditingController();
   final TextEditingController tax2Controller = TextEditingController();
   final TextEditingController totalController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController(text: "Write any note here");
 
   DateTime stayDay = TimeManager.instance.today();
   DateTime transactionDay = TimeManager.instance.now();
@@ -78,14 +78,14 @@ class _RoomTransactionManagementFormWidgetState
       } else if (transactionType == TransactionType.charge.name) {
         _currentItemTypeOptions = [
           ItemType.laundry.name,
-          //       ItemType.room_adjust.name,
+          ItemType.room_adjust.name,
           ItemType.pet.name,
           ItemType.atm.name,
           ItemType.demage.name,
           ItemType.food.name,
           ItemType.other.name,
           ItemType.vending.name,
-          ItemType.room.name,
+//          ItemType.room.name,
         ];
       } else if (transactionType == TransactionType.deposit.name) {
         _currentItemTypeOptions = [
@@ -388,6 +388,7 @@ class _RoomTransactionManagementFormWidgetState
       late double total;
       late double sign;
       late double cost;
+      //  late bool withGST = true;
 
       switch (transactionType) {
         case TransactionType.refund:
@@ -397,31 +398,47 @@ class _RoomTransactionManagementFormWidgetState
           break;
         // break;
         case TransactionType.deposit:
-        case TransactionType.pay:
-        case TransactionType.adjustCredit:
           sign = -1;
+          break;
+        case TransactionType.pay:
+          sign = -1;
+          break;
         case TransactionType.charge:
+          sign = -1;
+          break;
+        case TransactionType.adjustCredit:
+          {
+            //    withGST = false;
+            sign = -1;
+          }
+          break;
         case TransactionType.adjustDebit:
-          sign = 1;
+          {
+            //   withGST = false;
+            sign = 1;
+          }
+          break;
+        default:
+          throw Exception('Unknown transaction type: $transactionType');
       }
 
       switch (itemType) {
         case ItemType.room:
           {
             cost = amount / 1.09;
-            gst  = cost * 0.05;
+            gst = cost * 0.05;
             levy = cost * 0.04;
-           // gst = amount - cost - cost * 1.04;
-           // levy = amount - cost - cost * 1.05;
+            // gst = amount - cost - cost * 1.04;
+            // levy = amount - cost - cost * 1.05;
           }
           break;
         case ItemType.room_adjust:
           {
             cost = amount / 1.09;
-            gst  = cost * 0.05;
+            gst = cost * 0.05;
             levy = cost * 0.04;
-         //   gst = amount - cost - cost * 1.04;
-          //  levy = amount - cost - cost * 1.05;
+            //   gst = amount - cost - cost * 1.04;
+            //  levy = amount - cost - cost * 1.05;
           }
           break;
         //  gst = amount * 0.05; gst + levy + cost = amount
@@ -446,12 +463,12 @@ class _RoomTransactionManagementFormWidgetState
         case ItemType.debit:
           gst = 0;
           levy = 0;
-        break;
+          break;
         default:
           throw Exception('Unknown item type: $itemType');
       }
 
-      if (itemType == ItemType.room_adjust ) {
+      if (itemType == ItemType.room_adjust) {
         total = amount;
         amount = cost;
       } else {
