@@ -666,8 +666,8 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       note: noteController.text,
     );
 
-    
-    // checkOutDate = formKey.currentState!.fields['checkOutDate']!.value;
+        checkInDate = formKey.currentState!.fields['checkInDate']!.value;
+    checkOutDate = formKey.currentState!.fields['checkOutDate']!.value;
 
 
     context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
@@ -728,12 +728,13 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           dateUpdate: formKey.currentState?.fields['dateUpdate']?.value ??
               TimeManager.instance.now(),
           //! should I use now()
-          checkInDate: formKey.currentState?.fields['checkInDate']?.value ?? TimeManager.instance.today(),
+
+     //     checkInDate: formKey.currentState?.fields['checkInDate']?.value ?? TimeManager.instance.today(),
        //   checkInDate: formKey.currentState?.fields['checkInDate']?.value,
           //! May have a bug checkOutDate
-             checkOutDate: formKey.currentState?.fields['checkOutDate']?.value ?? TimeManager.instance.today().add(Duration(days: 1)),
-
-    //      checkOutDate: checkOutDate,
+    //         checkOutDate: formKey.currentState?.fields['checkOutDate']?.value ?? TimeManager.instance.today().add(Duration(days: 1)),
+          checkInDate : checkInDate,
+          checkOutDate: checkOutDate,
           //! stayDay == checkInDay the first day.
           stayDay: formKey.currentState?.fields['checkInDate']?.value ??
               TimeManager.instance.today(),
