@@ -150,20 +150,21 @@ class _RoomGuestTransactionsManageWidgetState
       itemBuilder: (context, index) {
         final transaction = transactions[index];
         final isLastItem = index == transactions.length - 1;
+        final isFirstItem = index  ==  0;
 
         return Card(
           margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          color: isLastItem
+          color: isFirstItem
               ? Colors.red[50]
               : null, // Light red background for the last item
           child: ExpansionTile(
             title: Text(
               '${transaction.transactionType} - ${transaction.itemType}    /    # ${transaction.roomId} - StayDay at ${transaction.stayDay.getMonthNameDD()}  /          Create At - ${transaction.transactionDay.getMonthDayHour()}',
-              style: TextStyle(color: isLastItem ? Colors.red : null),
+              style: TextStyle(color: isFirstItem ? Colors.red : null),
             ),
             subtitle: Text(
               'Total: \$${transaction.total.toStringAsFixed(2)}',
-              style: TextStyle(color: isLastItem ? Colors.red : null),
+              style: TextStyle(color: isFirstItem ? Colors.red : null),
             ),
             children: [
               Padding(
@@ -172,34 +173,34 @@ class _RoomGuestTransactionsManageWidgetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildInfoRow('Transaction ID', '${transaction.id}',
-                        isLastItem: isLastItem),
+                        isLastItem: isFirstItem),
                     _buildInfoRow('Room ID', '${transaction.roomId}',
-                        isLastItem: isLastItem),
+                        isLastItem: isFirstItem),
                     _buildInfoRow('Guest ID', '${transaction.guestId}',
-                        isLastItem: isLastItem),
+                        isLastItem: isFirstItem),
                     _buildInfoRow('Guest ',
                         '${transaction.guest?.lastName} ${transaction.guest?.firstName}',
-                        isLastItem: isLastItem),
+                        isLastItem: isFirstItem),
                     _buildInfoRow(
                         'Stay Day', transaction.stayDay.getMonthNameDD(),
-                        isLastItem: isLastItem),
+                        isLastItem: isFirstItem),
                     _buildInfoRow('Transaction Day',
                         transaction.transactionDay.getMonthDayHourMinute(),
-                        isLastItem: isLastItem),
+                        isLastItem: isFirstItem),
                     _buildInfoRow(
                         'Amount', '\$${transaction.amount.toStringAsFixed(2)}',
-                        isLastItem: isLastItem),
+                        isLastItem: isFirstItem),
                     _buildInfoRow(
                         'GST', '\$${transaction.tax1.toStringAsFixed(2)}',
-                        isLastItem: isLastItem),
+                        isLastItem: isFirstItem),
                     _buildInfoRow(
                         'Levy', '\$${transaction.tax2.toStringAsFixed(2)}',
-                        isLastItem: isLastItem),
+                        isLastItem: isFirstItem),
                     _buildInfoRow(
                         'Total', '\$${transaction.total.toStringAsFixed(2)}',
-                        isLastItem: isLastItem),
+                        isLastItem: isFirstItem),
                     _buildInfoRow('Description', transaction.description,
-                        isLastItem: isLastItem),
+                        isLastItem: isFirstItem),
                     _buildActionButtons(transaction.id),
                   ],
                 ),

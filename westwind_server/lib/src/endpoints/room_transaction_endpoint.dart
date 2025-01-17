@@ -51,6 +51,11 @@ class RoomTransactionEndpoint extends Endpoint {
       Session session, int roomGuestId) async {
     return await RoomTransaction.db.find(session,
         where: (i) => i.roomGuestId.equals(roomGuestId),
+      //  orderBy : (t)  => t.updateDate,
+        orderByList: (t) => [
+              Order(column: t.updateDate, orderDescending: true),
+              Order(column: t.transactionDay, orderDescending: true),
+            ],
         include: RoomTransaction.include(
             guest: Guest.include(),
             room: Room.include(),

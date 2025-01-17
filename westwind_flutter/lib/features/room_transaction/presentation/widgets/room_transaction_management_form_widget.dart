@@ -78,7 +78,7 @@ class _RoomTransactionManagementFormWidgetState
       } else if (transactionType == TransactionType.charge.name) {
         _currentItemTypeOptions = [
           ItemType.laundry.name,
-   //       ItemType.room_adjust.name,
+          //       ItemType.room_adjust.name,
           ItemType.pet.name,
           ItemType.atm.name,
           ItemType.demage.name,
@@ -158,7 +158,10 @@ class _RoomTransactionManagementFormWidgetState
                 _buildAdditionalInfoSection(),
               ],
               const SizedBox(height: 24),
-              _buildButton( "save room transaction ", _saveRoomTransaction, ),
+              _buildButton(
+                "save room transaction ",
+                _saveRoomTransaction,
+              ),
               /*
               ElevatedButton(
                 onPressed: _saveRoomTransaction,
@@ -172,31 +175,31 @@ class _RoomTransactionManagementFormWidgetState
     );
   }
 
-Widget _buildButton(String text, VoidCallback onPressed) {
-  return ElevatedButton.icon(
-    onPressed: onPressed,
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.green, // Set a meaningful color like green for "Save"
-      foregroundColor: Colors.white, // Text/icon color
-      minimumSize: Size(double.infinity, 50), // Full-width and height
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12), // Rounded corners
+  Widget _buildButton(String text, VoidCallback onPressed) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor:
+            Colors.green, // Set a meaningful color like green for "Save"
+        foregroundColor: Colors.white, // Text/icon color
+        minimumSize: Size(double.infinity, 50), // Full-width and height
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12), // Rounded corners
+        ),
+        padding: EdgeInsets.symmetric(
+            vertical: 14), // Add vertical padding for better touch target
+        elevation: 3, // Add slight shadow
       ),
-      padding: EdgeInsets.symmetric(vertical: 14), // Add vertical padding for better touch target
-      elevation: 3, // Add slight shadow
-    ),
-    icon: Icon(Icons.save, size: 24), // Save icon
-    label: Text(
-      text,
-      style: TextStyle(
-        fontSize: 18, // Larger font for readability
-        fontWeight: FontWeight.bold, // Make it stand out
+      icon: Icon(Icons.save, size: 24), // Save icon
+      label: Text(
+        text,
+        style: TextStyle(
+          fontSize: 18, // Larger font for readability
+          fontWeight: FontWeight.bold, // Make it stand out
+        ),
       ),
-    ),
-  );
-}
-
-
+    );
+  }
 
   Widget _buildRoomGuestDetailsSection() {
     return Column(
@@ -403,18 +406,20 @@ Widget _buildButton(String text, VoidCallback onPressed) {
       }
 
       switch (itemType) {
-        case ItemType.room: {
-          cost = amount / 1.09;
-          gst = amount - cost - cost * 1.04;
-          levy = amount - cost - cost * 1.05;
-        }
-        break;
-        case ItemType.room_adjust: {
-          cost = amount / 1.09;
-          gst = amount - cost - cost * 1.04;
-          levy = amount - cost - cost * 1.05;
-        }
-        break;
+        case ItemType.room:
+          {
+            cost = amount / 1.09;
+            gst = amount - cost - cost * 1.04;
+            levy = amount - cost - cost * 1.05;
+          }
+          break;
+        case ItemType.room_adjust:
+          {
+            cost = amount / 1.09;
+            gst = amount - cost - cost * 1.04;
+            levy = amount - cost - cost * 1.05;
+          }
+          break;
         //  gst = amount * 0.05; gst + levy + cost = amount
         //  gst = amount -
         // levy = amount * 0.04;
@@ -423,6 +428,7 @@ Widget _buildButton(String text, VoidCallback onPressed) {
         case ItemType.pet:
           gst = amount * 0.05;
           levy = 0;
+          break;
         case ItemType.vending:
         case ItemType.atm:
         case ItemType.demage:
@@ -437,14 +443,18 @@ Widget _buildButton(String text, VoidCallback onPressed) {
         case ItemType.debit:
           gst = 0;
           levy = 0;
+          break;
+        default:
+          throw Exception('Unknown item type: $itemType');
       }
 
-      if (itemType == ItemType.room_adjust || itemType == ItemType.room ) {
+      if (itemType == ItemType.room_adjust || itemType == ItemType.room) {
         total = amount;
         amount = cost;
       } else {
         total = amount + gst + levy;
       }
+
       final totalFinal = total * sign;
       final amountFinal = amount * sign;
 
