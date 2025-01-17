@@ -403,12 +403,18 @@ Widget _buildButton(String text, VoidCallback onPressed) {
       }
 
       switch (itemType) {
-        case ItemType.room:
-        case ItemType.room_adjust:
+        case ItemType.room: {
           cost = amount / 1.09;
           gst = amount - cost - cost * 1.04;
           levy = amount - cost - cost * 1.05;
-
+        }
+        break;
+        case ItemType.room_adjust: {
+          cost = amount / 1.09;
+          gst = amount - cost - cost * 1.04;
+          levy = amount - cost - cost * 1.05;
+        }
+        break;
         //  gst = amount * 0.05; gst + levy + cost = amount
         //  gst = amount -
         // levy = amount * 0.04;
@@ -433,7 +439,7 @@ Widget _buildButton(String text, VoidCallback onPressed) {
           levy = 0;
       }
 
-      if (itemType == ItemType.room_adjust) {
+      if (itemType == ItemType.room_adjust || itemType == ItemType.room ) {
         total = amount;
         amount = cost;
       } else {
