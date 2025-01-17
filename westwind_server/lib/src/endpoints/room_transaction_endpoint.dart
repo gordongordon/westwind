@@ -21,8 +21,8 @@ class RoomTransactionEndpoint extends Endpoint {
   Future<List<RoomTransaction>> list(Session session) async {
     return await RoomTransaction.db.find(session,
         orderByList: (t) => [
-              Order(column: t.updateDate, orderDescending: false),
-              Order(column: t.transactionDay, orderDescending: false),
+              Order(column: t.updateDate, orderDescending: true),
+              Order(column: t.transactionDay, orderDescending: true),
             ],
         include: RoomTransaction.include(
             guest: Guest.include(),
@@ -35,6 +35,10 @@ class RoomTransactionEndpoint extends Endpoint {
   Future<List<RoomTransaction>> listWithItemTypeRoom(Session session) async {
     return await RoomTransaction.db.find(session,
         where: (i) => i.itemType.equals(ItemType.room),
+        orderByList: (t) => [
+              Order(column: t.updateDate, orderDescending: true),
+              Order(column: t.transactionDay, orderDescending: true),
+            ],
         include: RoomTransaction.include(
             guest: Guest.include(),
             room: Room.include(),
