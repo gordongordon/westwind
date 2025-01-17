@@ -21,8 +21,8 @@ class RoomTransactionEndpoint extends Endpoint {
   Future<List<RoomTransaction>> list(Session session) async {
     return await RoomTransaction.db.find(session,
         orderByList: (t) => [
-              Order(column: t.updateDate, orderDescending: true),
-              Order(column: t.transactionDay, orderDescending: true),
+              Order(column: t.updateDate, orderDescending: false),
+              Order(column: t.transactionDay, orderDescending: false),
             ],
         include: RoomTransaction.include(
             guest: Guest.include(),

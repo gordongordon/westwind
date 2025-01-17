@@ -9,6 +9,7 @@ import 'package:westwind_flutter/features/room_guest/domain/usescases/delete_roo
 import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/extend_stay_day_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/save_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/update_room_guest_note.dart';
 
 part 'room_guest_manage_event.dart';
 part 'room_guest_manage_state.dart';
@@ -23,6 +24,7 @@ class RoomGuestManageBloc
   final ExtendStayDayRoomGuestUseCase extendStayDayRoomGuest;
   final ChargeAndExtendStayDayUseCase chargeAndExtendStayDayRoomGuest;
   final SaveRoomGuestUseCase saveRoomGuest;
+  final UpdateRoomGuestNoteUseCase updateRoomGuestNote;
 
   RoomGuestManageBloc({
     required this.deleteRoomGuest,
@@ -33,6 +35,7 @@ class RoomGuestManageBloc
     required this.extendStayDayRoomGuest,
     required this.chargeAndExtendStayDayRoomGuest,
     required this.saveRoomGuest,
+    required this.updateRoomGuestNote,
   }) : super(RoomGuestManageStateInitial()) {
     on<RoomGuestManageEvent>((event, emit) {
       emit(RoomGuestManageStateLoading());
@@ -46,6 +49,25 @@ class RoomGuestManageBloc
     on<ExtendStayDayRoomGuest>(_onExtendStayDayRoomGuest);
     on<ChargeAndExtendStayDay>(_onChargeAndExtendStay);
     on<SaveRoomGuest>(_onSaveRoomGuest);
+    on<UpdateRoomGuestNote>(_onUpdateRoomGuestNote); 
+  }
+
+  Future<void> _onUpdateRoomGuestNote( UpdateRoomGuestNote event , Emitter<RoomGuestManageState> emit) async {
+
+    emit(RoomGuestManageStateLoading());
+   // await Future.delayed(Duration(seconds: 1));
+
+    final result =
+        await updateRoomGuestNote(UpdateRoomGuestNoteParams(roomGuestId : event.roomGuestId,  note: event.note ));
+
+    result.fold(
+      (failure) => emit(RoomGuestManageStateFailure(failure.message)),
+      (_) => emit(RoomGuestManageStateUpdateNoteSuccess()),
+    );
+
+    return;
+
+
   }
 
   Future<void> _onSaveRoomGuest(

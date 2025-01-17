@@ -1,3 +1,4 @@
+import 'package:serverpod/server.dart';
 import 'package:westwind_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
@@ -25,6 +26,19 @@ class RoomGuestEndpoint extends Endpoint {
 
     return await RoomGuest.db.insertRow(session, res);
   }
+
+   Future<RoomGuest?> updateNote(Session session, int roomGuestId, String note) async {
+    final RoomGuest? result = await RoomGuest.db.findById(session, roomGuestId);
+
+
+    if (result != null) {
+      result.note = note;
+      result.updateDate = DateTime.now().toUtc();
+      return await RoomGuest.db.updateRow(session, result);
+    }  
+
+    return null; 
+  } 
 
   Future<RoomGuest> insertGuestByReservation(
       Session session, RoomGuest checkInGuest, Reservation reservation) async {

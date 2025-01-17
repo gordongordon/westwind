@@ -36,6 +36,7 @@ room:
   - toggleRoomStatus:
 roomGuest:
   - saveRoomGuest:
+  - updateNote:
   - insertGuestByReservation:
   - changeAllRateByRoomId:
   - changeAllRateReasonByRoomId:

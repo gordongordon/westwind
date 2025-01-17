@@ -19,6 +19,8 @@ abstract interface class RoomGuestRepository {
    Future<Either<Failure,List<RoomGuest>>> retrieveRoommatesSameStayDayById( int roomGuestId );
    Future<Either<Failure,List<RoomGuest>>> retrieveRoommatesSameStayDayWithOutGoHomeById( int roomGuestId );
    Future<Either<Failure,List<RoomGuest>>> updateRateSameStayDayByReasonAndId( int roomGuestId, RateReason reason, double rate);
+   Future<Either<Failure,RoomGuest?>> updateNote({required int roomGuestId, required String note});   
+   
 
 
 }

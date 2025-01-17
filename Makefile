@@ -23,4 +23,4 @@ freezed:
 delete_db:
 	cd westwind_server && docker compose down -v 
 db_repair: 
-    cd westwind_server && serverpod create-repair-migration
+	cd westwind_server && serverpod create-repair-migration

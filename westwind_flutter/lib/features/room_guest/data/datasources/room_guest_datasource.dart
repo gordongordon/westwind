@@ -16,6 +16,7 @@ abstract interface class RoomGuestDatasource {
   Future<List<RoomGuest>> retrieveRoommatesSameStayDayById(int roomGuestId);
   Future<List<RoomGuest>> retrieveRoommatesSameStayDayWithOutGoHomeById( int roomGuestId );
   Future<List<RoomGuest>> updateRateSameStayDayByReasonAndId( int roomGuestId, RateReason rearson, double rate); 
+  Future<RoomGuest?> updateNote( {required int roomGuestId, required String note});
 }
 
 class RoomGuestDatasourceImpl implements RoomGuestDatasource {
@@ -159,6 +160,15 @@ class RoomGuestDatasourceImpl implements RoomGuestDatasource {
   Future<List<RoomGuest>> updateRateSameStayDayByReasonAndId(int roomGuestId, RateReason reason, double rate) async {
     try {
       return await client.roomGuest.updateRateSameStayDayByReasonAndId(roomGuestId, reason, rate );
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+  
+  @override
+  Future<RoomGuest?> updateNote({required int roomGuestId, required String note}) async {
+    try {
+      return await client.roomGuest.updateNote( roomGuestId, note );
     } catch (e) {
       throw ServerException(e.toString());
     }

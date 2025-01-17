@@ -221,12 +221,15 @@ class _RoomGuestTransactionsManageWidgetState
               () => context
                   .read<RoomTransactionBloc>()
                   .add(DeleteRoomTransactionEvent(id: transactionId)),
-              color: Colors.red),
+             color: Colors.red
+             ),
         ],
       );
     }
     return SizedBox();
   }
+
+
 
   Widget _buildButton(String text, VoidCallback onPressed,
       {Color color = Colors.blue}) {
@@ -239,6 +242,35 @@ class _RoomGuestTransactionsManageWidgetState
       child: Text(text),
     );
   }
+
+
+
+/* 
+Widget _buildButton(String text, VoidCallback onPressed) {
+  return ElevatedButton.icon(
+    onPressed: onPressed,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.green, // Set a meaningful color like green for "Save"
+      foregroundColor: Colors.white, // Text/icon color
+      minimumSize: Size(double.infinity, 50), // Full-width and height
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12), // Rounded corners
+      ),
+      padding: EdgeInsets.symmetric(vertical: 14), // Add vertical padding for better touch target
+      elevation: 3, // Add slight shadow
+    ),
+    icon: Icon(Icons.save, size: 24), // Save icon
+    label: Text(
+      text,
+      style: TextStyle(
+        fontSize: 18, // Larger font for readability
+        fontWeight: FontWeight.bold, // Make it stand out
+      ),
+    ),
+  );
+}
+*/
+
 
   Widget _buildInfoRow(String label, String value, {required bool isLastItem}) {
     return Padding(

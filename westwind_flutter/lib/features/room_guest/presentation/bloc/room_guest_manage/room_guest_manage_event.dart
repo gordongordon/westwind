@@ -10,6 +10,13 @@ class SaveRoomGuest extends RoomGuestManageEvent {
    SaveRoomGuest( this.roomGuest );
 }
 
+class UpdateRoomGuestNote extends RoomGuestManageEvent {
+  final int roomGuestId;
+  final String note; 
+
+  UpdateRoomGuestNote(this.roomGuestId, this.note );
+}
+
 
 class RetrieveRoomGuest extends RoomGuestManageEvent {
   final int id;

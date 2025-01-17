@@ -641,6 +641,30 @@ class Endpoints extends _i1.EndpointDispatch {
             params['res'],
           ),
         ),
+        'updateNote': _i1.MethodConnector(
+          name: 'updateNote',
+          params: {
+            'roomGuestId': _i1.ParameterDescription(
+              name: 'roomGuestId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'note': _i1.ParameterDescription(
+              name: 'note',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint).updateNote(
+            session,
+            params['roomGuestId'],
+            params['note'],
+          ),
+        ),
         'insertGuestByReservation': _i1.MethodConnector(
           name: 'insertGuestByReservation',
           params: {

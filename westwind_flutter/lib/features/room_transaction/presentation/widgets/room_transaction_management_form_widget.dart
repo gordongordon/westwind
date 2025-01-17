@@ -158,16 +158,45 @@ class _RoomTransactionManagementFormWidgetState
                 _buildAdditionalInfoSection(),
               ],
               const SizedBox(height: 24),
+              _buildButton( "save room transaction ", _saveRoomTransaction, ),
+              /*
               ElevatedButton(
                 onPressed: _saveRoomTransaction,
                 child: const Text('Save Room Transaction'),
               ),
+              */
             ],
           ),
         ),
       ),
     );
   }
+
+Widget _buildButton(String text, VoidCallback onPressed) {
+  return ElevatedButton.icon(
+    onPressed: onPressed,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.green, // Set a meaningful color like green for "Save"
+      foregroundColor: Colors.white, // Text/icon color
+      minimumSize: Size(double.infinity, 50), // Full-width and height
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12), // Rounded corners
+      ),
+      padding: EdgeInsets.symmetric(vertical: 14), // Add vertical padding for better touch target
+      elevation: 3, // Add slight shadow
+    ),
+    icon: Icon(Icons.save, size: 24), // Save icon
+    label: Text(
+      text,
+      style: TextStyle(
+        fontSize: 18, // Larger font for readability
+        fontWeight: FontWeight.bold, // Make it stand out
+      ),
+    ),
+  );
+}
+
+
 
   Widget _buildRoomGuestDetailsSection() {
     return Column(

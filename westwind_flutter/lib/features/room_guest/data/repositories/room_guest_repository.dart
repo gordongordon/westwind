@@ -234,4 +234,14 @@ class RoomGuestRepositoryImpl implements RoomGuestRepository {
       note: data.note,
     );
   }
+  
+  @override
+  Future<Either<Failure,RoomGuest?>> updateNote({required int roomGuestId, required  String note}) async {
+    try {
+      return Right(await roomGuestDatasource.updateNote(
+          roomGuestId: roomGuestId, note: note));
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    }
+  }
 }

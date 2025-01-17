@@ -61,6 +61,7 @@ import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_r
 import 'package:westwind_flutter/features/room_guest/domain/usescases/save_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/extend_stay_day_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/undo_charge_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/update_room_guest_note.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/data/datasources/room_transaction_datasource.dart';
@@ -504,6 +505,14 @@ void _initRoomGuest() {
     ),
   );
 
+
+  serverLocator.registerLazySingleton<UpdateRoomGuestNoteUseCase>(
+    () => UpdateRoomGuestNoteUseCase(
+      serverLocator<RoomGuestRepository>(),
+    ),
+  );
+
+
   serverLocator.registerLazySingleton<DeleteRoomGuestUseCase>(
     () => DeleteRoomGuestUseCase(
       serverLocator<RoomGuestRepository>(),
@@ -613,6 +622,7 @@ void _initRoomGuest() {
         chargeAndExtendStayDayRoomGuest:
             serverLocator<ChargeAndExtendStayDayUseCase>(),
         saveRoomGuest: serverLocator<SaveRoomGuestUseCase>(),
+        updateRoomGuestNote: serverLocator<UpdateRoomGuestNoteUseCase>(),
       ));
 }
 

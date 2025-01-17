@@ -297,6 +297,19 @@ class EndpointRoomGuest extends _i1.EndpointRef {
         {'res': res},
       );
 
+  _i2.Future<_i9.RoomGuest?> updateNote(
+    int roomGuestId,
+    String note,
+  ) =>
+      caller.callServerEndpoint<_i9.RoomGuest?>(
+        'roomGuest',
+        'updateNote',
+        {
+          'roomGuestId': roomGuestId,
+          'note': note,
+        },
+      );
+
   _i2.Future<_i9.RoomGuest> insertGuestByReservation(
     _i9.RoomGuest checkInGuest,
     _i7.Reservation reservation,

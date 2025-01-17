@@ -36,6 +36,8 @@ final class RoomGuestManageStateDeleteSuccess extends RoomGuestManageState {}
 
 final class RoomGuestManageStateChargeSuccess extends RoomGuestManageState {}
 
+final class RoomGuestManageStateUpdateNoteSuccess extends RoomGuestManageState {}
+
 final class RoomGuestManageStateExtendStayDaySuccess
     extends RoomGuestManageState {}
 
