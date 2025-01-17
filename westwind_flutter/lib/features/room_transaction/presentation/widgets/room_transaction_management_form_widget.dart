@@ -409,15 +409,19 @@ class _RoomTransactionManagementFormWidgetState
         case ItemType.room:
           {
             cost = amount / 1.09;
-            gst = amount - cost - cost * 1.04;
-            levy = amount - cost - cost * 1.05;
+            gst  = cost * 0.05;
+            levy = cost * 0.04;
+           // gst = amount - cost - cost * 1.04;
+           // levy = amount - cost - cost * 1.05;
           }
           break;
         case ItemType.room_adjust:
           {
             cost = amount / 1.09;
-            gst = amount - cost - cost * 1.04;
-            levy = amount - cost - cost * 1.05;
+            gst  = cost * 0.05;
+            levy = cost * 0.04;
+         //   gst = amount - cost - cost * 1.04;
+          //  levy = amount - cost - cost * 1.05;
           }
           break;
         //  gst = amount * 0.05; gst + levy + cost = amount
@@ -428,7 +432,6 @@ class _RoomTransactionManagementFormWidgetState
         case ItemType.pet:
           gst = amount * 0.05;
           levy = 0;
-          break;
         case ItemType.vending:
         case ItemType.atm:
         case ItemType.demage:
@@ -443,12 +446,12 @@ class _RoomTransactionManagementFormWidgetState
         case ItemType.debit:
           gst = 0;
           levy = 0;
-          break;
+        break;
         default:
           throw Exception('Unknown item type: $itemType');
       }
 
-      if (itemType == ItemType.room_adjust || itemType == ItemType.room) {
+      if (itemType == ItemType.room_adjust ) {
         total = amount;
         amount = cost;
       } else {
