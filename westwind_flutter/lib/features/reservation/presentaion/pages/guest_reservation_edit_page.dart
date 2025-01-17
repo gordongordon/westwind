@@ -3,17 +3,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:serverpod_auth_shared_flutter/serverpod_auth_shared_flutter.dart';
+import 'package:serverpod_flutter/serverpod_flutter.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/core/error/exception.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
+import 'package:westwind_flutter/features/guest/data/datasources/guest_datasource.dart';
+import 'package:westwind_flutter/features/guest/data/repositories/guest_repository_imp.dart';
+import 'package:westwind_flutter/features/guest/domain/repositories/guest_repository.dart';
+import 'package:westwind_flutter/features/guest/domain/usecases/list_guest.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_list/guest_list_events.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_manage/guest_manage_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_list/reservation_list_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/reservation_manage/bloc/reservation_manage_bloc.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class GuestReservationEditPage extends StatefulWidget {
   final int? guestId;
@@ -29,8 +37,13 @@ class GuestReservationEditPage extends StatefulWidget {
   static String routeCalendar([int? roomId, DateTime? date]) =>
       "/guest-reservation/calendar/${roomId ?? ':roomId'}/${date ?? ':date'}";
 
-  const GuestReservationEditPage(
-      {super.key, this.guestId, this.reservationId, this.roomId, this.date});
+  const GuestReservationEditPage({
+    super.key,
+    this.guestId,
+    this.reservationId,
+    this.roomId,
+    this.date,
+  });
 
   @override
   State<GuestReservationEditPage> createState() =>
@@ -39,6 +52,11 @@ class GuestReservationEditPage extends StatefulWidget {
 
 class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   final formKey = GlobalKey<FormBuilderState>();
+  final dropDownKey = GlobalKey<DropdownSearchState>();
+
+  // final List<String> getData = ['gordon', 'may'];
+
+  // final GuestRepository guestRepository;
 
   // Guest-related controllers
   final TextEditingController guestIdController = TextEditingController();
@@ -164,7 +182,6 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
               _buildReservationInfoSection(),
               _buildRateInfoSection(),
               _buildActionButtons(),
-
               _buildAdditionalInfoSection(),
               //    if (isGuestEditing || isReservationEditing) _buildActionButtons(),
             ],
@@ -174,6 +191,24 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     );
   }
 
+  Future<List<Guest>> getData(filter) async {
+    // late response;
+
+//    GuestDatasourceImpl(_client).list();
+
+    try {
+      var client = await Client(
+            "http://localhost:8080/",
+            authenticationKeyManager: FlutterAuthenticationKeyManager(),
+          )
+            ..connectivityMonitor = FlutterConnectivityMonitor(),
+          response = client.guest.retrieveGuestByLastName(lastName: filter);
+      return response;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
   Widget _buildGuestInfoSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,6 +216,56 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         Text('Guest Information',
             style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: 16),
+
+        // Building  asyn field :
+        DropdownSearch<Guest>(
+          items: (f, cs) => getData(f),
+          suffixProps: DropdownSuffixProps(
+              clearButtonProps: ClearButtonProps(isVisible: true)),
+          compareFn: (item, selectedItem) {
+            if (item.id == selectedItem.id) {
+              phoneController.text = item.phone.toString();
+
+              
+      context
+          .read<GuestManageBloc>()
+          .add(GuestManageRetrieveByPhoneEvent(phone: phoneController.text .trim()));
+              return true;
+            }
+
+            return false;
+          },
+          dropdownBuilder: (context, selectedItem) {
+            if (selectedItem == null) {
+              return SizedBox.shrink();
+            }
+
+            return ListTile(
+              contentPadding: EdgeInsets.only(left: 0),
+              leading: CircleAvatar(
+                  backgroundColor: Colors.blue,
+                  child: Text(selectedItem.lastName[0])),
+              title: Text(selectedItem.lastName),
+            );
+          },
+          popupProps: PopupProps.menu(
+            disableFilter: true, //data will be filtered by the backend
+            showSearchBox: true,
+            showSelectedItems: true,
+            itemBuilder: (ctx, item, isDisabled, isSelected) {
+              return ListTile(
+                leading: CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    child: Text(item.lastName[0])),
+                selected: isSelected,
+                title: Text(item.lastName),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 16),
+        // ENd of
+
         _buildTextFieldPhone(
             'phone', 'Phone', phoneController, _onPhoneChanged),
         _buildTextField('guestId', 'Guest ID', guestIdController, null,
@@ -241,7 +326,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         FormBuilderSwitch(
           name: 'isCheckedIn',
           title: const Text('Is Checked In'),
-          initialValue: isCheckedIn,
+          initialValue: isCheckedIn, 
           onChanged: (val) => setState(() => isCheckedIn = val ?? false),
         ),
         FormBuilderSwitch(
@@ -307,7 +392,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         _buildButton('Save & Check In', () {
           isSaveAndCheckIn = true;
           _saveGuestReservation();
-    //      _saveGuest();
+          //      _saveGuest();
           /*  context
                 .read<ReservationManageBloc>()
                 .add(CheckInReservation(id: int.parse(reservationIdController.text))); */
@@ -620,13 +705,13 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
   bool _validateFields(List<String> fields) {
     bool isValid = true;
     for (var field in fields) {
-         if (formKey.currentState?.fields[field]?.validate() == false) {
-  //    if (formKey.currentState?.fields[field]?.value == null) {
+      if (formKey.currentState?.fields[field]?.validate() == false) {
+        //    if (formKey.currentState?.fields[field]?.value == null) {
         isValid = false;
         print('Validation failed for field: $field');
-    //    showSnackbar(context, 'Validation failed for field: $field');
+        //    showSnackbar(context, 'Validation failed for field: $field');
       } else {
-     //   showSnackbar(context, 'Validation for field: $field');
+        //   showSnackbar(context, 'Validation for field: $field');
       }
     }
     return isValid;
@@ -666,9 +751,8 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       note: noteController.text,
     );
 
-        checkInDate = formKey.currentState!.fields['checkInDate']!.value;
+    checkInDate = formKey.currentState!.fields['checkInDate']!.value;
     checkOutDate = formKey.currentState!.fields['checkOutDate']!.value;
-
 
     context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
   }
@@ -729,11 +813,11 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
               TimeManager.instance.now(),
           //! should I use now()
 
-     //     checkInDate: formKey.currentState?.fields['checkInDate']?.value ?? TimeManager.instance.today(),
-       //   checkInDate: formKey.currentState?.fields['checkInDate']?.value,
+          //     checkInDate: formKey.currentState?.fields['checkInDate']?.value ?? TimeManager.instance.today(),
+          //   checkInDate: formKey.currentState?.fields['checkInDate']?.value,
           //! May have a bug checkOutDate
-    //         checkOutDate: formKey.currentState?.fields['checkOutDate']?.value ?? TimeManager.instance.today().add(Duration(days: 1)),
-          checkInDate : checkInDate,
+          //         checkOutDate: formKey.currentState?.fields['checkOutDate']?.value ?? TimeManager.instance.today().add(Duration(days: 1)),
+          checkInDate: checkInDate,
           checkOutDate: checkOutDate,
           //! stayDay == checkInDay the first day.
           stayDay: formKey.currentState?.fields['checkInDate']?.value ??

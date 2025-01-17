@@ -46,6 +46,18 @@ class GuestEndpoint extends Endpoint {
     );
   }
 
+  Future<List<Guest>> retrieveGuestByLastName(Session session,
+      {required String lastName}) async {
+
+    final String filter = lastName + '%';
+ 
+    return await Guest.db.find(
+      session,
+      where: (guest) => guest.lastName.like(filter),
+    );
+  }
+
+
   Future<Guest> createGuest(Session session, {required Guest guest}) async {
     guest.dateCreate = DateTime.now().toUtc();
 
