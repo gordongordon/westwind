@@ -1,6 +1,6 @@
 # If you update the dart version, make sure the image is
 # compatible with the busybox image.
-FROM dart:3.6.1 AS build
+FROM dart:3.5.2 AS build
 
 WORKDIR /app
 COPY . .
