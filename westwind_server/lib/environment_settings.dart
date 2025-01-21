@@ -18,7 +18,7 @@ class EnvironmentSettings {
 
     serviceSecret = env['SERVERPOD_SERVICE_SECRET']!;
 
-    final dbUri = Uri.parse(env['DATABASE_URL']!);
+    final dbUri = Uri.parse(env['HEROKU_POSTGRESQL_AMBER_URL']!);
     final dbNoSsl = env['DATABASE_NO_SSL'] == 'true';
 
     databaseConfig = DatabaseConfig(
