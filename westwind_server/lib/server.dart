@@ -52,13 +52,13 @@ void run(List<String> args) async {
     auth.AuthConfig(
       sendValidationEmail: (session, email, validationCode) async {
         // Todo : Send email to user with validation code
-        print(validationCode);
+        print('code : $validationCode');
 
         return true;
       },
       sendPasswordResetEmail: (session, email, validationCode) async {
         // Todo : Send email to user with validation code
-        print(validationCode);
+        print('code : $validationCode');
 
         return true;
       },
