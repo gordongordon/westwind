@@ -19,11 +19,11 @@ RUN apk add --no-cache nginx bash curl supervisor
 # FROM busybox:1.36.1-glibc
 
 # ENV runmode=development
-ENV runmode=production
-ENV serverid=default
-ENV logging=normal
+#ENV runmode=production
+#ENV serverid=default
+#ENV logging=normal
 #ENV role=monolith
-ENV role=serverless
+#ENV role=serverless
 
 COPY --from=build /runtime/ /
 COPY --from=build /app/bin/server server
