@@ -23,6 +23,7 @@ import 'package:westwind_flutter/features/room_transaction/presentation/pages/ro
 class AppRouter {
   static GoRouter router = GoRouter(
       initialLocation: LoginPage.route(),
+     //  initialLocation: GuestListPage.route(),
       routes: [
         GoRoute(
           path: MainScreen.route(),
@@ -147,9 +148,11 @@ class AppRouter {
         ];
 
         if (!publicRoutes.contains(state.matchedLocation)) {
-          if (userState is AppUserInitial) {
-            return LoginPage.route();
-          }
+
+          //GuestListPage.route();
+           if (userState is AppUserInitial) {
+             return LoginPage.route();
+           }
         }
 
         return null;
