@@ -48,6 +48,23 @@ void run(List<String> args) async {
   // If you are using any future calls, they need to be registered here.
   // pod.registerFutureCall(ExampleFutureCall(), 'exampleFutureCall');
 
+  auth.AuthConfig.set(
+    auth.AuthConfig(
+      sendValidationEmail: (session, email, validationCode) async {
+        // Todo : Send email to user with validation code
+        print(validationCode);
+
+        return true;
+      },
+      sendPasswordResetEmail: (session, email, validationCode) async {
+        // Todo : Send email to user with validation code
+        print(validationCode);
+
+        return true;
+      },
+    ),
+  );
+
   // Setup a default page at the web root.
   pod.webServer.addRoute(RouteRoot(), '/');
   pod.webServer.addRoute(RouteRoot(), '/index.html');
