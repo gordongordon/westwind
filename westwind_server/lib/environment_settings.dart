@@ -8,7 +8,7 @@ class EnvironmentSettings {
 
   EnvironmentSettings() {
     env = DotEnv(includePlatformEnvironment: true)..load();
-    if (env['HEROKU_POSTGRESQL_AMBER_URL'] == null) {
+    if (env['DATABASE_URL'] == null) {
       throw Exception("HEROKU_POSTGRESQL_AMBER_URL not set in environment.");
     }
 
@@ -18,7 +18,7 @@ class EnvironmentSettings {
 
     serviceSecret = env['SERVERPOD_SERVICE_SECRET']!;
 
-    final dbUri = Uri.parse(env['HEROKU_POSTGRESQL_AMBER_URL']!);
+    final dbUri = Uri.parse(env['DATABASE_URL']!);
     final dbNoSsl = env['DATABASE_NO_SSL'] == 'true';
 
     databaseConfig = DatabaseConfig(
