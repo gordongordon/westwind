@@ -1,7 +1,7 @@
 import 'package:serverpod/serverpod.dart';
-import 'environment_settings.dart';
+import 'package:westwind_server/environment_settings.dart';
 
-import 'src/web/routes/root.dart';
+import 'package:westwind_server/src/web/routes/root.dart';
 
 import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';

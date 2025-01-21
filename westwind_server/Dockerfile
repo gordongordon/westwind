@@ -1,5 +1,3 @@
-# If you update the dart version, make sure the image is
-# compatible with the busybox image.
 FROM dart:3.5.2 AS build
 
 WORKDIR /app
@@ -8,22 +6,9 @@ COPY . .
 RUN dart pub get
 RUN dart compile exe bin/main.dart -o bin/server
 
-# delopy heroku
 FROM alpine:latest
-# heroku
+
 RUN apk add --no-cache nginx bash curl supervisor
-
-# If you update the busybox version, make sure the image is
-# compatible with the dart image.
-#heroku 
-# FROM busybox:1.36.1-glibc
-
-# ENV runmode=development
-#ENV runmode=production
-#ENV serverid=default
-#ENV logging=normal
-#ENV role=monolith
-#ENV role=serverless
 
 COPY --from=build /runtime/ /
 COPY --from=build /app/bin/server server
