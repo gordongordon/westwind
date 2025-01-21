@@ -8,8 +8,8 @@ class EnvironmentSettings {
 
   EnvironmentSettings() {
     env = DotEnv(includePlatformEnvironment: true)..load();
-    if (env['DATABASE_URL'] == null) {
-      throw Exception("DATABASE_URL not set in environment.");
+    if (env['HEROKU_POSTGRESQL_AMBER_URL'] == null) {
+      throw Exception("HEROKU_POSTGRESQL_AMBER_URL not set in environment.");
     }
 
     if (env['SERVERPOD_SERVICE_SECRET'] == null) {
