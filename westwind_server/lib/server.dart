@@ -18,7 +18,7 @@ import 'package:serverpod_auth_server/serverpod_auth_server.dart' as auth;
 void run(List<String> args) async {
   // Initialize Serverpod and connect it with your generated code.
 
-  final envSettings = EnvironmentSettings();
+ final envSettings = EnvironmentSettings();
 
   final pod = Serverpod(
     args,
@@ -56,44 +56,22 @@ void run(List<String> args) async {
     auth.AuthConfig(
       sendValidationEmail: (session, email, validationCode) async {
         // Todo : Send email to user with validation code
-      //  log('code : ' , validationCode);
-     //   debuggerPrint( 'code : $validationCode' );
-      //  debugPrint('code : $validationCode');
-             print('code : $validationCode');
-             
-             stdout.writeln('code : $validationCode');
 
+          session.log('Your log message here');
+        //  log('code : ' , validationCode);
+        //   debuggerPrint( 'code : $validationCode' );
+        //  debugPrint('code : $validationCode');
+        print('code : $validationCode');
 
-
-               Logger.root.level = Level.ALL; // Set log level
-  Logger.root.onRecord.listen((record) {
-    print('${record.level.name}: ${record.time}: ${record.message}');
-  });
-  
-
-
-  final logger = Logger('YourAppName');
-  logger.info('This will show up in Heroku logs');
-  logger.warning('Warning message');
-  logger.severe('Error message');
-        return true;
+//             stdout.writeln('code : $validationCode');
       },
       sendPasswordResetEmail: (session, email, validationCode) async {
         // Todo : Send email to user with validation code
         print('code : $validationCode');
 
-              stdout.writeln('code : $validationCode');
-  Logger.root.level = Level.ALL; // Set log level
-  Logger.root.onRecord.listen((record) {
-    print('${record.level.name}: ${record.time}: ${record.message}');
-  });
-  
+        //     stdout.writeln('code : $validationCode');
 
-  final logger = Logger('YourAppName');
-  logger.info('This will show up in Heroku logs');
-  logger.warning('Warning message');
-  logger.severe('Error message');
-        return true;
+          session.log('Your log message here');
       },
     ),
   );
