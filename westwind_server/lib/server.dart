@@ -7,8 +7,8 @@ import 'package:westwind_server/src/web/routes/root.dart';
 
 import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
-import 'package:logging/logging.dart';
-import 'dart:io';
+// import 'package:logging/logging.dart';
+//import 'dart:io';
 
 import 'package:serverpod_auth_server/serverpod_auth_server.dart' as auth;
 // This is the starting point of your Serverpod server. In most cases, you will
@@ -18,7 +18,7 @@ import 'package:serverpod_auth_server/serverpod_auth_server.dart' as auth;
 void run(List<String> args) async {
   // Initialize Serverpod and connect it with your generated code.
 
- final envSettings = EnvironmentSettings();
+  final envSettings = EnvironmentSettings();
 
   final pod = Serverpod(
     args,
@@ -57,12 +57,12 @@ void run(List<String> args) async {
       sendValidationEmail: (session, email, validationCode) async {
         // Todo : Send email to user with validation code
 
-          session.log('Your log message here');
+        session.log('Your log message here');
         //  log('code : ' , validationCode);
         //   debuggerPrint( 'code : $validationCode' );
         //  debugPrint('code : $validationCode');
         print('code : $validationCode');
-
+        return true;
 //             stdout.writeln('code : $validationCode');
       },
       sendPasswordResetEmail: (session, email, validationCode) async {
@@ -71,7 +71,8 @@ void run(List<String> args) async {
 
         //     stdout.writeln('code : $validationCode');
 
-          session.log('Your log message here');
+        session.log('Your log message here');
+                return true;
       },
     ),
   );
