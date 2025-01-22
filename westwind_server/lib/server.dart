@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:serverpod/serverpod.dart';
 import 'package:westwind_server/environment_settings.dart';
 
@@ -8,7 +6,7 @@ import 'package:westwind_server/src/web/routes/root.dart';
 import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
 // import 'package:logging/logging.dart';
-//import 'dart:io';
+import 'dart:io';
 
 import 'package:serverpod_auth_server/serverpod_auth_server.dart' as auth;
 // This is the starting point of your Serverpod server. In most cases, you will
@@ -57,21 +55,24 @@ void run(List<String> args) async {
       sendValidationEmail: (session, email, validationCode) async {
         // Todo : Send email to user with validation code
 
-        session.log('Your log message here');
-        //  log('code : ' , validationCode);
-        //   debuggerPrint( 'code : $validationCode' );
-        //  debugPrint('code : $validationCode');
-        print('code : $validationCode');
+      // Use session.logger
+      session.log('Sending validation email');
+      session.log('Email: $email, Code: $validationCode');
+      
+      print('code : $validationCode'); // Keep your print statement as backup
+      stdout.writeln('Validation email code: $validationCode'); 
+
         return true;
 //             stdout.writeln('code : $validationCode');
       },
       sendPasswordResetEmail: (session, email, validationCode) async {
         // Todo : Send email to user with validation code
-        print('code : $validationCode');
-
-        //     stdout.writeln('code : $validationCode');
-
-        session.log('Your log message here');
+      // Use session.logger
+      session.log('Sending validation email');
+      session.log('Email: $email, Code: $validationCode');
+      
+      print('code : $validationCode'); // Keep your print statement as backup
+      stdout.writeln('Validation email code: $validationCode'); 
                 return true;
       },
     ),
