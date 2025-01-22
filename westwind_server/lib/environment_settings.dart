@@ -5,6 +5,8 @@ class EnvironmentSettings {
   late final DotEnv env;
   late final DatabaseConfig databaseConfig;
   late final String serviceSecret;
+  late final String gmailEmail;
+  late final String gmailPassword;
 
   EnvironmentSettings() {
     env = DotEnv(includePlatformEnvironment: true)..load();
@@ -16,7 +18,18 @@ class EnvironmentSettings {
       throw Exception("SERVERPOD_SERVICE_SECRET not set in environment.");
     }
 
+    if (env['GMAILEMAIL'] == null) {
+      throw Exception("GMAILEMAIL not set in environment.");
+    }
+
+    if (env['GMAILPASSWORD'] == null) {
+      throw Exception("GMAILPASSWORD not set in environment.");
+    }
+
     serviceSecret = env['SERVERPOD_SERVICE_SECRET']!;
+
+    gmailEmail = env['GMAILEMAIL']!;
+    gmailPassword = env['GMAILPASSWORD']!;
 
     final dbUri = Uri.parse(env['DATABASE_URL']!);
     final dbNoSsl = env['DATABASE_NO_SSL'] == 'true';

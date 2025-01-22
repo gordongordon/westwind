@@ -83,8 +83,8 @@ Future<void> initDependencies() async {
 
   serverLocator.registerLazySingleton<Client>(
     () => Client(
-     //"http://localhost:8080/",
-     "https://westwind-app-b00b64c234f3.herokuapp.com/api/",
+     "http://localhost:8080/",
+     //"https://westwind-app-b00b64c234f3.herokuapp.com/api/",
       authenticationKeyManager: FlutterAuthenticationKeyManager(),
     )..connectivityMonitor = FlutterConnectivityMonitor(),
   );
