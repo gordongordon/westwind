@@ -11,7 +11,7 @@ class EnvironmentSettings {
   EnvironmentSettings() {
     env = DotEnv(includePlatformEnvironment: true)..load();
     if (env['DATABASE_URL'] == null) {
-      throw Exception("DATABASE_RUL not set in environment.");
+      throw Exception("DATABASE_URUL not set in environment.");
     }
 
     if (env['SERVERPOD_SERVICE_SECRET'] == null) {
