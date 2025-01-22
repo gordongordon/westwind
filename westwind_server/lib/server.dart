@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:serverpod/serverpod.dart';
 import 'package:westwind_server/environment_settings.dart';
 
@@ -5,6 +7,7 @@ import 'package:westwind_server/src/web/routes/root.dart';
 
 import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
+import 'package:logging/logging.dart';
 
 import 'package:serverpod_auth_server/serverpod_auth_server.dart' as auth;
 // This is the starting point of your Serverpod server. In most cases, you will
@@ -52,14 +55,33 @@ void run(List<String> args) async {
     auth.AuthConfig(
       sendValidationEmail: (session, email, validationCode) async {
         // Todo : Send email to user with validation code
-        print('code : $validationCode');
-
+      //  log('code : ' , validationCode);
+     //   debuggerPrint( 'code : $validationCode' );
+      //  debugPrint('code : $validationCode');
+             print('code : $validationCode');
+               Logger.root.level = Level.ALL; // Set log level
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
+  
+  final logger = Logger('YourAppName');
+  logger.info('This will show up in Heroku logs');
+  logger.warning('Warning message');
+  logger.severe('Error message');
         return true;
       },
       sendPasswordResetEmail: (session, email, validationCode) async {
         // Todo : Send email to user with validation code
         print('code : $validationCode');
-
+  Logger.root.level = Level.ALL; // Set log level
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
+  
+  final logger = Logger('YourAppName');
+  logger.info('This will show up in Heroku logs');
+  logger.warning('Warning message');
+  logger.severe('Error message');
         return true;
       },
     ),
