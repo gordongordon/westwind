@@ -15,11 +15,13 @@ class CalculateRateRoomGuestUseCase
   final RoomGuestRepository roomGuestRepository;
   final RateTableRepository rateTableRepository;
   final GoHomeRoomGuestUseCase goHomeRoomGuestUseCase;
+//  final DoubleRoomGuestUseCase doubleRoomGuestUseCase;
 
   CalculateRateRoomGuestUseCase(
     this.roomGuestRepository,
     this.rateTableRepository,
     this.goHomeRoomGuestUseCase,
+ //   this.doubleRoomGuestUseCase,
   );
 
   @override
@@ -56,9 +58,27 @@ class CalculateRateRoomGuestUseCase
     debugPrint(" Num of room guests $numOfRoomGuests & type of $type");
 
     // Determine the rate reason based on the number of room guests.
-    final RateReason reason = numOfRoomGuests == 1
-        ? RateReason.single
-        : (numOfRoomGuests == 2 ? RateReason.share : RateReason.triple);
+    late RateReason reason;
+
+    if (roomGuest.rateReason == RateReason.double) {
+      reason = RateReason.double;
+    } else {
+      switch (numOfRoomGuests) {
+        case 1:
+          reason = RateReason.single;
+          break;
+        case 2:
+          reason = RateReason.share;
+          break;
+        case 3:
+          reason = RateReason.triple;
+          break;
+      }
+    }
+
+    //  = numOfRoomGuests == 1
+    //     ? RateReason.single
+    //     : (numOfRoomGuests == 2 ? RateReason.share : (numOfRoomGuests ==3 ? RateReason.triple);
 
     // Calculate the rate for the given type and rate reason.
     final rate = (await rateTableRepository.getRate(type, reason)).foldResult();
@@ -138,7 +158,6 @@ class CalculateRateRoomGuestUseCase
     return resultRate.foldResult();
   }
   */
-
 }
 
 class CalculateRateRoomGuestParams {
