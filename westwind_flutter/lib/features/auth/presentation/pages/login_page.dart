@@ -91,6 +91,7 @@ class _LoginPageState extends State<LoginPage> {
               child: const Text('Login'),
             ),
             const SizedBox(height: 24),
+            //! Disable when public 
             _buildSignUpLink(),
           ],
         ),

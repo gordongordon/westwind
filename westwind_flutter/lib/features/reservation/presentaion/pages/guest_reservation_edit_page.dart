@@ -198,7 +198,8 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
 
     try {
       var client = await Client(
-            "http://localhost:8080/",
+            // "http://localhost:8080/",
+            "https://westwind-app-b00b64c234f3.herokuapp.com/api/",
             authenticationKeyManager: FlutterAuthenticationKeyManager(),
           )
             ..connectivityMonitor = FlutterConnectivityMonitor(),
