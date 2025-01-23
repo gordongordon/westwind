@@ -220,11 +220,17 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
 
         // Building  asyn field :
         DropdownSearch<Guest>(
+          decoratorProps: DropDownDecoratorProps( 
+              decoration: InputDecoration(
+                labelText: 'Click to start searching guest',
+                border: OutlineInputBorder(),
+              //  hintText: 'when guest was selected then click to update the booking ! '
+              ),
+          ),
           items: (f, cs) => getData(f),
           suffixProps: DropdownSuffixProps(
               clearButtonProps: ClearButtonProps(isVisible: true)),
           compareFn: (item, selectedItem) {
-
             if (item.id == selectedItem.id) {
               phoneController.text = item.phone.toString();
 
@@ -236,7 +242,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
 
             return false;
           },
-        //  onChanged: (item) => context.read<GuestManageBloc>().add(GuestManageRetrieveByPhoneEvent( phone: item!.phone)),
+          //  onChanged: (item) => context.read<GuestManageBloc>().add(GuestManageRetrieveByPhoneEvent( phone: item!.phone)),
 
           dropdownBuilder: (context, selectedItem) {
             if (selectedItem == null) {
@@ -248,22 +254,29 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
               leading: CircleAvatar(
                   backgroundColor: Colors.blue,
                   child: Text(selectedItem.lastName[0])),
-              title: Text( selectedItem.lastName ),
-            //  subtitle: Text('sub'),
+              title: Text(selectedItem.lastName),
+              //  subtitle: Text('sub'),
+                           subtitle: Text(' ${selectedItem.rateType} / Tel : ${selectedItem.phone}'),
             );
           },
           popupProps: PopupProps.menu(
             disableFilter: false, //data will be filtered by the backend
             showSearchBox: true,
             showSelectedItems: true,
+            searchFieldProps: TextFieldProps(
+              decoration: InputDecoration(
+                labelText: 'Type to search by guest\'s last name',
+                border: OutlineInputBorder(),
+              ),
+            ),
             itemBuilder: (ctx, item, isDisabled, isSelected) {
               return ListTile(
                 leading: CircleAvatar(
                     backgroundColor: Colors.blue,
                     child: Text(item.lastName[0])),
                 selected: isSelected,
-                title: Text( '${item.lastName} ${item.firstName}'  ),
-                subtitle: Text( ' ${item.rateType} / Tel : ${item.phone}'),
+                title: Text('${item.lastName} ${item.firstName}'),
+                subtitle: Text(' ${item.rateType} / Tel : ${item.phone}'),
               );
             },
           ),
