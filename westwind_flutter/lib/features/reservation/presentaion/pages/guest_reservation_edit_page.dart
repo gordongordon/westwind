@@ -224,13 +224,13 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           suffixProps: DropdownSuffixProps(
               clearButtonProps: ClearButtonProps(isVisible: true)),
           compareFn: (item, selectedItem) {
+
             if (item.id == selectedItem.id) {
               phoneController.text = item.phone.toString();
 
-              
-      context
-          .read<GuestManageBloc>()
-          .add(GuestManageRetrieveByPhoneEvent(phone: phoneController.text .trim()));
+              context.read<GuestManageBloc>().add(
+                  GuestManageRetrieveByPhoneEvent(
+                      phone: phoneController.text.trim()));
               return true;
             }
 
@@ -246,7 +246,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
               leading: CircleAvatar(
                   backgroundColor: Colors.blue,
                   child: Text(selectedItem.lastName[0])),
-              title: Text(selectedItem.lastName),
+              title: Text( selectedItem.lastName ),
             );
           },
           popupProps: PopupProps.menu(
@@ -259,7 +259,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
                     backgroundColor: Colors.blue,
                     child: Text(item.lastName[0])),
                 selected: isSelected,
-                title: Text(item.lastName),
+                title: Text( '${item.lastName} ${item.firstName} ${item.rateType}'),
               );
             },
           ),
@@ -327,7 +327,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         FormBuilderSwitch(
           name: 'isCheckedIn',
           title: const Text('Is Checked In'),
-          initialValue: isCheckedIn, 
+          initialValue: isCheckedIn,
           onChanged: (val) => setState(() => isCheckedIn = val ?? false),
         ),
         FormBuilderSwitch(
