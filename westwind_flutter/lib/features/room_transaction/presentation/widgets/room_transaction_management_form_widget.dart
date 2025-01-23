@@ -404,7 +404,7 @@ class _RoomTransactionManagementFormWidgetState
           sign = -1;
           break;
         case TransactionType.charge:
-          sign = -1;
+          sign = 1;
           break;
         case TransactionType.adjustCredit:
           {
