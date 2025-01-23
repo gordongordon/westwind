@@ -236,6 +236,8 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
 
             return false;
           },
+        //  onChanged: (item) => context.read<GuestManageBloc>().add(GuestManageRetrieveByPhoneEvent( phone: item!.phone)),
+
           dropdownBuilder: (context, selectedItem) {
             if (selectedItem == null) {
               return SizedBox.shrink();
@@ -247,10 +249,11 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
                   backgroundColor: Colors.blue,
                   child: Text(selectedItem.lastName[0])),
               title: Text( selectedItem.lastName ),
+            //  subtitle: Text('sub'),
             );
           },
           popupProps: PopupProps.menu(
-            disableFilter: true, //data will be filtered by the backend
+            disableFilter: false, //data will be filtered by the backend
             showSearchBox: true,
             showSelectedItems: true,
             itemBuilder: (ctx, item, isDisabled, isSelected) {
@@ -259,7 +262,8 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
                     backgroundColor: Colors.blue,
                     child: Text(item.lastName[0])),
                 selected: isSelected,
-                title: Text( '${item.lastName} ${item.firstName} ${item.rateType}'),
+                title: Text( '${item.lastName} ${item.firstName}'  ),
+                subtitle: Text( ' ${item.rateType} / Tel : ${item.phone}'),
               );
             },
           ),
