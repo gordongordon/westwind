@@ -39,6 +39,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
       TextEditingController(); //
   final TextEditingController noteController =
       TextEditingController(text: "write messages to room guest state only");
+  final TextEditingController balanceController = TextEditingController();
   // final TextEditingController noteController = TextEditingController();
 
   late DateTime checkInDate;
@@ -70,7 +71,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? "Edit Room Guest : ${firstNameController.text} ${lastNameController.text}" : "New Room Guest"),
+        title: Text(isEditing ? "Edit Room Guest : ${firstNameController.text} ${lastNameController.text} \ \$${balanceController.text}" : "New Room Guest"),
         actions: [
           IconButton(
             onPressed: _saveRoomGuest,
@@ -391,6 +392,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
     rigNumberController.text = roomGuest.guest!.rigNumber.toString();
     noteController.text = roomGuest.note;
     checkInDate = roomGuest.checkInDate;
+    balanceController.text = roomGuest.guest!.accountBalance.toString();
 
     setState(() {
       checkOutDate = roomGuest.checkOutDate;
