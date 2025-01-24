@@ -51,7 +51,6 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   final List<String> _rateTypeOptions =
       RateType.values.map((e) => e.name).toSet().toList();
 
-  
   final List<String> _rateReasonOptions =
       RateReason.values.map((e) => e.name).toList();
 
@@ -71,7 +70,9 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? "Edit Room Guest : ${firstNameController.text} ${lastNameController.text} \ \$${balanceController.text}" : "New Room Guest"),
+        title: Text(isEditing
+            ? "Edit Room Guest :  ${lastNameController.text} , ${firstNameController.text} : Room# : ${roomIdController.text} : Balance \$${balanceController.text}"
+            : "New Room Guest"),
         actions: [
           IconButton(
             onPressed: _saveRoomGuest,
@@ -164,7 +165,6 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   }
 
   Widget _buildRateInfoSection() {
-
     print('print rateTypeOptions $_rateTypeOptions');
     print('RateTable ${RateType.values}');
 
@@ -297,9 +297,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
 
   Widget _buildDropdown(String name, String label, List<String> options,
       {required String initialValue}) {
-
-        print('** Print Options : $options');
-
+    print('** Print Options : $options');
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
@@ -380,9 +378,18 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
   }
 
   void _populateFields(RoomGuest roomGuest) {
+    final List<RoomTransaction>? transactions = roomGuest.roomTransactions;
+    double totalSum = 0;
+
+    if (transactions != null) {
+      for (RoomTransaction transaction in transactions) {
+        totalSum += transaction.total;
+      }
+    }
+
     idController.text = roomGuest.id!.toString();
     guestIdController.text = roomGuest.guestId.toString();
-    roomIdController.text = roomGuest.roomId.toString();
+    // roomIdController.text = roomGuest.roomId.toString();
     rateController.text = roomGuest.rate.toString();
     rateReasonController.text = roomGuest.rateReason.toString();
     rateTypeController.text = roomGuest.rateType.toString();
@@ -392,12 +399,16 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
     rigNumberController.text = roomGuest.guest!.rigNumber.toString();
     noteController.text = roomGuest.note;
     checkInDate = roomGuest.checkInDate;
-    balanceController.text = roomGuest.guest!.accountBalance.toString();
+    // balanceController.text = roomGuest.guest!.accountBalance.toString();
 
     setState(() {
       checkOutDate = roomGuest.checkOutDate;
       stayDay = roomGuest.stayDay;
       isCheckOut = roomGuest.isCheckOut;
+      roomIdController.text = roomGuest.roomId.toString();
+      //    balanceController.text = roomGuest.guest!.accountBalance.toString();
+      balanceController.text =
+          double.parse(totalSum.toStringAsFixed(2)).toString();
     });
 
     formKey.currentState?.patchValue({
