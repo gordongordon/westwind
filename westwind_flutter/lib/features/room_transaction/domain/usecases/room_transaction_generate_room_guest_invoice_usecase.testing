@@ -1,0 +1,93 @@
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:fpdart/fpdart.dart';
+import 'package:intl/intl.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/core/error/failure.dart';
+import 'package:westwind_flutter/core/usecases/usecase.dart';
+import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
+import 'package:westwind_flutter/core/utils/timeManager.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_usecase.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf/data.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf/invoice.dart';
+
+//Future<Uint8List> generateInvoice(
+ //   PdfPageFormat pageFormat, CustomData data) async {
+
+
+
+
+class GenerateInvoiceUseCase implements UseCase<Uint8List, GenerateInvoiceParams> {
+
+  final RoomTransactionRepository _repository;
+
+  GenerateInvoiceUseCase(this._repository);
+
+  //final RoomTransactionRepository roomTransactionRepository;
+
+  //final transaction = await roomTransactionRepository.retrieve(100);
+
+
+
+
+
+
+  // return await invoice.buildPdf(pageFormat);
+
+  @override
+  Future<Either<Failure, Uint8List>> call(GenerateInvoiceParams params) async {
+  
+      final result =  await _repository.getTransactionsForRoomGuest(params.id);
+  
+       
+       
+       final answer =  result.fold(
+            (undoFailure) => Left(Failure(
+                'Failed to update stay day and undo charge: ${undoFailure.message}')),
+             (ts) => Right( (ts) => {
+
+
+
+  final invoice = Invoice(
+    invoiceNumber: '982347',
+    roomTransactions: ts,
+    customerName: 'Abraham Swearegin',
+    customerAddress: '54 rue de Rivoli\n75001 Paris, France',
+    paymentInfo: 'Westwind Motor Inn, 4225 50St, Drayton Vally, Alberta, T7A1M4, 1 (780) 542-5375',
+    tax: .09,
+    baseColor: PdfColors.teal,
+    accentColor: PdfColors.blueGrey900,
+  );
+   
+   
+   final result2 = await invoice.buildPdf(pageFormat);
+
+
+             } ));
+
+return answer;
+
+   
+   
+  // final result2 = await invoice.buildPdf(pageFormat);
+
+  }
+
+}
+
+
+class GenerateInvoiceParams {
+
+  final int roomGuestId;
+  final PdfPageFormat pageFormat;
+  final CustomData data;
+
+  const GenerateInvoiceParams({required this.roomGuestId, required this.pageFormat, required this.data});
+
+}

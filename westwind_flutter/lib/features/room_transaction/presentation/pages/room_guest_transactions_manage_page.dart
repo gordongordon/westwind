@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:go_router/go_router.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/features/app_user/presentation/widgets/app_user_dropdown.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdf_edit.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/widgets/room_guest_transactions_manage_widget.dart';
 
 class RoomGuestTransactionsManagePage extends StatefulWidget {
@@ -80,6 +82,8 @@ class _RoomGuestTransactionsManagePage
                 child: RoomGuestTransactionsManageWidget(
                     roomGuestId: widget.roomGuestId ?? 0),
               ),
+
+              _buildActionButtons(),
             ],
           );
 
@@ -95,12 +99,12 @@ class _RoomGuestTransactionsManagePage
        context.read<RoomGuestManageBloc>().add(UpdateRoomGuestNote(widget.roomGuestId!, noteController.text ));
   }
 
-/*
+
   Widget _buildActionButtons() {
     return Column(
       children: [
         const SizedBox(height: 24),
-        _buildButton('Save note', () => context.read<RoomTransactionBloc>().add(DeleteRoomTransactionEvent(id: 1 ))),
+        _buildButton('Invoice PDF', () =>     context.push(PdfEditPage.route(widget.roomGuestId!)))
       ],
     );
   }
@@ -114,7 +118,7 @@ class _RoomGuestTransactionsManagePage
       child: Text(text),
     );
   }
-  */
+  
 
 
   Widget _buildTextFieldMultiline(

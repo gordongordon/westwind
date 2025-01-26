@@ -220,12 +220,12 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
 
         // Building  asyn field :
         DropdownSearch<Guest>(
-          decoratorProps: DropDownDecoratorProps( 
-              decoration: InputDecoration(
-                labelText: 'Click to start searching guest',
-                border: OutlineInputBorder(),
+          decoratorProps: DropDownDecoratorProps(
+            decoration: InputDecoration(
+              labelText: 'Click to start searching guest',
+              border: OutlineInputBorder(),
               //  hintText: 'when guest was selected then click to update the booking ! '
-              ),
+            ),
           ),
           items: (f, cs) => getData(f),
           suffixProps: DropdownSuffixProps(
@@ -256,11 +256,12 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
                   child: Text(selectedItem.lastName[0])),
               title: Text(selectedItem.lastName),
               //  subtitle: Text('sub'),
-                           subtitle: Text(' ${selectedItem.rateType} / Tel : ${selectedItem.phone}'),
+              subtitle: Text(
+                  ' ${selectedItem.rateType} / Tel : ${selectedItem.phone}'),
             );
           },
           popupProps: PopupProps.menu(
-            disableFilter: false, //data will be filtered by the backend
+            disableFilter: true, //data will be filtered by the backend
             showSearchBox: true,
             showSelectedItems: true,
             searchFieldProps: TextFieldProps(

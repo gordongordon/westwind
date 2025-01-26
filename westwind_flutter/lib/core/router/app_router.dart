@@ -19,11 +19,12 @@ import 'package:westwind_flutter/features/room_transaction/presentation/pages/ro
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_create_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_edit_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_list_page.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdf_edit.dart';
 
 class AppRouter {
   static GoRouter router = GoRouter(
       initialLocation: LoginPage.route(),
-     //  initialLocation: GuestListPage.route(),
+      //  initialLocation: GuestListPage.route(),
       routes: [
         GoRoute(
           path: MainScreen.route(),
@@ -131,10 +132,21 @@ class AppRouter {
           builder: (context, state) => GuestReservationEditPage(),
         ),
         GoRoute(
+          path: PdfEditPage.routeNew(),
+          builder: (context, state) => PdfEditPage(),
+        ),
+        GoRoute(
+          path: PdfEditPage.route(),
+          builder: (context, state) => PdfEditPage(
+            roomGuestId: int.parse(state.pathParameters['id'] ?? '54'),
+          ),
+        ),
+        GoRoute(
           path: GuestReservationEditPage.routeCalendar(),
           builder: (context, state) => GuestReservationEditPage(
             roomId: int.parse(state.pathParameters['roomId'] ?? '0'),
-            date:   DateTime.parse( state.pathParameters['date'] ?? DateTime.now().getDateOnly().toString() ),
+            date: DateTime.parse(state.pathParameters['date'] ??
+                DateTime.now().getDateOnly().toString()),
           ),
         ),
       ],
@@ -148,11 +160,10 @@ class AppRouter {
         ];
 
         if (!publicRoutes.contains(state.matchedLocation)) {
-
           //GuestListPage.route();
-           if (userState is AppUserInitial) {
-             return LoginPage.route();
-           }
+          if (userState is AppUserInitial) {
+            return LoginPage.route();
+          }
         }
 
         return null;

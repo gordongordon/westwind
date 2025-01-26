@@ -29,6 +29,7 @@ class RoomTransactionBloc
     required this.retrieveRoomGuest,
     required this.retrieveGuest,
   }) : super(RoomTransactionListStateInitial()) {
+    // add(FetchRoomTransactionsEvent()); // Add this lin
     on<FetchRoomTransactionsEvent>(_onFetchRoomTransactions);
     on<DeleteRoomTransactionEvent>((_onDeleteRoomTransaction));
     on<RetrieveRoomTransactionEvent>((_onRetrieveRoomTransaction));
