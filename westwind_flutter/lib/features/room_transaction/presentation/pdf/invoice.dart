@@ -27,9 +27,8 @@ import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/data.dart';
 
-
-Future<Uint8List> generateInvoice(
-    PdfPageFormat pageFormat, CustomData data, List<RoomTransaction> roomTransactions) async {
+Future<Uint8List> generateInvoice(PdfPageFormat pageFormat, CustomData data,
+    List<RoomTransaction> roomTransactions) async {
   final lorem = pw.LoremText();
 
   //final RoomTransactionRepository roomTransactionRepository;
@@ -43,12 +42,37 @@ Future<Uint8List> generateInvoice(
     Product('77', lorem.sentence(3), 86, TimeManager.instance.today()),
   ];
   */
+  final length = roomTransactions.length;
+  int invoiceNumber;
+  String lastName;
+  String firstName;
+  String phoneNumber;
+  DateTime checkInDay;
+  DateTime checkOutDay;
+
+  if (length > 0) {
+    final item = roomTransactions[0];
+    invoiceNumber = item.roomGuestId;
+    lastName = item.roomGuest!.guest!.lastName;
+    firstName = item.roomGuest!.guest!.firstName;
+    phoneNumber = item.roomGuest!.guest!.phone;
+    checkInDay = item.roomGuest!.checkInDate;
+    checkOutDay = item.roomGuest!.checkOutDate;
+
+  } else {
+    invoiceNumber = 0;
+    lastName = "none";
+    firstName = "none";
+    phoneNumber = "0";
+    checkInDay = TimeManager.instance.today();
+    checkOutDay = TimeManager.instance.today();
+  }
 
   final invoice = Invoice(
-    invoiceNumber: '982347',
+    invoiceNumber: invoiceNumber.toString(),
     roomTransactions: roomTransactions,
-    customerName: 'Abraham Swearegin',
-    customerAddress: '54 rue de Rivoli\n75001 Paris, France',
+    customerName: '$lastName, $firstName',
+    customerAddress: 'Check In : ${checkInDay.getDDMonthName()} - Check out : ${checkOutDay.getDDMonthName()} ',
     paymentInfo:
         'Westwind Motor Inn, 4225 50St, Drayton Vally, Alberta, T7A1M4, 1 (780) 542-5375',
     tax: .09,
@@ -87,10 +111,17 @@ class Invoice {
 
   PdfColor get _accentTextColor => baseColor.isLight ? _lightColor : _darkColor;
 
-  double get _total =>
-      roomTransactions.map<double>((p) => p.total).reduce((a, b) => a + b);
+  double get _sub_amount =>
+  //    roomTransactions.map<double>((p) => p.amount).reduce((a, b) => a + b);
+      roomTransactions.map<double>((p) => p.amount).reduce((a, b) => a + b);
 
-  double get _grandTotal => _total * (1 + tax);
+  double get _levy =>
+      roomTransactions.map<double>((p) => p.tax2).reduce((a, b) => a + b);
+
+  double get _gst =>
+      roomTransactions.map<double>((p) => p.tax1).reduce((a, b) => a + b);
+  // double get _grandTotal => _total * (1 + tax);
+  double get _grandTotal =>   roomTransactions.map<double>((p) => p.total).reduce((a, b) => a + b);
 
   String? _logo;
 
@@ -366,15 +397,25 @@ class Invoice {
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
                     pw.Text('Sub Total:'),
-                    pw.Text(_formatCurrency(_total)),
+                    pw.Text(_formatCurrency(_sub_amount)),
                   ],
                 ),
                 pw.SizedBox(height: 5),
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text('Tax:'),
-                    pw.Text('${(tax * 100).toStringAsFixed(1)}%'),
+                    pw.Text('levy:'),
+                    //        pw.Text('${(tax * 100).toStringAsFixed(1)}%'),
+                    pw.Text(_formatCurrency(_levy)),
+                  ],
+                ),
+                pw.SizedBox(height: 5),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text('gst:'),
+                    //pw.Text('${(tax * 100).toStringAsFixed(1)}%'),
+                    pw.Text(_formatCurrency(_gst)),
                   ],
                 ),
                 pw.Divider(color: accentColor),
@@ -447,6 +488,8 @@ class Invoice {
       'Item Description',
       'Price',
       'Stay Date',
+      'levy',
+      'gst',
       'Total'
     ];
 
@@ -457,14 +500,16 @@ class Invoice {
         borderRadius: const pw.BorderRadius.all(pw.Radius.circular(2)),
         color: baseColor,
       ),
-      headerHeight: 25,
-      cellHeight: 40,
+      headerHeight: 20,
+      cellHeight: 20,
       cellAlignments: {
         0: pw.Alignment.centerLeft,
         1: pw.Alignment.centerLeft,
         2: pw.Alignment.centerRight,
-        3: pw.Alignment.center,
+        3: pw.Alignment.centerRight,
         4: pw.Alignment.centerRight,
+        5: pw.Alignment.centerRight,
+        6: pw.Alignment.centerRight,
       },
       headerStyle: pw.TextStyle(
         color: _baseTextColor,
@@ -479,7 +524,7 @@ class Invoice {
         border: pw.Border(
           bottom: pw.BorderSide(
             color: accentColor,
-            width: .5,
+            width: .2,
           ),
         ),
       ),
@@ -498,11 +543,15 @@ class Invoice {
             case 'ID#':
               return roomTransactions[row].id.toString();
             case 'Item Description':
-              return roomTransactions[row].description;
+              return roomTransactions[row].itemType.toString();
             case 'Price':
-              return roomTransactions[row].total.toString();
+              return roomTransactions[row].amount.toString();
             case 'Stay Date':
               return roomTransactions[row].stayDay.getDDMonthName();
+            case 'levy':
+              return roomTransactions[row].tax2.toString();
+            case 'gst':
+              return roomTransactions[row].tax1.toStringAsFixed(2);
             case 'Total':
               return roomTransactions[row].total.toString();
             default:

@@ -219,7 +219,7 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
       field: 'id',
       enableRowChecked: true,
       type: PlutoColumnType.number(),
-      width: 70,
+      width: 80,
       enableDropToResize: true,
       readOnly: true,
       titlePadding: const EdgeInsets.all(8),
