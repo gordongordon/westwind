@@ -78,7 +78,7 @@ class _RoomTransactionManagementFormWidgetState
       } else if (transactionType == TransactionType.charge.name) {
         _currentItemTypeOptions = [
           ItemType.laundry.name,
-          ItemType.room_adjust.name,
+          ItemType.room.name,
           ItemType.pet.name,
           ItemType.atm.name,
           ItemType.demage.name,
@@ -110,7 +110,7 @@ class _RoomTransactionManagementFormWidgetState
       } else if (transactionType == TransactionType.adjustCredit.name) {
         _currentItemTypeOptions = [
           ItemType.laundry.name,
-          ItemType.room_adjust.name,
+          ItemType.room.name,
           ItemType.pet.name,
           ItemType.atm.name,
           ItemType.demage.name,
@@ -121,7 +121,7 @@ class _RoomTransactionManagementFormWidgetState
       } else if (transactionType == TransactionType.adjustDebit.name) {
         _currentItemTypeOptions = [
           ItemType.laundry.name,
-          ItemType.room_adjust.name,
+          ItemType.room.name,
           ItemType.pet.name,
           ItemType.atm.name,
           ItemType.demage.name,

@@ -484,12 +484,11 @@ class Invoice {
 
   pw.Widget _contentTable(pw.Context context) {
     const tableHeaders = [
-      'ID#',
-      'Item Description',
-      'Price',
       'Stay Date',
-      'levy',
+      'Description',
+      'Price',
       'gst',
+      'levy',
       'Total'
     ];
 
@@ -509,7 +508,7 @@ class Invoice {
         3: pw.Alignment.centerRight,
         4: pw.Alignment.centerRight,
         5: pw.Alignment.centerRight,
-        6: pw.Alignment.centerRight,
+ //       6: pw.Alignment.centerRight,
       },
       headerStyle: pw.TextStyle(
         color: _baseTextColor,
@@ -540,9 +539,9 @@ class Invoice {
             (col) {
           // Use a switch or map to access the correct property
           switch (tableHeaders[col]) {
-            case 'ID#':
-              return roomTransactions[row].id.toString();
-            case 'Item Description':
+        //    case 'ID#':
+        //      return roomTransactions[row].id.toString();
+            case 'Description':
               return roomTransactions[row].itemType.toString();
             case 'Price':
               return roomTransactions[row].amount.toString();
