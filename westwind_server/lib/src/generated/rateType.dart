@@ -37,6 +37,7 @@ enum RateType implements _i1.SerializableModel {
   performance,
   PWS_Frontier,
   precision_drilling,
+  pro_medic,
   savanah,
   spectre,
   stampede,
@@ -99,6 +100,8 @@ enum RateType implements _i1.SerializableModel {
         return PWS_Frontier;
       case 'precision_drilling':
         return precision_drilling;
+      case 'pro_medic':
+        return pro_medic;
       case 'savanah':
         return savanah;
       case 'spectre':
