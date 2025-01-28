@@ -27,9 +27,12 @@ import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/data.dart';
 
-Future<Uint8List> generateInvoice(PdfPageFormat pageFormat, CustomData data,
-    List<RoomTransaction> roomTransactions) async {
-  final lorem = pw.LoremText();
+Future<Uint8List> generateInvoice(
+  PdfPageFormat pageFormat,
+  CustomData data,
+  List<RoomTransaction> roomTransactions,
+) async {
+  //final lorem = pw.LoremText();
 
   //final RoomTransactionRepository roomTransactionRepository;
 
@@ -58,7 +61,6 @@ Future<Uint8List> generateInvoice(PdfPageFormat pageFormat, CustomData data,
     phoneNumber = item.roomGuest!.guest!.phone;
     checkInDay = item.roomGuest!.checkInDate;
     checkOutDay = item.roomGuest!.checkOutDate;
-
   } else {
     invoiceNumber = 0;
     lastName = "none";
@@ -72,12 +74,15 @@ Future<Uint8List> generateInvoice(PdfPageFormat pageFormat, CustomData data,
     invoiceNumber: invoiceNumber.toString(),
     roomTransactions: roomTransactions,
     customerName: '$lastName, $firstName',
-    customerAddress: 'Check In : ${checkInDay.getDDMonthName()} - Check out : ${checkOutDay.getDDMonthName()} ',
+    customerAddress: 'none',
+    checkInDay : 'Check In : ${checkInDay.getDDMonthName()}',
+    checkOutDay : 'Check out : ${checkOutDay.getDDMonthName()} ',
     paymentInfo:
         'Westwind Motor Inn, 4225 50St, Drayton Vally, Alberta, T7A1M4, 1 (780) 542-5375',
     tax: .09,
     baseColor: PdfColors.teal,
     accentColor: PdfColors.blueGrey900,
+    inputData: data,
   );
 
   return await invoice.buildPdf(pageFormat);
@@ -88,21 +93,27 @@ class Invoice {
     required this.roomTransactions,
     required this.customerName,
     required this.customerAddress,
+    required this.checkInDay,
+    required this.checkOutDay,
     required this.invoiceNumber,
     required this.tax,
     required this.paymentInfo,
     required this.baseColor,
     required this.accentColor,
+    required this.inputData,
   });
 
   final List<RoomTransaction> roomTransactions;
   final String customerName;
   final String customerAddress;
+  final String checkInDay;
+  final String checkOutDay;
   final String invoiceNumber;
   final double tax;
   final String paymentInfo;
   final PdfColor baseColor;
   final PdfColor accentColor;
+  final CustomData inputData;
 
   static const _darkColor = PdfColors.blueGrey800;
   static const _lightColor = PdfColors.white;
@@ -111,8 +122,8 @@ class Invoice {
 
   PdfColor get _accentTextColor => baseColor.isLight ? _lightColor : _darkColor;
 
-  double get _sub_amount =>
-  //    roomTransactions.map<double>((p) => p.amount).reduce((a, b) => a + b);
+  double get _subAmount =>
+      //    roomTransactions.map<double>((p) => p.amount).reduce((a, b) => a + b);
       roomTransactions.map<double>((p) => p.amount).reduce((a, b) => a + b);
 
   double get _levy =>
@@ -121,7 +132,8 @@ class Invoice {
   double get _gst =>
       roomTransactions.map<double>((p) => p.tax1).reduce((a, b) => a + b);
   // double get _grandTotal => _total * (1 + tax);
-  double get _grandTotal =>   roomTransactions.map<double>((p) => p.total).reduce((a, b) => a + b);
+  double get _grandTotal =>
+      roomTransactions.map<double>((p) => p.total).reduce((a, b) => a + b);
 
   String? _logo;
 
@@ -287,7 +299,9 @@ class Invoice {
             height: 70,
             child: pw.FittedBox(
               child: pw.Text(
-                'Total: ${_formatCurrency(_grandTotal)}',
+                'To : $customerName',
+         //    'Total: ${_formatCurrency(_grandTotal)}',
+        //        ' ',
                 style: pw.TextStyle(
                   color: baseColor,
                   fontStyle: pw.FontStyle.italic,
@@ -330,7 +344,21 @@ class Invoice {
                           ),
                         ),
                         pw.TextSpan(
-                          text: customerAddress,
+                          text: '$checkInDay\n',
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.normal,
+                            fontSize: 10,
+                          ),
+                        ),
+                                                pw.TextSpan(
+                          text: '$checkOutDay\n',
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.normal,
+                            fontSize: 10,
+                          ),
+                        ),
+                        pw.TextSpan(
+                          text: '${inputData.name}\n',
                           style: pw.TextStyle(
                             fontWeight: pw.FontWeight.normal,
                             fontSize: 10,
@@ -397,7 +425,7 @@ class Invoice {
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
                     pw.Text('Sub Total:'),
-                    pw.Text(_formatCurrency(_sub_amount)),
+                    pw.Text(_formatCurrency(_subAmount)),
                   ],
                 ),
                 pw.SizedBox(height: 5),
@@ -508,7 +536,7 @@ class Invoice {
         3: pw.Alignment.centerRight,
         4: pw.Alignment.centerRight,
         5: pw.Alignment.centerRight,
- //       6: pw.Alignment.centerRight,
+        //       6: pw.Alignment.centerRight,
       },
       headerStyle: pw.TextStyle(
         color: _baseTextColor,
@@ -539,8 +567,8 @@ class Invoice {
             (col) {
           // Use a switch or map to access the correct property
           switch (tableHeaders[col]) {
-        //    case 'ID#':
-        //      return roomTransactions[row].id.toString();
+            //    case 'ID#':
+            //      return roomTransactions[row].id.toString();
             case 'Description':
               return roomTransactions[row].itemType.toString();
             case 'Price':

@@ -31,6 +31,7 @@ import 'package:westwind_flutter/features/room_transaction/presentation/bloc/roo
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/data.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/invoice.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdf_generator.dart';
+
 //import 'package:url_launcher/url_launcher.dart' as ul;
 class PdfEditPage extends StatefulWidget {
   final int? roomGuestId;
@@ -59,23 +60,69 @@ class PdfEditPageState extends State<PdfEditPage>
   @override
   void initState() {
     super.initState();
-    
-    // Use the actual roomGuestId passed to the widget
+
+    // First fetch the data
     if (widget.roomGuestId != null) {
       context
           .read<RoomGuestTransactionsBloc>()
           .add(FetchRoomGuestTransactions(widget.roomGuestId!));
+      //! we mayn't need this 
+//      context
+      //         .read<RoomTransactionBloc>()
+      //         .add(RetrieveRoomGuestEvent(roomGuestId: widget.roomGuestId!));
+    }
 
-      context
-          .read<RoomTransactionBloc>()
-          .add(RetrieveRoomGuestEvent(roomGuestId: widget.roomGuestId!));
-   }
+    // Listen to the bloc state changes
+    context.read<RoomGuestTransactionsBloc>().stream.listen((state) {
+      if (state is RoomGuestTransactionsLoaded) {
+        // Initialize PdfGenerators once we have the data
+        pdfGenerators = <PdfGenerator>[
+          PdfGenerator(
+            'INVOICE - RoomGuest ID ${widget.roomGuestId!}',
+            'invoice.dart',
+            (format, data, transactions) async {
+              return await generateInvoice(format, data, transactions);
+            },
+            state.transactions,
+            true,
+          ),
+        ];
 
-    _init();
+        // Then initialize other components that depend on pdfGenerators
+        _init();
+            _checkIfNameNeeded(); // Add this lin
+      }
+    });
   }
 
   Future<void> _init() async {
     final info = await Printing.info();
+
+    _tabController = TabController(
+      vsync: this,
+      length: pdfGenerators.length,
+      initialIndex: _tab,
+    );
+
+    _tabController!.addListener(() {
+      if (_tab != _tabController!.index) {
+        setState(() {
+          _tab = _tabController!.index;
+        });
+      }
+      if (pdfGenerators[_tab].needsData && !_hasData && !_pending) {
+        _pending = true;
+        askName(context).then((value) {
+          if (value != null) {
+            setState(() {
+              _data = CustomData(name: value);
+              _hasData = true;
+              _pending = false;
+            });
+          }
+        });
+      }
+    });
 
     setState(() {
       printingInfo = info;
@@ -168,20 +215,30 @@ class PdfEditPageState extends State<PdfEditPage>
             return const Center(child: CircularProgressIndicator());
           } else if (state is RoomGuestTransactionsLoaded) {
             final roomTransactions = state.transactions;
-
+/*
             // Only set up generators and tab controller once
             if (pdfGenerators.isEmpty) {
               pdfGenerators = <PdfGenerator>[
                 PdfGenerator(
-                    'INVOICE - RoomGuest ID ${widget.roomGuestId!} ', 'invoice.dart', generateInvoice, roomTransactions),
+                  'INVOICE - RoomGuest ID ${widget.roomGuestId!} ',
+                  'invoice.dart',
+                  //  generateInvoice,
+                  (format, data, transactions) async {
+                    // This matches the typedef LayoutCallbackWithData
+                    return await generateInvoice(format, data, transactions);
+                  },
+                  roomTransactions,
+                  true,
+                ),
               ];
               _setupTabController(pdfGenerators);
             }
-
+*/
             return _tabController != null
                 ? PdfPreview(
                     maxPageWidth: 700,
-                    build: (format) => pdfGenerators[_tab].builder(format, _data, roomTransactions),
+                    build: (format) => pdfGenerators[_tab]
+                        .builder(format, _data, roomTransactions),
                     actions: actions,
                     onPrinted: _showPrintedToast,
                     onShared: _showSharedToast,
@@ -197,6 +254,25 @@ class PdfEditPageState extends State<PdfEditPage>
     );
   }
 
+
+void _checkIfNameNeeded() {
+  if (pdfGenerators.isNotEmpty && 
+      pdfGenerators[_tab].needsData && 
+      !_hasData && 
+      !_pending) {
+    _pending = true;
+    askName(context).then((value) {
+      if (value != null) {
+        setState(() {
+          _data = CustomData(name: value);
+          _hasData = true;
+          _pending = false;
+        });
+      }
+    });
+  }
+}
+
   Future<String?> askName(BuildContext context) {
     return showDialog<String>(
       barrierDismissible: false,
@@ -205,10 +281,10 @@ class PdfEditPageState extends State<PdfEditPage>
         final controller = TextEditingController();
 
         return AlertDialog(
-          title: const Text('Please type your name:'),
+          title: const Text('Please type note or PO into invoice:'),
           contentPadding: const EdgeInsets.symmetric(horizontal: 20),
           content: TextField(
-            decoration: const InputDecoration(hintText: '[your name]'),
+            decoration: const InputDecoration(hintText: '[your notes]'),
             controller: controller,
           ),
           actions: [

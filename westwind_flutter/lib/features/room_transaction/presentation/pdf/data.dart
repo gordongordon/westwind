@@ -1,6 +1,6 @@
 class CustomData {
   const CustomData({
-    this.name = '[your name]',
+    this.name = '[Note to add into invoice]',
     this.testing = false,
   });
 
