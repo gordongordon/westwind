@@ -179,8 +179,8 @@ void _initRoomGuestTransactions() {
   serverLocator.registerFactory<RoomGuestTransactionsBloc>(
     () => RoomGuestTransactionsBloc(
       roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
-      createRoomTransactionUseCase:
-          serverLocator<CreateRoomTransactionUseCase>(),
+      createRoomTransactionUseCase: serverLocator<CreateRoomTransactionUseCase>(),
+      retrieveRoomTransactionWithOutLaundryUseCase : serverLocator<RetrieveRoomTransactionWithOutLaundryUseCase>(),
     ),
   );
 }
@@ -257,7 +257,7 @@ void _initRoomTransaction() {
       createRoomTransaction: serverLocator<CreateRoomTransactionUseCase>(),
       retrieveRoomGuest: serverLocator<RetrieveRoomGuestUseCase>(),
       retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
-      retrieveRoomTransactionWithOutLaundry: serverLocator<RetrieveRoomTransactionWithOutLaundryUseCase>(),
+   //   retrieveRoomTransactionWithOutLaundry: serverLocator<RetrieveRoomTransactionWithOutLaundryUseCase>(),
     ),
   );
 }

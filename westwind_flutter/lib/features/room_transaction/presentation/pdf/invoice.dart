@@ -50,6 +50,7 @@ Future<Uint8List> generateInvoice(
   String lastName;
   String firstName;
   String phoneNumber;
+  String roomId;
   DateTime checkInDay;
   DateTime checkOutDay;
 
@@ -61,6 +62,7 @@ Future<Uint8List> generateInvoice(
     phoneNumber = item.roomGuest!.guest!.phone;
     checkInDay = item.roomGuest!.checkInDate;
     checkOutDay = item.roomGuest!.checkOutDate;
+    roomId = item.roomId.toString();
   } else {
     invoiceNumber = 0;
     lastName = "none";
@@ -68,6 +70,7 @@ Future<Uint8List> generateInvoice(
     phoneNumber = "0";
     checkInDay = TimeManager.instance.today();
     checkOutDay = TimeManager.instance.today();
+    roomId = "0";
   }
 
   final invoice = Invoice(
@@ -75,8 +78,9 @@ Future<Uint8List> generateInvoice(
     roomTransactions: roomTransactions,
     customerName: '$lastName, $firstName',
     customerAddress: 'none',
-    checkInDay : 'Check In : ${checkInDay.getDDMonthName()}',
-    checkOutDay : 'Check out : ${checkOutDay.getDDMonthName()} ',
+    roomId: roomId,
+    checkInDay: 'Check In : ${checkInDay.getDDMonthName()}',
+    checkOutDay: 'Check out : ${checkOutDay.getDDMonthName()} ',
     paymentInfo:
         'Westwind Motor Inn, 4225 50St, Drayton Vally, Alberta, T7A1M4, 1 (780) 542-5375',
     tax: .09,
@@ -93,6 +97,7 @@ class Invoice {
     required this.roomTransactions,
     required this.customerName,
     required this.customerAddress,
+    required this.roomId,
     required this.checkInDay,
     required this.checkOutDay,
     required this.invoiceNumber,
@@ -106,6 +111,7 @@ class Invoice {
   final List<RoomTransaction> roomTransactions;
   final String customerName;
   final String customerAddress;
+  final String roomId;
   final String checkInDay;
   final String checkOutDay;
   final String invoiceNumber;
@@ -186,11 +192,11 @@ class Invoice {
                     padding: const pw.EdgeInsets.only(left: 20),
                     alignment: pw.Alignment.centerLeft,
                     child: pw.Text(
-                      'INVOICE',
+                      'Westwind Motor Inn',
                       style: pw.TextStyle(
                         color: baseColor,
                         fontWeight: pw.FontWeight.bold,
-                        fontSize: 40,
+                        fontSize: 20,
                       ),
                     ),
                   ),
@@ -223,10 +229,12 @@ class Invoice {
                 ],
               ),
             ),
+            
             pw.Expanded(
               child: pw.Column(
                 mainAxisSize: pw.MainAxisSize.min,
                 children: [
+                  /*
                   pw.Container(
                     alignment: pw.Alignment.topRight,
                     padding: const pw.EdgeInsets.only(bottom: 8, left: 30),
@@ -234,6 +242,7 @@ class Invoice {
                     child:
                         _logo != null ? pw.SvgImage(svg: _logo!) : pw.PdfLogo(),
                   ),
+                  */
                   // pw.Container(
                   //   color: baseColor,
                   //   padding: pw.EdgeInsets.only(top: 3),
@@ -241,6 +250,7 @@ class Invoice {
                 ],
               ),
             ),
+            
           ],
         ),
         if (context.pageNumber > 1) pw.SizedBox(height: 20)
@@ -296,12 +306,12 @@ class Invoice {
         pw.Expanded(
           child: pw.Container(
             margin: const pw.EdgeInsets.symmetric(horizontal: 20),
-            height: 70,
+            height: 18,
             child: pw.FittedBox(
               child: pw.Text(
-                'To : $customerName',
-         //    'Total: ${_formatCurrency(_grandTotal)}',
-        //        ' ',
+                '${inputData.message}',
+                //    'Total: ${_formatCurrency(_grandTotal)}',
+                //        ' ',
                 style: pw.TextStyle(
                   color: baseColor,
                   fontStyle: pw.FontStyle.italic,
@@ -350,20 +360,24 @@ class Invoice {
                             fontSize: 10,
                           ),
                         ),
-                                                pw.TextSpan(
+                        pw.TextSpan(
                           text: '$checkOutDay\n',
                           style: pw.TextStyle(
                             fontWeight: pw.FontWeight.normal,
                             fontSize: 10,
                           ),
                         ),
+                        /*
                         pw.TextSpan(
-                          text: '${inputData.name}\n',
+                          text: '${inputData.message}\n',
                           style: pw.TextStyle(
                             fontWeight: pw.FontWeight.normal,
                             fontSize: 10,
                           ),
                         ),
+                        
+
+                        */
                       ])),
                 ),
               ),
@@ -513,8 +527,9 @@ class Invoice {
   pw.Widget _contentTable(pw.Context context) {
     const tableHeaders = [
       'Stay Date',
+      'Room#',
       'Description',
-      'Price',
+      'Amount',
       'gst',
       'levy',
       'Total'
@@ -532,10 +547,11 @@ class Invoice {
       cellAlignments: {
         0: pw.Alignment.centerLeft,
         1: pw.Alignment.centerLeft,
-        2: pw.Alignment.centerRight,
+        2: pw.Alignment.centerLeft,
         3: pw.Alignment.centerRight,
         4: pw.Alignment.centerRight,
         5: pw.Alignment.centerRight,
+        6: pw.Alignment.centerRight,
         //       6: pw.Alignment.centerRight,
       },
       headerStyle: pw.TextStyle(
@@ -567,11 +583,11 @@ class Invoice {
             (col) {
           // Use a switch or map to access the correct property
           switch (tableHeaders[col]) {
-            //    case 'ID#':
-            //      return roomTransactions[row].id.toString();
+            case 'Room#':
+              return roomTransactions[row].roomId.toString();
             case 'Description':
               return roomTransactions[row].itemType.toString();
-            case 'Price':
+            case 'Amount':
               return roomTransactions[row].amount.toString();
             case 'Stay Date':
               return roomTransactions[row].stayDay.getDDMonthName();

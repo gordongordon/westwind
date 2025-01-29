@@ -21,8 +21,7 @@ class RoomTransactionBloc
   final CreateRoomTransactionUseCase createRoomTransaction;
   final RetrieveRoomGuestUseCase retrieveRoomGuest;
   final RetrieveGuestUseCase retrieveGuest;
-  final RetrieveRoomTransactionWithOutLaundryUseCase
-      retrieveRoomTransactionWithOutLaundry;
+
 
   RoomTransactionBloc({
     required this.listRoomTransactions,
@@ -31,7 +30,6 @@ class RoomTransactionBloc
     required this.createRoomTransaction,
     required this.retrieveRoomGuest,
     required this.retrieveGuest,
-    required this.retrieveRoomTransactionWithOutLaundry,
   }) : super(RoomTransactionListStateInitial()) {
     // add(FetchRoomTransactionsEvent()); // Add this lin
     on<FetchRoomTransactionsEvent>(_onFetchRoomTransactions);
@@ -72,7 +70,6 @@ class RoomTransactionBloc
       }
     });
   }
-
 
 
   void _onRetrieveRoomTransaction(

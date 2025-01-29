@@ -63,8 +63,8 @@ class PdfEditPageState extends State<PdfEditPage>
 
     // First fetch the data
     if (widget.roomGuestId != null) {
-      context.read<RoomTransactionBloc>().add(
-          RetrieveRoomTransactionWithOutLaundryEvent(id: widget.roomGuestId!));
+      context.read<RoomGuestTransactionsBloc>().add(
+          RetrieveRoomTransactionWithOutLaundryEvent( widget.roomGuestId!));
       //! we mayn't need this
 //      context
       //         .read<RoomTransactionBloc>()
@@ -114,7 +114,7 @@ class PdfEditPageState extends State<PdfEditPage>
         askName(context).then((value) {
           if (value != null) {
             setState(() {
-              _data = CustomData(name: value);
+              _data = CustomData(message: value);
               _hasData = true;
               _pending = false;
             });
@@ -145,7 +145,7 @@ class PdfEditPageState extends State<PdfEditPage>
         askName(context).then((value) {
           if (value != null) {
             setState(() {
-              _data = CustomData(name: value);
+              _data = CustomData(message: value);
               _hasData = true;
               _pending = false;
             });
@@ -262,7 +262,7 @@ class PdfEditPageState extends State<PdfEditPage>
       askName(context).then((value) {
         if (value != null) {
           setState(() {
-            _data = CustomData(name: value);
+            _data = CustomData(message: value);
             _hasData = true;
             _pending = false;
           });
