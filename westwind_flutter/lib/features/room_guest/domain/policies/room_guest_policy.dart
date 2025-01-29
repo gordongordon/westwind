@@ -12,7 +12,7 @@ abstract interface class RoomGuestPolicy {
 }
 
 // standard_guest_policy.dart
-class RooGuestPolicyImpl implements RoomGuestPolicy {
+class RoomGuestPolicyImpl implements RoomGuestPolicy {
   
   @override
   bool canChargeGuest(RoomGuest guest) {

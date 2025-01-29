@@ -605,7 +605,7 @@ void _initRoomGuest() {
   );
 
   serverLocator.registerLazySingleton<RoomGuestPolicy>(
-    RooGuestPolicyImpl.new,
+    RoomGuestPolicyImpl.new,
   );
 
   // Policy Services
