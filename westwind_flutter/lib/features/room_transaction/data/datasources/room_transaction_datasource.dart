@@ -7,6 +7,7 @@ abstract class RoomTransactionDatasource {
   Future<bool> delete(int id);
   Future<RoomTransaction> save(RoomTransaction roomTransaction);
   Future<List<RoomTransaction>> getTransactionsForRoomGuest(int roomGuestId);
+  Future<List<RoomTransaction>> getTransactionsForRoomGuestWithOutLaundry(int roomGuestId);
 }
 
 class RoomTransactionDatasourceImpl implements RoomTransactionDatasource {
@@ -72,6 +73,15 @@ class RoomTransactionDatasourceImpl implements RoomTransactionDatasource {
   Future<List<RoomTransaction>> getTransactionsForRoomGuest(int roomGuestId) async {
     try { 
       return await _client.roomTransaction.getTransactionsForRoomGuest(roomGuestId);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+  
+  @override
+  Future<List<RoomTransaction>> getTransactionsForRoomGuestWithOutLaundry(int roomGuestId) async {
+    try { 
+      return await _client.roomTransaction.getTransactionsForRoomGuestWithOutLaundry(roomGuestId);
     } catch (e) {
       throw ServerException(e.toString());
     }

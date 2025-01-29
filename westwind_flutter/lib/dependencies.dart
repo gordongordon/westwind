@@ -71,6 +71,7 @@ import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_create_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_delete_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_usecase.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_without_laundry_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_guest_transactions/room_guest_transactions_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
 
@@ -234,6 +235,12 @@ void _initRoomTransaction() {
     ),
   );
 
+ serverLocator.registerLazySingleton<RetrieveRoomTransactionWithOutLaundryUseCase> (
+    () => RetrieveRoomTransactionWithOutLaundryUseCase(
+      serverLocator<RoomTransactionRepository>(),
+    ),
+  );
+
   serverLocator.registerFactory<RoomCalendarBloc>(() => RoomCalendarBloc(
         reservationRepository: serverLocator<ReservationRepository>(),
         roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
@@ -250,6 +257,7 @@ void _initRoomTransaction() {
       createRoomTransaction: serverLocator<CreateRoomTransactionUseCase>(),
       retrieveRoomGuest: serverLocator<RetrieveRoomGuestUseCase>(),
       retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
+      retrieveRoomTransactionWithOutLaundry: serverLocator<RetrieveRoomTransactionWithOutLaundryUseCase>(),
     ),
   );
 }

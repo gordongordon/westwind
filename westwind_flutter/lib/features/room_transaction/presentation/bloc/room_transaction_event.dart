@@ -17,6 +17,15 @@ class RetrieveRoomTransactionEvent extends RoomTransactionEvent {
    RetrieveRoomTransactionEvent({required this.id});
 }
 
+class RetrieveRoomTransactionWithOutLaundryEvent extends RoomTransactionEvent {
+  final int id;
+
+   RetrieveRoomTransactionWithOutLaundryEvent({required this.id});
+
+   
+}
+
+
 class CreateRoomTransactionEvent extends RoomTransactionEvent {
   final RoomTransaction roomTransaction;
 

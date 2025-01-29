@@ -69,6 +69,7 @@ roomTransaction:
   - list:
   - listWithItemTypeRoom:
   - getTransactionsForRoomGuest:
+  - getTransactionsForRoomGuestWithOutLaundry:
   - saveRoomTransaciton:
   - retrieve:
   - delete:

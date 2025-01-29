@@ -74,6 +74,8 @@ class _RoomTransactionManagementFormWidgetState
           ItemType.amex.name,
           ItemType.eTransfer.name,
           ItemType.gift_card.name,
+          // Add this to handle invoice without laundry
+          ItemType.laundry.name,
         ];
       } else if (transactionType == TransactionType.charge.name) {
         _currentItemTypeOptions = [

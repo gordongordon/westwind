@@ -124,4 +124,19 @@ class RoomTransactionRepositoryImp implements RoomTransactionRepository {
           : null,
     );
   }
+  
+  @override
+  Future<Either<Failure, List<RoomTransaction>>> getTransactionsForRoomGuestWithOutLaundry(int roomGuesetId) async {
+    try {
+      final response =
+          await _datasource.getTransactionsForRoomGuestWithOutLaundry(roomGuesetId);
+
+      final result = response.map(_fromServer).toList();
+
+      // return right(await _datasource.getTransactionsForRoomGuest(roomGuesetId));
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 }

@@ -51,7 +51,7 @@ class RoomTransactionEndpoint extends Endpoint {
       Session session, int roomGuestId) async {
     return await RoomTransaction.db.find(session,
         where: (i) => i.roomGuestId.equals(roomGuestId),
-      //  orderBy : (t)  => t.updateDate,
+        //  orderBy : (t)  => t.updateDate,
         orderByList: (t) => [
               Order(column: t.updateDate, orderDescending: true),
               Order(column: t.transactionDay, orderDescending: true),
@@ -63,6 +63,24 @@ class RoomTransactionEndpoint extends Endpoint {
               guest: Guest.include(),
             )));
   }
+
+  Future<List<RoomTransaction>> getTransactionsForRoomGuestWithOutLaundry(
+      Session session, int roomGuestId) async {
+    return await RoomTransaction.db.find(session,
+        where: (i) => i.roomGuestId.equals(roomGuestId) & i.itemType.notEquals(ItemType.laundry) ,
+        //  orderBy : (t)  => t.updateDate,
+        orderByList: (t) => [
+              Order(column: t.updateDate, orderDescending: false),
+              Order(column: t.transactionDay, orderDescending: false),
+            ],
+        include: RoomTransaction.include(
+            guest: Guest.include(),
+            room: Room.include(),
+            roomGuest: RoomGuest.include(
+              guest: Guest.include(),
+            )));
+  }
+
 
   Future<RoomTransaction> saveRoomTransaciton(
       Session session, RoomTransaction rt) async {

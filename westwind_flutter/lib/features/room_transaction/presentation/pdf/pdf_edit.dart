@@ -63,10 +63,9 @@ class PdfEditPageState extends State<PdfEditPage>
 
     // First fetch the data
     if (widget.roomGuestId != null) {
-      context
-          .read<RoomGuestTransactionsBloc>()
-          .add(FetchRoomGuestTransactions(widget.roomGuestId!));
-      //! we mayn't need this 
+      context.read<RoomTransactionBloc>().add(
+          RetrieveRoomTransactionWithOutLaundryEvent(id: widget.roomGuestId!));
+      //! we mayn't need this
 //      context
       //         .read<RoomTransactionBloc>()
       //         .add(RetrieveRoomGuestEvent(roomGuestId: widget.roomGuestId!));
@@ -90,7 +89,7 @@ class PdfEditPageState extends State<PdfEditPage>
 
         // Then initialize other components that depend on pdfGenerators
         _init();
-            _checkIfNameNeeded(); // Add this lin
+        _checkIfNameNeeded(); // Add this lin
       }
     });
   }
@@ -254,24 +253,23 @@ class PdfEditPageState extends State<PdfEditPage>
     );
   }
 
-
-void _checkIfNameNeeded() {
-  if (pdfGenerators.isNotEmpty && 
-      pdfGenerators[_tab].needsData && 
-      !_hasData && 
-      !_pending) {
-    _pending = true;
-    askName(context).then((value) {
-      if (value != null) {
-        setState(() {
-          _data = CustomData(name: value);
-          _hasData = true;
-          _pending = false;
-        });
-      }
-    });
+  void _checkIfNameNeeded() {
+    if (pdfGenerators.isNotEmpty &&
+        pdfGenerators[_tab].needsData &&
+        !_hasData &&
+        !_pending) {
+      _pending = true;
+      askName(context).then((value) {
+        if (value != null) {
+          setState(() {
+            _data = CustomData(name: value);
+            _hasData = true;
+            _pending = false;
+          });
+        }
+      });
+    }
   }
-}
 
   Future<String?> askName(BuildContext context) {
     return showDialog<String>(

@@ -8,6 +8,7 @@ import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_create_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_delete_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_usecase.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_without_laundry_usecase.dart';
 
 part 'room_transaction_event.dart';
 part 'room_transaction_state.dart';
@@ -20,6 +21,8 @@ class RoomTransactionBloc
   final CreateRoomTransactionUseCase createRoomTransaction;
   final RetrieveRoomGuestUseCase retrieveRoomGuest;
   final RetrieveGuestUseCase retrieveGuest;
+  final RetrieveRoomTransactionWithOutLaundryUseCase
+      retrieveRoomTransactionWithOutLaundry;
 
   RoomTransactionBloc({
     required this.listRoomTransactions,
@@ -28,39 +31,40 @@ class RoomTransactionBloc
     required this.createRoomTransaction,
     required this.retrieveRoomGuest,
     required this.retrieveGuest,
+    required this.retrieveRoomTransactionWithOutLaundry,
   }) : super(RoomTransactionListStateInitial()) {
     // add(FetchRoomTransactionsEvent()); // Add this lin
     on<FetchRoomTransactionsEvent>(_onFetchRoomTransactions);
     on<DeleteRoomTransactionEvent>((_onDeleteRoomTransaction));
     on<RetrieveRoomTransactionEvent>((_onRetrieveRoomTransaction));
     on<CreateRoomTransactionEvent>((_onCreateRoomTransaction));
-    on<RetrieveRoomGuestEvent>(
-        (_onRetrieveRoomGuest));
-     on<RetrieveGuestEvent>((_onRetrieveGuestRoomTransaction)); 
-  
+    on<RetrieveRoomGuestEvent>((_onRetrieveRoomGuest));
+    on<RetrieveGuestEvent>((_onRetrieveGuestRoomTransaction));
+
   }
 
-  Future<void> _onFetchRoomTransactions(RoomTransactionEvent event,
-      Emitter<RoomTransactionState> emit) async {
+  Future<void> _onFetchRoomTransactions(
+      RoomTransactionEvent event, Emitter<RoomTransactionState> emit) async {
     emit(RoomTransactionListStateLoading());
 
-
     final result = await listRoomTransactions.call(NoParams());
-    result.fold(
-        (l) => emit(RoomTransactionStateFailure(message: l.message)), (r) {
+    result.fold((l) => emit(RoomTransactionStateFailure(message: l.message)),
+        (r) {
       emit(RoomTransactionListStateLoaded(roomTransactions: r));
     });
   }
 
-  void _onDeleteRoomTransaction(DeleteRoomTransactionEvent event,
-      Emitter<RoomTransactionState> emit) async {
+  void _onDeleteRoomTransaction(
+    DeleteRoomTransactionEvent event,
+    Emitter<RoomTransactionState> emit,
+  ) async {
     emit(RoomTransactionListStateLoading());
-   await Future.delayed(Duration(seconds: 1));
+    //  await Future.delayed(Duration(seconds: 1));
 
     final result = await deleteRoomTransaction
         .call(DeleteRoomTransactionParams(id: event.id));
-    result.fold(
-        (l) => emit(RoomTransactionStateFailure(message: l.message)), (r) {
+    result.fold((l) => emit(RoomTransactionStateFailure(message: l.message)),
+        (r) {
       if (r) {
         emit(RoomTransactionStateDeletedSuccess(id: event.id));
       } else {
@@ -69,15 +73,19 @@ class RoomTransactionBloc
     });
   }
 
-  void _onRetrieveRoomTransaction(RetrieveRoomTransactionEvent event,
-      Emitter<RoomTransactionState> emit) async {
+
+
+  void _onRetrieveRoomTransaction(
+    RetrieveRoomTransactionEvent event,
+    Emitter<RoomTransactionState> emit,
+  ) async {
     emit(RoomTransactionListStateLoading());
-   await Future.delayed(Duration(seconds: 1));
+    //  await Future.delayed(Duration(seconds: 1));
 
     final result = await retrieveRoomTransaction
         .call(RetrieveRoomTransactionParams(id: event.id));
-    result.fold(
-        (l) => emit(RoomTransactionStateFailure(message: l.message)), (r) {
+    result.fold((l) => emit(RoomTransactionStateFailure(message: l.message)),
+        (r) {
       emit(RoomTransactionStateRetrievedSuccess(roomTransaction: r));
     });
   }
@@ -85,51 +93,43 @@ class RoomTransactionBloc
   void _onCreateRoomTransaction(CreateRoomTransactionEvent event,
       Emitter<RoomTransactionState> emit) async {
     emit(RoomTransactionListStateLoading());
-       await Future.delayed(Duration(seconds: 1));
+    //      await Future.delayed(Duration(seconds: 1));
 
     final result = await createRoomTransaction.call(
         CreateRoomTransactionParams(roomTransaction: event.roomTransaction));
 
-    result.fold(
-        (l) => emit(RoomTransactionStateFailure(message: l.message)), (r) {
+    result.fold((l) => emit(RoomTransactionStateFailure(message: l.message)),
+        (r) {
       emit(RoomTransactionStateCreatedSuccess(roomTransaction: r));
     });
   }
 
-
-    Future<void> _onRetrieveRoomGuest(
-      RetrieveRoomGuestEvent event,
-      Emitter<RoomTransactionState> emit) async {
-
-
-   emit(RoomTransactionListStateLoading());
-  //  await Future.delayed(Duration(seconds: 1));
-    final result = await retrieveRoomGuest(
-
-        RetrieveRoomGuestParams( id: event.roomGuestId));
+  Future<void> _onRetrieveRoomGuest(
+      RetrieveRoomGuestEvent event, Emitter<RoomTransactionState> emit) async {
+    emit(RoomTransactionListStateLoading());
+    //  await Future.delayed(Duration(seconds: 1));
+    final result =
+        await retrieveRoomGuest(RetrieveRoomGuestParams(id: event.roomGuestId));
 
     result.fold(
-      (failure) =>  emit(RoomTransactionStateFailure(message: failure.message)),
-      (r) { emit(RoomTransactionStateRetrievedRoomGuestSuccess(roomGuest: r)); }
-    );
+        (failure) =>
+            emit(RoomTransactionStateFailure(message: failure.message)), (r) {
+      emit(RoomTransactionStateRetrievedRoomGuestSuccess(roomGuest: r));
+    });
   }
 
-
-   Future<void> _onRetrieveGuestRoomTransaction(RetrieveGuestEvent event,
-      Emitter<RoomTransactionState> emit) async {
-
+  Future<void> _onRetrieveGuestRoomTransaction(
+      RetrieveGuestEvent event, Emitter<RoomTransactionState> emit) async {
     emit(RoomTransactionListStateLoading());
-   await Future.delayed(Duration(seconds: 1));
+    // await Future.delayed(Duration(seconds: 1));
 
-    final result = await retrieveGuest(
-        RetrieveGuestParams(id: event.guestId));
+    final result = await retrieveGuest(RetrieveGuestParams(id: event.guestId));
 
     result.fold(
-      (failure) => emit(RoomTransactionStateFailure(message : failure.message)),
+      (failure) => emit(RoomTransactionStateFailure(message: failure.message)),
       (guest) => emit(RoomTransactionStateRetrieveGuestSuccess(guest)),
     );
   }
-
 
 /*
 
@@ -147,10 +147,4 @@ class RoomTransactionBloc
     );
   }
   */
-
-
 }
-
-
-
-

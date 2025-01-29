@@ -1247,6 +1247,25 @@ class Endpoints extends _i1.EndpointDispatch {
             params['roomGuestId'],
           ),
         ),
+        'getTransactionsForRoomGuestWithOutLaundry': _i1.MethodConnector(
+          name: 'getTransactionsForRoomGuestWithOutLaundry',
+          params: {
+            'roomGuestId': _i1.ParameterDescription(
+              name: 'roomGuestId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomTransaction'] as _i8.RoomTransactionEndpoint)
+                  .getTransactionsForRoomGuestWithOutLaundry(
+            session,
+            params['roomGuestId'],
+          ),
+        ),
         'saveRoomTransaciton': _i1.MethodConnector(
           name: 'saveRoomTransaciton',
           params: {

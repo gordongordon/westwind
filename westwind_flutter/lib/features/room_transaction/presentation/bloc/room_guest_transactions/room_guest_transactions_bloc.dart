@@ -74,6 +74,7 @@ class RoomGuestTransactionsBloc extends Bloc<RoomGuestTransactionsEvent, RoomGue
     on<CreateRoomTransaction>(_onCreateRoomTransaction);
   }
 
+
   Future<void> _onFetchRoomGuestTransactions(
     FetchRoomGuestTransactions event,
     Emitter<RoomGuestTransactionsState> emit,
