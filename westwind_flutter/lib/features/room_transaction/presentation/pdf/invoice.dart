@@ -82,7 +82,7 @@ Future<Uint8List> generateInvoice(
     checkInDay: 'Check In : ${checkInDay.getDDMonthName()}',
     checkOutDay: 'Check out : ${checkOutDay.getDDMonthName()} ',
     paymentInfo:
-        'Westwind Motor Inn, 4225 50St, Drayton Vally, Alberta, T7A1M4, 1 (780) 542-5375',
+        'Westwind Motor Inn, 4225 50St, Drayton Vally, Alberta, T7A1M4, 1 (780) 542-5375, Email: westwindmotorinn@gmail.com',
     tax: .09,
     baseColor: PdfColors.teal,
     accentColor: PdfColors.blueGrey900,
@@ -169,7 +169,7 @@ class Invoice {
           pw.SizedBox(height: 20),
           _contentFooter(context),
           pw.SizedBox(height: 20),
-          _termsAndConditions(context),
+        // _termsAndConditions(context),
         ],
       ),
     );
@@ -179,6 +179,9 @@ class Invoice {
   }
 
   pw.Widget _buildHeader(pw.Context context) {
+
+     final invoiceDay = TimeManager.instance.today().toCompactString();
+
     return pw.Column(
       children: [
         pw.Row(
@@ -219,9 +222,10 @@ class Invoice {
                         crossAxisCount: 2,
                         children: [
                           pw.Text('Invoice #'),
-                          pw.Text(invoiceNumber),
+                          //pw.Text(  invoiceNumber ),
+                          pw.Text('$invoiceNumber-$invoiceDay'),
                           pw.Text('Date:'),
-                          pw.Text(_formatDate(DateTime.now())),
+                          pw.Text(_formatDate(TimeManager.instance.today())),
                         ],
                       ),
                     ),
@@ -259,6 +263,9 @@ class Invoice {
   }
 
   pw.Widget _buildFooter(pw.Context context) {
+
+  //  final invoiceDay = TimeManager.instance.today().getMonthDayHour();
+
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
       crossAxisAlignment: pw.CrossAxisAlignment.end,
@@ -375,8 +382,6 @@ class Invoice {
                             fontSize: 10,
                           ),
                         ),
-                        
-
                         */
                       ])),
                 ),
@@ -483,6 +488,7 @@ class Invoice {
     );
   }
 
+ 
   pw.Widget _termsAndConditions(pw.Context context) {
     return pw.Row(
       crossAxisAlignment: pw.CrossAxisAlignment.end,

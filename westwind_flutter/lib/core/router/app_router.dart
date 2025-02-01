@@ -15,6 +15,7 @@ import 'package:westwind_flutter/features/reservation/presentaion/pages/reservat
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_list_page.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list.dart';
+import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list_but_co.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_guest_transactions_manage_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_create_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_edit_page.dart';
@@ -83,6 +84,10 @@ class AppRouter {
         GoRoute(
           path: RoomGuestListPage.route(),
           builder: (context, _) => const RoomGuestListPage(),
+        ),
+        GoRoute(
+          path: RoomGuestListButCOPage.route(),
+          builder: (context, _) => const RoomGuestListButCOPage(),
         ),
         GoRoute(
           path: RoomGuestEditPage.routeNew(),

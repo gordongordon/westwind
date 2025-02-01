@@ -249,7 +249,7 @@ class DateHeaderWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(4),
               child: Text(
-                '${date.getDDMonthName()}',
+                '${date.getMMDDWeekday()}',
                 //'${date.day}/${date.getDDMonthName()}',
                 style: const TextStyle(fontSize: 12),
                 textAlign: TextAlign.center,

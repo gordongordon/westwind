@@ -25,6 +25,24 @@ DateTime getCurrentEdmontonDate() {
 }
 
 extension MyDateExtension on DateTime {
+
+  String getYYMMDDWeekday() {
+    const List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const List<String> weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    return "$year ${months[month - 1]} $day ${weekdays[weekday - 1]}";
+  }
+
+  String getMMDDWeekday() {
+    const List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const List<String> weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  //  return "${months[month - 1]} $day ${weekdays[weekday - 1]}";
+    return " ${weekdays[weekday - 1]} ${months[month - 1]} $day";
+  }
+
+  String toCompactString() {
+    return "${year}${month.toString().padLeft(2, '0')}${day.toString().padLeft(2, '0')}";
+  }
+
   String getDDMM() {
     return DateFormat('dd-MM').format(this);
   }

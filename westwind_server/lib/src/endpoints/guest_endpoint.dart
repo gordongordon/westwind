@@ -17,7 +17,11 @@ class GuestEndpoint extends Endpoint {
   // supported. The `session` object provides access to the database, logging,
   // passwords, and information about the request being made to the server.
   Future<List<Guest>> list(Session session) async {
-    return Guest.db.find(session);
+    return Guest.db.find(
+      session,
+      orderBy: (t) => t.lastName,
+      orderDescending: false,
+    );
   }
 
   Future<Guest?> retrieve(Session session, int id) async {
@@ -48,17 +52,15 @@ class GuestEndpoint extends Endpoint {
 
   Future<List<Guest>> retrieveGuestByLastName(Session session,
       {required String lastName}) async {
-
     final String filter = lastName + '%';
- 
+
     return await Guest.db.find(
       session,
       where: (guest) => guest.lastName.ilike(filter),
-        orderBy: (t) => t.lastName,
-        orderDescending: false,
+      orderBy: (t) => t.lastName,
+      orderDescending: false,
     );
   }
-
 
   Future<Guest> createGuest(Session session, {required Guest guest}) async {
     guest.dateCreate = DateTime.now().toUtc();

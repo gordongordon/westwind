@@ -57,6 +57,7 @@ import 'package:westwind_flutter/features/room_guest/domain/usescases/check_in_r
 import 'package:westwind_flutter/features/room_guest/domain/usescases/delete_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/go_home_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest_but_co.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/save_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/extend_stay_day_room_guest.dart';
@@ -84,8 +85,8 @@ Future<void> initDependencies() async {
 
   serverLocator.registerLazySingleton<Client>(
     () => Client(
-     //"http://localhost:8080/",
-     "https://westwind-app-b00b64c234f3.herokuapp.com/api/",
+      //"http://localhost:8080/",
+      "https://westwind-app-b00b64c234f3.herokuapp.com/api/",
       authenticationKeyManager: FlutterAuthenticationKeyManager(),
     )..connectivityMonitor = FlutterConnectivityMonitor(),
   );
@@ -96,13 +97,12 @@ Future<void> initDependencies() async {
     ),
   );
 
-  // central time manager 
+  // central time manager
   serverLocator.registerLazySingleton<TimeManager>(
     TimeManager.new,
   );
 
   await serverLocator<SessionManager>().initialize();
-
 
   _initRoom();
 
@@ -121,19 +121,16 @@ Future<void> initDependencies() async {
   _initRoomTransaction();
 
   _initRoomGuestTransactions();
-
 }
 
-
 void _initRoom() {
-
   // datatsoruce
   serverLocator.registerLazySingleton<RoomDatasource>(
     () => RoomDatasourceImpl(
       serverLocator<Client>(),
     ),
   );
-  
+
   // Repository
   serverLocator.registerLazySingleton<RoomRepository>(
     () => RoomRepositoryImp(
@@ -145,11 +142,9 @@ void _initRoom() {
   serverLocator.registerFactory<RoomToggleBloc>(
     () => RoomToggleBloc(
       roomRepository: serverLocator<RoomRepository>(),
-      toggleRoomStatus:
-          serverLocator<ToggleRoomStatusUseCase>(),
+      toggleRoomStatus: serverLocator<ToggleRoomStatusUseCase>(),
     ),
   );
-
 
   // Usecase
   serverLocator.registerLazySingleton<ToggleRoomStatusUseCase>(
@@ -157,7 +152,6 @@ void _initRoom() {
       serverLocator<RoomRepository>(),
     ),
   );
-
 }
 
 void _initRoomGuestTransactions() {
@@ -179,8 +173,10 @@ void _initRoomGuestTransactions() {
   serverLocator.registerFactory<RoomGuestTransactionsBloc>(
     () => RoomGuestTransactionsBloc(
       roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
-      createRoomTransactionUseCase: serverLocator<CreateRoomTransactionUseCase>(),
-      retrieveRoomTransactionWithOutLaundryUseCase : serverLocator<RetrieveRoomTransactionWithOutLaundryUseCase>(),
+      createRoomTransactionUseCase:
+          serverLocator<CreateRoomTransactionUseCase>(),
+      retrieveRoomTransactionWithOutLaundryUseCase:
+          serverLocator<RetrieveRoomTransactionWithOutLaundryUseCase>(),
     ),
   );
 }
@@ -192,7 +188,6 @@ void _initRoomTransaction() {
       serverLocator<Client>(),
     ),
   );
-
 
   // Repositories
   serverLocator.registerLazySingleton<RoomTransactionRepository>(
@@ -235,7 +230,8 @@ void _initRoomTransaction() {
     ),
   );
 
- serverLocator.registerLazySingleton<RetrieveRoomTransactionWithOutLaundryUseCase> (
+  serverLocator
+      .registerLazySingleton<RetrieveRoomTransactionWithOutLaundryUseCase>(
     () => RetrieveRoomTransactionWithOutLaundryUseCase(
       serverLocator<RoomTransactionRepository>(),
     ),
@@ -257,7 +253,7 @@ void _initRoomTransaction() {
       createRoomTransaction: serverLocator<CreateRoomTransactionUseCase>(),
       retrieveRoomGuest: serverLocator<RetrieveRoomGuestUseCase>(),
       retrieveGuest: serverLocator<RetrieveGuestUseCase>(),
-   //   retrieveRoomTransactionWithOutLaundry: serverLocator<RetrieveRoomTransactionWithOutLaundryUseCase>(),
+      //   retrieveRoomTransactionWithOutLaundry: serverLocator<RetrieveRoomTransactionWithOutLaundryUseCase>(),
     ),
   );
 }
@@ -435,8 +431,6 @@ void _initReservation() {
 
   //! register as Singleton base on Reso coder, for cacheing .
 
-
-
   serverLocator.registerLazySingleton<ListReservationUseCase>(
     () => ListReservationUseCase(
       serverLocator<ReservationRepository>(),
@@ -514,13 +508,11 @@ void _initRoomGuest() {
     ),
   );
 
-
   serverLocator.registerLazySingleton<UpdateRoomGuestNoteUseCase>(
     () => UpdateRoomGuestNoteUseCase(
       serverLocator<RoomGuestRepository>(),
     ),
   );
-
 
   serverLocator.registerLazySingleton<DeleteRoomGuestUseCase>(
     () => DeleteRoomGuestUseCase(
@@ -564,6 +556,12 @@ void _initRoomGuest() {
 
   serverLocator.registerLazySingleton<ExtendStayDayRoomGuestUseCase>(
     () => ExtendStayDayRoomGuestUseCase(
+      serverLocator<RoomGuestRepository>(),
+    ),
+  );
+
+  serverLocator.registerLazySingleton<ListRoomGuestButCOUseCase>(
+    () => ListRoomGuestButCOUseCase(
       serverLocator<RoomGuestRepository>(),
     ),
   );
@@ -619,6 +617,7 @@ void _initRoomGuest() {
   // Bloc
   serverLocator.registerFactory<RoomGuestListBloc>(() => RoomGuestListBloc(
         listRoomGuests: serverLocator<ListRoomGuestUseCase>(),
+        listRoomGuestsButCO: serverLocator<ListRoomGuestButCOUseCase>(),
       ));
 
   serverLocator.registerFactory<RoomGuestManageBloc>(() => RoomGuestManageBloc(

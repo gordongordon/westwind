@@ -217,14 +217,21 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                 .add(CalculateRateRoomGuest(widget.roomGuestId!))),
 */
 
+/*
         const SizedBox(height: 16),
         _buildButton(
             'Delete',
             () => context
                 .read<RoomGuestManageBloc>()
                 .add(DeleteRoomGuest(widget.roomGuestId!)),
-            color: Colors.red),
+            color: Colors.red)
+            */
+            
+//            ,
+
+
       ],
+      
     );
   }
 
