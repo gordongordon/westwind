@@ -226,12 +226,9 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
                 .add(DeleteRoomGuest(widget.roomGuestId!)),
             color: Colors.red)
             */
-            
+
 //            ,
-
-
       ],
-      
     );
   }
 
@@ -361,7 +358,7 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
       );
 
       context.read<RoomGuestManageBloc>().add(SaveRoomGuest(roomGuest));
-    }
+    } 
   }
 
   void _blocListener(BuildContext context, RoomGuestManageState state) {
@@ -374,7 +371,10 @@ class _RoomGuestEditPageState extends State<RoomGuestEditPage> {
     } else if (state is RoomGuestManageStateCalculateRateSuccess ||
         state is RoomGuestManageStateDeleteSuccess ||
         state is RoomGuestManageStateChargeAndExtendStayDaySuccess) {
-      context.read<RoomGuestListBloc>().add(FetchRoomGuestsEvent());
+
+
+      //! should handle back to ButCo or with CO ?? 
+      context.read<RoomGuestListBloc>().add(FetchRoomGuestsButCOEvent());
 
       //! Handle exit to Calendar
       context.read<RoomCalendarBloc>().add(InitializeCalendar());
