@@ -58,7 +58,7 @@ class ReservationEndpoint extends Endpoint {
         throw TimeValidationException('check-in time must be in UTC');
       }
 
-      print('Save Reservation ${reservation}');
+      print('Save Reservation $reservation');
       DateTime checkInDate = reservation.checkInDate;
       DateTime checkOutDate = reservation.checkOutDate;
 

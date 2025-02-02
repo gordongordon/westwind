@@ -946,6 +946,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     rateReasonController.text = reservation.rateReason.toString();
     noteController.text =
         reservation.guest == null ? "no note given" : reservation.guest!.note;
+    rateTypeController.text = reservation.rateType.name;
 
     setState(() {
       checkInDate = reservation.checkInDate;
