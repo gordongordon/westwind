@@ -846,6 +846,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           rate: double.tryParse(rateController.text) ?? 0.0,
           rateReason: RateReason.values.byName(rateReasonController.text),
           //   rateReason: RateReason.values.byName(formKey.currentState?.fields['rateReason']?.value ?? RateReason.single.name),
+          note: noteController.text,
         );
 
         print('Reservation object created: $reservation');

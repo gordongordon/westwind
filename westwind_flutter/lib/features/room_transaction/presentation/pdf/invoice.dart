@@ -79,11 +79,11 @@ Future<Uint8List> generateInvoice(
     customerName: '$lastName, $firstName',
     customerAddress: 'none',
     roomId: roomId,
-    checkInDay: 'Check In : ${checkInDay.getDDMonthName()}',
-    checkOutDay: 'Check out : ${checkOutDay.getDDMonthName()} ',
+    checkInDay:  'Check  In : ${checkInDay.getDDMonthName()}',
+    checkOutDay: 'Check Out : ${checkOutDay.getDDMonthName()} ',
     paymentInfo:
-        'Westwind Motor Inn, 4225 50St, Drayton Vally, Alberta, T7A1M4, 1 (780) 542-5375, Email: westwindmotorinn@gmail.com',
-    tax: .09,
+        'Westwind Motor Inn, 4225 50St, Drayton Vally, Alberta, T7A1M4\n Tel: 1 (780) 542-5375\n Email: westwindmotorinn@gmail.com',
+    tax: .9,
     baseColor: PdfColors.teal,
     accentColor: PdfColors.blueGrey900,
     inputData: data,
@@ -128,18 +128,30 @@ class Invoice {
 
   PdfColor get _accentTextColor => baseColor.isLight ? _lightColor : _darkColor;
 
-  double get _subAmount =>
-      //    roomTransactions.map<double>((p) => p.amount).reduce((a, b) => a + b);
-      roomTransactions.map<double>((p) => p.amount).reduce((a, b) => a + b);
+  // double get _taxAbleSales = roomTransactions.map<double>( (p) => p.itemType == ItemType.room )
+
+//  double get _subAmount =>
+  //    roomTransactions.map<double>((p) => p.amount).reduce((a, b) => a + b);
+  //     roomTransactions.map<double>((p) => p.amount).reduce((a, b) => a + b);
+
+  //    roomTransactions.map<double>((p) => p.amount).reduce((a, b) => a + b);
+  double get _taxableSales => roomTransactions
+      .map<double>((p) => (p.itemType == ItemType.room ) || (p.itemType == ItemType.room_adjust) ? p.amount : 0)
+      .fold(0, (a, b) => a + b);
+
+// double get _subAmount =>    roomTransactions.fold(0, (a, b) => a + b.amount);
 
   double get _levy =>
-      roomTransactions.map<double>((p) => p.tax2).reduce((a, b) => a + b);
+      roomTransactions.map<double>((p) => p.tax2).fold(0, (a, b) => a + b);
+     // .reduce((a, b) => a + b);
 
   double get _gst =>
-      roomTransactions.map<double>((p) => p.tax1).reduce((a, b) => a + b);
+      roomTransactions.map<double>((p) => p.tax1).fold(0, (a, b) => a + b);
+      //.reduce((a, b) => a + b);
   // double get _grandTotal => _total * (1 + tax);
   double get _grandTotal =>
-      roomTransactions.map<double>((p) => p.total).reduce((a, b) => a + b);
+      roomTransactions.map<double>((p) => p.total).fold(0, (a, b) => a + b);
+    //  .reduce((a, b) => a + b);
 
   String? _logo;
 
@@ -166,10 +178,10 @@ class Invoice {
         build: (context) => [
           _contentHeader(context),
           _contentTable(context),
-          pw.SizedBox(height: 20),
+          pw.SizedBox(height: 10),
           _contentFooter(context),
           pw.SizedBox(height: 20),
-        // _termsAndConditions(context),
+          // _termsAndConditions(context),
         ],
       ),
     );
@@ -179,8 +191,7 @@ class Invoice {
   }
 
   pw.Widget _buildHeader(pw.Context context) {
-
-     final invoiceDay = TimeManager.instance.today().toCompactString();
+    final invoiceDay = TimeManager.instance.today().toCompactString();
 
     return pw.Column(
       children: [
@@ -233,7 +244,6 @@ class Invoice {
                 ],
               ),
             ),
-            
             pw.Expanded(
               child: pw.Column(
                 mainAxisSize: pw.MainAxisSize.min,
@@ -254,17 +264,15 @@ class Invoice {
                 ],
               ),
             ),
-            
           ],
         ),
-        if (context.pageNumber > 1) pw.SizedBox(height: 20)
+        if (context.pageNumber > 1) pw.SizedBox(height: 10)
       ],
     );
   }
 
   pw.Widget _buildFooter(pw.Context context) {
-
-  //  final invoiceDay = TimeManager.instance.today().getMonthDayHour();
+    //  final invoiceDay = TimeManager.instance.today().getMonthDayHour();
 
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -403,7 +411,7 @@ class Invoice {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text(
-                'Thank you for your business',
+                'Thank you for your business. We appreciate your partnership and look forward to serving you again.',
                 style: pw.TextStyle(
                   color: _darkColor,
                   fontWeight: pw.FontWeight.bold,
@@ -422,7 +430,7 @@ class Invoice {
               pw.Text(
                 paymentInfo,
                 style: const pw.TextStyle(
-                  fontSize: 8,
+                  fontSize: 9,
                   lineSpacing: 5,
                   color: _darkColor,
                 ),
@@ -434,7 +442,7 @@ class Invoice {
           flex: 1,
           child: pw.DefaultTextStyle(
             style: const pw.TextStyle(
-              fontSize: 10,
+              fontSize: 11,
               color: _darkColor,
             ),
             child: pw.Column(
@@ -443,26 +451,26 @@ class Invoice {
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text('Sub Total:'),
-                    pw.Text(_formatCurrency(_subAmount)),
+                    pw.Text('Taxable Sales:'),
+                    pw.Text(_formatCurrency(_taxableSales)),
                   ],
                 ),
                 pw.SizedBox(height: 5),
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text('levy:'),
-                    //        pw.Text('${(tax * 100).toStringAsFixed(1)}%'),
-                    pw.Text(_formatCurrency(_levy)),
-                  ],
-                ),
-                pw.SizedBox(height: 5),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text('gst:'),
+                    pw.Text('GST:'),
                     //pw.Text('${(tax * 100).toStringAsFixed(1)}%'),
                     pw.Text(_formatCurrency(_gst)),
+                  ],
+                ),
+                pw.SizedBox(height: 5),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text('Alberta Tourism Levy:'),
+                    //        pw.Text('${(tax * 100).toStringAsFixed(1)}%'),
+                    pw.Text(_formatCurrency(_levy)),
                   ],
                 ),
                 pw.Divider(color: accentColor),
@@ -475,7 +483,7 @@ class Invoice {
                   child: pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
-                      pw.Text('Total:'),
+                      pw.Text('Balance Due:'),
                       pw.Text(_formatCurrency(_grandTotal)),
                     ],
                   ),
@@ -488,7 +496,6 @@ class Invoice {
     );
   }
 
- 
   pw.Widget _termsAndConditions(pw.Context context) {
     return pw.Row(
       crossAxisAlignment: pw.CrossAxisAlignment.end,
@@ -536,8 +543,8 @@ class Invoice {
       'Room#',
       'Description',
       'Amount',
-      'gst',
-      'levy',
+      'GST',
+      'Levy',
       'Total'
     ];
 
@@ -549,7 +556,7 @@ class Invoice {
         color: baseColor,
       ),
       headerHeight: 20,
-      cellHeight: 20,
+      cellHeight: 18,
       cellAlignments: {
         0: pw.Alignment.centerLeft,
         1: pw.Alignment.centerLeft,
@@ -596,10 +603,10 @@ class Invoice {
             case 'Amount':
               return roomTransactions[row].amount.toString();
             case 'Stay Date':
-              return roomTransactions[row].stayDay.getDDMonthName();
-            case 'levy':
+              return roomTransactions[row].stayDay.getYYMMDD();
+            case 'Levy':
               return roomTransactions[row].tax2.toString();
-            case 'gst':
+            case 'GST':
               return roomTransactions[row].tax1.toStringAsFixed(2);
             case 'Total':
               return roomTransactions[row].total.toString();

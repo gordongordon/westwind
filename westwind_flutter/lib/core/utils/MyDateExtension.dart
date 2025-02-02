@@ -39,6 +39,11 @@ extension MyDateExtension on DateTime {
     return " ${weekdays[weekday - 1]} ${months[month - 1]} $day";
   }
 
+    String getYYMMDD() {
+    const List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return "$year ${months[month - 1]} $day";
+  }
+
   String toCompactString() {
     return "${year}${month.toString().padLeft(2, '0')}${day.toString().padLeft(2, '0')}";
   }
