@@ -1218,6 +1218,25 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['roomTransaction'] as _i8.RoomTransactionEndpoint)
                   .list(session),
         ),
+        'listByDay': _i1.MethodConnector(
+          name: 'listByDay',
+          params: {
+            'day': _i1.ParameterDescription(
+              name: 'day',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomTransaction'] as _i8.RoomTransactionEndpoint)
+                  .listByDay(
+            session,
+            params['day'],
+          ),
+        ),
         'listWithItemTypeRoom': _i1.MethodConnector(
           name: 'listWithItemTypeRoom',
           params: {},

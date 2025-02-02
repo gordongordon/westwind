@@ -25,11 +25,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
+import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_guest_transactions/room_guest_transactions_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/data.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/invoice.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf/invoice_with_all_transactions.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdf_generator.dart';
 
 //import 'package:url_launcher/url_launcher.dart' as ul;
@@ -61,26 +64,68 @@ class PdfEditPageState extends State<PdfEditPage>
   void initState() {
     super.initState();
 
+    context.read<RoomTransactionBloc>().add(FetchRoomTransactionsByDayEvent(
+        day: TimeManager.instance.toServer(
+            TimeManager.instance.today().subtract(Duration(days: 2)))));
+
     // First fetch the data
     if (widget.roomGuestId != null) {
-      context.read<RoomGuestTransactionsBloc>().add(
-          RetrieveRoomTransactionWithOutLaundryEvent( widget.roomGuestId!));
+      //context.read<RoomGuestTransactionsBloc>().add(
+      //   RetrieveRoomTransactionWithOutLaundryEvent( widget.roomGuestId!));
+
+      context
+          .read<RoomGuestTransactionsBloc>()
+          .add(FetchRoomGuestTransactions(widget.roomGuestId!));
       //! we mayn't need this
-//      context
-      //         .read<RoomTransactionBloc>()
-      //         .add(RetrieveRoomGuestEvent(roomGuestId: widget.roomGuestId!));
+      //  context
+      //           .read<RoomTransactionBloc>()
+      //           .add(RetrieveRoomGuestEvent(roomGuestId: widget.roomGuestId!));
     }
 
+    context.read<RoomTransactionBloc>().stream.listen((state) {
+      if (state is RoomTransactionListByDayStateLoaded) {
+        pdfGenerators.add(
+          PdfGenerator(
+            'Today Transactions',
+            'invoice.dart',
+            (format, data, transactions) async {
+              return await generateInvoiceWithAllTransactions(
+                  format, data, transactions);
+            },
+            state.roomTransactions,
+            true,
+          ),
+        );
+        _init();
+      }
+    });
+
+    /*
     // Listen to the bloc state changes
     context.read<RoomGuestTransactionsBloc>().stream.listen((state) {
       if (state is RoomGuestTransactionsLoaded) {
         // Initialize PdfGenerators once we have the data
+
+        final result = state.transactions
+            .where((item) => item.itemType != ItemType.laundry)
+            .toList();
+
         pdfGenerators = <PdfGenerator>[
           PdfGenerator(
-            'INVOICE - RoomGuest ID ${widget.roomGuestId!}',
+            'INVOICE (Room only) - RoomGuest ID ${widget.roomGuestId!}',
             'invoice.dart',
             (format, data, transactions) async {
-              return await generateInvoice(format, data, transactions);
+              return await generateInvoice(format, data, result);
+            },
+            state.transactions,
+            true,
+          ),
+          PdfGenerator(
+            'INVOICE (All Transactions)- RoomGuest ID ${widget.roomGuestId!}',
+            'invoice.dart',
+            (format, data, transactions) async {
+              return await generateInvoiceWithAllTransactions(
+                  format, data, transactions);
             },
             state.transactions,
             true,
@@ -92,6 +137,7 @@ class PdfEditPageState extends State<PdfEditPage>
         _checkIfNameNeeded(); // Add this lin
       }
     });
+    */
   }
 
   Future<void> _init() async {

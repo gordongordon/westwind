@@ -3,6 +3,7 @@ import 'package:westwind_flutter/core/error/exception.dart';
 
 abstract class RoomTransactionDatasource {
   Future<List<RoomTransaction>> list();
+    Future<List<RoomTransaction>> listByDay( DateTime day );
   Future<RoomTransaction> retrieve(int id);
   Future<bool> delete(int id);
   Future<RoomTransaction> save(RoomTransaction roomTransaction);
@@ -82,6 +83,15 @@ class RoomTransactionDatasourceImpl implements RoomTransactionDatasource {
   Future<List<RoomTransaction>> getTransactionsForRoomGuestWithOutLaundry(int roomGuestId) async {
     try { 
       return await _client.roomTransaction.getTransactionsForRoomGuestWithOutLaundry(roomGuestId);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+  
+  @override
+  Future<List<RoomTransaction>> listByDay( DateTime day) async {
+    try { 
+      return await _client.roomTransaction.listByDay( day );
     } catch (e) {
       throw ServerException(e.toString());
     }

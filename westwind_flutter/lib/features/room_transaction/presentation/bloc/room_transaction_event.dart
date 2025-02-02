@@ -5,6 +5,12 @@ sealed class RoomTransactionEvent {}
 
 class FetchRoomTransactionsEvent extends RoomTransactionEvent {}
 
+class FetchRoomTransactionsByDayEvent  extends RoomTransactionEvent {
+  final DateTime day;
+
+   FetchRoomTransactionsByDayEvent({required this.day});
+}
+
 class DeleteRoomTransactionEvent extends RoomTransactionEvent {
   final int id;
 

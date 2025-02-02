@@ -7,6 +7,7 @@ import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_r
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_Transaction_list_usercase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_create_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_delete_usecase.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_list_by_day_usercase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_without_laundry_usecase.dart';
 
@@ -16,6 +17,7 @@ part 'room_transaction_state.dart';
 class RoomTransactionBloc
     extends Bloc<RoomTransactionEvent, RoomTransactionState> {
   final ListRoomTransactionsUseCase listRoomTransactions;
+  final ListRoomTransactionsByDayUseCase listRoomTransactionsByDay;
   final DeleteRoomTransactionUseCase deleteRoomTransaction;
   final RetrieveRoomTransactionUseCase retrieveRoomTransaction;
   final CreateRoomTransactionUseCase createRoomTransaction;
@@ -25,6 +27,7 @@ class RoomTransactionBloc
 
   RoomTransactionBloc({
     required this.listRoomTransactions,
+    required this.listRoomTransactionsByDay,
     required this.deleteRoomTransaction,
     required this.retrieveRoomTransaction,
     required this.createRoomTransaction,
@@ -32,7 +35,8 @@ class RoomTransactionBloc
     required this.retrieveGuest,
   }) : super(RoomTransactionListStateInitial()) {
     // add(FetchRoomTransactionsEvent()); // Add this lin
-    on<FetchRoomTransactionsEvent>(_onFetchRoomTransactions);
+    on<FetchRoomTransactionsEvent>((_onFetchRoomTransactions));
+    on<FetchRoomTransactionsByDayEvent>((_onFetchRoomTransactionsByDay));
     on<DeleteRoomTransactionEvent>((_onDeleteRoomTransaction));
     on<RetrieveRoomTransactionEvent>((_onRetrieveRoomTransaction));
     on<CreateRoomTransactionEvent>((_onCreateRoomTransaction));
@@ -51,6 +55,25 @@ class RoomTransactionBloc
       emit(RoomTransactionListStateLoaded(roomTransactions: r));
     });
   }
+
+
+  Future<void> _onFetchRoomTransactionsByDay (
+    FetchRoomTransactionsByDayEvent event,
+    Emitter<RoomTransactionState> emit,
+  ) async {
+    emit(RoomTransactionListStateLoading());
+    //  await Future.delayed(Duration(seconds: 1));
+
+    final result = await listRoomTransactionsByDay
+        .call(ListRoomTransactionsByDayParams( day: event.day));
+    result.fold((l) => emit(RoomTransactionStateFailure(message: l.message)),
+        (r) {
+      emit(RoomTransactionListByDayStateLoaded(roomTransactions: r));
+    });
+  }
+
+
+
 
   void _onDeleteRoomTransaction(
     DeleteRoomTransactionEvent event,
@@ -88,7 +111,7 @@ class RoomTransactionBloc
   }
 
   void _onCreateRoomTransaction(CreateRoomTransactionEvent event,
-      Emitter<RoomTransactionState> emit) async {
+      Emitter<RoomTransactionState> emit,) async {
     emit(RoomTransactionListStateLoading());
     //      await Future.delayed(Duration(seconds: 1));
 
@@ -102,7 +125,7 @@ class RoomTransactionBloc
   }
 
   Future<void> _onRetrieveRoomGuest(
-      RetrieveRoomGuestEvent event, Emitter<RoomTransactionState> emit) async {
+      RetrieveRoomGuestEvent event, Emitter<RoomTransactionState> emit,) async {
     emit(RoomTransactionListStateLoading());
     //  await Future.delayed(Duration(seconds: 1));
     final result =
@@ -116,7 +139,7 @@ class RoomTransactionBloc
   }
 
   Future<void> _onRetrieveGuestRoomTransaction(
-      RetrieveGuestEvent event, Emitter<RoomTransactionState> emit) async {
+      RetrieveGuestEvent event, Emitter<RoomTransactionState> emit,) async {
     emit(RoomTransactionListStateLoading());
     // await Future.delayed(Duration(seconds: 1));
 

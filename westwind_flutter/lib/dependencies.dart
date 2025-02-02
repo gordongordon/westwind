@@ -71,6 +71,7 @@ import 'package:westwind_flutter/features/room_transaction/domain/repositories/r
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_Transaction_list_usercase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_create_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_delete_usecase.dart';
+import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_list_by_day_usercase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/usecases/room_transaction_retrieve_without_laundry_usecase.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_guest_transactions/room_guest_transactions_bloc.dart';
@@ -212,6 +213,12 @@ void _initRoomTransaction() {
     ),
   );
 
+  serverLocator.registerLazySingleton<ListRoomTransactionsByDayUseCase>(
+    () => ListRoomTransactionsByDayUseCase(
+      serverLocator<RoomTransactionRepository>(),
+    ),
+  );
+
   serverLocator.registerLazySingleton<DeleteRoomTransactionUseCase>(
     () => DeleteRoomTransactionUseCase(
       serverLocator<RoomTransactionRepository>(),
@@ -248,6 +255,8 @@ void _initRoomTransaction() {
   serverLocator.registerFactory<RoomTransactionBloc>(
     () => RoomTransactionBloc(
       listRoomTransactions: serverLocator<ListRoomTransactionsUseCase>(),
+      listRoomTransactionsByDay:
+          serverLocator<ListRoomTransactionsByDayUseCase>(),
       deleteRoomTransaction: serverLocator<DeleteRoomTransactionUseCase>(),
       retrieveRoomTransaction: serverLocator<RetrieveRoomTransactionUseCase>(),
       createRoomTransaction: serverLocator<CreateRoomTransactionUseCase>(),

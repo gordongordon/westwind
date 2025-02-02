@@ -139,4 +139,18 @@ class RoomTransactionRepositoryImp implements RoomTransactionRepository {
       return left(Failure(e.message));
     }
   }
+  
+  @override
+  Future<Either<Failure, List<RoomTransaction>>> listByDay(DateTime day ) async {
+    try {
+      final response = await _datasource.listByDay( day );
+
+      final result = response.map(_fromServer).toList();
+
+      //   return right(await _datasource.list());
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 }

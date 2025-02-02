@@ -13,6 +13,13 @@ class RoomTransactionListStateLoaded extends RoomTransactionState {
   RoomTransactionListStateLoaded({required this.roomTransactions});
 }
 
+class RoomTransactionListByDayStateLoaded extends RoomTransactionState {
+  final List<RoomTransaction> roomTransactions;
+
+  RoomTransactionListByDayStateLoaded({required this.roomTransactions});
+}
+
+
 class RoomTransactionStateFailure extends RoomTransactionState {
   final String message;
 

@@ -572,6 +572,13 @@ class EndpointRoomTransaction extends _i1.EndpointRef {
         {},
       );
 
+  _i2.Future<List<_i10.RoomTransaction>> listByDay(DateTime day) =>
+      caller.callServerEndpoint<List<_i10.RoomTransaction>>(
+        'roomTransaction',
+        'listByDay',
+        {'day': day},
+      );
+
   _i2.Future<List<_i10.RoomTransaction>> listWithItemTypeRoom() =>
       caller.callServerEndpoint<List<_i10.RoomTransaction>>(
         'roomTransaction',

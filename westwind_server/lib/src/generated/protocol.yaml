@@ -67,6 +67,7 @@ roomGuest:
 roomTransaction:
   - hasBeenRoomChargedToday:
   - list:
+  - listByDay:
   - listWithItemTypeRoom:
   - getTransactionsForRoomGuest:
   - getTransactionsForRoomGuestWithOutLaundry:
