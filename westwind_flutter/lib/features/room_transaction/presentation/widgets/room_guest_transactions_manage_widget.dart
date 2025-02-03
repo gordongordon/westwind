@@ -66,7 +66,7 @@ class _RoomGuestTransactionsManageWidgetState
                 });
 
                 return _buildTransactionsList(state.transactions);
-              } else if (state is RoomGuestTransactionsError) {
+              } else if (state is RoomGuestTransactionsFailure) {
                 return Center(child: Text(state.message));
               } else {
                 return Center(child: Text('No transactions found'));

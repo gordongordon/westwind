@@ -63,10 +63,11 @@ class RoomGuestTransactionsLoaded extends RoomGuestTransactionsState {
   List<Object> get props => [transactions];
 }
 
-class RoomGuestTransactionsError extends RoomGuestTransactionsState {
+
+class RoomGuestTransactionsFailure extends RoomGuestTransactionsState {
   final String message;
 
-  const RoomGuestTransactionsError(this.message);
+  const RoomGuestTransactionsFailure(this.message);
 
   @override
   List<Object> get props => [message];
@@ -100,7 +101,7 @@ class RoomGuestTransactionsBloc
 
     final result = await retrieveRoomTransactionWithOutLaundryUseCase.call(
         RetrieveRoomTransactionWithOutLaundryParams(id: event.roomGuestId));
-    result.fold((l) => emit(RoomGuestTransactionsError(l.message)), (r) {
+    result.fold((l) => emit(RoomGuestTransactionsFailure(l.message)), (r) {
       emit((RoomGuestTransactionsLoaded(r)));
     });
   }
@@ -117,7 +118,7 @@ class RoomGuestTransactionsBloc
 
       emit(RoomGuestTransactionsLoaded(transactions.foldResult()));
     } catch (e) {
-      emit(RoomGuestTransactionsError('Failed to fetch transactions: $e'));
+      emit(RoomGuestTransactionsFailure('Failed to fetch transactions: $e'));
     }
   }
 
@@ -130,7 +131,7 @@ class RoomGuestTransactionsBloc
       final result = await createRoomTransactionUseCase(
           CreateRoomTransactionParams(roomTransaction: event.transaction));
       result.fold(
-        (failure) => emit(RoomGuestTransactionsError(failure.message)),
+        (failure) => emit(RoomGuestTransactionsFailure(failure.message)),
         (newTransaction) {
           if (state is RoomGuestTransactionsLoaded) {
             final currentTransactions =
@@ -143,7 +144,7 @@ class RoomGuestTransactionsBloc
         },
       );
     } catch (e) {
-      emit(RoomGuestTransactionsError('Failed to create transaction: $e'));
+      emit(RoomGuestTransactionsFailure('Failed to create transaction: $e'));
     }
   }
 }

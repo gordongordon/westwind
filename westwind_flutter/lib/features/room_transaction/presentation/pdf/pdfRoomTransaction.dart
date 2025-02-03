@@ -36,19 +36,19 @@ import 'package:westwind_flutter/features/room_transaction/presentation/pdf/invo
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdf_generator.dart';
 
 //import 'package:url_launcher/url_launcher.dart' as ul;
-class PdfEditPage extends StatefulWidget {
+class PdfRoomTransactionPage extends StatefulWidget {
   final int? roomGuestId;
   static String route([int? roomGuestId]) =>
-      "/pdfEdit/roomGuestInvoice/${roomGuestId ?? ':id'}";
-  static String routeNew() => "/pdfEdit/new";
+      "/pdfRoomTransaction/${roomGuestId ?? ':id'}";
+  static String routeNew() => "/pdfTransaction/new";
 
-  const PdfEditPage({super.key, this.roomGuestId});
+  const PdfRoomTransactionPage({super.key, this.roomGuestId});
 
   @override
-  PdfEditPageState createState() => PdfEditPageState();
+  PdfRoomTransactionPageState createState() => PdfRoomTransactionPageState();
 }
 
-class PdfEditPageState extends State<PdfEditPage>
+class PdfRoomTransactionPageState extends State<PdfRoomTransactionPage>
     with SingleTickerProviderStateMixin {
   int _tab = 0;
   TabController? _tabController;
@@ -65,15 +65,15 @@ class PdfEditPageState extends State<PdfEditPage>
   @override
   void initState() {
     super.initState();
-/*
+
     context.read<RoomTransactionBloc>().add(FetchRoomTransactionsByDayEvent(
         day: TimeManager.instance.toServer(
-            TimeManager.instance.today().subtract(Duration(days: 1)))));
-*/
+            TimeManager.instance.today().subtract(Duration(days: 4)))));
+
     // First fetch the data
     if (widget.roomGuestId != null) {
-      context.read<RoomGuestTransactionsBloc>().add(
-         RetrieveRoomTransactionWithOutLaundryEvent( widget.roomGuestId!));
+      //context.read<RoomGuestTransactionsBloc>().add(
+      //   RetrieveRoomTransactionWithOutLaundryEvent( widget.roomGuestId!));
 
    //   context
    //       .read<RoomGuestTransactionsBloc>()
@@ -84,10 +84,9 @@ class PdfEditPageState extends State<PdfEditPage>
       //           .add(RetrieveRoomGuestEvent(roomGuestId: widget.roomGuestId!));
     }
 
-/*
     context.read<RoomTransactionBloc>().stream.listen((state) {
       if (state is RoomTransactionListByDayStateLoaded) {
-    //    _roomTransactions =   state.roomTransactions;
+        _roomTransactions =   state.roomTransactions;
 
         pdfGenerators.add(
           PdfGenerator(
@@ -104,9 +103,8 @@ class PdfEditPageState extends State<PdfEditPage>
         _init();
       }
     });
-    */
 
-    
+    /*
     // Listen to the bloc state changes
     context.read<RoomGuestTransactionsBloc>().stream.listen((state) {
       if (state is RoomGuestTransactionsLoaded) {
@@ -143,7 +141,7 @@ class PdfEditPageState extends State<PdfEditPage>
         _checkIfNameNeeded(); // Add this lin
       }
     });
-    
+    */
   }
 
   Future<void> _init() async {
@@ -260,12 +258,12 @@ class PdfEditPageState extends State<PdfEditPage>
               )
             : null,
       ),
-      body: BlocBuilder<RoomGuestTransactionsBloc, RoomGuestTransactionsState>(
+      body: BlocBuilder<RoomTransactionBloc, RoomTransactionState>(
         builder: (context, state) {
-          if (state is RoomGuestTransactionsLoading) {
+          if (state is RoomTransactionListStateLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is RoomGuestTransactionsLoaded) {
-          // final _roomTransactions = state.transactions;
+          } else if (state is RoomTransactionListByDayStateLoaded) {
+          //  final _roomTransactions = state.transactions;
 /*
             // Only set up generators and tab controller once
             if (pdfGenerators.isEmpty) {
@@ -291,7 +289,7 @@ class PdfEditPageState extends State<PdfEditPage>
                 ? PdfPreview(
                     maxPageWidth: 700,
                     build: (format) => pdfGenerators[_tab]
-                        .builder(format, _data, state.transactions),
+                        .builder(format, _data, state.roomTransactions),
                     actions: actions,
                     onPrinted: _showPrintedToast,
                     onShared: _showSharedToast,
@@ -301,7 +299,7 @@ class PdfEditPageState extends State<PdfEditPage>
                 
                // return Center(child: Text( 'wrong transACTIOIN'));
              
-          } else if (state is RoomGuestTransactionsFailure) {
+          } else if (state is RoomTransactionStateFailure) {
             return Center(child: Text(state.message));
           } else {
             return const Center(child: Text('No transactions found'));

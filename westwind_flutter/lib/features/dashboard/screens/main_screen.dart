@@ -11,6 +11,7 @@ import 'package:westwind_flutter/features/reservation/presentaion/pages/reservat
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_list_page.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list_but_co.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdfRoomTransaction.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdf_edit.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_list_page.dart';
 
@@ -62,7 +63,7 @@ const List<Widget> menuPages = <Widget>[
   RoomTransactionListPage(),
   GuestReservationEditPage(),
   RoomGuestListPage(),
-  PdfEditPage(),
+  PdfRoomTransactionPage(),
 ];
 
 class MainScreen extends StatelessWidget {

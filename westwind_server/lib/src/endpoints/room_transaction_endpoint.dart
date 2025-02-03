@@ -32,15 +32,23 @@ class RoomTransactionEndpoint extends Endpoint {
             )));
   }
 
-
   Future<List<RoomTransaction>> listByDay(Session session, DateTime day) async {
-
-  // Normalize the given day (start and end of day)
-  DateTime startOfDay = DateTime(day.year, day.month, day.day);
-  DateTime endOfDay = startOfDay.add(Duration(days: 1));
+    // Normalize the given day (start and end of day)
+    DateTime startOfDay = DateTime(day.year, day.month, day.day);
+    DateTime endOfDay = startOfDay.add(Duration(days: 1));
 
     return await RoomTransaction.db.find(session,
-        where: (t) => t.transactionDay.between( startOfDay, endOfDay),
+        where: (t) =>
+            t.transactionDay.between(startOfDay, endOfDay) &
+            (t.itemType.inSet({
+              ItemType.amex,
+              ItemType.cash,
+              ItemType.debit,
+              ItemType.eTransfer,
+              ItemType.master,
+              ItemType.gift_card,
+              ItemType.visa,},
+            )),
         orderByList: (t) => [
               Order(column: t.updateDate, orderDescending: true),
               Order(column: t.transactionDay, orderDescending: true),
@@ -88,7 +96,9 @@ class RoomTransactionEndpoint extends Endpoint {
   Future<List<RoomTransaction>> getTransactionsForRoomGuestWithOutLaundry(
       Session session, int roomGuestId) async {
     return await RoomTransaction.db.find(session,
-        where: (i) => i.roomGuestId.equals(roomGuestId) & i.itemType.notEquals(ItemType.laundry) ,
+        where: (i) =>
+            i.roomGuestId.equals(roomGuestId) &
+            i.itemType.notEquals(ItemType.laundry),
         //  orderBy : (t)  => t.updateDate,
         orderByList: (t) => [
               Order(column: t.updateDate, orderDescending: false),
@@ -101,7 +111,6 @@ class RoomTransactionEndpoint extends Endpoint {
               guest: Guest.include(),
             )));
   }
-
 
   Future<RoomTransaction> saveRoomTransaciton(
       Session session, RoomTransaction rt) async {
