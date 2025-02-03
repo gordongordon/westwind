@@ -33,6 +33,7 @@ import 'package:westwind_flutter/features/room_transaction/presentation/bloc/roo
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/data.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/invoice.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/invoice_with_all_transactions.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf/night_audit.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdf_generator.dart';
 
 //import 'package:url_launcher/url_launcher.dart' as ul;
@@ -67,8 +68,7 @@ class PdfRoomTransactionPageState extends State<PdfRoomTransactionPage>
     super.initState();
 
     context.read<RoomTransactionBloc>().add(FetchRoomTransactionsByDayEvent(
-        day: TimeManager.instance.toServer(
-            TimeManager.instance.today().subtract(Duration(days: 4)))));
+        day: TimeManager.instance.today().subtract(Duration(days: 0))));
 
     // First fetch the data
     if (widget.roomGuestId != null) {
@@ -86,14 +86,14 @@ class PdfRoomTransactionPageState extends State<PdfRoomTransactionPage>
 
     context.read<RoomTransactionBloc>().stream.listen((state) {
       if (state is RoomTransactionListByDayStateLoaded) {
-        _roomTransactions =   state.roomTransactions;
+     //   _roomTransactions =   state.roomTransactions;
 
         pdfGenerators.add(
           PdfGenerator(
-            'Today Transactions',
+            'Today Payments',
             'invoice.dart',
             (format, data, transactions) async {
-              return await generateInvoiceWithAllTransactions(
+              return await generateNightAudit(
                   format, data, transactions);
             },
             state.roomTransactions,

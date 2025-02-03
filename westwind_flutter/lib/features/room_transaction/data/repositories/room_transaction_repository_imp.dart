@@ -143,7 +143,7 @@ class RoomTransactionRepositoryImp implements RoomTransactionRepository {
   @override
   Future<Either<Failure, List<RoomTransaction>>> listByDay(DateTime day ) async {
     try {
-      final response = await _datasource.listByDay( day );
+      final response = await _datasource.listByDay( TimeManager.instance.toServer(day) );
 
       final result = response.map(_fromServer).toList();
 
