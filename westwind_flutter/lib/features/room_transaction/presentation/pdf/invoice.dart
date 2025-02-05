@@ -603,9 +603,10 @@ class Invoice {
           // Use a switch or map to access the correct property
           switch (tableHeaders[col]) {
             case 'Room#':
-              return roomTransactions[row].roomId.toString() + roomTransactions[row].description;
+              return roomTransactions[row].roomId.toString();
             case 'Description':
-              return roomTransactions[row].itemType.toString();
+//              return roomTransactions[row].itemType.toString();
+            return roomTransactions[row].description.toString();
             case 'Amount':
               return roomTransactions[row].amount.toString();
             case 'Stay Date':
