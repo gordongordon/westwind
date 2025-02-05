@@ -51,6 +51,7 @@ Future<Uint8List> generateInvoice(
   String firstName;
   String phoneNumber;
   String roomId;
+  String description;
   DateTime checkInDay;
   DateTime checkOutDay;
 
@@ -63,6 +64,7 @@ Future<Uint8List> generateInvoice(
     checkInDay = item.roomGuest!.checkInDate;
     checkOutDay = item.roomGuest!.checkOutDate;
     roomId = item.roomId.toString();
+    description = item.description;
   } else {
     invoiceNumber = 0;
     lastName = "none";
@@ -71,6 +73,7 @@ Future<Uint8List> generateInvoice(
     checkInDay = TimeManager.instance.today();
     checkOutDay = TimeManager.instance.today();
     roomId = "0";
+    description = "-";
   }
 
   final invoice = Invoice(
@@ -79,6 +82,7 @@ Future<Uint8List> generateInvoice(
     customerName: '$lastName, $firstName',
     customerAddress: 'none',
     roomId: roomId,
+    description : description,
     checkInDay:  'Check  In : ${checkInDay.getDDMonthName()}',
     checkOutDay: 'Check Out : ${checkOutDay.getDDMonthName()} ',
     paymentInfo:
@@ -98,6 +102,7 @@ class Invoice {
     required this.customerName,
     required this.customerAddress,
     required this.roomId,
+    required this.description,
     required this.checkInDay,
     required this.checkOutDay,
     required this.invoiceNumber,
@@ -112,6 +117,7 @@ class Invoice {
   final String customerName;
   final String customerAddress;
   final String roomId;
+  final String description;
   final String checkInDay;
   final String checkOutDay;
   final String invoiceNumber;
@@ -597,7 +603,7 @@ class Invoice {
           // Use a switch or map to access the correct property
           switch (tableHeaders[col]) {
             case 'Room#':
-              return roomTransactions[row].roomId.toString();
+              return roomTransactions[row].roomId.toString() + roomTransactions[row].description;
             case 'Description':
               return roomTransactions[row].itemType.toString();
             case 'Amount':

@@ -1,0 +1,13 @@
+heroku pg:pull postgres://u5h0502ggllct4:pa06f0f74de9cc5a8477eee3a351b81b1ef7398334e38d02cab1c817962d50b16@cfls9h51f4i86c.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/denkcg2pa4n84g my_local_db --app westwind-app
+pg_dump -t guest -t reservation -t room_guest -t room_transaction -Fc -f my_backup.dump
+
+
+
+
+heroku pg:pull DATABASE_URL my_local_db --app westwind-app --remote localhost
+
+
+heroku pg:pull DATABASE_URL westwind --app westwind-app --remote localhost --port 8090
+
+
+heroku pg:pull DATABASE_URL postgres://westwind:8lozzN3S344jkh5UlLJ7eQ358zh_EFfT@localhost:8090/westwind --app westwind-app

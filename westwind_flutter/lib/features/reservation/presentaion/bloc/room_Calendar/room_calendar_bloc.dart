@@ -18,6 +18,8 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   final RoomGuestRepository roomGuestRepository;
   final RoomRepository roomRepository;
 
+   // Map<DateTime, RoomCalendarLoaded> _stateCache = {};
+
   RoomCalendarBloc({
     required this.reservationRepository,
     required this.roomTransactionRepository,
@@ -108,6 +110,110 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     }
   }
 
+/*
+//class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
+  // Add a cache variable
+//  Map<DateTime, RoomCalendarLoaded> _stateCache = {};
+  
+  // Modify fetch method to use caching
+  Future<void> _onFetchReservationsAndTransactions(
+      FetchReservationsAndTransactions event,
+      Emitter<RoomCalendarState> emit) async {
+    
+    // Check if data for this date is already cached
+    if (_stateCache.containsKey(event.startDate)) {
+      emit(_stateCache[event.startDate]!);
+      return;
+    }
+
+    // Existing fetch logic
+    try {
+      final reservationResult = 
+          await reservationRepository.listButCanceledAndCheckIn();
+      
+      // Rest of your existing implementation
+      
+   final roomTransactionResult = await roomTransactionRepository.list();
+
+      /**
+       * Fixed Checkout, not remove from Calendar
+       */
+      final roomGuestResult = await roomGuestRepository.listButCheckOut();
+      //          final roomGuestResult = await roomGuestRepository.list();
+
+      final failureOrLoaded = await reservationResult.fold(
+        (failure) async => RoomCalendarError(message: failure.message),
+        (reservations) async {
+          return await roomTransactionResult.fold(
+            (failure) async => RoomCalendarError(message: failure.message),
+            (roomTransactions) async {
+              return await roomGuestResult.fold(
+                (failure) async => RoomCalendarError(message: failure.message),
+                (roomGuests) async {
+                  final Map<String, List<Reservation>> reservationsByRoom =
+                      _groupReservationsByRoom(reservations);
+                  final Map<String, List<RoomTransaction>>
+                      roomTransactionsByRoom =
+                      _groupRoomTransactionsByRoom(roomTransactions);
+                  final Map<String, List<RoomGuest>> roomGuestsByRoom =
+                      _groupRoomGuestsByRoom(roomGuests);
+
+                  if (state is RoomCalendarLoaded) {
+                    final currentState = state as RoomCalendarLoaded;
+                    return currentState.copyWith(
+                      reservations: reservations,
+                      reservationsByRoom: reservationsByRoom,
+                      roomTransactions: roomTransactions,
+                      roomTransactionsByRoom: roomTransactionsByRoom,
+                      roomGuests: roomGuests,
+                      roomGuestsByRoom: roomGuestsByRoom,
+                    );
+                  } else {
+                    final rooms = (await roomRepository.list()).foldResult();
+                    final roomNumbers =
+                        rooms.map((room) => room.id!.toString()).toList();
+                    final roomTypes =
+                        rooms.map((room) => room.roomType.toString()).toList();
+                    final roomStatus = rooms
+                        .map((room) => room.roomStatus.toString())
+                        .toList();
+                    return RoomCalendarLoaded(
+                      roomTypes: roomTypes,
+                      roomNumbers: roomNumbers,
+                      roomStatus: roomStatus,
+                      startDate: event.startDate,
+                      daysToShow: 14,
+                      reservations: reservations,
+                      reservationsByRoom: reservationsByRoom,
+                      roomTransactions: roomTransactions,
+                      roomTransactionsByRoom: roomTransactionsByRoom,
+                      roomGuests: roomGuests,
+                      roomGuestsByRoom: roomGuestsByRoom,
+                    );
+                  }
+                },
+              );
+            },
+          );
+        },
+      );
+
+
+      // Before emitting, cache the state
+      if (failureOrLoaded is RoomCalendarLoaded) {
+        _stateCache[event.startDate] = failureOrLoaded;
+      }
+      
+      emit(failureOrLoaded);
+    } catch (e) {
+      emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
+    }
+  }
+//}
+
+*/
+
+
   Future<void> _onFetchReservationsAndTransactions(
       FetchReservationsAndTransactions event,
       Emitter<RoomCalendarState> emit) async {
@@ -189,7 +295,9 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     } catch (e) {
       emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
     }
+
   }
+
 
   void _onChangeStartDate(
       ChangeStartDate event, Emitter<RoomCalendarState> emit) {
