@@ -606,7 +606,7 @@ class Invoice {
               return roomTransactions[row].roomId.toString();
             case 'Description':
 //              return roomTransactions[row].itemType.toString();
-            return roomTransactions[row].description.toString();
+              return roomTransactions[row].description.toString();
             case 'Amount':
               return roomTransactions[row].amount.toString();
             case 'Stay Date':
