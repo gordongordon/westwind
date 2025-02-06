@@ -40,14 +40,16 @@ class RoomTransactionEndpoint extends Endpoint {
     return await RoomTransaction.db.find(session,
         where: (t) =>
             t.transactionDay.between(startOfDay, endOfDay) &
-            (t.itemType.inSet({
-              ItemType.amex,
-              ItemType.cash,
-              ItemType.debit,
-              ItemType.eTransfer,
-              ItemType.master,
-              ItemType.gift_card,
-              ItemType.visa,},
+            (t.itemType.inSet(
+              {
+                ItemType.amex,
+                ItemType.cash,
+                ItemType.debit,
+                ItemType.eTransfer,
+                ItemType.master,
+                ItemType.gift_card,
+                ItemType.visa,
+              },
             )),
         orderByList: (t) => [
               Order(column: t.updateDate, orderDescending: true),
@@ -93,7 +95,6 @@ class RoomTransactionEndpoint extends Endpoint {
             )));
   }
 
-
   Future<List<RoomTransaction>> getTransactionsForRoomGuestOrderDescending(
       Session session, int roomGuestId) async {
     return await RoomTransaction.db.find(session,
@@ -110,7 +111,6 @@ class RoomTransactionEndpoint extends Endpoint {
               guest: Guest.include(),
             )));
   }
-
 
   Future<List<RoomTransaction>> getTransactionsForRoomGuestWithOutLaundry(
       Session session, int roomGuestId) async {
@@ -183,5 +183,21 @@ class RoomTransactionEndpoint extends Endpoint {
     }
 
     return false;
+  }
+
+  Future<List<RoomTransaction>> findRoomTransactionsForWindow(
+      Session session, DateTime startDate, DateTime endDate) async {
+    return await RoomTransaction.db.find(session,
+        where: (t) => (t.stayDay.between(startDate, endDate)),
+        orderByList: (t) => [
+              Order(column: t.updateDate, orderDescending: true),
+              Order(column: t.transactionDay, orderDescending: true),
+            ],
+        include: RoomTransaction.include(
+            guest: Guest.include(),
+            room: Room.include(),
+            roomGuest: RoomGuest.include(
+              guest: Guest.include(),
+            )));
   }
 }

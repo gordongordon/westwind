@@ -11,5 +11,6 @@ abstract class RoomTransactionRepository {
   Future<Either<Failure,List<RoomTransaction>>> getTransactionsForRoomGuest(int roomGuesetId);
   Future<Either<Failure,List<RoomTransaction>>> getTransactionsForRoomGuestOrderDescending(int roomGuesetId);
   Future<Either<Failure,List<RoomTransaction>>> getTransactionsForRoomGuestWithOutLaundry(int roomGuesetId);
+  Future<Either<Failure,List<RoomTransaction>>> findRoomTransactionsForWindow(DateTime startDate, DateTime endDate);
 }
  

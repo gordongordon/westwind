@@ -124,12 +124,13 @@ class RoomTransactionRepositoryImp implements RoomTransactionRepository {
           : null,
     );
   }
-  
+
   @override
-  Future<Either<Failure, List<RoomTransaction>>> getTransactionsForRoomGuestWithOutLaundry(int roomGuesetId) async {
+  Future<Either<Failure, List<RoomTransaction>>>
+      getTransactionsForRoomGuestWithOutLaundry(int roomGuesetId) async {
     try {
-      final response =
-          await _datasource.getTransactionsForRoomGuestWithOutLaundry(roomGuesetId);
+      final response = await _datasource
+          .getTransactionsForRoomGuestWithOutLaundry(roomGuesetId);
 
       final result = response.map(_fromServer).toList();
 
@@ -139,11 +140,12 @@ class RoomTransactionRepositoryImp implements RoomTransactionRepository {
       return left(Failure(e.message));
     }
   }
-  
+
   @override
-  Future<Either<Failure, List<RoomTransaction>>> listByDay(DateTime day ) async {
+  Future<Either<Failure, List<RoomTransaction>>> listByDay(DateTime day) async {
     try {
-      final response = await _datasource.listByDay( TimeManager.instance.toServer(day) );
+      final response =
+          await _datasource.listByDay(TimeManager.instance.toServer(day));
 
       final result = response.map(_fromServer).toList();
 
@@ -153,16 +155,35 @@ class RoomTransactionRepositoryImp implements RoomTransactionRepository {
       return left(Failure(e.message));
     }
   }
-  
+
   @override
-  Future<Either<Failure, List<RoomTransaction>>> getTransactionsForRoomGuestOrderDescending(int roomGuesetId) async {
+  Future<Either<Failure, List<RoomTransaction>>>
+      getTransactionsForRoomGuestOrderDescending(int roomGuesetId) async {
     try {
-      final response =
-          await _datasource.getTransactionsForRoomGuestOrderDescending(roomGuesetId);
+      final response = await _datasource
+          .getTransactionsForRoomGuestOrderDescending(roomGuesetId);
 
       final result = response.map(_fromServer).toList();
 
       // return right(await _datasource.getTransactionsForRoomGuest(roomGuesetId));
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<RoomTransaction>>> findRoomTransactionsForWindow(
+      DateTime startDate, DateTime endDate) async {
+    try {
+      final response = await _datasource.findRoomTransactionsForWindow(
+        TimeManager.instance.toServer(startDate),
+        TimeManager.instance.toServer(endDate),
+      );
+
+      final result = response.map(_fromServer).toList();
+
+      //   return right(await _datasource.list());
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));

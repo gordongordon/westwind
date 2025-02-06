@@ -1612,6 +1612,31 @@ class Endpoints extends _i1.EndpointDispatch {
             params['id'],
           ),
         ),
+        'findRoomTransactionsForWindow': _i1.MethodConnector(
+          name: 'findRoomTransactionsForWindow',
+          params: {
+            'startDate': _i1.ParameterDescription(
+              name: 'startDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'endDate': _i1.ParameterDescription(
+              name: 'endDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomTransaction'] as _i8.RoomTransactionEndpoint)
+                  .findRoomTransactionsForWindow(
+            session,
+            params['startDate'],
+            params['endDate'],
+          ),
+        ),
       },
     );
     connectors['systemTime'] = _i1.EndpointConnector(

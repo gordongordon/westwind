@@ -111,11 +111,9 @@ class RoomGuestRepositoryImpl implements RoomGuestRepository {
     required Reservation reservation,
   }) async {
     try {
+      final dataCheckInRoomGuest = _toServer(checkInRoomGuest);
 
-
-       final dataCheckInRoomGuest = _toServer( checkInRoomGuest );
-
-      //! not sure the time ? 
+      //! not sure the time ?
       //! reservation may need to toServer
       return Right(
         await roomGuestDatasource.checkInRoomGuest(
@@ -123,8 +121,6 @@ class RoomGuestRepositoryImpl implements RoomGuestRepository {
             //      roommates: roommates,
             reservation: reservation),
       );
-
-
     } on ServerException catch (e) {
       return Left(Failure(e.message));
     }
@@ -234,9 +230,10 @@ class RoomGuestRepositoryImpl implements RoomGuestRepository {
       note: data.note,
     );
   }
-  
+
   @override
-  Future<Either<Failure,RoomGuest?>> updateNote({required int roomGuestId, required  String note}) async {
+  Future<Either<Failure, RoomGuest?>> updateNote(
+      {required int roomGuestId, required String note}) async {
     try {
       return Right(await roomGuestDatasource.updateNote(
           roomGuestId: roomGuestId, note: note));
@@ -244,12 +241,16 @@ class RoomGuestRepositoryImpl implements RoomGuestRepository {
       return Left(Failure(e.message));
     }
   }
-  
+
   @override
-  Future<Either<Failure, List<RoomGuest>>> findRoomGuestsForWindow(DateTime startDate, DateTime endDate) async {
+  Future<Either<Failure, List<RoomGuest>>> findRoomGuestsForWindow(
+      DateTime startDate, DateTime endDate) async {
     try {
       // When fetching from server
-      final response = await roomGuestDatasource.findRoomGuestsForWindow(startDate,endDate);
+      final response = await roomGuestDatasource.findRoomGuestsForWindow(
+        TimeManager.instance.toServer(startDate),
+        TimeManager.instance.toServer(endDate),
+      );
 
       final result = response.map(_fromServer).toList();
 

@@ -749,6 +749,19 @@ class EndpointRoomTransaction extends _i1.EndpointRef {
         'delete',
         {'id': id},
       );
+
+  _i2.Future<List<_i11.RoomTransaction>> findRoomTransactionsForWindow(
+    DateTime startDate,
+    DateTime endDate,
+  ) =>
+      caller.callServerEndpoint<List<_i11.RoomTransaction>>(
+        'roomTransaction',
+        'findRoomTransactionsForWindow',
+        {
+          'startDate': startDate,
+          'endDate': endDate,
+        },
+      );
 }
 
 /// {@category Endpoint}

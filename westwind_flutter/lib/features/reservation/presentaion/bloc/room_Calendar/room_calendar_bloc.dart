@@ -23,7 +23,7 @@ class _CacheEntry {
     required this.expirationTime,
   });
 
-  bool get isExpired => DateTime.now().isAfter(expirationTime);
+  bool get isExpired => TimeManager.instance.now().isAfter(expirationTime);
 }
 
 class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
@@ -338,15 +338,20 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   //! Add implement this in serverpod 
   Future<List<RoomTransaction>> _fetchTransactionsForWindow(
       DateTime start, DateTime end) async {
-    final result = await roomTransactionRepository.list();
+    final result = await roomTransactionRepository.findRoomTransactionsForWindow(start,end);
     return result.fold(
       (failure) => [],
+      (transactions) => transactions,
+    );
+
+
+/*
       (transactions) => transactions
           .where((trans) =>
               trans.stayDay.isAfter(start.subtract(const Duration(days: 1))) &&
               trans.stayDay.isBefore(end.add(const Duration(days: 1))))
           .toList(),
-    );
+    );*/
   }
 
   Future<List<RoomGuest>> _fetchRoomGuestsForWindow(
@@ -357,7 +362,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       (guests) => guests,
     );
   }
-  
+
 /*
   Future<List<RoomGuest>> _fetchRoomGuestsForWindow(
       DateTime start, DateTime end) async {
@@ -408,7 +413,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     // Add new entry with expiration
     _stateCache[date] = _CacheEntry(
       state: state,
-      expirationTime: DateTime.now().add(_cacheDuration),
+      expirationTime: TimeManager.instance.now().add(_cacheDuration),
     );
   }
 
