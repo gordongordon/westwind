@@ -1,3 +1,4 @@
+// room_calendar_bloc.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -12,13 +13,34 @@ import 'package:westwind_flutter/features/room_guest/domain/repositories/room_gu
 part 'room_calendar_event.dart';
 part 'room_calendar_state.dart';
 
+// Cache entry class for storing state with expiration
+class _CacheEntry {
+  final RoomCalendarLoaded state;
+  final DateTime expirationTime;
+
+  _CacheEntry({
+    required this.state,
+    required this.expirationTime,
+  });
+
+  bool get isExpired => DateTime.now().isAfter(expirationTime);
+}
+
 class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   final ReservationRepository reservationRepository;
   final RoomTransactionRepository roomTransactionRepository;
   final RoomGuestRepository roomGuestRepository;
   final RoomRepository roomRepository;
 
-   // Map<DateTime, RoomCalendarLoaded> _stateCache = {};
+  // Cache settings
+  final Map<DateTime, _CacheEntry> _stateCache = {};
+  static const Duration _cacheDuration = Duration(minutes: 5);
+  static const int _maxCacheEntries = 90; // Maximum days to keep in cache
+
+  // Window-based loading settings
+  static const int _windowSize = 30; // Days to load at once
+  DateTime? _lastLoadedStartDate;
+  DateTime? _lastLoadedEndDate;
 
   RoomCalendarBloc({
     required this.reservationRepository,
@@ -39,58 +61,22 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     on<ToggleRoomStatus>(_onToggleRoomStatus);
   }
 
-  void _onToggleRoomStatus(
-      ToggleRoomStatus event, Emitter<RoomCalendarState> emit) async {
- 
-          if (state is RoomCalendarLoaded) {
-      final currentState = state as RoomCalendarLoaded;
-
-      final saveResult = await roomRepository.toggleRoomStatus(event.roomId);
-
-      await saveResult.fold(
-        (failure) async => emit(RoomCalendarError(
-            message: "Failed to toggle room status: ${failure.message}")),
-        (savedRoom) async {
-
-                final rooms = (await roomRepository.list()).foldResult();
-                      final roomStatus =
-          rooms.map((room) => room.roomStatus.toString()).toList();
-       //   final updatedState = _updateStateAfterReservationMove(
-       //       currentState, event.reservation, savedReservation);
-       //   emit(updatedState);
-       //   add(FetchReservationsAndTransactions(currentState.startDate));
-
-         emit( currentState.copyWith( roomStatus: roomStatus ));       
-        },
-      );
-    }
-
-
-      }
-
   void _onInitializeCalendar(
       InitializeCalendar event, Emitter<RoomCalendarState> emit) async {
     emit(RoomCalendarLoading());
 
-    //  final List<String> roomNumbers =
-    //    List.generate(67, (index) => (101 + index).toString());
     try {
-      //  final List<String> roomTypes = ['Deluxe', 'Suite'];
       final rooms = (await roomRepository.list()).foldResult();
       final roomTypes = rooms.map((room) => room.roomType.toString()).toList();
       final roomNumbers = rooms.map((room) => room.id!.toString()).toList();
       final roomStatus =
           rooms.map((room) => room.roomStatus.toString()).toList();
 
-      // final DateTime startDate = DateTime.now().getDateOnly().subtract(Duration( days : 1));
       final startDate =
-          TimeManager.instance.today().subtract(Duration(days: 1));
-
-      //print('Current Time ${DateTime.now().getDateOnly()}' );
-
+          TimeManager.instance.today().subtract(const Duration(days: 1));
       const int daysToShow = 14;
 
-      emit(RoomCalendarLoaded(
+      final initialState = RoomCalendarLoaded(
         roomTypes: roomTypes,
         roomNumbers: roomNumbers,
         roomStatus: roomStatus,
@@ -102,209 +88,74 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         roomTransactionsByRoom: const {},
         roomGuests: const [],
         roomGuestsByRoom: const {},
-      ));
+      );
 
+      emit(initialState);
       add(FetchReservationsAndTransactions(startDate));
     } catch (e) {
       emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
     }
   }
 
-/*
-//class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
-  // Add a cache variable
-//  Map<DateTime, RoomCalendarLoaded> _stateCache = {};
-  
-  // Modify fetch method to use caching
   Future<void> _onFetchReservationsAndTransactions(
       FetchReservationsAndTransactions event,
       Emitter<RoomCalendarState> emit) async {
-    
-    // Check if data for this date is already cached
-    if (_stateCache.containsKey(event.startDate)) {
-      emit(_stateCache[event.startDate]!);
-      return;
-    }
-
-    // Existing fetch logic
     try {
-      final reservationResult = 
-          await reservationRepository.listButCanceledAndCheckIn();
-      
-      // Rest of your existing implementation
-      
-   final roomTransactionResult = await roomTransactionRepository.list();
-
-      /**
-       * Fixed Checkout, not remove from Calendar
-       */
-      final roomGuestResult = await roomGuestRepository.listButCheckOut();
-      //          final roomGuestResult = await roomGuestRepository.list();
-
-      final failureOrLoaded = await reservationResult.fold(
-        (failure) async => RoomCalendarError(message: failure.message),
-        (reservations) async {
-          return await roomTransactionResult.fold(
-            (failure) async => RoomCalendarError(message: failure.message),
-            (roomTransactions) async {
-              return await roomGuestResult.fold(
-                (failure) async => RoomCalendarError(message: failure.message),
-                (roomGuests) async {
-                  final Map<String, List<Reservation>> reservationsByRoom =
-                      _groupReservationsByRoom(reservations);
-                  final Map<String, List<RoomTransaction>>
-                      roomTransactionsByRoom =
-                      _groupRoomTransactionsByRoom(roomTransactions);
-                  final Map<String, List<RoomGuest>> roomGuestsByRoom =
-                      _groupRoomGuestsByRoom(roomGuests);
-
-                  if (state is RoomCalendarLoaded) {
-                    final currentState = state as RoomCalendarLoaded;
-                    return currentState.copyWith(
-                      reservations: reservations,
-                      reservationsByRoom: reservationsByRoom,
-                      roomTransactions: roomTransactions,
-                      roomTransactionsByRoom: roomTransactionsByRoom,
-                      roomGuests: roomGuests,
-                      roomGuestsByRoom: roomGuestsByRoom,
-                    );
-                  } else {
-                    final rooms = (await roomRepository.list()).foldResult();
-                    final roomNumbers =
-                        rooms.map((room) => room.id!.toString()).toList();
-                    final roomTypes =
-                        rooms.map((room) => room.roomType.toString()).toList();
-                    final roomStatus = rooms
-                        .map((room) => room.roomStatus.toString())
-                        .toList();
-                    return RoomCalendarLoaded(
-                      roomTypes: roomTypes,
-                      roomNumbers: roomNumbers,
-                      roomStatus: roomStatus,
-                      startDate: event.startDate,
-                      daysToShow: 14,
-                      reservations: reservations,
-                      reservationsByRoom: reservationsByRoom,
-                      roomTransactions: roomTransactions,
-                      roomTransactionsByRoom: roomTransactionsByRoom,
-                      roomGuests: roomGuests,
-                      roomGuestsByRoom: roomGuestsByRoom,
-                    );
-                  }
-                },
-              );
-            },
-          );
-        },
-      );
-
-
-      // Before emitting, cache the state
-      if (failureOrLoaded is RoomCalendarLoaded) {
-        _stateCache[event.startDate] = failureOrLoaded;
+      // Check if date is within current window
+      if (_isDateInCurrentWindow(event.startDate)) {
+        final cachedState = _getCachedState(event.startDate);
+        if (cachedState != null) {
+          emit(cachedState);
+          return;
+        }
       }
-      
-      emit(failureOrLoaded);
-    } catch (e) {
-      emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
-    }
-  }
-//}
 
-*/
+      emit(RoomCalendarLoading());
 
+      // Calculate window dates
+      final windowStart = _calculateWindowStart(event.startDate);
+      final windowEnd = windowStart.add(Duration(days: _windowSize));
 
-  Future<void> _onFetchReservationsAndTransactions(
-      FetchReservationsAndTransactions event,
-      Emitter<RoomCalendarState> emit) async {
-    emit(RoomCalendarLoading());
+      // Fetch data for the window
+      final reservations =
+          await _fetchReservationsForWindow(windowStart, windowEnd);
+      final transactions =
+          await _fetchTransactionsForWindow(windowStart, windowEnd);
+      final roomGuests =
+          await _fetchRoomGuestsForWindow(windowStart, windowEnd);
 
-    try {
-      /**
-       * Fixed canceled and checked In reservation don't display on calendar
-       */
-      final reservationResult =
-          await reservationRepository.listButCanceledAndCheckIn();
-
-      final roomTransactionResult = await roomTransactionRepository.list();
-
-      /**
-       * Fixed Checkout, not remove from Calendar
-       */
-      final roomGuestResult = await roomGuestRepository.listButCheckOut();
-      //          final roomGuestResult = await roomGuestRepository.list();
-
-      final failureOrLoaded = await reservationResult.fold(
-        (failure) async => RoomCalendarError(message: failure.message),
-        (reservations) async {
-          return await roomTransactionResult.fold(
-            (failure) async => RoomCalendarError(message: failure.message),
-            (roomTransactions) async {
-              return await roomGuestResult.fold(
-                (failure) async => RoomCalendarError(message: failure.message),
-                (roomGuests) async {
-                  final Map<String, List<Reservation>> reservationsByRoom =
-                      _groupReservationsByRoom(reservations);
-                  final Map<String, List<RoomTransaction>>
-                      roomTransactionsByRoom =
-                      _groupRoomTransactionsByRoom(roomTransactions);
-                  final Map<String, List<RoomGuest>> roomGuestsByRoom =
-                      _groupRoomGuestsByRoom(roomGuests);
-
-                  if (state is RoomCalendarLoaded) {
-                    final currentState = state as RoomCalendarLoaded;
-                    return currentState.copyWith(
-                      reservations: reservations,
-                      reservationsByRoom: reservationsByRoom,
-                      roomTransactions: roomTransactions,
-                      roomTransactionsByRoom: roomTransactionsByRoom,
-                      roomGuests: roomGuests,
-                      roomGuestsByRoom: roomGuestsByRoom,
-                    );
-                  } else {
-                    final rooms = (await roomRepository.list()).foldResult();
-                    final roomNumbers =
-                        rooms.map((room) => room.id!.toString()).toList();
-                    final roomTypes =
-                        rooms.map((room) => room.roomType.toString()).toList();
-                    final roomStatus = rooms
-                        .map((room) => room.roomStatus.toString())
-                        .toList();
-                    return RoomCalendarLoaded(
-                      roomTypes: roomTypes,
-                      roomNumbers: roomNumbers,
-                      roomStatus: roomStatus,
-                      startDate: event.startDate,
-                      daysToShow: 14,
-                      reservations: reservations,
-                      reservationsByRoom: reservationsByRoom,
-                      roomTransactions: roomTransactions,
-                      roomTransactionsByRoom: roomTransactionsByRoom,
-                      roomGuests: roomGuests,
-                      roomGuestsByRoom: roomGuestsByRoom,
-                    );
-                  }
-                },
-              );
-            },
-          );
-        },
+      // Process and emit state
+      final newState = await _processAndCreateState(
+        windowStart,
+        reservations,
+        transactions,
+        roomGuests,
       );
 
-      emit(failureOrLoaded);
+      // Update cache and window tracking
+      _updateCache(windowStart, newState);
+      _lastLoadedStartDate = windowStart;
+      _lastLoadedEndDate = windowEnd;
+
+      emit(newState);
+
+      // Preload next window if needed
+      _preloadNextWindowIfNeeded(event.startDate);
     } catch (e) {
       emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
     }
-
   }
-
 
   void _onChangeStartDate(
       ChangeStartDate event, Emitter<RoomCalendarState> emit) {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
-      emit(currentState.copyWith(startDate: event.newStartDate));
-      //  add(const FetchReservationsAndTransactions());
+      final updatedState = currentState.copyWith(startDate: event.newStartDate);
+      emit(updatedState);
+
+      if (!_isDateInCurrentWindow(event.newStartDate)) {
+        add(FetchReservationsAndTransactions(event.newStartDate));
+      }
     }
   }
 
@@ -312,8 +163,11 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       ChangeDaysToShow event, Emitter<RoomCalendarState> emit) {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
-      emit(currentState.copyWith(daysToShow: event.newDaysToShow));
-      // add(const FetchReservationsAndTransactions());
+      final updatedState =
+          currentState.copyWith(daysToShow: event.newDaysToShow);
+      emit(updatedState);
+      _invalidateCache();
+      add(FetchReservationsAndTransactions(currentState.startDate));
     }
   }
 
@@ -332,8 +186,11 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) async {
           final updatedState = _updateStateAfterReservationMove(
               currentState, event.reservation, savedReservation);
+
+          _updateCacheForDateRange(savedReservation.stayDay,
+              savedReservation.checkOutDate, updatedState);
+
           emit(updatedState);
-          add(FetchReservationsAndTransactions(currentState.startDate));
         },
       );
     }
@@ -355,8 +212,11 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedRoomGuest) async {
           final updatedState = _updateStateAfterRoomGuestMove(
               currentState, event.roomGuest, savedRoomGuest);
+
+          _updateCacheForDateRange(savedRoomGuest.stayDay,
+              savedRoomGuest.checkOutDate, updatedState);
+
           emit(updatedState);
-          add(FetchReservationsAndTransactions(currentState.startDate));
         },
       );
     }
@@ -377,8 +237,11 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
         (savedReservation) async {
           final updatedState =
               _updateStateAfterReservationAdd(currentState, savedReservation);
+
+          _updateCacheForDateRange(savedReservation.stayDay,
+              savedReservation.checkOutDate, updatedState);
+
           emit(updatedState);
-          //  add(FetchReservationsAndTransactions());
         },
       );
     }
@@ -391,7 +254,10 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       final newStartDate =
           currentState.startDate.add(Duration(days: event.days));
       emit(currentState.copyWith(startDate: newStartDate));
-      //   add(const FetchReservationsAndTransactions());
+
+      if (!_isDateInCurrentWindow(newStartDate)) {
+        add(FetchReservationsAndTransactions(newStartDate));
+      }
     }
   }
 
@@ -402,7 +268,10 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       final newStartDate =
           currentState.startDate.add(Duration(days: event.weeks * 7));
       emit(currentState.copyWith(startDate: newStartDate));
-      //   add(const FetchReservationsAndTransactions());
+
+      if (!_isDateInCurrentWindow(newStartDate)) {
+        add(FetchReservationsAndTransactions(newStartDate));
+      }
     }
   }
 
@@ -411,7 +280,157 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     if (state is RoomCalendarLoaded) {
       final currentState = state as RoomCalendarLoaded;
       emit(currentState.copyWith(startDate: event.selectedDate));
-      //  add(const FetchReservationsAndTransactions());
+
+      if (!_isDateInCurrentWindow(event.selectedDate)) {
+        add(FetchReservationsAndTransactions(event.selectedDate));
+      }
+    }
+  }
+
+  void _onToggleRoomStatus(
+      ToggleRoomStatus event, Emitter<RoomCalendarState> emit) async {
+    if (state is RoomCalendarLoaded) {
+      final currentState = state as RoomCalendarLoaded;
+
+      final saveResult = await roomRepository.toggleRoomStatus(event.roomId);
+
+      await saveResult.fold(
+        (failure) async => emit(RoomCalendarError(
+            message: "Failed to toggle room status: ${failure.message}")),
+        (savedRoom) async {
+          final rooms = (await roomRepository.list()).foldResult();
+          final roomStatus =
+              rooms.map((room) => room.roomStatus.toString()).toList();
+          emit(currentState.copyWith(roomStatus: roomStatus));
+        },
+      );
+    }
+  }
+
+  bool _isDateInCurrentWindow(DateTime date) {
+    if (_lastLoadedStartDate == null || _lastLoadedEndDate == null)
+      return false;
+    return date.isAfter(_lastLoadedStartDate!) &&
+        date.isBefore(_lastLoadedEndDate!);
+  }
+
+  DateTime _calculateWindowStart(DateTime date) {
+    return date.subtract(Duration(days: date.weekday - 1));
+  }
+
+
+  //! Add implement this in serverpod 
+  //e.g. fetchReservationsForWindows in Serverside
+  Future<List<Reservation>> _fetchReservationsForWindow(
+      DateTime start, DateTime end) async {
+    final result = await reservationRepository.list();
+    return result.fold(
+      (failure) => [],
+      (reservations) => reservations
+          .where((res) =>
+              res.stayDay.isAfter(start.subtract(const Duration(days: 1))) &&
+              res.stayDay.isBefore(end.add(const Duration(days: 1))) &&
+              !res.isCanceled &&
+              !res.isCheckedIn)
+          .toList(),
+    );
+  }
+  //! Add implement this in serverpod 
+  Future<List<RoomTransaction>> _fetchTransactionsForWindow(
+      DateTime start, DateTime end) async {
+    final result = await roomTransactionRepository.list();
+    return result.fold(
+      (failure) => [],
+      (transactions) => transactions
+          .where((trans) =>
+              trans.stayDay.isAfter(start.subtract(const Duration(days: 1))) &&
+              trans.stayDay.isBefore(end.add(const Duration(days: 1))))
+          .toList(),
+    );
+  }
+
+  Future<List<RoomGuest>> _fetchRoomGuestsForWindow(
+      DateTime start, DateTime end) async {
+    final result = await roomGuestRepository.list();
+    return result.fold(
+      (failure) => [],
+      (guests) => guests
+          .where((guest) =>
+              guest.stayDay.isAfter(start.subtract(const Duration(days: 1))) &&
+              guest.stayDay.isBefore(end.add(const Duration(days: 1))) &&
+              !guest.isCheckOut)
+          .toList(),
+    );
+  }
+
+  Future<RoomCalendarLoaded> _processAndCreateState(
+    DateTime startDate,
+    List<Reservation> reservations,
+    List<RoomTransaction> transactions,
+    List<RoomGuest> roomGuests,
+  ) async {
+    final rooms = (await roomRepository.list()).foldResult();
+
+    return RoomCalendarLoaded(
+      roomTypes: rooms.map((room) => room.roomType.toString()).toList(),
+      roomNumbers: rooms.map((room) => room.id!.toString()).toList(),
+      roomStatus: rooms.map((room) => room.roomStatus.toString()).toList(),
+      startDate: startDate,
+      daysToShow: _windowSize,
+      reservations: reservations,
+      reservationsByRoom: _groupReservationsByRoom(reservations),
+      roomTransactions: transactions,
+      roomTransactionsByRoom: _groupRoomTransactionsByRoom(transactions),
+      roomGuests: roomGuests,
+      roomGuestsByRoom: _groupRoomGuestsByRoom(roomGuests),
+    );
+  }
+
+  void _updateCache(DateTime date, RoomCalendarLoaded state) {
+    // Remove old entries if cache is too large
+    if (_stateCache.length > _maxCacheEntries) {
+      final oldestDate =
+          _stateCache.keys.reduce((a, b) => a.isBefore(b) ? a : b);
+      _stateCache.remove(oldestDate);
+    }
+
+    // Add new entry with expiration
+    _stateCache[date] = _CacheEntry(
+      state: state,
+      expirationTime: DateTime.now().add(_cacheDuration),
+    );
+  }
+
+  void _updateCacheForDateRange(
+      DateTime startDate, DateTime endDate, RoomCalendarLoaded state) {
+    DateTime currentDate = startDate;
+    while (currentDate.isBefore(endDate) ||
+        currentDate.isAtSameMomentAs(endDate)) {
+      _updateCache(currentDate, state);
+      currentDate = currentDate.add(const Duration(days: 1));
+    }
+  }
+
+  RoomCalendarLoaded? _getCachedState(DateTime date) {
+    final entry = _stateCache[date];
+    if (entry == null || entry.isExpired) {
+      _stateCache.remove(date);
+      return null;
+    }
+    return entry.state;
+  }
+
+  void _invalidateCache() {
+    _stateCache.clear();
+  }
+
+  void _preloadNextWindowIfNeeded(DateTime currentDate) {
+    if (_lastLoadedEndDate != null &&
+        currentDate.isAfter(
+            _lastLoadedEndDate!.subtract(Duration(days: _windowSize ~/ 2)))) {
+      // Preload next window
+      add(FetchReservationsAndTransactions(
+          _lastLoadedEndDate!.add(const Duration(days: 1))));
     }
   }
 
@@ -441,6 +460,19 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       }
     }
     return roomTransactionsByRoom;
+  }
+
+  Map<String, List<RoomGuest>> _groupRoomGuestsByRoom(
+      List<RoomGuest> roomGuests) {
+    final Map<String, List<RoomGuest>> roomGuestsByRoom = {};
+    for (var roomGuest in roomGuests) {
+      final roomId = roomGuest.roomId.toString();
+      if (!roomGuestsByRoom.containsKey(roomId)) {
+        roomGuestsByRoom[roomId] = [];
+      }
+      roomGuestsByRoom[roomId]!.add(roomGuest);
+    }
+    return roomGuestsByRoom;
   }
 
   Reservation _updateReservationForMove(
@@ -584,16 +616,9 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     );
   }
 
-  Map<String, List<RoomGuest>> _groupRoomGuestsByRoom(
-      List<RoomGuest> roomGuests) {
-    final Map<String, List<RoomGuest>> roomGuestsByRoom = {};
-    for (var roomGuest in roomGuests) {
-      final roomId = roomGuest.roomId.toString();
-      if (!roomGuestsByRoom.containsKey(roomId)) {
-        roomGuestsByRoom[roomId] = [];
-      }
-      roomGuestsByRoom[roomId]!.add(roomGuest);
-    }
-    return roomGuestsByRoom;
+  @override
+  Future<void> close() {
+    _invalidateCache();
+    return super.close();
   }
 }

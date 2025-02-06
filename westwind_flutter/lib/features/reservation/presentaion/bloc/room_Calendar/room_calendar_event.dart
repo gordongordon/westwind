@@ -1,3 +1,4 @@
+// room_calendar_event.dart
 part of 'room_calendar_bloc.dart';
 
 @immutable
@@ -16,10 +17,10 @@ class FetchReservationsAndTransactions extends RoomCalendarEvent {
   final DateTime startDate;
 
   const FetchReservationsAndTransactions(this.startDate);
-    @override
+  
+  @override
   List<Object> get props => [startDate];
 }
-
 
 class ChangeStartDate extends RoomCalendarEvent {
   final DateTime newStartDate;
@@ -52,6 +53,21 @@ class MoveReservation extends RoomCalendarEvent {
 
   @override
   List<Object> get props => [reservation, newRoomNumber, newStartDate];
+}
+
+class MoveRoomGuest extends RoomCalendarEvent {
+  final RoomGuest roomGuest;
+  final String newRoomNumber;
+  final DateTime newStayDate;
+
+  const MoveRoomGuest({
+    required this.roomGuest,
+    required this.newRoomNumber,
+    required this.newStayDate,
+  });
+
+  @override
+  List<Object> get props => [roomGuest, newRoomNumber, newStayDate];
 }
 
 class AddReservationToCell extends RoomCalendarEvent {
@@ -104,19 +120,3 @@ class ToggleRoomStatus extends RoomCalendarEvent {
   @override
   List<Object> get props => [roomId];
 }
-
-class MoveRoomGuest extends RoomCalendarEvent {
-  final RoomGuest roomGuest;
-  final String newRoomNumber;
-  final DateTime newStayDate;
-
-  const MoveRoomGuest({
-    required this.roomGuest,
-    required this.newRoomNumber,
-    required this.newStayDate,
-  });
-
-  @override
-  List<Object> get props => [roomGuest, newRoomNumber, newStayDate];
-}
-
