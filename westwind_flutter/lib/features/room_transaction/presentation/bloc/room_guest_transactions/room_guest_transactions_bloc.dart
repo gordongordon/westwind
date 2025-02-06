@@ -113,7 +113,7 @@ class RoomGuestTransactionsBloc
     emit(RoomGuestTransactionsLoading());
     try {
       final transactions = await roomTransactionRepository
-          .getTransactionsForRoomGuest(event.roomGuestId);
+          .getTransactionsForRoomGuestOrderDescending(event.roomGuestId);
       //      final transactions = await roomTransactionRepository.list();
 
       emit(RoomGuestTransactionsLoaded(transactions.foldResult()));

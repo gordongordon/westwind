@@ -70,6 +70,7 @@ roomTransaction:
   - listByDay:
   - listWithItemTypeRoom:
   - getTransactionsForRoomGuest:
+  - getTransactionsForRoomGuestOrderDescending:
   - getTransactionsForRoomGuestWithOutLaundry:
   - saveRoomTransaciton:
   - retrieve:

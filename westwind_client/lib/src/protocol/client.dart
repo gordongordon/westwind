@@ -595,6 +595,14 @@ class EndpointRoomTransaction extends _i1.EndpointRef {
       );
 
   _i2.Future<List<_i10.RoomTransaction>>
+      getTransactionsForRoomGuestOrderDescending(int roomGuestId) =>
+          caller.callServerEndpoint<List<_i10.RoomTransaction>>(
+            'roomTransaction',
+            'getTransactionsForRoomGuestOrderDescending',
+            {'roomGuestId': roomGuestId},
+          );
+
+  _i2.Future<List<_i10.RoomTransaction>>
       getTransactionsForRoomGuestWithOutLaundry(int roomGuestId) =>
           caller.callServerEndpoint<List<_i10.RoomTransaction>>(
             'roomTransaction',
