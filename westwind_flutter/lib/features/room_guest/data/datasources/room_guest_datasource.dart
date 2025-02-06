@@ -16,7 +16,9 @@ abstract interface class RoomGuestDatasource {
   Future<List<RoomGuest>> retrieveRoommatesSameStayDayById(int roomGuestId);
   Future<List<RoomGuest>> retrieveRoommatesSameStayDayWithOutGoHomeById( int roomGuestId );
   Future<List<RoomGuest>> updateRateSameStayDayByReasonAndId( int roomGuestId, RateReason rearson, double rate); 
-  Future<RoomGuest?> updateNote( {required int roomGuestId, required String note});
+  Future<RoomGuest?> updateNote( {required int roomGuestId, required String note}); 
+  Future<List<RoomGuest>> findRoomGuestsForWindow(DateTime startDate, DateTime endDate);
+
 }
 
 class RoomGuestDatasourceImpl implements RoomGuestDatasource {
@@ -169,6 +171,21 @@ class RoomGuestDatasourceImpl implements RoomGuestDatasource {
   Future<RoomGuest?> updateNote({required int roomGuestId, required String note}) async {
     try {
       return await client.roomGuest.updateNote( roomGuestId, note );
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+  
+  @override
+  Future<List<RoomGuest>> findRoomGuestsForWindow(DateTime startDate, DateTime endDate) async {
+    try {
+      final result = await client.roomGuest.findRoomGuestsForWindow(startDate, endDate);
+
+    /// if (result == null) {
+     //   throw ServerException("RoomGuest with $id wasn't found!");
+     // }
+
+      return result;
     } catch (e) {
       throw ServerException(e.toString());
     }

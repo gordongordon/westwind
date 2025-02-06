@@ -484,4 +484,160 @@ class RoomGuestEndpoint extends Endpoint {
 
     return await RoomGuest.db.updateRow(session, roomGuest);
   }
+
+
+// Add these optimized query methods to RoomGuestEndpoint class
+
+Future<List<RoomGuest>> findRoomGuestsForWindow(
+    Session session, DateTime startDate, DateTime endDate) async {
+  return await RoomGuest.db.find(
+    session,
+    where: (t) => (t.stayDay.between(startDate, endDate))
+        & (t.isCheckOut.equals(false)),
+    include: RoomGuest.include(
+      guest: Guest.include(),
+      room: Room.include(),
+      roomTransactions: RoomTransaction.includeList(),
+    ),
+    orderByList: (t) => [
+      Order(column: t.roomId, orderDescending: false),
+      Order(column: t.stayDay, orderDescending: false),
+    ],
+  );
+}
+
+
+
+
+Future<List<RoomGuest>> findActiveRoomGuestsForDate(
+    Session session, DateTime date) async {
+  return await RoomGuest.db.find(
+    session,
+    where: (t) => (t.stayDay.equals(date))
+        & (t.isCheckOut.equals(false)),
+    include: RoomGuest.include(
+      guest: Guest.include(),
+      room: Room.include(),
+    ),
+  );
+}
+
+Future<List<RoomGuest>> findFutureRoomGuests(
+    Session session, DateTime fromDate) async {
+  return await RoomGuest.db.find(
+    session,
+    where: (t) => (t.stayDay > fromDate)
+        & (t.isCheckOut.equals(false)),
+    include: RoomGuest.include(
+      guest: Guest.include(),
+      room: Room.include(),
+    ),
+    orderBy: (t) => t.stayDay,
+  );
+}
+
+Future<List<RoomGuest>> findPastRoomGuests(
+    Session session, DateTime beforeDate) async {
+  return await RoomGuest.db.find(
+    session,
+    where: (t) => (t.stayDay < beforeDate)
+        & (t.isCheckOut.equals(false)),
+    include: RoomGuest.include(
+      guest: Guest.include(),
+      room: Room.include(),
+    ),
+    orderBy: (t) => t.stayDay,
+  );
+}
+
+Future<List<RoomGuest>> findRoomGuestsByRoom(
+    Session session, int roomId, DateTime startDate, DateTime endDate) async {
+  return await RoomGuest.db.find(
+    session,
+    where: (t) => (t.roomId.equals(roomId))
+        & (t.stayDay.between(startDate, endDate))
+        & (t.isCheckOut.equals(false)),
+    include: RoomGuest.include(
+      guest: Guest.include(),
+      roomTransactions: RoomTransaction.includeList(),
+    ),
+    orderBy: (t) => t.stayDay,
+  );
+}
+
+Future<int> countGuestsInRoom(
+    Session session, int roomId, DateTime date) async {
+  return await RoomGuest.db.count(
+    session,
+    where: (t) => (t.roomId.equals(roomId))
+        & (t.stayDay.equals(date))
+        & (t.isCheckOut.equals(false)),
+  );
+}
+
+// Find rooms with any transactions for the given date range
+Future<List<RoomGuest>> findRoomGuestsWithTransactions(
+    Session session, DateTime startDate, DateTime endDate) async {
+  return await RoomGuest.db.find(
+    session,
+    where: (t) => (t.stayDay.between(startDate, endDate))
+        & (t.isCheckOut.equals(false))
+        & (t.roomTransactions.any()),
+    include: RoomGuest.include(
+      guest: Guest.include(),
+      room: Room.include(),
+      roomTransactions: RoomTransaction.includeList(),
+    ),
+  );
+}
+
+// Find rooms with no transactions in date range
+Future<List<RoomGuest>> findRoomGuestsWithoutTransactions(
+    Session session, DateTime startDate, DateTime endDate) async {
+  return await RoomGuest.db.find(
+    session,
+    where: (t) => (t.stayDay.between(startDate, endDate))
+        & (t.isCheckOut.equals(false))
+        & (t.roomTransactions.none()),
+    include: RoomGuest.include(
+      guest: Guest.include(),
+      room: Room.include(),
+    ),
+  );
+}
+
+// Check if a room has multiple guests
+Future<bool> hasMultipleGuests(
+    Session session, int roomId, DateTime date) async {
+  final guestCount = await RoomGuest.db.count(
+    session,
+    where: (t) => (t.roomId.equals(roomId))
+        & (t.stayDay.equals(date))
+        & (t.isCheckOut.equals(false)),
+  );
+  return guestCount > 1;
+}
+
+// Find all guests in a room with specific transaction types
+Future<List<RoomGuest>> findGuestsWithTransactionType(
+    Session session, 
+    int roomId, 
+    DateTime startDate,
+    DateTime endDate,
+    ItemType itemType) async {
+  return await RoomGuest.db.find(
+    session,
+    where: (t) => (t.roomId.equals(roomId))
+        & (t.stayDay.between(startDate, endDate))
+        & (t.isCheckOut.equals(false))
+        & (t.roomTransactions.any((rt) => rt.itemType.equals(itemType))),
+    include: RoomGuest.include(
+      guest: Guest.include(),
+      roomTransactions: RoomTransaction.includeList(),
+    ),
+  );
+}
+
+
+  
 }

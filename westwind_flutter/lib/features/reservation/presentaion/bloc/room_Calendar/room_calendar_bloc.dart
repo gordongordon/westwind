@@ -351,6 +351,16 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
 
   Future<List<RoomGuest>> _fetchRoomGuestsForWindow(
       DateTime start, DateTime end) async {
+    final result = await roomGuestRepository.findRoomGuestsForWindow(start, end);
+    return result.fold(
+      (failure) => [],
+      (guests) => guests,
+    );
+  }
+  
+/*
+  Future<List<RoomGuest>> _fetchRoomGuestsForWindow(
+      DateTime start, DateTime end) async {
     final result = await roomGuestRepository.list();
     return result.fold(
       (failure) => [],
@@ -362,6 +372,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
           .toList(),
     );
   }
+  */
 
   Future<RoomCalendarLoaded> _processAndCreateState(
     DateTime startDate,

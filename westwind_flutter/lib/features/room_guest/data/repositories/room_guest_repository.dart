@@ -244,4 +244,20 @@ class RoomGuestRepositoryImpl implements RoomGuestRepository {
       return Left(Failure(e.message));
     }
   }
+  
+  @override
+  Future<Either<Failure, List<RoomGuest>>> findRoomGuestsForWindow(DateTime startDate, DateTime endDate) async {
+    try {
+      // When fetching from server
+      final response = await roomGuestDatasource.findRoomGuestsForWindow(startDate,endDate);
+
+      final result = response.map(_fromServer).toList();
+
+      return Right(result);
+
+      //    return Right(await roomGuestDatasource.list());
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    }
+  }
 }

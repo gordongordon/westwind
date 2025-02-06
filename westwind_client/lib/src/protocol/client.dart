@@ -18,10 +18,11 @@ import 'package:westwind_client/src/protocol/rateReason.dart' as _i6;
 import 'package:westwind_client/src/protocol/reservation.dart' as _i7;
 import 'package:westwind_client/src/protocol/room.dart' as _i8;
 import 'package:westwind_client/src/protocol/roomGuest.dart' as _i9;
-import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i10;
-import 'package:westwind_client/src/protocol/system_time.dart' as _i11;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i12;
-import 'protocol.dart' as _i13;
+import 'package:westwind_client/src/protocol/itemType.dart' as _i10;
+import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i11;
+import 'package:westwind_client/src/protocol/system_time.dart' as _i12;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i13;
+import 'protocol.dart' as _i14;
 
 /// {@category Endpoint}
 class EndpointExample extends _i1.EndpointRef {
@@ -549,6 +550,124 @@ class EndpointRoomGuest extends _i1.EndpointRef {
           'rate': rate,
         },
       );
+
+  _i2.Future<List<_i9.RoomGuest>> findRoomGuestsForWindow(
+    DateTime startDate,
+    DateTime endDate,
+  ) =>
+      caller.callServerEndpoint<List<_i9.RoomGuest>>(
+        'roomGuest',
+        'findRoomGuestsForWindow',
+        {
+          'startDate': startDate,
+          'endDate': endDate,
+        },
+      );
+
+  _i2.Future<List<_i9.RoomGuest>> findActiveRoomGuestsForDate(DateTime date) =>
+      caller.callServerEndpoint<List<_i9.RoomGuest>>(
+        'roomGuest',
+        'findActiveRoomGuestsForDate',
+        {'date': date},
+      );
+
+  _i2.Future<List<_i9.RoomGuest>> findFutureRoomGuests(DateTime fromDate) =>
+      caller.callServerEndpoint<List<_i9.RoomGuest>>(
+        'roomGuest',
+        'findFutureRoomGuests',
+        {'fromDate': fromDate},
+      );
+
+  _i2.Future<List<_i9.RoomGuest>> findPastRoomGuests(DateTime beforeDate) =>
+      caller.callServerEndpoint<List<_i9.RoomGuest>>(
+        'roomGuest',
+        'findPastRoomGuests',
+        {'beforeDate': beforeDate},
+      );
+
+  _i2.Future<List<_i9.RoomGuest>> findRoomGuestsByRoom(
+    int roomId,
+    DateTime startDate,
+    DateTime endDate,
+  ) =>
+      caller.callServerEndpoint<List<_i9.RoomGuest>>(
+        'roomGuest',
+        'findRoomGuestsByRoom',
+        {
+          'roomId': roomId,
+          'startDate': startDate,
+          'endDate': endDate,
+        },
+      );
+
+  _i2.Future<int> countGuestsInRoom(
+    int roomId,
+    DateTime date,
+  ) =>
+      caller.callServerEndpoint<int>(
+        'roomGuest',
+        'countGuestsInRoom',
+        {
+          'roomId': roomId,
+          'date': date,
+        },
+      );
+
+  _i2.Future<List<_i9.RoomGuest>> findRoomGuestsWithTransactions(
+    DateTime startDate,
+    DateTime endDate,
+  ) =>
+      caller.callServerEndpoint<List<_i9.RoomGuest>>(
+        'roomGuest',
+        'findRoomGuestsWithTransactions',
+        {
+          'startDate': startDate,
+          'endDate': endDate,
+        },
+      );
+
+  _i2.Future<List<_i9.RoomGuest>> findRoomGuestsWithoutTransactions(
+    DateTime startDate,
+    DateTime endDate,
+  ) =>
+      caller.callServerEndpoint<List<_i9.RoomGuest>>(
+        'roomGuest',
+        'findRoomGuestsWithoutTransactions',
+        {
+          'startDate': startDate,
+          'endDate': endDate,
+        },
+      );
+
+  _i2.Future<bool> hasMultipleGuests(
+    int roomId,
+    DateTime date,
+  ) =>
+      caller.callServerEndpoint<bool>(
+        'roomGuest',
+        'hasMultipleGuests',
+        {
+          'roomId': roomId,
+          'date': date,
+        },
+      );
+
+  _i2.Future<List<_i9.RoomGuest>> findGuestsWithTransactionType(
+    int roomId,
+    DateTime startDate,
+    DateTime endDate,
+    _i10.ItemType itemType,
+  ) =>
+      caller.callServerEndpoint<List<_i9.RoomGuest>>(
+        'roomGuest',
+        'findGuestsWithTransactionType',
+        {
+          'roomId': roomId,
+          'startDate': startDate,
+          'endDate': endDate,
+          'itemType': itemType,
+        },
+      );
 }
 
 /// {@category Endpoint}
@@ -565,61 +684,61 @@ class EndpointRoomTransaction extends _i1.EndpointRef {
         {'guestId': guestId},
       );
 
-  _i2.Future<List<_i10.RoomTransaction>> list() =>
-      caller.callServerEndpoint<List<_i10.RoomTransaction>>(
+  _i2.Future<List<_i11.RoomTransaction>> list() =>
+      caller.callServerEndpoint<List<_i11.RoomTransaction>>(
         'roomTransaction',
         'list',
         {},
       );
 
-  _i2.Future<List<_i10.RoomTransaction>> listByDay(DateTime day) =>
-      caller.callServerEndpoint<List<_i10.RoomTransaction>>(
+  _i2.Future<List<_i11.RoomTransaction>> listByDay(DateTime day) =>
+      caller.callServerEndpoint<List<_i11.RoomTransaction>>(
         'roomTransaction',
         'listByDay',
         {'day': day},
       );
 
-  _i2.Future<List<_i10.RoomTransaction>> listWithItemTypeRoom() =>
-      caller.callServerEndpoint<List<_i10.RoomTransaction>>(
+  _i2.Future<List<_i11.RoomTransaction>> listWithItemTypeRoom() =>
+      caller.callServerEndpoint<List<_i11.RoomTransaction>>(
         'roomTransaction',
         'listWithItemTypeRoom',
         {},
       );
 
-  _i2.Future<List<_i10.RoomTransaction>> getTransactionsForRoomGuest(
+  _i2.Future<List<_i11.RoomTransaction>> getTransactionsForRoomGuest(
           int roomGuestId) =>
-      caller.callServerEndpoint<List<_i10.RoomTransaction>>(
+      caller.callServerEndpoint<List<_i11.RoomTransaction>>(
         'roomTransaction',
         'getTransactionsForRoomGuest',
         {'roomGuestId': roomGuestId},
       );
 
-  _i2.Future<List<_i10.RoomTransaction>>
+  _i2.Future<List<_i11.RoomTransaction>>
       getTransactionsForRoomGuestOrderDescending(int roomGuestId) =>
-          caller.callServerEndpoint<List<_i10.RoomTransaction>>(
+          caller.callServerEndpoint<List<_i11.RoomTransaction>>(
             'roomTransaction',
             'getTransactionsForRoomGuestOrderDescending',
             {'roomGuestId': roomGuestId},
           );
 
-  _i2.Future<List<_i10.RoomTransaction>>
+  _i2.Future<List<_i11.RoomTransaction>>
       getTransactionsForRoomGuestWithOutLaundry(int roomGuestId) =>
-          caller.callServerEndpoint<List<_i10.RoomTransaction>>(
+          caller.callServerEndpoint<List<_i11.RoomTransaction>>(
             'roomTransaction',
             'getTransactionsForRoomGuestWithOutLaundry',
             {'roomGuestId': roomGuestId},
           );
 
-  _i2.Future<_i10.RoomTransaction> saveRoomTransaciton(
-          _i10.RoomTransaction rt) =>
-      caller.callServerEndpoint<_i10.RoomTransaction>(
+  _i2.Future<_i11.RoomTransaction> saveRoomTransaciton(
+          _i11.RoomTransaction rt) =>
+      caller.callServerEndpoint<_i11.RoomTransaction>(
         'roomTransaction',
         'saveRoomTransaciton',
         {'rt': rt},
       );
 
-  _i2.Future<_i10.RoomTransaction?> retrieve(int id) =>
-      caller.callServerEndpoint<_i10.RoomTransaction?>(
+  _i2.Future<_i11.RoomTransaction?> retrieve(int id) =>
+      caller.callServerEndpoint<_i11.RoomTransaction?>(
         'roomTransaction',
         'retrieve',
         {'id': id},
@@ -639,15 +758,15 @@ class EndpointSystemTime extends _i1.EndpointRef {
   @override
   String get name => 'systemTime';
 
-  _i2.Future<_i11.SystemTime?> retrieve() =>
-      caller.callServerEndpoint<_i11.SystemTime?>(
+  _i2.Future<_i12.SystemTime?> retrieve() =>
+      caller.callServerEndpoint<_i12.SystemTime?>(
         'systemTime',
         'retrieve',
         {},
       );
 
-  _i2.Future<_i11.SystemTime?> extendByDay(int days) =>
-      caller.callServerEndpoint<_i11.SystemTime?>(
+  _i2.Future<_i12.SystemTime?> extendByDay(int days) =>
+      caller.callServerEndpoint<_i12.SystemTime?>(
         'systemTime',
         'extendByDay',
         {'days': days},
@@ -662,10 +781,10 @@ class EndpointSystemTime extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    auth = _i12.Caller(client);
+    auth = _i13.Caller(client);
   }
 
-  late final _i12.Caller auth;
+  late final _i13.Caller auth;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -684,7 +803,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i13.Protocol(),
+          _i14.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,

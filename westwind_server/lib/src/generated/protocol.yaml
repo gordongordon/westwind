@@ -64,6 +64,16 @@ roomGuest:
   - deleteById:
   - checkOut:
   - updateGuestRate:
+  - findRoomGuestsForWindow:
+  - findActiveRoomGuestsForDate:
+  - findFutureRoomGuests:
+  - findPastRoomGuests:
+  - findRoomGuestsByRoom:
+  - countGuestsInRoom:
+  - findRoomGuestsWithTransactions:
+  - findRoomGuestsWithoutTransactions:
+  - hasMultipleGuests:
+  - findGuestsWithTransactionType:
 roomTransaction:
   - hasBeenRoomChargedToday:
   - list:

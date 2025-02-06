@@ -24,8 +24,9 @@ import 'package:westwind_server/src/generated/rateType.dart' as _i12;
 import 'package:westwind_server/src/generated/rateReason.dart' as _i13;
 import 'package:westwind_server/src/generated/reservation.dart' as _i14;
 import 'package:westwind_server/src/generated/roomGuest.dart' as _i15;
-import 'package:westwind_server/src/generated/roomTransaction.dart' as _i16;
-import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i17;
+import 'package:westwind_server/src/generated/itemType.dart' as _i16;
+import 'package:westwind_server/src/generated/roomTransaction.dart' as _i17;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i18;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -1183,6 +1184,256 @@ class Endpoints extends _i1.EndpointDispatch {
             rate: params['rate'],
           ),
         ),
+        'findRoomGuestsForWindow': _i1.MethodConnector(
+          name: 'findRoomGuestsForWindow',
+          params: {
+            'startDate': _i1.ParameterDescription(
+              name: 'startDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'endDate': _i1.ParameterDescription(
+              name: 'endDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
+                  .findRoomGuestsForWindow(
+            session,
+            params['startDate'],
+            params['endDate'],
+          ),
+        ),
+        'findActiveRoomGuestsForDate': _i1.MethodConnector(
+          name: 'findActiveRoomGuestsForDate',
+          params: {
+            'date': _i1.ParameterDescription(
+              name: 'date',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
+                  .findActiveRoomGuestsForDate(
+            session,
+            params['date'],
+          ),
+        ),
+        'findFutureRoomGuests': _i1.MethodConnector(
+          name: 'findFutureRoomGuests',
+          params: {
+            'fromDate': _i1.ParameterDescription(
+              name: 'fromDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
+                  .findFutureRoomGuests(
+            session,
+            params['fromDate'],
+          ),
+        ),
+        'findPastRoomGuests': _i1.MethodConnector(
+          name: 'findPastRoomGuests',
+          params: {
+            'beforeDate': _i1.ParameterDescription(
+              name: 'beforeDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
+                  .findPastRoomGuests(
+            session,
+            params['beforeDate'],
+          ),
+        ),
+        'findRoomGuestsByRoom': _i1.MethodConnector(
+          name: 'findRoomGuestsByRoom',
+          params: {
+            'roomId': _i1.ParameterDescription(
+              name: 'roomId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'startDate': _i1.ParameterDescription(
+              name: 'startDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'endDate': _i1.ParameterDescription(
+              name: 'endDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
+                  .findRoomGuestsByRoom(
+            session,
+            params['roomId'],
+            params['startDate'],
+            params['endDate'],
+          ),
+        ),
+        'countGuestsInRoom': _i1.MethodConnector(
+          name: 'countGuestsInRoom',
+          params: {
+            'roomId': _i1.ParameterDescription(
+              name: 'roomId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'date': _i1.ParameterDescription(
+              name: 'date',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
+                  .countGuestsInRoom(
+            session,
+            params['roomId'],
+            params['date'],
+          ),
+        ),
+        'findRoomGuestsWithTransactions': _i1.MethodConnector(
+          name: 'findRoomGuestsWithTransactions',
+          params: {
+            'startDate': _i1.ParameterDescription(
+              name: 'startDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'endDate': _i1.ParameterDescription(
+              name: 'endDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
+                  .findRoomGuestsWithTransactions(
+            session,
+            params['startDate'],
+            params['endDate'],
+          ),
+        ),
+        'findRoomGuestsWithoutTransactions': _i1.MethodConnector(
+          name: 'findRoomGuestsWithoutTransactions',
+          params: {
+            'startDate': _i1.ParameterDescription(
+              name: 'startDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'endDate': _i1.ParameterDescription(
+              name: 'endDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
+                  .findRoomGuestsWithoutTransactions(
+            session,
+            params['startDate'],
+            params['endDate'],
+          ),
+        ),
+        'hasMultipleGuests': _i1.MethodConnector(
+          name: 'hasMultipleGuests',
+          params: {
+            'roomId': _i1.ParameterDescription(
+              name: 'roomId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'date': _i1.ParameterDescription(
+              name: 'date',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
+                  .hasMultipleGuests(
+            session,
+            params['roomId'],
+            params['date'],
+          ),
+        ),
+        'findGuestsWithTransactionType': _i1.MethodConnector(
+          name: 'findGuestsWithTransactionType',
+          params: {
+            'roomId': _i1.ParameterDescription(
+              name: 'roomId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+            'startDate': _i1.ParameterDescription(
+              name: 'startDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'endDate': _i1.ParameterDescription(
+              name: 'endDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'itemType': _i1.ParameterDescription(
+              name: 'itemType',
+              type: _i1.getType<_i16.ItemType>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
+                  .findGuestsWithTransactionType(
+            session,
+            params['roomId'],
+            params['startDate'],
+            params['endDate'],
+            params['itemType'],
+          ),
+        ),
       },
     );
     connectors['roomTransaction'] = _i1.EndpointConnector(
@@ -1309,7 +1560,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'rt': _i1.ParameterDescription(
               name: 'rt',
-              type: _i1.getType<_i16.RoomTransaction>(),
+              type: _i1.getType<_i17.RoomTransaction>(),
               nullable: false,
             )
           },
@@ -1407,6 +1658,6 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth'] = _i17.Endpoints()..initializeEndpoints(server);
+    modules['serverpod_auth'] = _i18.Endpoints()..initializeEndpoints(server);
   }
 }
