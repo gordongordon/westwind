@@ -585,6 +585,31 @@ class Endpoints extends _i1.EndpointDispatch {
             params['id'],
           ),
         ),
+        'findReservatioinsForWindow': _i1.MethodConnector(
+          name: 'findReservatioinsForWindow',
+          params: {
+            'startDate': _i1.ParameterDescription(
+              name: 'startDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'endDate': _i1.ParameterDescription(
+              name: 'endDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['reservation'] as _i5.ReservationEndpoint)
+                  .findReservatioinsForWindow(
+            session,
+            params['startDate'],
+            params['endDate'],
+          ),
+        ),
       },
     );
     connectors['room'] = _i1.EndpointConnector(

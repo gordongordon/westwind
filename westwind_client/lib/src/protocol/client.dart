@@ -261,6 +261,19 @@ class EndpointReservation extends _i1.EndpointRef {
         'delete',
         {'id': id},
       );
+
+  _i2.Future<List<_i7.Reservation>> findReservatioinsForWindow(
+    DateTime startDate,
+    DateTime endDate,
+  ) =>
+      caller.callServerEndpoint<List<_i7.Reservation>>(
+        'reservation',
+        'findReservatioinsForWindow',
+        {
+          'startDate': startDate,
+          'endDate': endDate,
+        },
+      );
 }
 
 /// {@category Endpoint}

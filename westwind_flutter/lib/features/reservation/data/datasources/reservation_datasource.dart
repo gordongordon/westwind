@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/error/exception.dart';
 
@@ -9,6 +11,7 @@ abstract interface class ReservationDatasource {
   Future<bool> delete(int id);
   Future<Reservation> save(Reservation reservation);
   Future<bool> checkIn(int id);
+  Future<List<Reservation>> findReservatioinsForWindow(DateTime startDate, DateTime endDate);
 }
 
 class ReservationDatasourceImp implements ReservationDatasource {
@@ -100,5 +103,14 @@ class ReservationDatasourceImp implements ReservationDatasource {
       } catch (e) {
         throw ServerException(e.toString());
       }
+  }
+  
+  @override
+  Future<List<Reservation>> findReservatioinsForWindow(DateTime startDate, DateTime endDate) async{
+    try {
+      return await client.reservation.findReservatioinsForWindow(startDate,endDate,);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
   }
 }

@@ -85,7 +85,7 @@ class ReservationRepositoryImp implements ReservationRepository {
   @override
   Future<Either<Failure, Reservation>> save(Reservation reservation) async {
     try {
-     // final data = reservation;
+      // final data = reservation;
 
       final result = _toServer(reservation);
 
@@ -99,7 +99,6 @@ class ReservationRepositoryImp implements ReservationRepository {
   @override
   Future<Either<Failure, bool>> checkIn(int id) async {
     try {
-
       return Right(await datasource.checkIn(id));
     } on ServerException catch (e) {
       return Left(Failure(e.message));
@@ -152,5 +151,25 @@ class ReservationRepositoryImp implements ReservationRepository {
       room: data.room,
       note: data.note,
     );
+  }
+
+  @override
+  Future<Either<Failure, List<Reservation>>> findReservatioinsForWindow(
+      DateTime startDate, DateTime endDate) async {
+    try {
+      // When fetching from server
+      final response = await datasource.findReservatioinsForWindow(
+        TimeManager.instance.toServer(startDate),
+        TimeManager.instance.toServer(endDate),
+      );
+
+      final result = response.map(_fromServer).toList();
+
+      return Right(result);
+
+      //  return Right(await datasource.list());
+    } on ServerException catch (e) {
+      return Left(Failure(e.message));
+    }
   }
 }

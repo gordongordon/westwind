@@ -630,4 +630,24 @@ class ReservationEndpoint extends Endpoint {
     return result;
   }
   */
+
+
+Future<List<Reservation>> findReservatioinsForWindow(
+    Session session, DateTime startDate, DateTime endDate) async {
+    return await Reservation.db.find(
+      session,
+      limit: 20,
+      where: (reservation) => reservation.isCheckedIn.equals(false) &  (reservation.stayDay.between(startDate, endDate)),
+      include: Reservation.include(
+        guest: Guest.include(),
+        room: Room.include(),
+      ),
+      orderByList: (t) => [
+        Order(column: t.isCheckedIn, orderDescending: false),
+        Order(column: t.id, orderDescending: true),
+        Order(column: t.checkInDate),
+      ],
+    );
+
+    }
 }

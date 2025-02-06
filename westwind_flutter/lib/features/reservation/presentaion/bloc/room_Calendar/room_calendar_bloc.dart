@@ -321,6 +321,16 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
 
   //! Add implement this in serverpod 
   //e.g. fetchReservationsForWindows in Serverside
+
+  Future<List<Reservation>> _fetchReservationsForWindow(
+      DateTime start, DateTime end) async {
+    final result = await reservationRepository.findReservatioinsForWindow(start,end);
+    return result.fold(
+      (failure) => [],
+      (reservations) => reservations
+    );
+  }
+/*
   Future<List<Reservation>> _fetchReservationsForWindow(
       DateTime start, DateTime end) async {
     final result = await reservationRepository.list();
@@ -335,6 +345,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
           .toList(),
     );
   }
+  */
   //! Add implement this in serverpod 
   Future<List<RoomTransaction>> _fetchTransactionsForWindow(
       DateTime start, DateTime end) async {
