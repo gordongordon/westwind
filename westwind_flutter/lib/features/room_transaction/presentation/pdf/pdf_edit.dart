@@ -73,7 +73,9 @@ class PdfEditPageState extends State<PdfEditPage>
     // First fetch the data
     if (widget.roomGuestId != null) {
       context.read<RoomGuestTransactionsBloc>().add(
-         RetrieveRoomTransactionWithOutLaundryEvent( widget.roomGuestId!));
+//         RetrieveRoomTransactionWithOutLaundryEvent( widget.roomGuestId!));
+           FetchRoomGuestTransactions(widget.roomGuestId!));
+
 
    //   context
    //       .read<RoomGuestTransactionsBloc>()
@@ -123,7 +125,7 @@ class PdfEditPageState extends State<PdfEditPage>
             (format, data, transactions) async {
               return await generateInvoice(format, data, result);
             },
-            state.transactions,
+            result,
             true,
           ),
           PdfGenerator(
