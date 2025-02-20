@@ -637,7 +637,8 @@ Future<List<Reservation>> findReservatioinsForWindow(
     return await Reservation.db.find(
       session,
       limit: 20,
-      where: (reservation) => reservation.isCheckedIn.equals(false) &  (reservation.stayDay.between(startDate, endDate)),
+      where: (reservation) => reservation.isCheckedIn.equals(false) & (reservation.stayDay.between(startDate, endDate))
+              & reservation.isCanceled.equals(false),
       include: Reservation.include(
         guest: Guest.include(),
         room: Room.include(),
