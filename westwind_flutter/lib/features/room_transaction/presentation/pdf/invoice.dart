@@ -548,6 +548,7 @@ class Invoice {
       'Stay Date',
       'Room#',
       'Description',
+      'Approved #',
       'Amount',
       'GST',
       'Levy',
@@ -567,10 +568,11 @@ class Invoice {
         0: pw.Alignment.centerLeft,
         1: pw.Alignment.centerLeft,
         2: pw.Alignment.centerLeft,
-        3: pw.Alignment.centerRight,
+        3: pw.Alignment.centerLeft,
         4: pw.Alignment.centerRight,
         5: pw.Alignment.centerRight,
         6: pw.Alignment.centerRight,
+        7: pw.Alignment.centerRight,
         //       6: pw.Alignment.centerRight,
       },
       headerStyle: pw.TextStyle(
@@ -604,9 +606,20 @@ class Invoice {
           switch (tableHeaders[col]) {
             case 'Room#':
               return roomTransactions[row].roomId.toString();
-            case 'Description':
+            case 'Description': {
 //              return roomTransactions[row].itemType.toString();
-              return '${roomTransactions[row].itemType} ${roomTransactions[row].description}';
+  
+              return '${roomTransactions[row].itemType}';
+            } 
+            case 'Approved #' : {
+                              String approvedCode = ""; 
+                if ( roomTransactions[row].approvedCode != null ) {
+                  if (roomTransactions[row].approvedCode! != "" ) {
+                     approvedCode = 'Approved Code ${roomTransactions[row].approvedCode!}}';
+                  }
+                }
+                return approvedCode ;
+            }
             case 'Amount':
               return roomTransactions[row].amount.toString();
             case 'Stay Date':

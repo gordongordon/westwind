@@ -35,7 +35,10 @@ class _RoomTransactionManagementFormWidgetState
   final TextEditingController tax1Controller = TextEditingController();
   final TextEditingController tax2Controller = TextEditingController();
   final TextEditingController totalController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController(text: "Write any note here");
+  final TextEditingController descriptionController =
+      TextEditingController(text: "Write any note here");
+  final TextEditingController approvedCodeController =
+      TextEditingController(text: "");
 
   DateTime stayDay = TimeManager.instance.today();
   DateTime transactionDay = TimeManager.instance.now();
@@ -235,6 +238,8 @@ class _RoomTransactionManagementFormWidgetState
             });
           }
         }),
+        _buildTextField('approvedCode', 'Approved Code', approvedCodeController,
+            maxLines: 1),
         _buildTextField('description', 'Description', descriptionController,
             maxLines: 3),
       ],
@@ -305,6 +310,8 @@ class _RoomTransactionManagementFormWidgetState
             });
           }
         }),
+        _buildTextField('approvedCode', 'Approved Code', approvedCodeController,
+            maxLines: 3),
         _buildTextField('description', 'Description', descriptionController,
             maxLines: 3),
       ],
@@ -494,6 +501,7 @@ class _RoomTransactionManagementFormWidgetState
         total: totalFinal,
         description: descriptionController.text,
         itemType: itemType,
+        approvedCode: approvedCodeController.text,
       );
 
       widget.onSave(roomTransaction);
@@ -515,6 +523,7 @@ class _RoomTransactionManagementFormWidgetState
     transactionDay = transaction.transactionDay;
     stayDay = transaction.stayDay;
     descriptionController.text = transaction.description;
+    approvedCodeController.text = transaction.approvedCode!;
     // transactionTypeController.text = transaction.transactionType;
 
     _updateItemTypeOptions(transaction.transactionType.name);

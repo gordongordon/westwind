@@ -69,6 +69,14 @@ class _RoomGuestTransactionFormWidgetState
             ]),
             keyboardType: TextInputType.number,
           ),
+          /*
+          FormBuilderTextField(
+            name: 'approvedCode',
+            decoration: InputDecoration(labelText: 'Approved Code'),
+         //   validator: FormBuilderValidators.required(),
+            maxLines: 1,
+          ),
+          */
           FormBuilderTextField(
             name: 'description',
             decoration: InputDecoration(labelText: 'Description'),
