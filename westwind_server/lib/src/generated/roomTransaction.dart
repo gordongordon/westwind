@@ -29,6 +29,7 @@ abstract class RoomTransaction
     required this.stayDay,
     required this.transactionDay,
     required this.transactionType,
+    this.approvedCode,
     this.updateDate,
     required this.amount,
     required this.tax1,
@@ -49,6 +50,7 @@ abstract class RoomTransaction
     required DateTime stayDay,
     required DateTime transactionDay,
     required _i5.TransactionType transactionType,
+    String? approvedCode,
     DateTime? updateDate,
     required double amount,
     required double tax1,
@@ -81,6 +83,7 @@ abstract class RoomTransaction
           jsonSerialization['transactionDay']),
       transactionType: _i5.TransactionType.fromJson(
           (jsonSerialization['transactionType'] as String)),
+      approvedCode: jsonSerialization['approvedCode'] as String?,
       updateDate: jsonSerialization['updateDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updateDate']),
@@ -119,6 +122,8 @@ abstract class RoomTransaction
 
   _i5.TransactionType transactionType;
 
+  String? approvedCode;
+
   DateTime? updateDate;
 
   double amount;
@@ -147,6 +152,7 @@ abstract class RoomTransaction
     DateTime? stayDay,
     DateTime? transactionDay,
     _i5.TransactionType? transactionType,
+    String? approvedCode,
     DateTime? updateDate,
     double? amount,
     double? tax1,
@@ -168,6 +174,7 @@ abstract class RoomTransaction
       'stayDay': stayDay.toJson(),
       'transactionDay': transactionDay.toJson(),
       'transactionType': transactionType.toJson(),
+      if (approvedCode != null) 'approvedCode': approvedCode,
       if (updateDate != null) 'updateDate': updateDate?.toJson(),
       'amount': amount,
       'tax1': tax1,
@@ -191,6 +198,7 @@ abstract class RoomTransaction
       'stayDay': stayDay.toJson(),
       'transactionDay': transactionDay.toJson(),
       'transactionType': transactionType.toJson(),
+      if (approvedCode != null) 'approvedCode': approvedCode,
       if (updateDate != null) 'updateDate': updateDate?.toJson(),
       'amount': amount,
       'tax1': tax1,
@@ -253,6 +261,7 @@ class _RoomTransactionImpl extends RoomTransaction {
     required DateTime stayDay,
     required DateTime transactionDay,
     required _i5.TransactionType transactionType,
+    String? approvedCode,
     DateTime? updateDate,
     required double amount,
     required double tax1,
@@ -271,6 +280,7 @@ class _RoomTransactionImpl extends RoomTransaction {
           stayDay: stayDay,
           transactionDay: transactionDay,
           transactionType: transactionType,
+          approvedCode: approvedCode,
           updateDate: updateDate,
           amount: amount,
           tax1: tax1,
@@ -292,6 +302,7 @@ class _RoomTransactionImpl extends RoomTransaction {
     DateTime? stayDay,
     DateTime? transactionDay,
     _i5.TransactionType? transactionType,
+    Object? approvedCode = _Undefined,
     Object? updateDate = _Undefined,
     double? amount,
     double? tax1,
@@ -312,6 +323,7 @@ class _RoomTransactionImpl extends RoomTransaction {
       stayDay: stayDay ?? this.stayDay,
       transactionDay: transactionDay ?? this.transactionDay,
       transactionType: transactionType ?? this.transactionType,
+      approvedCode: approvedCode is String? ? approvedCode : this.approvedCode,
       updateDate: updateDate is DateTime? ? updateDate : this.updateDate,
       amount: amount ?? this.amount,
       tax1: tax1 ?? this.tax1,
@@ -350,6 +362,10 @@ class RoomTransactionTable extends _i1.Table {
       'transactionType',
       this,
       _i1.EnumSerialization.byName,
+    );
+    approvedCode = _i1.ColumnString(
+      'approvedCode',
+      this,
     );
     updateDate = _i1.ColumnDateTime(
       'updateDate',
@@ -399,6 +415,8 @@ class RoomTransactionTable extends _i1.Table {
   late final _i1.ColumnDateTime transactionDay;
 
   late final _i1.ColumnEnum<_i5.TransactionType> transactionType;
+
+  late final _i1.ColumnString approvedCode;
 
   late final _i1.ColumnDateTime updateDate;
 
@@ -462,6 +480,7 @@ class RoomTransactionTable extends _i1.Table {
         stayDay,
         transactionDay,
         transactionType,
+        approvedCode,
         updateDate,
         amount,
         tax1,

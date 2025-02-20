@@ -1191,6 +1191,12 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'protocol:TransactionType',
         ),
         _i2.ColumnDefinition(
+          name: 'approvedCode',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
           name: 'updateDate',
           columnType: _i2.ColumnType.timestampWithoutTimeZone,
           isNullable: true,
