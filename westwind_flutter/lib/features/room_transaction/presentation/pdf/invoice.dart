@@ -548,7 +548,7 @@ class Invoice {
       'Stay Date',
       'Room#',
       'Type',
-      'Description'
+      'Description',
       'Appr #',
       'Amount',
       'GST',
@@ -574,7 +574,8 @@ class Invoice {
         5: pw.Alignment.centerRight,
         6: pw.Alignment.centerRight,
         7: pw.Alignment.centerRight,
-        8: pw.Alignment.centerRight,
+        8: pw.Alignment.centerRight,        
+        9: pw.Alignment.centerRight,
         //       6: pw.Alignment.centerRight,
       },
       headerStyle: pw.TextStyle(
