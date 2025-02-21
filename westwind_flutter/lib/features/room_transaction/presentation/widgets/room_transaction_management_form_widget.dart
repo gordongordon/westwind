@@ -418,6 +418,116 @@ Widget _buildTextField(
     );
   }
 
+void _saveRoomTransaction() {
+    if (formKey.currentState!.saveAndValidate()) {
+      final transactionType = TransactionType.values
+          .byName(formKey.currentState!.fields['transactionType']!.value);
+      final itemType = ItemType.values
+          .byName(formKey.currentState!.fields['itemType']!.value);
+      final finalStayDay = widget.roomGuest == null
+          ? formKey.currentState!.fields['stayDay']!.value
+          : stayDay;
+
+      var amount = double.parse(amountController.text).roundToDouble();
+      late double gst;
+      late double levy;
+      late double total;
+      late double sign;
+      late double cost;
+
+      switch (transactionType) {
+        case TransactionType.refund:
+          sign = 1;
+          break;
+        case TransactionType.deposit:
+          sign = -1;
+          break;
+        case TransactionType.pay:
+          sign = -1;
+          break;
+        case TransactionType.charge:
+          sign = 1;
+          break;
+        case TransactionType.adjustCredit:
+          sign = -1;
+          break;
+        case TransactionType.adjustDebit:
+          sign = 1;
+          break;
+        default:
+          throw Exception('Unknown transaction type: $transactionType');
+      }
+
+      switch (itemType) {
+        case ItemType.room:
+        case ItemType.room_adjust:
+          {
+            cost = (amount / 1.09).roundToDouble();
+            gst = (cost * 0.05).roundToDouble();
+            levy = (cost * 0.04).roundToDouble();
+          }
+          break;
+        case ItemType.food:
+        case ItemType.laundry:
+        case ItemType.pet:
+          gst = (amount * 0.05).roundToDouble();
+          levy = 0;
+          break;
+        case ItemType.vending:
+        case ItemType.atm:
+        case ItemType.demage:
+        case ItemType.deposite:
+        case ItemType.other:
+        case ItemType.visa:
+        case ItemType.master:
+        case ItemType.amex:
+        case ItemType.cash:
+        case ItemType.eTransfer:
+        case ItemType.gift_card:
+        case ItemType.debit:
+          gst = 0;
+          levy = 0;
+          break;
+        default:
+          throw Exception('Unknown item type: $itemType');
+      }
+
+      if (itemType == ItemType.room_adjust) {
+        total = amount.roundToDouble();
+        amount = cost.roundToDouble();
+      } else {
+        total = (amount + gst + levy).roundToDouble();
+      }
+
+      final totalFinal = (total * sign).roundToDouble();
+      final amountFinal = (amount * sign).roundToDouble();
+      final gstFinal = gst.roundToDouble();
+      final levyFinal = levy.roundToDouble();
+
+      final roomTransaction = RoomTransaction(
+        id: widget.roomTransaction?.id,
+        guestId: int.parse(guestIdController.text),
+        roomId: int.parse(roomIdController.text),
+        roomGuestId: int.parse(roomGuestIdController.text),
+        stayDay: finalStayDay,
+        transactionDay: transactionDay,
+        transactionType: transactionType,
+        amount: amountFinal,
+        tax1: gstFinal,
+        tax2: levyFinal,
+        total: totalFinal,
+        description: descriptionController.text,
+        itemType: itemType,
+        approvedCode: approvedCodeController.text,
+      );
+
+      widget.onSave(roomTransaction);
+    }
+  }
+
+
+
+/* 
   void _saveRoomTransaction() {
     if (formKey.currentState!.saveAndValidate()) {
       final transactionType = TransactionType.values
@@ -544,6 +654,8 @@ Widget _buildTextField(
       widget.onSave(roomTransaction);
     }
   }
+
+*/
 
   void _populateFields(RoomTransaction transaction) {
     idController.text = transaction.id.toString();
