@@ -82,8 +82,8 @@ Future<Uint8List> generateInvoice(
     customerName: '$lastName, $firstName',
     customerAddress: 'none',
     roomId: roomId,
-    description : description,
-    checkInDay:  'Check  In : ${checkInDay.getDDMonthName()}',
+    description: description,
+    checkInDay: 'Check  In : ${checkInDay.getDDMonthName()}',
     checkOutDay: 'Check Out : ${checkOutDay.getDDMonthName()} ',
     paymentInfo:
         'Westwind Motor Inn, 4225 50St, Drayton Vally, Alberta, T7A1M4\n Tel: 1 (780) 542-5375\n Email: westwindmotorinn@gmail.com',
@@ -142,22 +142,25 @@ class Invoice {
 
   //    roomTransactions.map<double>((p) => p.amount).reduce((a, b) => a + b);
   double get _taxableSales => roomTransactions
-      .map<double>((p) => (p.itemType == ItemType.room ) || (p.itemType == ItemType.room_adjust) ? p.amount : 0)
+      .map<double>((p) =>
+          (p.itemType == ItemType.room) || (p.itemType == ItemType.room_adjust)
+              ? p.amount
+              : 0)
       .fold(0, (a, b) => a + b);
 
 // double get _subAmount =>    roomTransactions.fold(0, (a, b) => a + b.amount);
 
   double get _levy =>
       roomTransactions.map<double>((p) => p.tax2).fold(0, (a, b) => a + b);
-     // .reduce((a, b) => a + b);
+  // .reduce((a, b) => a + b);
 
   double get _gst =>
       roomTransactions.map<double>((p) => p.tax1).fold(0, (a, b) => a + b);
-      //.reduce((a, b) => a + b);
+  //.reduce((a, b) => a + b);
   // double get _grandTotal => _total * (1 + tax);
   double get _grandTotal =>
       roomTransactions.map<double>((p) => p.total).fold(0, (a, b) => a + b);
-    //  .reduce((a, b) => a + b);
+  //  .reduce((a, b) => a + b);
 
   String? _logo;
 
@@ -570,11 +573,11 @@ class Invoice {
         1: pw.Alignment.centerLeft,
         2: pw.Alignment.centerLeft,
         3: pw.Alignment.centerLeft,
-        4: pw.Alignment.centerLeft,
+        4: pw.Alignment.centerRight,
         5: pw.Alignment.centerRight,
         6: pw.Alignment.centerRight,
         7: pw.Alignment.centerRight,
-        8: pw.Alignment.centerRight,        
+        8: pw.Alignment.centerRight,
         9: pw.Alignment.centerRight,
         //       6: pw.Alignment.centerRight,
       },
@@ -610,18 +613,19 @@ class Invoice {
             case 'Room#':
               return roomTransactions[row].roomId.toString();
             case 'Type':
-              return  roomTransactions[row].itemType.toString();
-            case 'Description': 
-                return roomTransactions[row].description;
-            case 'Appr #' : {
-                              String approvedCode = ""; 
-                if ( roomTransactions[row].approvedCode != null ) {
-                  if (roomTransactions[row].approvedCode! != "" ) {
-                     approvedCode = roomTransactions[row].approvedCode!;
+              return roomTransactions[row].itemType.toString();
+            case 'Description':
+              return roomTransactions[row].description;
+            case 'Appr #':
+              {
+                String approvedCode = "";
+                if (roomTransactions[row].approvedCode != null) {
+                  if (roomTransactions[row].approvedCode! != "") {
+                    approvedCode = roomTransactions[row].approvedCode!;
                   }
                 }
-                return approvedCode ;
-            }
+                return approvedCode;
+              }
             case 'Amount':
               return roomTransactions[row].amount.toString();
             case 'Stay Date':

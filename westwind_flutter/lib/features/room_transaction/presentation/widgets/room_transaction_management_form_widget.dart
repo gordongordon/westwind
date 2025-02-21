@@ -239,9 +239,9 @@ class _RoomTransactionManagementFormWidgetState
           }
         }),
         _buildTextField('approvedCode', 'Approved Code', approvedCodeController,
-            maxLines: 1),
+            maxLines: 1, isRequired: false),
         _buildTextField('description', 'Description', descriptionController,
-            maxLines: 3),
+            maxLines: 3, isRequired: false),
       ],
     );
   }
@@ -311,13 +311,49 @@ class _RoomTransactionManagementFormWidgetState
           }
         }),
         _buildTextField('approvedCode', 'Approved Code', approvedCodeController,
-            maxLines: 1),
+            maxLines: 1, isRequired: false),
         _buildTextField('description', 'Description', descriptionController,
-            maxLines: 3),
+            maxLines: 3, isRequired: false),
       ],
     );
   }
 
+Widget _buildTextField(
+    String name,
+    String label,
+    TextEditingController controller, {
+    bool enabled = true,
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+    bool isRequired = true, // New parameter to control if the field is required
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        enabled: enabled,
+        keyboardType: keyboardType,
+        maxLines: maxLines,
+        decoration: InputDecoration(
+          labelText: isRequired ? '$label *' : label, // Add asterisk for required fields
+          border: OutlineInputBorder(),
+          helperText: isRequired ? 'Required' : 'Optional', // Add helper text
+          helperStyle: TextStyle(
+            color: isRequired ? Colors.red.shade300 : Colors.grey,
+          ),
+        ),
+        validator: isRequired
+            ? FormBuilderValidators.compose([
+                FormBuilderValidators.required(errorText: '$label is required'),
+              ])
+            : null, // No validation for optional fields
+      ),
+    );
+  }
+
+
+/*
   Widget _buildTextField(
       String name, String label, TextEditingController controller,
       {bool enabled = true,
@@ -340,6 +376,7 @@ class _RoomTransactionManagementFormWidgetState
       ),
     );
   }
+  */
 
   Widget _buildDateTimePicker(String name, String label,
       {required DateTime initialValue}) {
