@@ -610,11 +610,8 @@ class Invoice {
               return roomTransactions[row].roomId.toString();
             case 'Type':
               return  roomTransactions[row].itemType.toString();
-            case 'Description': {
-//              return roomTransactions[row].itemType.toString();
+            case 'Description': 
                 return roomTransactions[row].description;
-            //  return '${roomTransactions[row].itemType}';
-            } 
             case 'Approved #' : {
                               String approvedCode = ""; 
                 if ( roomTransactions[row].approvedCode != null ) {
