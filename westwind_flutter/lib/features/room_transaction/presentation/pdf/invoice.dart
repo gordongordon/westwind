@@ -615,7 +615,7 @@ class Invoice {
                               String approvedCode = ""; 
                 if ( roomTransactions[row].approvedCode != null ) {
                   if (roomTransactions[row].approvedCode! != "" ) {
-                     approvedCode = 'Approved Code ${roomTransactions[row].approvedCode!}}';
+                     approvedCode = roomTransactions[row].approvedCode!;
                   }
                 }
                 return approvedCode ;
