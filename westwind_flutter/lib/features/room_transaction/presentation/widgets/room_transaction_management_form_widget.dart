@@ -311,7 +311,7 @@ class _RoomTransactionManagementFormWidgetState
           }
         }),
         _buildTextField('approvedCode', 'Approved Code', approvedCodeController,
-            maxLines: 3),
+            maxLines: 1),
         _buildTextField('description', 'Description', descriptionController,
             maxLines: 3),
       ],
