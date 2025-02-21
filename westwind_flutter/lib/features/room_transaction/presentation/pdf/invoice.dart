@@ -549,7 +549,7 @@ class Invoice {
       'Room#',
       'Type',
       'Description'
-      'Approved #',
+      'Appr #',
       'Amount',
       'GST',
       'Levy',
@@ -612,7 +612,7 @@ class Invoice {
               return  roomTransactions[row].itemType.toString();
             case 'Description': 
                 return roomTransactions[row].description;
-            case 'Approved #' : {
+            case 'Appr #' : {
                               String approvedCode = ""; 
                 if ( roomTransactions[row].approvedCode != null ) {
                   if (roomTransactions[row].approvedCode! != "" ) {
