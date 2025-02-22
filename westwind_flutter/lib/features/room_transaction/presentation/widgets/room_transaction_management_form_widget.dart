@@ -507,6 +507,10 @@ void _saveRoomTransaction() {
       final gstFinal = gst.roundToTwoDecimals();
       final levyFinal = levy.roundToTwoDecimals();
 
+
+      print('totalFinal $totalFinal ');
+
+
       final roomTransaction = RoomTransaction(
         id: widget.roomTransaction?.id,
         guestId: int.parse(guestIdController.text),
