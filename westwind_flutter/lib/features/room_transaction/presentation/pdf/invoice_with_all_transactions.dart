@@ -541,7 +541,9 @@ class InvoiceWithAllTransactions {
     const tableHeaders = [
       'Stay Date',
       'Room#',
+      'Type',
       'Description',
+      'Appr #',
       'Amount',
       'GST',
       'Levy',
@@ -561,10 +563,13 @@ class InvoiceWithAllTransactions {
         0: pw.Alignment.centerLeft,
         1: pw.Alignment.centerLeft,
         2: pw.Alignment.centerLeft,
-        3: pw.Alignment.centerRight,
+        3: pw.Alignment.centerLeft,
         4: pw.Alignment.centerRight,
         5: pw.Alignment.centerRight,
         6: pw.Alignment.centerRight,
+        7: pw.Alignment.centerRight,
+        8: pw.Alignment.centerRight,
+        9: pw.Alignment.centerRight,
         //       6: pw.Alignment.centerRight,
       },
       headerStyle: pw.TextStyle(
@@ -598,8 +603,20 @@ class InvoiceWithAllTransactions {
           switch (tableHeaders[col]) {
             case 'Room#':
               return roomTransactions[row].roomId.toString();
-            case 'Description':
+            case 'Type':
               return roomTransactions[row].itemType.toString();
+            case 'Description':
+              return roomTransactions[row].description;
+            case 'Appr #':
+              {
+                String approvedCode = "";
+                if (roomTransactions[row].approvedCode != null) {
+                  if (roomTransactions[row].approvedCode! != "") {
+                    approvedCode = roomTransactions[row].approvedCode!;
+                  }
+                }
+                return approvedCode;
+              }
             case 'Amount':
               return roomTransactions[row].amount.toString();
             case 'Stay Date':

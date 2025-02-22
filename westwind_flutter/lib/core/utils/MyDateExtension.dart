@@ -164,3 +164,9 @@ extension MyFoldResult<L extends Failure, R> on Either<L, R> {
     );
   }
 }
+
+extension DoubleExtensions on double {
+  double roundToTwoDecimals() {
+    return (this * 100).roundToDouble() / 100;
+  }
+}

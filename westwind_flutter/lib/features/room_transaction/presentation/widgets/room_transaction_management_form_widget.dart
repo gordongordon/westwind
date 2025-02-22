@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/timeManager.dart';
 
 class RoomTransactionManagementFormWidget extends StatefulWidget {
@@ -428,7 +429,7 @@ void _saveRoomTransaction() {
           ? formKey.currentState!.fields['stayDay']!.value
           : stayDay;
 
-      var amount = double.parse(amountController.text).roundToDouble();
+      var amount = double.parse(amountController.text);
       late double gst;
       late double levy;
       late double total;
@@ -462,15 +463,15 @@ void _saveRoomTransaction() {
         case ItemType.room:
         case ItemType.room_adjust:
           {
-            cost = (amount / 1.09).roundToDouble();
-            gst = (cost * 0.05).roundToDouble();
-            levy = (cost * 0.04).roundToDouble();
+            cost = (amount / 1.09) ;
+            gst = (cost * 0.05) ;
+            levy = (cost * 0.04) ;
           }
           break;
         case ItemType.food:
         case ItemType.laundry:
         case ItemType.pet:
-          gst = (amount * 0.05).roundToDouble();
+          gst = (amount * 0.05) ;
           levy = 0;
           break;
         case ItemType.vending:
@@ -493,16 +494,18 @@ void _saveRoomTransaction() {
       }
 
       if (itemType == ItemType.room_adjust) {
-        total = amount.roundToDouble();
-        amount = cost.roundToDouble();
+        total = amount ;
+        amount = cost ;
       } else {
-        total = (amount + gst + levy).roundToDouble();
+        total = (amount + gst + levy);
       }
 
-      final totalFinal = (total * sign).roundToDouble();
-      final amountFinal = (amount * sign).roundToDouble();
-      final gstFinal = gst.roundToDouble();
-      final levyFinal = levy.roundToDouble();
+     
+
+      final totalFinal = (total * sign).roundToTwoDecimals();
+      final amountFinal = (amount * sign).roundToTwoDecimals();
+      final gstFinal = gst.roundToTwoDecimals();
+      final levyFinal = levy.roundToTwoDecimals();
 
       final roomTransaction = RoomTransaction(
         id: widget.roomTransaction?.id,
