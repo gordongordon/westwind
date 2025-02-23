@@ -37,7 +37,7 @@ class _RoomTransactionManagementFormWidgetState
   final TextEditingController tax2Controller = TextEditingController();
   final TextEditingController totalController = TextEditingController();
   final TextEditingController descriptionController =
-      TextEditingController(text: "Write any note here");
+      TextEditingController(text: "");
   final TextEditingController approvedCodeController =
       TextEditingController(text: "");
 
