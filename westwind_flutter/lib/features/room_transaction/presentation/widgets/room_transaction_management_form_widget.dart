@@ -178,7 +178,7 @@ class _RoomTransactionManagementFormWidgetState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (widget.roomGuest != null)
-                _buildRoomGuestDetailsSection()
+                _buildCreateNewTransaction()
               else ...[
                 _buildTransactionDetailsSection(),
                 _buildFinancialDetailsSection(),
@@ -186,7 +186,7 @@ class _RoomTransactionManagementFormWidgetState
               ],
               const SizedBox(height: 24),
               AppFormFields.buildActionButton(
-                text: "Save Room Transaction",
+                text: "Save Room xxTransaction",
                 onPressed: _saveRoomTransaction,
                 color: Colors.green,
                 icon: Icons.save,
@@ -198,7 +198,7 @@ class _RoomTransactionManagementFormWidgetState
     );
   }
 
-  Widget _buildRoomGuestDetailsSection() {
+  Widget _buildCreateNewTransaction() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

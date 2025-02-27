@@ -101,8 +101,8 @@ class RoomTransactionEndpoint extends Endpoint {
         where: (i) => i.roomGuestId.equals(roomGuestId),
         //  orderBy : (t)  => t.updateDate,
         orderByList: (t) => [
-              Order(column: t.updateDate, orderDescending: false),
-              Order(column: t.transactionDay, orderDescending: false),
+              Order(column: t.updateDate, orderDescending: true),
+              Order(column: t.transactionDay, orderDescending: true),
             ],
         include: RoomTransaction.include(
             guest: Guest.include(),
