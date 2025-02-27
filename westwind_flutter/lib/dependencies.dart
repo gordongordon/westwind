@@ -12,6 +12,8 @@ import 'package:westwind_flutter/features/auth/domain/usecases/user_login.dart';
 import 'package:westwind_flutter/features/auth/domain/usecases/user_logout.dart';
 import 'package:westwind_flutter/features/auth/domain/usecases/user_register.dart';
 import 'package:westwind_flutter/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:westwind_flutter/features/calendar/data/repositories/calendar_darta_repository_imp.dart';
+import 'package:westwind_flutter/features/calendar/domain/repositories/calendar_data_repository.dart';
 import 'package:westwind_flutter/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:westwind_flutter/features/guest/data/datasources/guest_datasource.dart';
 import 'package:westwind_flutter/features/guest/data/repositories/guest_repository_imp.dart';
@@ -122,7 +124,21 @@ Future<void> initDependencies() async {
   _initRoomTransaction();
 
   _initRoomGuestTransactions();
+
+  _initCalendar();
 }
+
+void _initCalendar() {
+  serverLocator.registerLazySingleton<CalendarDataRepository>(
+    () => CalendarDataRepositoryImpl(
+      reservationRepository: serverLocator<ReservationRepository>(),
+      roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
+      roomGuestRepository: serverLocator<RoomGuestRepository>(),
+      // Add any other required arguments here...
+    ),
+  );
+}
+
 
 void _initRoom() {
   // datatsoruce
@@ -246,9 +262,10 @@ void _initRoomTransaction() {
 
   serverLocator.registerFactory<RoomCalendarBloc>(() => RoomCalendarBloc(
         reservationRepository: serverLocator<ReservationRepository>(),
-        roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
+       // roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
         roomGuestRepository: serverLocator<RoomGuestRepository>(),
-        roomRepository: serverLocator<RoomRepository>(),
+        roomRepository: serverLocator<RoomRepository>(), 
+        calendarDataRepository: serverLocator<CalendarDataRepository>(),
       ));
 
   // bloc

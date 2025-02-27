@@ -110,7 +110,7 @@ class AppValidators {
   ]);
   
   static String? Function(String?) approvedCodeValidator = FormBuilderValidators.compose([
-    FormBuilderValidators.maxLength(20, errorText: 'Approval code cannot exceed 20 characters'),
+    FormBuilderValidators.maxLength(10, errorText: 'Approval code cannot exceed 20 characters'),
   ]);
   
   // Custom validators
