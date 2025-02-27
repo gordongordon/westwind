@@ -26,6 +26,22 @@ class RoomRowWidget extends StatefulWidget {
 }
 
 class _RoomRowWidgetState extends State<RoomRowWidget> {
+
+  // In RoomRowWidget
+Color _getStatusColor(String status) {
+  switch (status) {
+    case 'BLK': return Colors.red.shade700; // Blocked
+    case 'VCC': return Colors.green.shade600; // Vacant Clean
+    case 'DRT': return Colors.orange.shade700; // Dirty
+    case 'CO': return Colors.purple.shade500; // Check Out
+    case 'M': return Colors.blue.shade600; // Maintenance
+    case 'MM': return Colors.indigo.shade500; // Major Maintenance
+    case 'CH': return Colors.amber.shade700; // Check
+    case 'DDD': return Colors.brown.shade700; // Do Not Disturb
+    default: return Colors.grey; // Default
+  }
+}
+/*
   Color _getStatusColor(String status) {
     Color result;
     // Add your status color logic here
@@ -43,6 +59,7 @@ class _RoomRowWidgetState extends State<RoomRowWidget> {
 
     return result; // Default color
   }
+*/
 
   List<T> _findItemsForDate<T>(List<T> items, DateTime date) {
     return items.where((item) {
@@ -58,6 +75,30 @@ class _RoomRowWidgetState extends State<RoomRowWidget> {
       return false;
     }).toList();
   }
+
+
+  Widget _buildRoomStatusIndicator(String status) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+    decoration: BoxDecoration(
+      color: _getStatusColor(status).withOpacity(0.2),
+      borderRadius: BorderRadius.circular(4),
+      border: Border.all(
+        color: _getStatusColor(status),
+        width: 1,
+      ),
+    ),
+    child: Text(
+      status,
+      style: TextStyle(
+        fontSize: 10,
+        color: _getStatusColor(status),
+        fontWeight: FontWeight.bold,
+      ),
+      textAlign: TextAlign.center,
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +136,9 @@ class _RoomRowWidgetState extends State<RoomRowWidget> {
                   ),
                 );
               },
-              child: Container(
+              child: _buildRoomStatusIndicator(widget.roomStatus),
+              /*
+              Container(
                 padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
                 decoration: BoxDecoration(
                   color: _getStatusColor(widget.roomStatus).withOpacity(0.1),
@@ -115,6 +158,8 @@ class _RoomRowWidgetState extends State<RoomRowWidget> {
                   textAlign: TextAlign.center,
                 ),
               ),
+*/
+
             ),
           ),
           ...List.generate(widget.state.daysToShow, (index) {
