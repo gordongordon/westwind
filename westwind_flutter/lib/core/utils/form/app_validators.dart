@@ -12,7 +12,7 @@ class AppValidators {
   static String? Function(String?) phoneValidator = FormBuilderValidators.compose([
     FormBuilderValidators.required(errorText: 'Phone number is required'),
     FormBuilderValidators.numeric(errorText: 'Phone must contain only numbers'),
-    FormBuilderValidators.minLength(10, errorText: 'Phone number must be at least 10 digits'),
+    FormBuilderValidators.minLength(11, errorText: 'Phone number must be at least 10 digits'),
     FormBuilderValidators.maxLength(11, errorText: 'Phone number cannot exceed 11 digits'),
   ]);
   

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/core/utils/form/app_validators.dart';
+import 'package:westwind_flutter/core/utils/form/form_helpers.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
 import 'package:westwind_flutter/core/utils/timeManager.dart';
+import 'package:westwind_flutter/core/widgets/app_form_fields.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_bloc.dart';
 import 'package:westwind_flutter/features/guest/presentation/bloc/guest_detail/guest_detail_events.dart';
@@ -31,7 +33,6 @@ class _GuestEditPageState extends State<GuestEditPage> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController rateTypeController = TextEditingController();
   final TextEditingController rigNumberController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
 
@@ -103,12 +104,17 @@ class _GuestEditPageState extends State<GuestEditPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Personal Information',
-            style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: 16),
-        _buildTextField('firstName', 'First Name', firstNameController),
-        _buildTextField('lastName', 'Last Name', lastNameController),
-        // _buildTextField('firstName', 'First Name', firstNameController),
+        AppFormFields.buildSectionHeader(context, 'Personal Information'),
+        AppFormFields.buildNameField(
+          name: 'firstName',
+          label: 'First Name',
+          controller: firstNameController,
+        ),
+        AppFormFields.buildNameField(
+          name: 'lastName',
+          label: 'Last Name',
+          controller: lastNameController,
+        ),
       ],
     );
   }
@@ -117,17 +123,19 @@ class _GuestEditPageState extends State<GuestEditPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 24),
-        Text('Contact Information',
-            style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: 16),
-        _buildTextField('phone', 'Phone Number', phoneController,
-            keyboardType: TextInputType.phone,
-            maxLength: 11,
-            onChanged: _onPhoneChanged),
-        _buildTextFieldOptionalEmail('email', 'Email Address', emailController,
-            //  _buildTextField('email', 'Email Address', emailController,
-            keyboardType: TextInputType.emailAddress),
+        AppFormFields.buildSectionHeader(context, 'Contact Information'),
+        AppFormFields.buildPhoneField(
+          name: 'phone',
+          label: 'Phone Number',
+          controller: phoneController,
+          onChanged: _onPhoneChanged,
+        ),
+        AppFormFields.buildEmailField(
+          name: 'email',
+          label: 'Email Address',
+          controller: emailController,
+          required: false,
+        ),
       ],
     );
   }
@@ -136,183 +144,57 @@ class _GuestEditPageState extends State<GuestEditPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 24),
-        Text('Additional Information',
-            style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: 16),
-        _buildRateTypeDropdown(),
-        const SizedBox(height: 16),
-        _buildTextFieldOptional('rigNumber', 'Rig Number', rigNumberController,
-            keyboardType: TextInputType.number),
-        const SizedBox(height: 16),
-        _buildInHouseSwitch(),
-        const SizedBox(height: 16),
-        _buildDateField('dateCreate', 'Date Created', dateCreate),
-        _buildDateField('dateUpdate', 'Date Updated', dateUpdate),
-//
-
-        _buildTextFieldMultiline('note', 'Note to Guest', noteController, keyboardType:  TextInputType.multiline),
-      //  _buildDateField('note', 'Note', note),
+        AppFormFields.buildSectionHeader(context, 'Additional Information'),
+        AppFormFields.buildRateTypeDropdown(
+          name: 'rateType',
+          initialValue: _rateTypeOptions.first,
+          options: _rateTypeOptions,
+          onChanged: (value) => {},
+        ),
+        AppFormFields.buildIdField(
+          name: 'rigNumber',
+          label: 'Rig Number',
+          controller: rigNumberController,
+          validator: AppValidators.rigNumberValidator,
+          required: false,
+        ),
+        AppFormFields.buildSwitch(
+          name: 'isInHouse',
+          label: 'Currently In House',
+          initialValue: isInHouse,
+          onChanged: (value) => setState(() => isInHouse = value ?? false),
+        ),
+        AppFormFields.buildDateTimePicker(
+          name: 'dateCreate',
+          label: 'Date Created',
+          initialValue: dateCreate,
+          enabled: false,
+        ),
+        AppFormFields.buildDateTimePicker(
+          name: 'dateUpdate',
+          label: 'Date Updated',
+          initialValue: dateUpdate,
+          enabled: false,
+        ),
+        AppFormFields.buildNoteField(
+          name: 'note',
+          label: 'Note to Guest',
+          controller: noteController,
+          required: false,
+        ),
       ],
     );
   }
 
-  Widget _buildTextField(
-      String name, String label, TextEditingController controller,
-      {TextInputType keyboardType = TextInputType.text,
-      int? maxLength,
-      Function(String)? onChanged}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: FormBuilderTextField(
-        name: name,
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-        ),
-        keyboardType: keyboardType,
-        maxLength: maxLength,
-        // onChanged: ,
-        validator: FormBuilderValidators.compose([
-          if (name != 'email' && name != 'rigNumber')
-            FormBuilderValidators.required(),
-          if (name == 'email') FormBuilderValidators.email(),
-          if (name == 'phone') FormBuilderValidators.numeric(),
-        ]),
-      ),
-    );
-  }
-
-  Widget _buildTextFieldOptionalEmail(
-      String name, String label, TextEditingController controller,
-      {TextInputType keyboardType = TextInputType.text,
-      int? maxLength}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: FormBuilderTextField(
-        name: name,
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-        ),
-        keyboardType: keyboardType,
-        maxLength: maxLength,
-        // onChanged: ,
-        validator:
-            FormBuilderValidators.compose([FormBuilderValidators.email()]),
-      ),
-    );
-  }
-
-Widget _buildTextFieldMultiline(
-  String name,
-  String label,
-  TextEditingController controller, {
-  bool enabled = true,
-  TextInputType keyboardType = TextInputType.text,
-}) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 16.0),
-    child: FormBuilderTextField(
-      name: name,
-      controller: controller,
-      enabled: enabled,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(),
-      ),
-      keyboardType: keyboardType,
-      maxLines: keyboardType == TextInputType.multiline ? null : 1, // Allow multiple lines for multiline input
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(),
-      ]),
-    ),
-  );
-}
-
-
-  Widget _buildTextFieldOptional(
-      String name, String label, TextEditingController controller,
-      {TextInputType keyboardType = TextInputType.text,
-      int? maxLength}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: FormBuilderTextField(
-        name: name,
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-        ),
-        keyboardType: keyboardType,
-        maxLength: maxLength,
-        // onChanged: ,
-        // validator: FormBuilderValidators.compose([]),
-      ),
-    );
-  }
-
-  Widget _buildRateTypeDropdown() {
-    return FormBuilderDropdown<String>(
-      name: 'rateType',
-      initialValue: rateTypeController.text,
-      decoration: InputDecoration(
-        labelText: 'Rate Type',
-        border: OutlineInputBorder(),
-      ),
-      items: _rateTypeOptions
-          .map((rateType) =>
-              DropdownMenuItem(value: rateType, child: Text(rateType)))
-          .toList(),
-      validator:
-          FormBuilderValidators.compose([FormBuilderValidators.required()]),
-    );
-  }
-
-  Widget _buildInHouseSwitch() {
-    return FormBuilderSwitch(
-      name: 'isInHouse',
-      title: Text('Currently In House'),
-      initialValue: isInHouse,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(),
-      ),
-    );
-  }
-
-  Widget _buildDateField(String name, String label, DateTime initialValue) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: FormBuilderDateTimePicker(
-        name: name,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-        ),
-        initialValue: initialValue,
-        inputType: InputType.date,
-        enabled: false,
-      ),
-    );
-  }
-
   Widget _buildDeleteButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: ElevatedButton(
-        onPressed: () {
-          context
-              .read<GuestManageBloc>()
-              .add(GuestManageDeleteEvent(id: widget.guestId!));
-        },
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.red,
-        ),
-        child: Text('Delete Guest'),
-      ),
+    return AppFormFields.buildActionButton(
+      text: 'Delete Guest',
+      onPressed: () {
+        context
+            .read<GuestManageBloc>()
+            .add(GuestManageDeleteEvent(id: widget.guestId!));
+      },
+      color: Colors.red,
     );
   }
 
@@ -321,7 +203,6 @@ Widget _buildTextFieldMultiline(
     formState.validate();
 
     // You can also manually traverse the form fields
-
     formState.fields.forEach((key, formFieldState) {
       if (formFieldState.hasError) {
         print("Field '$key' error: ${formFieldState.errorText}");
@@ -333,7 +214,7 @@ Widget _buildTextFieldMultiline(
     final formState = formKey.currentState;
 
     if (formState != null) {
-      bool isValid = formState.validate();
+      bool isValid = FormHelpers.validateForm(formKey, context);
       if (isValid) {
         final guest = Guest(
           id: widget.guestId,
@@ -357,16 +238,16 @@ Widget _buildTextFieldMultiline(
 
         context.read<GuestManageBloc>().add(GuestManageSaveEvent(guest: guest));
       } else {
-        // Handle invalid form
-        _showValidationErrors(formState);
+        // Form validation is now handled by FormHelpers.validateForm
       }
     } else {
       print("Form state is null");
     }
   }
 
-  void _onPhoneChanged(String value) {
-    if (formKey.currentState!.fields['phone']!.valueIsValid) {
+  void _onPhoneChanged(String? value) {
+    if (value != null && value.isNotEmpty && 
+        formKey.currentState?.fields['phone']?.valueIsValid == true) {
       context
           .read<GuestManageBloc>()
           .add(GuestManageRetrieveByPhoneEvent(phone: value.trim()));
@@ -400,23 +281,21 @@ Widget _buildTextFieldMultiline(
     idController.text = guest.id.toString();
     firstNameController.text = guest.firstName;
     lastNameController.text = guest.lastName;
-    if (guest.email != null) {
-      emailController.text = guest.email!;
-    } else {
-      emailController.text = "";
-    }
+    emailController.text = guest.email ?? "";
     phoneController.text = guest.phone;
-    rateTypeController.text = guest.rateType.toString();
     isInHouse = guest.isInHouse;
     dateCreate = guest.dateCreate;
     dateUpdate = guest.dateUpdate!;
-    if (guest.rigNumber == null) {
-      rigNumberController.text = "";
-    } else {
-      rigNumberController.text = guest.rigNumber.toString();
-    }
-
-      formKey.currentState?.patchValue({'rateType': guest.rateType.name});
+    rigNumberController.text = guest.rigNumber?.toString() ?? "";
     noteController.text = guest.note;
+    
+    // Update the dropdown value
+    formKey.currentState?.patchValue({'rateType': guest.rateType.name});
+    
+    // Update the switch
+    formKey.currentState?.patchValue({'isInHouse': guest.isInHouse});
+    
+    // Force a rebuild to show updated values
+    setState(() {});
   }
 }
