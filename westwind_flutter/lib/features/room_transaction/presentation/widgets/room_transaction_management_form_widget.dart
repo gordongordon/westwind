@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/timeManager.dart';
+import 'package:westwind_flutter/core/utils/form/form_helpers.dart';
+import 'package:westwind_flutter/core/widgets/app_form_fields.dart';
+import 'package:westwind_flutter/core/utils/show_snackbar.dart';
+import 'package:westwind_flutter/core/utils/form/app_validators.dart';
 
 class RoomTransactionManagementFormWidget extends StatefulWidget {
   final RoomTransaction? roomTransaction;
@@ -65,6 +68,26 @@ class _RoomTransactionManagementFormWidgetState
       transactionTypeController.text = TransactionType.pay.name;
     }
     _updateItemTypeOptions(transactionTypeController.text);
+
+    // Setup tax calculation listeners
+    FormHelpers.setupTaxCalculationListeners(
+      amountController: amountController,
+      tax1Controller: tax1Controller,
+      tax2Controller: tax2Controller,
+      totalController: totalController,
+      calculateTaxesAutomatically: false, // Set based on your requirement
+    );
+  }
+
+  @override
+  void dispose() {
+    // Clean up listeners
+    FormHelpers.cleanupTaxCalculationListeners(
+      amountController: amountController,
+      tax1Controller: tax1Controller,
+      tax2Controller: tax2Controller,
+    );
+    super.dispose();
   }
 
   void _updateItemTypeOptions(String transactionType) {
@@ -78,7 +101,6 @@ class _RoomTransactionManagementFormWidgetState
           ItemType.amex.name,
           ItemType.eTransfer.name,
           ItemType.gift_card.name,
-          // Add this to handle invoice without laundry
           ItemType.laundry.name,
         ];
       } else if (transactionType == TransactionType.charge.name) {
@@ -91,7 +113,6 @@ class _RoomTransactionManagementFormWidgetState
           ItemType.food.name,
           ItemType.other.name,
           ItemType.vending.name,
-//          ItemType.room.name,
         ];
       } else if (transactionType == TransactionType.deposit.name) {
         _currentItemTypeOptions = [
@@ -164,44 +185,14 @@ class _RoomTransactionManagementFormWidgetState
                 _buildAdditionalInfoSection(),
               ],
               const SizedBox(height: 24),
-              _buildButton(
-                "save room transaction ",
-                _saveRoomTransaction,
-              ),
-              /*
-              ElevatedButton(
+              AppFormFields.buildActionButton(
+                text: "Save Room Transaction",
                 onPressed: _saveRoomTransaction,
-                child: const Text('Save Room Transaction'),
+                color: Colors.green,
+                icon: Icons.save,
               ),
-              */
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildButton(String text, VoidCallback onPressed) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor:
-            Colors.green, // Set a meaningful color like green for "Save"
-        foregroundColor: Colors.white, // Text/icon color
-        minimumSize: Size(double.infinity, 50), // Full-width and height
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12), // Rounded corners
-        ),
-        padding: EdgeInsets.symmetric(
-            vertical: 14), // Add vertical padding for better touch target
-        elevation: 3, // Add slight shadow
-      ),
-      icon: Icon(Icons.save, size: 24), // Save icon
-      label: Text(
-        text,
-        style: TextStyle(
-          fontSize: 18, // Larger font for readability
-          fontWeight: FontWeight.bold, // Make it stand out
         ),
       ),
     );
@@ -211,13 +202,11 @@ class _RoomTransactionManagementFormWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Create a new transaction details',
-            style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: 16),
-        _buildDropdown(
-          'transactionType',
-          'Transaction Type',
-          _transactionTypeOptions,
+        AppFormFields.buildSectionHeader(context, 'Create a new transaction'),
+        AppFormFields.buildDropdown(
+          name: 'transactionType',
+          label: 'Transaction Type',
+          options: _transactionTypeOptions,
           initialValue: transactionTypeController.text,
           onChanged: (value) {
             if (value != null) {
@@ -227,45 +216,102 @@ class _RoomTransactionManagementFormWidgetState
               });
             }
           },
+          prefixIcon: Icons.swap_horiz,
         ),
-        _buildTextField('amount', 'Amount', amountController,
-            keyboardType: TextInputType.number),
-        _buildDropdown('itemType', 'Item Type', _currentItemTypeOptions,
-            initialValue: itemTypeController.text, onChanged: (value) {
-          if (value != null) {
-            setState(() {
-              itemTypeController.text = value;
-              _updateItemTypeOptions(value);
-            });
-          }
-        }),
-        _buildTextField('approvedCode', 'Approved Code', approvedCodeController,
-            maxLines: 1, isRequired: false),
-        _buildTextField('description', 'Description', descriptionController,
-            maxLines: 3, isRequired: false),
+        AppFormFields.buildMoneyField(
+          name: 'amount',
+          label: 'Amount',
+          controller: amountController,
+          onChanged: (value) => FormHelpers.calculateTaxesFromAmount(
+            amountController: amountController,
+            tax1Controller: tax1Controller,
+            tax2Controller: tax2Controller,
+            totalController: totalController,
+          ),
+        ),
+        AppFormFields.buildDropdown(
+          name: 'itemType',
+          label: 'Item Type',
+          options: _currentItemTypeOptions,
+          initialValue: itemTypeController.text,
+          onChanged: (value) {
+            if (value != null) {
+              setState(() {
+                itemTypeController.text = value;
+              });
+            }
+          },
+          prefixIcon: Icons.category,
+        ),
+        AppFormFields.buildTextField(
+          name: 'approvedCode',
+          label: 'Approved Code',
+          controller: approvedCodeController,
+          // Using our makeOptional wrapper to ensure validation only happens if input is provided
+          validator: AppValidators.approvedCodeValidator,
+          required: false,
+          prefixIcon: Icons.check_circle,
+        ),
+        AppFormFields.buildNoteField(
+          name: 'description',
+          label: 'Description',
+          controller: descriptionController,
+          required: false,
+          // Using requiredNoteValidator with makeOptional to validate only when text is provided
+          validator: AppValidators.requiredNoteValidator,
+        ),
       ],
     );
   }
 
   Widget _buildTransactionDetailsSection() {
+    final guestName = widget.roomTransaction?.guest != null 
+        ? "${widget.roomTransaction!.guest!.firstName} ${widget.roomTransaction!.guest!.lastName}" 
+        : "Unknown Guest";
+    final roomNumber = widget.roomTransaction?.roomId != null 
+        ? "Room # ${widget.roomTransaction!.roomId}" 
+        : "";
+    final sectionTitle = "Transaction Details - $guestName $roomNumber";
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //! This can be null //
-        Text(
-            'Transaction Details -  ${widget.roomTransaction!.guest != null ? "${widget.roomTransaction!.guest!.firstName} ${widget.roomTransaction!.guest!.lastName} - Room # ${widget.roomTransaction!.roomId}" : "Unknow Guest Name"}',
-            style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: 16),
-        _buildTextField('id', 'Transaction ID', idController, enabled: false),
-        _buildDateTimePicker('stayDay', 'Stay Day', initialValue: stayDay),
-        _buildDateTimePicker('transactionDay', 'Transaction Day',
-            initialValue: transactionDay),
-        _buildTextField('roomId', 'Room ID', roomIdController),
-        _buildTextField('guestId', 'Guest ID', guestIdController),
-        _buildDropdown(
-          'transactionType',
-          'Transaction Type',
-          _transactionTypeOptions,
+        AppFormFields.buildSectionHeader(context, sectionTitle),
+        AppFormFields.buildIdField(
+          name: 'id',
+          label: 'Transaction ID',
+          controller: idController,
+          enabled: false,
+          validator: AppValidators.transactionIdValidator,
+        ),
+        AppFormFields.buildDateTimePicker(
+          name: 'stayDay',
+          label: 'Stay Day',
+          initialValue: stayDay,
+          inputType: InputType.date,
+        ),
+        AppFormFields.buildDateTimePicker(
+          name: 'transactionDay',
+          label: 'Transaction Day',
+          initialValue: transactionDay,
+          inputType: InputType.date,
+        ),
+        AppFormFields.buildIdField(
+          name: 'roomId',
+          label: 'Room ID',
+          controller: roomIdController,
+          validator: AppValidators.roomIdValidator,
+        ),
+        AppFormFields.buildIdField(
+          name: 'guestId',
+          label: 'Guest ID',
+          controller: guestIdController,
+          validator: AppValidators.guestIdValidator,
+        ),
+        AppFormFields.buildDropdown(
+          name: 'transactionType',
+          label: 'Transaction Type',
+          options: _transactionTypeOptions,
           initialValue: transactionTypeController.text,
           onChanged: (value) {
             if (value != null) {
@@ -275,6 +321,7 @@ class _RoomTransactionManagementFormWidgetState
               });
             }
           },
+          prefixIcon: Icons.swap_horiz,
         ),
       ],
     );
@@ -284,12 +331,38 @@ class _RoomTransactionManagementFormWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 24),
-        Text('Financial Details',
-            style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: 16),
-        _buildTextField('amount', 'Amount', amountController,
-            keyboardType: TextInputType.number),
+        AppFormFields.buildSectionHeader(context, 'Financial Details'),
+        AppFormFields.buildMoneyField(
+          name: 'amount',
+          label: 'Amount',
+          controller: amountController,
+          validator: AppValidators.amountValidator,
+          onChanged: (value) => FormHelpers.calculateTaxesFromAmount(
+            amountController: amountController,
+            tax1Controller: tax1Controller,
+            tax2Controller: tax2Controller,
+            totalController: totalController,
+          ),
+        ),
+        AppFormFields.buildMoneyField(
+          name: 'tax1',
+          label: 'GST (Tax 1)',
+          controller: tax1Controller,
+          validator: AppValidators.taxValidator,
+        ),
+        AppFormFields.buildMoneyField(
+          name: 'tax2',
+          label: 'Levy (Tax 2)',
+          controller: tax2Controller,
+          validator: AppValidators.taxValidator,
+        ),
+        AppFormFields.buildMoneyField(
+          name: 'total',
+          label: 'Total',
+          controller: totalController,
+          validator: AppValidators.totalValidator,
+          enabled: false,
+        ),
       ],
     );
   }
@@ -298,245 +371,47 @@ class _RoomTransactionManagementFormWidgetState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 24),
-        Text('Additional Information',
-            style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: 16),
-        _buildTextField('roomGuestId', 'Room Guest ID', roomGuestIdController),
-        _buildDropdown('itemType', 'Item Type', _currentItemTypeOptions,
-            initialValue: itemTypeController.text, onChanged: (value) {
-          if (value != null) {
-            setState(() {
-              itemTypeController.text = value;
-            });
-          }
-        }),
-        _buildTextField('approvedCode', 'Approved Code', approvedCodeController,
-            maxLines: 1, isRequired: false),
-        _buildTextField('description', 'Description', descriptionController,
-            maxLines: 3, isRequired: false),
+        AppFormFields.buildSectionHeader(context, 'Additional Information'),
+        AppFormFields.buildIdField(
+          name: 'roomGuestId',
+          label: 'Room Guest ID',
+          controller: roomGuestIdController,
+          validator: AppValidators.reservationIdValidator,
+        ),
+        AppFormFields.buildDropdown(
+          name: 'itemType',
+          label: 'Item Type',
+          options: _currentItemTypeOptions,
+          initialValue: itemTypeController.text,
+          onChanged: (value) {
+            if (value != null) {
+              setState(() {
+                itemTypeController.text = value;
+              });
+            }
+          },
+          prefixIcon: Icons.category,
+        ),
+        AppFormFields.buildTextField(
+          name: 'approvedCode',
+          label: 'Approved Code',
+          controller: approvedCodeController,
+          validator: AppValidators.approvedCodeValidator,
+          required: false,
+          prefixIcon: Icons.check_circle,
+        ),
+        AppFormFields.buildNoteField(
+          name: 'description',
+          label: 'Description',
+          controller: descriptionController,
+          required: false,
+        ),
       ],
     );
   }
 
-Widget _buildTextField(
-    String name,
-    String label,
-    TextEditingController controller, {
-    bool enabled = true,
-    TextInputType keyboardType = TextInputType.text,
-    int maxLines = 1,
-    bool isRequired = true, // New parameter to control if the field is required
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: FormBuilderTextField(
-        name: name,
-        controller: controller,
-        enabled: enabled,
-        keyboardType: keyboardType,
-        maxLines: maxLines,
-        decoration: InputDecoration(
-          labelText: isRequired ? '$label *' : label, // Add asterisk for required fields
-          border: OutlineInputBorder(),
-          helperText: isRequired ? 'Required' : 'Optional', // Add helper text
-          helperStyle: TextStyle(
-            color: isRequired ? Colors.red.shade300 : Colors.grey,
-          ),
-        ),
-        validator: isRequired
-            ? FormBuilderValidators.compose([
-                FormBuilderValidators.required(errorText: '$label is required'),
-              ])
-            : null, // No validation for optional fields
-      ),
-    );
-  }
-
-
-/*
-  Widget _buildTextField(
-      String name, String label, TextEditingController controller,
-      {bool enabled = true,
-      TextInputType keyboardType = TextInputType.text,
-      int maxLines = 1}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: FormBuilderTextField(
-        name: name,
-        controller: controller,
-        enabled: enabled,
-        keyboardType: keyboardType,
-        maxLines: maxLines,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-        ),
-        validator:
-            FormBuilderValidators.compose([FormBuilderValidators.required()]),
-      ),
-    );
-  }
-  */
-
-  Widget _buildDateTimePicker(String name, String label,
-      {required DateTime initialValue}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: FormBuilderDateTimePicker(
-        name: name,
-        initialValue: initialValue,
-        inputType: InputType.date,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-        ),
-        validator:
-            FormBuilderValidators.compose([FormBuilderValidators.required()]),
-      ),
-    );
-  }
-
-  Widget _buildDropdown(String name, String label, List<String> options,
-      {required String initialValue, void Function(String?)? onChanged}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: FormBuilderDropdown<String>(
-        name: name,
-        initialValue: initialValue,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-        ),
-        validator:
-            FormBuilderValidators.compose([FormBuilderValidators.required()]),
-        items: options
-            .map((option) =>
-                DropdownMenuItem(value: option, child: Text(option)))
-            .toList(),
-        onChanged: onChanged,
-      ),
-    );
-  }
-
-void _saveRoomTransaction() {
-    if (formKey.currentState!.saveAndValidate()) {
-      final transactionType = TransactionType.values
-          .byName(formKey.currentState!.fields['transactionType']!.value);
-      final itemType = ItemType.values
-          .byName(formKey.currentState!.fields['itemType']!.value);
-      final finalStayDay = widget.roomGuest == null
-          ? formKey.currentState!.fields['stayDay']!.value
-          : stayDay;
-
-      var amount = double.parse(amountController.text);
-      late double gst;
-      late double levy;
-      late double total;
-      late double sign;
-      late double cost;
-
-      switch (transactionType) {
-        case TransactionType.refund:
-          sign = 1;
-          break;
-        case TransactionType.deposit:
-          sign = -1;
-          break;
-        case TransactionType.pay:
-          sign = -1;
-          break;
-        case TransactionType.charge:
-          sign = 1;
-          break;
-        case TransactionType.adjustCredit:
-          sign = -1;
-          break;
-        case TransactionType.adjustDebit:
-          sign = 1;
-          break;
-        default:
-          throw Exception('Unknown transaction type: $transactionType');
-      }
-
-      switch (itemType) {
-        case ItemType.room:
-        case ItemType.room_adjust:
-          {
-            cost = (amount / 1.09) ;
-            gst = (cost * 0.05) ;
-            levy = (cost * 0.04) ;
-          }
-          break;
-        case ItemType.food:
-        case ItemType.laundry:
-        case ItemType.pet:
-          gst = (amount * 0.05) ;
-          levy = 0;
-          break;
-        case ItemType.vending:
-        case ItemType.atm:
-        case ItemType.demage:
-        case ItemType.deposite:
-        case ItemType.other:
-        case ItemType.visa:
-        case ItemType.master:
-        case ItemType.amex:
-        case ItemType.cash:
-        case ItemType.eTransfer:
-        case ItemType.gift_card:
-        case ItemType.debit:
-          gst = 0;
-          levy = 0;
-          break;
-        default:
-          throw Exception('Unknown item type: $itemType');
-      }
-
-      if (itemType == ItemType.room_adjust) {
-        total = amount ;
-        amount = cost ;
-      } else {
-        total = (amount + gst + levy);
-      }
-
-     
-
-      final totalFinal = (total * sign).roundToTwoDecimals();
-      final amountFinal = (amount * sign).roundToTwoDecimals();
-      final gstFinal = gst.roundToTwoDecimals();
-      final levyFinal = levy.roundToTwoDecimals();
-
-
-      print('totalFinal $totalFinal ');
-
-
-      final roomTransaction = RoomTransaction(
-        id: widget.roomTransaction?.id,
-        guestId: int.parse(guestIdController.text),
-        roomId: int.parse(roomIdController.text),
-        roomGuestId: int.parse(roomGuestIdController.text),
-        stayDay: finalStayDay,
-        transactionDay: transactionDay,
-        transactionType: transactionType,
-        amount: amountFinal,
-        tax1: gstFinal,
-        tax2: levyFinal,
-        total: totalFinal,
-        description: descriptionController.text,
-        itemType: itemType,
-        approvedCode: approvedCodeController.text,
-      );
-
-      widget.onSave(roomTransaction);
-    }
-  }
-
-
-
-/* 
   void _saveRoomTransaction() {
-    if (formKey.currentState!.saveAndValidate()) {
+    if (FormHelpers.validateForm(formKey, context)) {
       final transactionType = TransactionType.values
           .byName(formKey.currentState!.fields['transactionType']!.value);
       final itemType = ItemType.values
@@ -551,15 +426,11 @@ void _saveRoomTransaction() {
       late double total;
       late double sign;
       late double cost;
-      //  late bool withGST = true;
 
       switch (transactionType) {
         case TransactionType.refund:
-          {
-            sign = 1;
-          }
+          sign = 1;
           break;
-        // break;
         case TransactionType.deposit:
           sign = -1;
           break;
@@ -570,16 +441,10 @@ void _saveRoomTransaction() {
           sign = 1;
           break;
         case TransactionType.adjustCredit:
-          {
-            //    withGST = false;
-            sign = -1;
-          }
+          sign = -1;
           break;
         case TransactionType.adjustDebit:
-          {
-            //   withGST = false;
-            sign = 1;
-          }
+          sign = 1;
           break;
         default:
           throw Exception('Unknown transaction type: $transactionType');
@@ -587,31 +452,19 @@ void _saveRoomTransaction() {
 
       switch (itemType) {
         case ItemType.room:
-          {
-            cost = amount / 1.09;
-            gst = cost * 0.05;
-            levy = cost * 0.04;
-            // gst = amount - cost - cost * 1.04;
-            // levy = amount - cost - cost * 1.05;
-          }
-          break;
         case ItemType.room_adjust:
           {
-            cost = amount / 1.09;
-            gst = cost * 0.05;
-            levy = cost * 0.04;
-            //   gst = amount - cost - cost * 1.04;
-            //  levy = amount - cost - cost * 1.05;
+            cost = (amount / 1.09);
+            gst = (cost * 0.05);
+            levy = (cost * 0.04);
           }
           break;
-        //  gst = amount * 0.05; gst + levy + cost = amount
-        //  gst = amount -
-        // levy = amount * 0.04;
         case ItemType.food:
         case ItemType.laundry:
         case ItemType.pet:
-          gst = amount * 0.05;
+          gst = (amount * 0.05);
           levy = 0;
+          break;
         case ItemType.vending:
         case ItemType.atm:
         case ItemType.demage:
@@ -635,11 +488,13 @@ void _saveRoomTransaction() {
         total = amount;
         amount = cost;
       } else {
-        total = amount + gst + levy;
+        total = (amount + gst + levy);
       }
 
-      final totalFinal = total * sign;
-      final amountFinal = amount * sign;
+      final totalFinal = (total * sign).roundToTwoDecimals();
+      final amountFinal = (amount * sign).roundToTwoDecimals();
+      final gstFinal = gst.roundToTwoDecimals();
+      final levyFinal = levy.roundToTwoDecimals();
 
       final roomTransaction = RoomTransaction(
         id: widget.roomTransaction?.id,
@@ -650,8 +505,8 @@ void _saveRoomTransaction() {
         transactionDay: transactionDay,
         transactionType: transactionType,
         amount: amountFinal,
-        tax1: gst,
-        tax2: levy,
+        tax1: gstFinal,
+        tax2: levyFinal,
         total: totalFinal,
         description: descriptionController.text,
         itemType: itemType,
@@ -661,8 +516,6 @@ void _saveRoomTransaction() {
       widget.onSave(roomTransaction);
     }
   }
-
-*/
 
   void _populateFields(RoomTransaction transaction) {
     idController.text = transaction.id.toString();
@@ -675,12 +528,10 @@ void _saveRoomTransaction() {
     totalController.text = transaction.total.abs().toString();
     transactionTypeController.text = transaction.transactionType.name;
     itemTypeController.text = transaction.itemType.name;
-    //   transactionDay = transaction.transactionDay.toLocal();
     transactionDay = transaction.transactionDay;
     stayDay = transaction.stayDay;
     descriptionController.text = transaction.description;
     approvedCodeController.text = transaction.approvedCode!;
-    // transactionTypeController.text = transaction.transactionType;
 
     _updateItemTypeOptions(transaction.transactionType.name);
   }
