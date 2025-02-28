@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/timeManager.dart';
+import 'package:westwind_flutter/features/calendar/data/repositories/calendar_darta_repository_imp.dart';
 import 'package:westwind_flutter/features/calendar/domain/repositories/calendar_data_repository.dart';
 import 'package:westwind_flutter/features/reservation/domain/repositories/reservation_repository.dart';
 import 'package:westwind_flutter/features/room/domain/repositories/room_repository.dart';
@@ -18,6 +19,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
   final ReservationRepository reservationRepository;
   final RoomGuestRepository roomGuestRepository;
   final RoomRepository roomRepository;
+ // final GlobalCacheManager _cacheManager = GlobalCacheManager();
 
   // Window-based loading settings
   static const int _windowSize = 30; // Days to load at once
@@ -42,6 +44,54 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
     on<SelectSpecificDate>(_onSelectSpecificDate);
     on<ToggleRoomStatus>(_onToggleRoomStatus);
   }
+
+  void _onInitializeCalendar(
+      InitializeCalendar event, Emitter<RoomCalendarState> emit) async {
+    emit(RoomCalendarLoading());
+
+   // try {
+      // Check if data has been modified from other pages
+  //    if (_cacheManager.isDataModified) {
+        // Clear the cache if data was modified elsewhere
+        calendarDataRepository.clearCache();
+        // Reset the flag
+  //      _cacheManager.resetDataModifiedFlag();
+  //    }
+
+      final rooms = (await roomRepository.list()).foldResult();
+      final roomTypes = rooms.map((room) => room.roomType.toString()).toList();
+      final roomNumbers = rooms.map((room) => room.id!.toString()).toList();
+      final roomStatus =
+          rooms.map((room) => room.roomStatus.toString()).toList();
+
+      final startDate =
+          TimeManager.instance.today().subtract(const Duration(days: 1));
+      const int daysToShow = 14;
+
+      final initialState = RoomCalendarLoaded(
+        roomTypes: roomTypes,
+        roomNumbers: roomNumbers,
+        roomStatus: roomStatus,
+        startDate: startDate,
+        daysToShow: daysToShow,
+        reservations: const [],
+        reservationsByRoom: const {},
+        roomTransactions: const [],
+        roomTransactionsByRoom: const {},
+        roomGuests: const [],
+        roomGuestsByRoom: const {},
+      );
+
+      emit(initialState);
+      add(FetchReservationsAndTransactions(startDate));
+    } 
+    
+ //   catch (e) {
+ //     emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
+ //   }
+ // }
+
+/*
 
   void _onInitializeCalendar(
       InitializeCalendar event, Emitter<RoomCalendarState> emit) async {
@@ -81,6 +131,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       emit(RoomCalendarError(message: 'Failed to fetch data: ${e.toString()}'));
     }
   }
+  */
 
   Future<void> _onFetchReservationsAndTransactions(
       FetchReservationsAndTransactions event,
@@ -93,8 +144,8 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       emit(RoomCalendarLoading());
 
       // Use the CalendarDataRepository to fetch all required data at once
-      final calendarDataResult = await calendarDataRepository.fetchCalendarDataForWindow(
-          windowStart, windowEnd);
+      final calendarDataResult = await calendarDataRepository
+          .fetchCalendarDataForWindow(windowStart, windowEnd);
 
       await calendarDataResult.fold(
         (failure) async {
@@ -149,11 +200,13 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
       final updatedState =
           currentState.copyWith(daysToShow: event.newDaysToShow);
       emit(updatedState);
-      
+
       // Invalidate repository cache for the affected date range
-      final endDate = currentState.startDate.add(Duration(days: event.newDaysToShow));
-      calendarDataRepository.invalidateCacheForDateRange(currentState.startDate, endDate);
-      
+      final endDate =
+          currentState.startDate.add(Duration(days: event.newDaysToShow));
+      calendarDataRepository.invalidateCacheForDateRange(
+          currentState.startDate, endDate);
+
       add(FetchReservationsAndTransactions(currentState.startDate));
     }
   }
@@ -174,7 +227,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
           // First update the local state
           final updatedState = _updateStateAfterReservationMove(
               currentState, event.reservation, savedReservation);
-          
+
           // Invalidate repository cache for the affected date ranges
           // Original reservation dates
           calendarDataRepository.invalidateCacheForDateRange(
@@ -187,35 +240,34 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
           // This is important to keep the state synchronized with the backend
           final windowStart = _calculateWindowStart(savedReservation.stayDay);
           final windowEnd = windowStart.add(Duration(days: _windowSize));
-          
-          final freshDataResult = await calendarDataRepository.fetchCalendarDataForWindow(
-              windowStart, windowEnd);
-          
+
+          final freshDataResult = await calendarDataRepository
+              .fetchCalendarDataForWindow(windowStart, windowEnd);
+
           // Emit the updated state first for immediate UI feedback
           emit(updatedState);
-          
+
           // Then update with fresh data if fetched successfully
-          freshDataResult.fold(
-            (failure) {
-              // Just log the error, we already emitted the updated state
-              print("Warning: Failed to refresh data after reservation move: ${failure.message}");
-            },
-            (freshData) async {
-              // Only emit a new state if we're still in the same view
-              if (state is RoomCalendarLoaded) {
-                final currentState = state as RoomCalendarLoaded;
-                if (currentState.startDate.isAtSameMomentAs(updatedState.startDate)) {
-                  final freshState = await _processAndCreateState(
-                    windowStart,
-                    freshData.$1,
-                    freshData.$2,
-                    freshData.$3,
-                  );
-                  emit(freshState);
-                }
+          freshDataResult.fold((failure) {
+            // Just log the error, we already emitted the updated state
+            print(
+                "Warning: Failed to refresh data after reservation move: ${failure.message}");
+          }, (freshData) async {
+            // Only emit a new state if we're still in the same view
+            if (state is RoomCalendarLoaded) {
+              final currentState = state as RoomCalendarLoaded;
+              if (currentState.startDate
+                  .isAtSameMomentAs(updatedState.startDate)) {
+                final freshState = await _processAndCreateState(
+                  windowStart,
+                  freshData.$1,
+                  freshData.$2,
+                  freshData.$3,
+                );
+                emit(freshState);
               }
             }
-          );
+          });
         },
       );
     }
@@ -238,7 +290,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
           // First update the local state
           final updatedState = _updateStateAfterRoomGuestMove(
               currentState, event.roomGuest, savedRoomGuest);
-              
+
           // Invalidate repository cache for the affected date ranges
           // Original guest dates
           calendarDataRepository.invalidateCacheForDateRange(
@@ -251,35 +303,36 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
           // This is important to keep the state synchronized with the backend
           final windowStart = _calculateWindowStart(savedRoomGuest.stayDay);
           final windowEnd = windowStart.add(Duration(days: _windowSize));
-          
-          final freshDataResult = await calendarDataRepository.fetchCalendarDataForWindow(
-              windowStart, windowEnd);
-          
+
+          final freshDataResult = await calendarDataRepository
+              .fetchCalendarDataForWindow(windowStart, windowEnd);
+
           // Emit the updated state first for immediate UI feedback
           emit(updatedState);
-          
+//! testing only
+    //    _cacheManager.markDataModified();
+
           // Then update with fresh data if fetched successfully
-          freshDataResult.fold(
-            (failure) {
-              // Just log the error, we already emitted the updated state
-              print("Warning: Failed to refresh data after room guest move: ${failure.message}");
-            },
-            (freshData) async {
-              // Only emit a new state if we're still in the same view
-              if (state is RoomCalendarLoaded) {
-                final currentState = state as RoomCalendarLoaded;
-                if (currentState.startDate.isAtSameMomentAs(updatedState.startDate)) {
-                  final freshState = await _processAndCreateState(
-                    windowStart,
-                    freshData.$1,
-                    freshData.$2,
-                    freshData.$3,
-                  );
-                  emit(freshState);
-                }
+          freshDataResult.fold((failure) {
+            // Just log the error, we already emitted the updated state
+            print(
+                "Warning: Failed to refresh data after room guest move: ${failure.message}");
+          }, (freshData) async {
+            // Only emit a new state if we're still in the same view
+            if (state is RoomCalendarLoaded) {
+              final currentState = state as RoomCalendarLoaded;
+              if (currentState.startDate
+                  .isAtSameMomentAs(updatedState.startDate)) {
+                final freshState = await _processAndCreateState(
+                  windowStart,
+                  freshData.$1,
+                  freshData.$2,
+                  freshData.$3,
+                );
+                emit(freshState);
               }
             }
-          );
+          });
         },
       );
     }
@@ -301,7 +354,7 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
           // First update the local state
           final updatedState =
               _updateStateAfterReservationAdd(currentState, savedReservation);
-          
+
           // Invalidate repository cache for the affected date range
           calendarDataRepository.invalidateCacheForDateRange(
               savedReservation.stayDay, savedReservation.checkOutDate);
@@ -309,35 +362,34 @@ class RoomCalendarBloc extends Bloc<RoomCalendarEvent, RoomCalendarState> {
           // Force a reload of data for the affected date range to ensure persistence
           final windowStart = _calculateWindowStart(savedReservation.stayDay);
           final windowEnd = windowStart.add(Duration(days: _windowSize));
-          
-          final freshDataResult = await calendarDataRepository.fetchCalendarDataForWindow(
-              windowStart, windowEnd);
-          
+
+          final freshDataResult = await calendarDataRepository
+              .fetchCalendarDataForWindow(windowStart, windowEnd);
+
           // Emit the updated state first for immediate UI feedback
           emit(updatedState);
-          
+
           // Then update with fresh data if fetched successfully
-          freshDataResult.fold(
-            (failure) {
-              // Just log the error, we already emitted the updated state
-              print("Warning: Failed to refresh data after adding reservation: ${failure.message}");
-            },
-            (freshData) async {
-              // Only emit a new state if we're still in the same view
-              if (state is RoomCalendarLoaded) {
-                final currentState = state as RoomCalendarLoaded;
-                if (currentState.startDate.isAtSameMomentAs(updatedState.startDate)) {
-                  final freshState = await _processAndCreateState(
-                    windowStart,
-                    freshData.$1,
-                    freshData.$2,
-                    freshData.$3,
-                  );
-                  emit(freshState);
-                }
+          freshDataResult.fold((failure) {
+            // Just log the error, we already emitted the updated state
+            print(
+                "Warning: Failed to refresh data after adding reservation: ${failure.message}");
+          }, (freshData) async {
+            // Only emit a new state if we're still in the same view
+            if (state is RoomCalendarLoaded) {
+              final currentState = state as RoomCalendarLoaded;
+              if (currentState.startDate
+                  .isAtSameMomentAs(updatedState.startDate)) {
+                final freshState = await _processAndCreateState(
+                  windowStart,
+                  freshData.$1,
+                  freshData.$2,
+                  freshData.$3,
+                );
+                emit(freshState);
               }
             }
-          );
+          });
         },
       );
     }

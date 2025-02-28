@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:westwind_client/westwind_client.dart';
+import 'package:westwind_flutter/features/calendar/data/repositories/calendar_darta_repository_imp.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/calculate_rate_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/charge_and_extend_stay_day.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/charge_room_guest.dart';
@@ -25,6 +26,7 @@ class RoomGuestManageBloc
   final ChargeAndExtendStayDayUseCase chargeAndExtendStayDayRoomGuest;
   final SaveRoomGuestUseCase saveRoomGuest;
   final UpdateRoomGuestNoteUseCase updateRoomGuestNote;
+  // final GlobalCacheManager _cacheManager = GlobalCacheManager();
 
   RoomGuestManageBloc({
     required this.deleteRoomGuest,
@@ -82,8 +84,13 @@ class RoomGuestManageBloc
 
     result.fold(
       (failure) => emit(RoomGuestManageStateFailure(failure.message)),
-      (roomGuest) => emit(RoomGuestManageStateSaveSuccess(roomGuest)),
+      (roomGuest) { 
+      //  _cacheManager.markDataModified();
+        emit(RoomGuestManageStateSaveSuccess(roomGuest));
+        }
     );
+
+ 
 
     return;
   }

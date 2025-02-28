@@ -7,6 +7,39 @@ import 'package:westwind_flutter/features/reservation/domain/repositories/reserv
 import 'package:westwind_flutter/features/room_guest/domain/repositories/room_guest_repository.dart';
 import 'package:westwind_flutter/features/room_transaction/domain/repositories/room_transaction_repository.dart';
 
+// Add this to your CalendarDataRepository class or to a separate file
+
+/// A simple global flag to track if data has been modified
+class GlobalCacheManager {
+  // Singleton instance
+  static final GlobalCacheManager _instance = GlobalCacheManager._internal();
+  
+  // Private constructor
+  GlobalCacheManager._internal();
+  
+  // Factory constructor
+  factory GlobalCacheManager() {
+    return _instance;
+  }
+  
+  // Flag to track if data has been modified since last calendar load
+  bool _dataModified = false;
+  
+  // Check if data has been modified
+  bool get isDataModified => _dataModified;
+  
+  // Mark data as modified
+  void markDataModified() {
+    _dataModified = true;
+  }
+  
+  // Reset the flag
+  void resetDataModifiedFlag() {
+    _dataModified = false;
+  }
+}
+
+
 /// A cache entry with expiration time
 class _CacheEntry<T> {
   final T data;
@@ -241,8 +274,9 @@ class CalendarDataRepositoryImpl implements CalendarDataRepository {
 
   // Private helper methods
   bool _isDateInCurrentWindow(DateTime date) {
-    if (_lastLoadedStartDate == null || _lastLoadedEndDate == null)
+    if (_lastLoadedStartDate == null || _lastLoadedEndDate == null) {
       return false;
+    }
     return date.isAfter(_lastLoadedStartDate!.subtract(const Duration(days: 1))) &&
         date.isBefore(_lastLoadedEndDate!.add(const Duration(days: 1)));
   }

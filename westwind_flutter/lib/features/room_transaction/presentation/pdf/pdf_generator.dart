@@ -35,3 +35,17 @@ class PdfGenerator {
 
   final List<RoomTransaction> roomTransactions;
 }
+
+class PdfGeneratorRoomGuest {
+  const PdfGeneratorRoomGuest(this.name, this.file, this.builder, this.roomGuests, [this.needsData = false]);
+
+  final String name;
+
+  final String file;
+
+  final LayoutCallbackWithData builder;
+
+  final bool needsData;
+
+  final List<RoomGuest> roomGuests;
+}
