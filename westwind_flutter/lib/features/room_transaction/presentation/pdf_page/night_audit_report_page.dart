@@ -32,8 +32,9 @@ class NightAuditReportPageState extends State<NightAuditReportPage> {
 
 
     context.read<RoomTransactionBloc>().add(FetchRoomTransactionsByDayEvent(
-      //  day: TimeManager.instance.today().subtract(Duration(days: 2))));
-      day: DateTime( 2025, 2, 26, 0, 0 )));
+        day: TimeManager.instance.today().subtract(Duration(days: 4))));
+    //  day: DateTime( 2025, 2, 26, 8, 0 )));
+    //  day: TimeManager.instance.today()));
   }
 
 
