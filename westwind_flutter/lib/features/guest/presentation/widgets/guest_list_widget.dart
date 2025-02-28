@@ -19,7 +19,8 @@ class GuestListWidget extends StatefulWidget {
 
 class _GuestListWidgetState extends State<GuestListWidget> {
   final List<PlutoColumn> columns = [];
-  final List<String> _rateTypeOptions = RateType.values.map((e) => e.name).toList();
+  final List<String> _rateTypeOptions =
+      RateType.values.map((e) => e.name).toList();
   late PlutoGridStateManager stateManager;
 
   @override
@@ -34,7 +35,7 @@ class _GuestListWidgetState extends State<GuestListWidget> {
       _buildIdColumn(),
       _buildTextColumn('First Name', 'firstName', width: 120),
       _buildTextColumn('Last Name', 'lastName', width: 120),
-      _buildTextColumn('Phone', 'phone',width : 120),
+      _buildTextColumn('Phone', 'phone', width: 120),
       _buildTextColumn('Email', 'email', width: 140),
       _buildIsInHouseColumn(),
       _buildRateTypeColumn(),
@@ -70,17 +71,16 @@ class _GuestListWidgetState extends State<GuestListWidget> {
     );
   }
 
-PlutoColumn _buildTextColumn(String title, String field, {double? width}) {
- 
-  const double defaultWidth = 80;
+  PlutoColumn _buildTextColumn(String title, String field, {double? width}) {
+    const double defaultWidth = 80;
 
-  return PlutoColumn(
-    title: title,
-    field: field,
-    type: PlutoColumnType.text(),
-    width: width ?? defaultWidth, // Provide a default value if width is null
-  );
-}
+    return PlutoColumn(
+      title: title,
+      field: field,
+      type: PlutoColumnType.text(),
+      width: width ?? defaultWidth, // Provide a default value if width is null
+    );
+  }
 
   PlutoColumn _buildIsInHouseColumn() {
     return PlutoColumn(
@@ -194,7 +194,8 @@ PlutoColumn _buildTextColumn(String title, String field, {double? width}) {
     );
   }
 
-  void _handleRowDoubleTap(BuildContext context, PlutoGridOnRowDoubleTapEvent event) {
+  void _handleRowDoubleTap(
+      BuildContext context, PlutoGridOnRowDoubleTapEvent event) {
     final field = event.row.cells['id'];
     if (field == null || field.value == null) {
       showSnackbar(context, 'Cell id cannot be found!');

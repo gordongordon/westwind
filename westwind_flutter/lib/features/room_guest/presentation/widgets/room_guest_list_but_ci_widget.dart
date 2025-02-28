@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
+import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/core/widgets/loader.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_list/room_guest_list_bloc.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_edit.dart';
@@ -58,7 +59,7 @@ class _RoomGuestListButCIWidgetState extends State<RoomGuestListButCIWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<RoomGuestListBloc, RoomGuestListState>(
       builder: (context, state) {
-        debugPrint("building RoomGuest List");
+        debugPrint("building RoomGuest CI List");
         if (state is RoomGuestListStateInitial) {
           return const SizedBox.shrink();
         } else if (state is RoomGuestListStateLoading) {
@@ -247,7 +248,7 @@ class _RoomGuestListButCIWidgetState extends State<RoomGuestListButCIWidget> {
     return PlutoColumn(
       title: title,
       field: field,
-      type: PlutoColumnType.date(startDate: DateTime.now(), format: 'MM-dd'),
+      type: PlutoColumnType.date(startDate: TimeManager.instance.now(), format: 'MM-dd'),
       width: width,
     );
   }

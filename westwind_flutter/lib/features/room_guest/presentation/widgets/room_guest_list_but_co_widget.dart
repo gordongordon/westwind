@@ -58,7 +58,7 @@ class _RoomGuestListButCOWidgetState extends State<RoomGuestListButCOWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<RoomGuestListBloc, RoomGuestListState>(
       builder: (context, state) {
-        debugPrint("building RoomGuest List");
+        debugPrint("building RoomGuest CO List");
         if (state is RoomGuestListStateInitial) {
           return const SizedBox.shrink();
         } else if (state is RoomGuestListStateLoading) {

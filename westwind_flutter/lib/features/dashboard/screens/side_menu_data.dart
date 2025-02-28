@@ -11,7 +11,7 @@ class SideMenuData {
     MenuModel(icon: Icons.bed_rounded, title: 'CI RoomGuests'),
     MenuModel(icon: Icons.payment, title: 'RoomTransactions'),
     MenuModel(icon: Icons.book_sharp, title: 'Booking'),
-    MenuModel(icon: Icons.bed_rounded, title: 'RoomGuests'),
+    MenuModel(icon: Icons.bed_rounded, title: 'CO RoomGuests'),
     MenuModel(icon: Icons.print, title: 'Today Payments'),
     MenuModel(icon: Icons.history, title: 'History'),
     MenuModel(icon: Icons.logout, title: 'SignOut'),

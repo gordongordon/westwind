@@ -140,7 +140,6 @@ void _initCalendar() {
   );
 }
 
-
 void _initRoom() {
   // datatsoruce
   serverLocator.registerLazySingleton<RoomDatasource>(
@@ -263,9 +262,9 @@ void _initRoomTransaction() {
 
   serverLocator.registerFactory<RoomCalendarBloc>(() => RoomCalendarBloc(
         reservationRepository: serverLocator<ReservationRepository>(),
-       // roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
+        // roomTransactionRepository: serverLocator<RoomTransactionRepository>(),
         roomGuestRepository: serverLocator<RoomGuestRepository>(),
-        roomRepository: serverLocator<RoomRepository>(), 
+        roomRepository: serverLocator<RoomRepository>(),
         calendarDataRepository: serverLocator<CalendarDataRepository>(),
       ));
 
@@ -589,6 +588,12 @@ void _initRoomGuest() {
 
   serverLocator.registerLazySingleton<ListRoomGuestButCOUseCase>(
     () => ListRoomGuestButCOUseCase(
+      serverLocator<RoomGuestRepository>(),
+    ),
+  );
+
+  serverLocator.registerLazySingleton<ListRoomGuestButCIUseCase>(
+    () => ListRoomGuestButCIUseCase(
       serverLocator<RoomGuestRepository>(),
     ),
   );
