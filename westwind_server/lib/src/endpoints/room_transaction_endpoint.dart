@@ -34,9 +34,13 @@ class RoomTransactionEndpoint extends Endpoint {
 
   Future<List<RoomTransaction>> listByDay(Session session, DateTime day) async {
     // Normalize the given day (start and end of day)
-    DateTime startOfDay =  DateTime(day.year, day.month, day.day).toUtc();
-    DateTime endOfDay = startOfDay.add(Duration(days: 1)).toUtc();
-    
+    //DateTime startOfDay =  DateTime(day.year, day.month, day.day).toUtc();
+    // DateTime startOfDay = DateTime.now();
+    // DateTime endOfDay = startOfDay;
+    // DateTime endOfDay = startOfDay.subtract(Duration(days: 1)).toUtc();
+
+    final startOfDay = DateTime(2025, 2, 24);
+    final endOfDay = DateTime(2025, 2, 25);
 
     return await RoomTransaction.db.find(session,
         where: (t) =>
@@ -102,8 +106,8 @@ class RoomTransactionEndpoint extends Endpoint {
         where: (i) => i.roomGuestId.equals(roomGuestId),
         //  orderBy : (t)  => t.updateDate,
         orderByList: (t) => [
-              Order(column: t.updateDate, orderDescending: true),
-              Order(column: t.transactionDay, orderDescending: true),
+              Order(column: t.updateDate, orderDescending: false),
+              Order(column: t.transactionDay, orderDescending: false),
             ],
         include: RoomTransaction.include(
             guest: Guest.include(),

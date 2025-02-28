@@ -46,7 +46,7 @@ class NightAuditReportPageState extends State<NightAuditReportPage> {
             title: 'Night Audit Report ',
             entities: state.roomTransactions,
             templates: [
-        //      PdfTemplates.getRoomTransactionInvoiceConfig(),
+              PdfTemplates.getRoomTransactionInvoiceConfig(),
               PdfTemplates.getNightAuditConfig(),
             ],
             needsNotes: false, // Set to true if notes are needed
