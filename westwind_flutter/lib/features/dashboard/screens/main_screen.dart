@@ -10,6 +10,7 @@ import 'package:westwind_flutter/features/reservation/presentaion/pages/guest_re
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_calendar_page.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/pages/reservation_list_page.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list.dart';
+import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list_but_ci.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/pages/room_guest_list_but_co.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdfRoomTransaction.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdf_edit.dart';
@@ -66,7 +67,8 @@ const List<Widget> menuPages = <Widget>[
   RoomGuestListButCOPage(),
   RoomTransactionListPage(),
   GuestReservationEditPage(),
-  RoomGuestListPage(),
+  RoomGuestListButCIPage(),
+ // RoomGuestListPage(),
   // PdfRoomTransactionPage(),
  // InvoiceReportReportPage(),
   NightAuditReportPage(),
