@@ -51,6 +51,7 @@ roomGuest:
   - retrieveRoommatesSameStayDayById:
   - getAllRoomGuest:
   - getAllRoomGuestButCheckOut:
+  - getAllRoomGuestButCheckIn:
   - getAllRoomGuestByDay:
   - getTodayRoomGuest:
   - updateRateReasonSingle:

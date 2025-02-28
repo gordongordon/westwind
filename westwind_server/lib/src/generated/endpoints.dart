@@ -947,6 +947,16 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
                   .getAllRoomGuestButCheckOut(session),
         ),
+        'getAllRoomGuestButCheckIn': _i1.MethodConnector(
+          name: 'getAllRoomGuestButCheckIn',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['roomGuest'] as _i7.RoomGuestEndpoint)
+                  .getAllRoomGuestButCheckIn(session),
+        ),
         'getAllRoomGuestByDay': _i1.MethodConnector(
           name: 'getAllRoomGuestByDay',
           params: {

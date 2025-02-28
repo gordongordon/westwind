@@ -451,6 +451,13 @@ class EndpointRoomGuest extends _i1.EndpointRef {
         {},
       );
 
+  _i2.Future<List<_i9.RoomGuest>> getAllRoomGuestButCheckIn() =>
+      caller.callServerEndpoint<List<_i9.RoomGuest>>(
+        'roomGuest',
+        'getAllRoomGuestButCheckIn',
+        {},
+      );
+
   _i2.Future<List<_i9.RoomGuest>> getAllRoomGuestByDay(DateTime datetime) =>
       caller.callServerEndpoint<List<_i9.RoomGuest>>(
         'roomGuest',

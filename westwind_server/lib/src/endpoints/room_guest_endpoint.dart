@@ -306,6 +306,25 @@ class RoomGuestEndpoint extends Endpoint {
         ));
   }
 
+  Future<List<RoomGuest>> getAllRoomGuestButCheckIn(Session session) async {
+    return await RoomGuest.db.find(session,
+        //orderBy: (t) => t.roomId,
+        orderByList: (t) => [
+              Order(column: t.roomId, orderDescending: false),
+              Order(column: t.guest.lastName, orderDescending: false),
+              Order(column: t.updateDate, orderDescending: true),
+              Order(column: t.stayDay, orderDescending: false),
+              Order(column: t.checkOutDate, orderDescending: false),
+            ],
+        where: (t) => t.isCheckOut.equals(true),
+        include: RoomGuest.include(
+          guest: Guest.include(company: Company.include()),
+          room: Room.include(),
+          reservation: Reservation.include(),
+          roomTransactions: RoomTransaction.includeList(),
+        ));
+  }
+
   Future<List<RoomGuest>> getAllRoomGuestByDay(
       Session session, DateTime datetime) async {
     return await RoomGuest.db.find(session,

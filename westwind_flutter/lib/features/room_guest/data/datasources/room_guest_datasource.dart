@@ -4,6 +4,7 @@ import 'package:westwind_flutter/core/error/exception.dart';
 abstract interface class RoomGuestDatasource {
   Future<List<RoomGuest>> list();
   Future<List<RoomGuest>> listButCheckOut();
+  Future<List<RoomGuest>> listButCheckIn();
   Future<RoomGuest> save(RoomGuest roomGuest);
   Future<bool> delete(int id);
   Future<RoomGuest> retrieve(int id);
@@ -101,6 +102,15 @@ class RoomGuestDatasourceImpl implements RoomGuestDatasource {
   Future<List<RoomGuest>> listButCheckOut() async {
     try {
       return await client.roomGuest.getAllRoomGuestButCheckOut();
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+    @override
+  Future<List<RoomGuest>> listButCheckIn() async {
+    try {
+      return await client.roomGuest.getAllRoomGuestButCheckIn();
     } catch (e) {
       throw ServerException(e.toString());
     }

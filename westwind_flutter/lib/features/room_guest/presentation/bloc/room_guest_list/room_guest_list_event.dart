@@ -5,3 +5,4 @@ sealed class RoomGuestListEvent {}
 
 class FetchRoomGuestsEvent extends RoomGuestListEvent {}
 class FetchRoomGuestsButCOEvent extends RoomGuestListEvent {}
+class FetchRoomGuestsButCIEvent extends RoomGuestListEvent {}

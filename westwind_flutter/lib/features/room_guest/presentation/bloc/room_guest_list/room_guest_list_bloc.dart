@@ -3,6 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/usecases/usecase.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest_but_ci.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest_but_co.dart';
 
 part 'room_guest_list_event.dart';
@@ -11,15 +12,17 @@ part 'room_guest_list_state.dart';
 class RoomGuestListBloc extends Bloc<RoomGuestListEvent, RoomGuestListState> {
   final ListRoomGuestUseCase listRoomGuests;
   final ListRoomGuestButCOUseCase listRoomGuestsButCO;
+  final ListRoomGuestButCIUseCase listRoomGuestsButCI;
 
   RoomGuestListBloc(
-      {required this.listRoomGuests, required this.listRoomGuestsButCO})
+      {required this.listRoomGuests, required this.listRoomGuestsButCO, required this.listRoomGuestsButCI})
       : super(RoomGuestListStateInitial()) {
     on<RoomGuestListEvent>((event, emit) {
       emit(RoomGuestListStateLoading());
     });
     on<FetchRoomGuestsEvent>((_onFetchRoomGuests));
     on<FetchRoomGuestsButCOEvent>((_onFetchRoomGuestsButCO));
+    on<FetchRoomGuestsButCIEvent>((_onFetchRoomGuestsButCI));
   }
 
   Future<void> _onFetchRoomGuests(
@@ -41,6 +44,20 @@ class RoomGuestListBloc extends Bloc<RoomGuestListEvent, RoomGuestListState> {
     emit(RoomGuestListStateLoading());
     // await Future.delayed(Duration(seconds: 1));
     final result = await listRoomGuestsButCO(NoParams());
+
+    result.fold(
+      (failure) => emit(RoomGuestListStateFailure(failure.message)),
+      (roomGuests) => emit(RoomGuestListStateLoaded(roomGuests)),
+    );
+
+    return;
+  }
+
+    Future<void> _onFetchRoomGuestsButCI(
+      FetchRoomGuestsButCIEvent event, Emitter<RoomGuestListState> emit) async {
+    emit(RoomGuestListStateLoading());
+    // await Future.delayed(Duration(seconds: 1));
+    final result = await listRoomGuestsButCI(NoParams());
 
     result.fold(
       (failure) => emit(RoomGuestListStateFailure(failure.message)),

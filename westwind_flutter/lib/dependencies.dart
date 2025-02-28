@@ -59,6 +59,7 @@ import 'package:westwind_flutter/features/room_guest/domain/usescases/check_in_r
 import 'package:westwind_flutter/features/room_guest/domain/usescases/delete_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/go_home_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest.dart';
+import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest_but_ci.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/list_room_guest_but_co.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/retrieve_room_guest.dart';
 import 'package:westwind_flutter/features/room_guest/domain/usescases/save_room_guest.dart';
@@ -644,6 +645,7 @@ void _initRoomGuest() {
   serverLocator.registerFactory<RoomGuestListBloc>(() => RoomGuestListBloc(
         listRoomGuests: serverLocator<ListRoomGuestUseCase>(),
         listRoomGuestsButCO: serverLocator<ListRoomGuestButCOUseCase>(),
+        listRoomGuestsButCI: serverLocator<ListRoomGuestButCIUseCase>(),
       ));
 
   serverLocator.registerFactory<RoomGuestManageBloc>(() => RoomGuestManageBloc(
