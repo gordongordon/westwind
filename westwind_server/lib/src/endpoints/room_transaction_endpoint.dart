@@ -39,8 +39,8 @@ class RoomTransactionEndpoint extends Endpoint {
     // DateTime endOfDay = startOfDay;
     // DateTime endOfDay = startOfDay.subtract(Duration(days: 1)).toUtc();
 
-    final startOfDay = DateTime(2025, 2, 24);
-    final endOfDay = DateTime(2025, 2, 25);
+    final startOfDay = DateTime(2025, 2, 26);
+    final endOfDay = DateTime(2025, 2, 26);
 
     return await RoomTransaction.db.find(session,
         where: (t) =>
