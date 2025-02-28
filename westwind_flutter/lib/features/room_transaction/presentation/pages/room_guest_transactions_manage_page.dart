@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:westwind_flutter/core/utils/show_snackbar.dart';
+import 'package:westwind_flutter/core/widgets/app_form_fields.dart';
 import 'package:westwind_flutter/features/app_user/presentation/widgets/app_user_dropdown.dart';
 import 'package:westwind_flutter/features/room_guest/presentation/bloc/room_guest_manage/room_guest_manage_bloc.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_transaction_bloc.dart';
@@ -71,17 +72,22 @@ class _RoomGuestTransactionsManagePage
             children: [
               const SizedBox(height: 24),
               // Left side: Transaction List
+              AppFormFields.buildNoteField(   name: 'note', label: 'Note to Room Guest State only', controller: noteController, required: false ),
+
+              /*
               _buildTextFieldMultiline(
                   'note', 'Note to Room Guest State only', noteController,
                   keyboardType: TextInputType.multiline),
               //  _buildActionButtons(),
-
+           */
               // Right side: Transaction Form
               Expanded(
                 flex: 1,
                 child: RoomGuestTransactionsManageWidget(
-                    roomGuestId: widget.roomGuestId ?? 0),
+                    roomGuestId: widget.roomGuestId ?? 0
+                ),
               ),
+              
 
 
               // Invoice Button 
@@ -121,6 +127,7 @@ class _RoomGuestTransactionsManagePage
     );
   }
   
+
 
 
   Widget _buildTextFieldMultiline(

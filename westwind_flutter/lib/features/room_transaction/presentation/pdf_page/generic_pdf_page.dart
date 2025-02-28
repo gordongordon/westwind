@@ -1,3 +1,5 @@
+
+
 import 'dart:async';
 import 'dart:io';
 
@@ -19,13 +21,13 @@ class GenericPdfPage<T> extends StatefulWidget {
   final bool needsNotes;
 
   const GenericPdfPage({
-    Key? key,
+    super.key,
     this.entities,
     required this.title,
     this.fetchData,
     required this.templates,
     this.needsNotes = true,
-  }) : super(key: key);
+  });
 
   @override
   GenericPdfPageState<T> createState() => GenericPdfPageState<T>();

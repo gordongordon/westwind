@@ -320,6 +320,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           name: 'note',
           label: 'Note',
           controller: noteController,
+          required: false,
         ),
       ],
     );

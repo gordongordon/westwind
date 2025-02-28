@@ -21,6 +21,7 @@ import 'package:westwind_flutter/features/room_transaction/presentation/pages/ro
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_edit_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_list_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdf_edit.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/invoice_report_page.dart';
 
 class AppRouter {
   static GoRouter router = GoRouter(
@@ -143,6 +144,12 @@ class AppRouter {
         GoRoute(
           path: PdfEditPage.route(),
           builder: (context, state) => PdfEditPage(
+            roomGuestId: int.parse(state.pathParameters['id'] ?? '54'),
+          ),
+        ),
+          GoRoute(
+          path: InvoiceReportReportPage.route(),
+          builder: (context, state) => InvoiceReportReportPage(
             roomGuestId: int.parse(state.pathParameters['id'] ?? '54'),
           ),
         ),
