@@ -21,8 +21,6 @@ class NightAuditReportPage extends StatefulWidget {
 }
 
 class NightAuditReportPageState extends State<NightAuditReportPage> {
-
-
   @override
   void initState() {
     super.initState();
@@ -30,14 +28,19 @@ class NightAuditReportPageState extends State<NightAuditReportPage> {
     // context.read<RoomGuestTransactionsBloc>().add(
     //    FetchRoomGuestTransactions(163));
 
+    final DateTime nightAuditDay = TimeManager.instance.now();
 
-    context.read<RoomTransactionBloc>().add(FetchRoomTransactionsByDayEvent(
-        day: TimeManager.instance.today().subtract(Duration(days: 4))));
+    // make sure night audit still previvew by 5am in the morning
+    if (nightAuditDay.hour < 5) {
+      context.read<RoomTransactionBloc>().add(FetchRoomTransactionsByDayEvent(
+          day: TimeManager.instance.today().subtract(Duration(days: 1))));
+    } else {
+      context.read<RoomTransactionBloc>().add(FetchRoomTransactionsByDayEvent(
+          day: TimeManager.instance.today().subtract(Duration(days: 0))));
+    }
     //  day: DateTime( 2025, 2, 26, 8, 0 )));
     //  day: TimeManager.instance.today()));
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,7 @@ class NightAuditReportPageState extends State<NightAuditReportPage> {
             title: 'Night Audit Report ',
             entities: state.roomTransactions,
             templates: [
-              PdfTemplates.getRoomTransactionInvoiceConfig(),
+              //  PdfTemplates.getRoomTransactionInvoiceConfig(),
               PdfTemplates.getNightAuditConfig(),
             ],
             needsNotes: false, // Set to true if notes are needed
