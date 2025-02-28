@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/bloc/room_guest_transactions/room_guest_transactions_bloc.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/enhanced_pdf_page.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/enhanced_pdf_templates.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/generic_pdf_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/pdf_templates.dart';
 
 //import 'package:url_launcher/url_launcher.dart' as ul;
-class InvoiceReportPage extends StatefulWidget {
+class EnhancedInvoiceReportPage extends StatefulWidget {
   final int? roomGuestId;
   static String route([int? roomGuestId]) =>
       "/report/roomGuestInvoice/${roomGuestId ?? ':id'}";
   static String routeNew() => "/report/new";
 
-  const InvoiceReportPage({super.key, this.roomGuestId});
+  const EnhancedInvoiceReportPage({super.key, this.roomGuestId});
 
   @override
-  InvoiceReportPageState createState() => InvoiceReportPageState();
+  EnhancedInvoiceReportPageState createState() => EnhancedInvoiceReportPageState();
 }
 
-class InvoiceReportPageState extends State<InvoiceReportPage> {
+class EnhancedInvoiceReportPageState extends State<EnhancedInvoiceReportPage> {
 
 
   @override
@@ -33,7 +35,7 @@ class InvoiceReportPageState extends State<InvoiceReportPage> {
     // if (widget.roomGuestId != null) {
     context.read<RoomGuestTransactionsBloc>().add(
 //         RetrieveRoomTransactionWithOutLaundryEvent( widget.roomGuestId!));
-        FetchRoomGuestTransactionsOrderDescending(163));
+        FetchRoomGuestTransactions(242));
   }
 
   @override
@@ -41,14 +43,18 @@ class InvoiceReportPageState extends State<InvoiceReportPage> {
     return BlocBuilder<RoomGuestTransactionsBloc, RoomGuestTransactionsState>(
       builder: (context, state) {
         if (state is RoomGuestTransactionsLoaded) {
-          return GenericPdfPage<RoomTransaction>(
+          return EnhancedPdfPage<RoomTransaction>(
             title: 'Invoice (Room Guest Transactioin) ',
             entities: state.transactions,
             templates: [
-              PdfTemplates.getRoomTransactionInvoiceConfig(),
-              PdfTemplates.getNightAuditConfig(),
+                EnhancedPdfTemplates.getRoomTransactionInvoiceConfig(),
+             // PdfTemplates.getNightAuditConfig(),
             ],
-            needsNotes: true, // Set to true if notes are needed
+            needsNotes: false, // Set to true if notes are needed
+            defaultColumnCount: 2,
+            defaultEnableColumnOverflow: true,
+            defaultFillColumnVertically: false,
+            
           );
         }
 

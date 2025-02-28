@@ -24,6 +24,16 @@ class RetrieveRoomTransactionWithOutLaundryEvent
   List<Object> get props => [roomGuestId];
 }
 
+class FetchRoomGuestTransactionsOrderDescending
+    extends RoomGuestTransactionsEvent {
+  final int roomGuestId;
+
+  const FetchRoomGuestTransactionsOrderDescending(this.roomGuestId);
+
+  @override
+  List<Object> get props => [roomGuestId];
+}
+
 class FetchRoomGuestTransactions extends RoomGuestTransactionsEvent {
   final int roomGuestId;
 
@@ -63,7 +73,6 @@ class RoomGuestTransactionsLoaded extends RoomGuestTransactionsState {
   List<Object> get props => [transactions];
 }
 
-
 class RoomGuestTransactionsFailure extends RoomGuestTransactionsState {
   final String message;
 
@@ -87,9 +96,10 @@ class RoomGuestTransactionsBloc
     required this.retrieveRoomTransactionWithOutLaundryUseCase,
   }) : super(RoomGuestTransactionsInitial()) {
     on<FetchRoomGuestTransactions>(_onFetchRoomGuestTransactions);
+    on<FetchRoomGuestTransactionsOrderDescending>(_onFetchRoomGuestTransactionsOrderDescending);
     on<CreateRoomTransaction>(_onCreateRoomTransaction);
     on<RetrieveRoomTransactionWithOutLaundryEvent>(
-        (_onRetrieveRoomTransactionWithOutLaundry));
+        _onRetrieveRoomTransactionWithOutLaundry);
   }
 
   Future<void> _onRetrieveRoomTransactionWithOutLaundry(
@@ -113,7 +123,25 @@ class RoomGuestTransactionsBloc
     emit(RoomGuestTransactionsLoading());
     try {
       final transactions = await roomTransactionRepository
+          //.getTransactionsForRoomGuestOrderDescending(event.roomGuestId);
           .getTransactionsForRoomGuest(event.roomGuestId);
+      //      final transactions = await roomTransactionRepository.list();
+
+      emit(RoomGuestTransactionsLoaded(transactions.foldResult()));
+    } catch (e) {
+      emit(RoomGuestTransactionsFailure('Failed to fetch transactions: $e'));
+    }
+  }
+
+  Future<void> _onFetchRoomGuestTransactionsOrderDescending(
+    FetchRoomGuestTransactionsOrderDescending event,
+    Emitter<RoomGuestTransactionsState> emit,
+  ) async {
+    emit(RoomGuestTransactionsLoading());
+    try {
+      final transactions = await roomTransactionRepository
+          .getTransactionsForRoomGuestOrderDescending(event.roomGuestId);
+      //.getTransactionsForRoomGuest(event.roomGuestId);
       //      final transactions = await roomTransactionRepository.list();
 
       emit(RoomGuestTransactionsLoaded(transactions.foldResult()));

@@ -14,7 +14,10 @@ import 'package:westwind_flutter/features/room_guest/presentation/pages/room_gue
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdfRoomTransaction.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdf_edit.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_list_page.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/enhanced_invoice_report_page.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/enhanced_night_audit_report_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/invoice_report_page.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/night_audit_report_page.dart';
 
 List<BottomNavigationBarItem> bottomNavItems = const <BottomNavigationBarItem>[
   BottomNavigationBarItem(
@@ -65,7 +68,11 @@ const List<Widget> menuPages = <Widget>[
   GuestReservationEditPage(),
   RoomGuestListPage(),
   // PdfRoomTransactionPage(),
-  InvoiceReportReportPage(),
+ // InvoiceReportReportPage(),
+  NightAuditReportPage(),
+ // RoomGuestMealReportPage(),
+ // EnhancedNightAuditReportPage(),
+ // EnhancedInvoiceReportPage(),
 
 ];
 

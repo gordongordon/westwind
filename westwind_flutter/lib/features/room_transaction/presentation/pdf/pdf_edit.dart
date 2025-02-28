@@ -74,7 +74,7 @@ class PdfEditPageState extends State<PdfEditPage>
     if (widget.roomGuestId != null) {
       context.read<RoomGuestTransactionsBloc>().add(
 //         RetrieveRoomTransactionWithOutLaundryEvent( widget.roomGuestId!));
-           FetchRoomGuestTransactions(widget.roomGuestId!));
+           FetchRoomGuestTransactionsOrderDescending(widget.roomGuestId!));
 
 
    //   context

@@ -21,7 +21,10 @@ import 'package:westwind_flutter/features/room_transaction/presentation/pages/ro
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_edit_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pages/room_transaction_list_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf/pdf_edit.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/enhanced_invoice_report_page.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/enhanced_night_audit_report_page.dart';
 import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/invoice_report_page.dart';
+import 'package:westwind_flutter/features/room_transaction/presentation/pdf_page/night_audit_report_page.dart';
 
 class AppRouter {
   static GoRouter router = GoRouter(
@@ -147,9 +150,27 @@ class AppRouter {
             roomGuestId: int.parse(state.pathParameters['id'] ?? '54'),
           ),
         ),
-          GoRoute(
-          path: InvoiceReportReportPage.route(),
-          builder: (context, state) => InvoiceReportReportPage(
+            GoRoute(
+          path: EnhancedInvoiceReportPage.route(),
+          builder: (context, state) => EnhancedInvoiceReportPage(
+            roomGuestId: int.parse(state.pathParameters['id'] ?? '163'),
+          ),
+        ),
+        GoRoute(
+          path: InvoiceReportPage.route(),
+          builder: (context, state) => InvoiceReportPage(
+            roomGuestId: int.parse(state.pathParameters['id'] ?? '54'),
+          ),
+        ),
+        GoRoute(
+          path: NightAuditReportPage.route(),
+          builder: (context, state) => NightAuditReportPage(
+            roomGuestId: int.parse(state.pathParameters['id'] ?? '54'),
+          ),
+        ),
+                GoRoute(
+          path: EnhancedNightAuditReportPage.route(),
+          builder: (context, state) => EnhancedNightAuditReportPage(
             roomGuestId: int.parse(state.pathParameters['id'] ?? '54'),
           ),
         ),

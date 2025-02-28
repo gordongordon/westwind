@@ -97,6 +97,7 @@ class PdfRoomTransactionPageState extends State<PdfRoomTransactionPage>
                   format, data, transactions);
             },
             state.roomTransactions,
+        
             true,
           ),
         );
