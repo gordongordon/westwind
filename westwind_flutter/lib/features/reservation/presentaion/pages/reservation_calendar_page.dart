@@ -15,7 +15,7 @@ class ReservationCalendarPage extends StatelessWidget {
    //  final auth = serverLocator<Client>().modules.auth;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Reservation Calendar"),
+       // title: const Text("Calendar"),
         actions: const [
             AppUserDropdown(),
         ],

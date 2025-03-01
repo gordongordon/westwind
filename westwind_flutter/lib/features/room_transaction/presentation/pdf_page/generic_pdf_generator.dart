@@ -40,7 +40,8 @@ class PdfContentConfig<T> {
     required this.getRowData,
     required this.calculateSummary,
     this.baseColor = const PdfColor(0, 0.6, 0.6),
-    this.accentColor = const PdfColor(0.13, 0.16, 0.19),
+    this.accentColor = const PdfColor(0.66, 0.66, 0.66),
+
     this.paymentInfo = 'Westwind Motor Inn, 4225 50St, Drayton Vally, Alberta, T7A1M4\n Tel: 1 (780) 542-5375\n Email: westwindmotorinn@gmail.com',
     this.footerText = 'Thank you for your business. We appreciate your partnership and look forward to serving you again.',
   });
@@ -49,7 +50,7 @@ class PdfContentConfig<T> {
 /// A generic class for generating PDF documents
 class GenericPdfGenerator {
   static const _darkColor = PdfColor(0.2, 0.2, 0.2); // Dark gray/almost black
-  static const _lightColor = PdfColor(1, 1, 1); // White
+  static const _lightColor = PdfColor(0.83, 0.83, 0.83) ; // White
   
   /// Generate PDF for any entity type
   static Future<Uint8List> generatePdf<T>({

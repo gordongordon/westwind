@@ -56,7 +56,7 @@ class GuestEndpoint extends Endpoint {
 
     return await Guest.db.find(
       session,
-      where: (guest) => guest.lastName.ilike(filter) | guest.lastName.ilike(filter) ,
+      where: (guest) => guest.lastName.ilike(filter) | guest.firstName.ilike(filter) ,
       orderBy: (t) => t.lastName,
       orderDescending: false,
     );

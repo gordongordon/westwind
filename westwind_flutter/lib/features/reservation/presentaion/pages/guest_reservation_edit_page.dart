@@ -180,7 +180,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
 
   Future<List<Guest>> getDataByName(filter) async {
     try {
-      var client = await Client(
+      var client = Client(
         "https://westwind-app-b00b64c234f3.herokuapp.com/api/",
         authenticationKeyManager: FlutterAuthenticationKeyManager(),
       )
@@ -234,11 +234,11 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
         DropdownSearch<Guest>(
           decoratorProps: DropDownDecoratorProps(
             decoration: InputDecoration(
-              labelText: 'Click to start searching guest by last name',
+              labelText: 'Click to search guest by last or first name',
               border: OutlineInputBorder(),
             ),
           ),
-          items: (f, cs) => getDataByLastName(f),
+          items: (f, cs) => getDataByName(f),
           suffixProps: DropdownSuffixProps(
               clearButtonProps: ClearButtonProps(isVisible: true)),
           compareFn: (item, selectedItem) {
@@ -262,7 +262,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
               leading: CircleAvatar(
                   backgroundColor: Colors.blue,
                   child: Text(selectedItem.lastName[0])),
-              title: Text(selectedItem.firstName + selectedItem.lastName ),
+              title: Text('${selectedItem.lastName}, ${selectedItem.firstName}'),
               subtitle: Text(
                   ' ${selectedItem.rateType} / Tel : ${selectedItem.phone}'),
             );
@@ -284,7 +284,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
                     backgroundColor: Colors.blue,
                     child: Text(item.lastName[0])),
                 selected: isSelected,
-                title: Text('${item.lastName} ${item.firstName}'),
+                title: Text('${item.lastName}, ${item.firstName}'),
                 subtitle: Text(' ${item.rateType} / Tel : ${item.phone}'),
               );
             },
