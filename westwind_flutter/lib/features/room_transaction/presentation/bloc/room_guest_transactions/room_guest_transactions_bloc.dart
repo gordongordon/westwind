@@ -27,8 +27,9 @@ class RetrieveRoomTransactionWithOutLaundryEvent
 class FetchRoomGuestTransactionsOrderDescending
     extends RoomGuestTransactionsEvent {
   final int roomGuestId;
+  final TransactionType? transactionType;
 
-  const FetchRoomGuestTransactionsOrderDescending(this.roomGuestId);
+  const FetchRoomGuestTransactionsOrderDescending(this.roomGuestId, this.transactionType );
 
   @override
   List<Object> get props => [roomGuestId];
@@ -140,7 +141,7 @@ class RoomGuestTransactionsBloc
     emit(RoomGuestTransactionsLoading());
     try {
       final transactions = await roomTransactionRepository
-          .getTransactionsForRoomGuestOrderDescending(event.roomGuestId);
+          .getTransactionsForRoomGuestOrderDescending(event.roomGuestId, event.transactionType);
       //.getTransactionsForRoomGuest(event.roomGuestId);
       //      final transactions = await roomTransactionRepository.list();
 

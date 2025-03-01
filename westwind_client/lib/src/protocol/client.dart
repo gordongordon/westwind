@@ -20,9 +20,10 @@ import 'package:westwind_client/src/protocol/room.dart' as _i8;
 import 'package:westwind_client/src/protocol/roomGuest.dart' as _i9;
 import 'package:westwind_client/src/protocol/itemType.dart' as _i10;
 import 'package:westwind_client/src/protocol/roomTransaction.dart' as _i11;
-import 'package:westwind_client/src/protocol/system_time.dart' as _i12;
-import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i13;
-import 'protocol.dart' as _i14;
+import 'package:westwind_client/src/protocol/transactionType.dart' as _i12;
+import 'package:westwind_client/src/protocol/system_time.dart' as _i13;
+import 'package:serverpod_auth_client/serverpod_auth_client.dart' as _i14;
+import 'protocol.dart' as _i15;
 
 /// {@category Endpoint}
 class EndpointExample extends _i1.EndpointRef {
@@ -749,11 +750,17 @@ class EndpointRoomTransaction extends _i1.EndpointRef {
       );
 
   _i2.Future<List<_i11.RoomTransaction>>
-      getTransactionsForRoomGuestOrderDescending(int roomGuestId) =>
+      getTransactionsForRoomGuestOrderDescending(
+    int roomGuestId,
+    _i12.TransactionType? transactionType,
+  ) =>
           caller.callServerEndpoint<List<_i11.RoomTransaction>>(
             'roomTransaction',
             'getTransactionsForRoomGuestOrderDescending',
-            {'roomGuestId': roomGuestId},
+            {
+              'roomGuestId': roomGuestId,
+              'transactionType': transactionType,
+            },
           );
 
   _i2.Future<List<_i11.RoomTransaction>>
@@ -806,15 +813,15 @@ class EndpointSystemTime extends _i1.EndpointRef {
   @override
   String get name => 'systemTime';
 
-  _i2.Future<_i12.SystemTime?> retrieve() =>
-      caller.callServerEndpoint<_i12.SystemTime?>(
+  _i2.Future<_i13.SystemTime?> retrieve() =>
+      caller.callServerEndpoint<_i13.SystemTime?>(
         'systemTime',
         'retrieve',
         {},
       );
 
-  _i2.Future<_i12.SystemTime?> extendByDay(int days) =>
-      caller.callServerEndpoint<_i12.SystemTime?>(
+  _i2.Future<_i13.SystemTime?> extendByDay(int days) =>
+      caller.callServerEndpoint<_i13.SystemTime?>(
         'systemTime',
         'extendByDay',
         {'days': days},
@@ -829,10 +836,10 @@ class EndpointSystemTime extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    auth = _i13.Caller(client);
+    auth = _i14.Caller(client);
   }
 
-  late final _i13.Caller auth;
+  late final _i14.Caller auth;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -851,7 +858,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
           host,
-          _i14.Protocol(),
+          _i15.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,

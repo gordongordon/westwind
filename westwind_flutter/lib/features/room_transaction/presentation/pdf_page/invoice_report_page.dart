@@ -33,7 +33,7 @@ class InvoiceReportPageState extends State<InvoiceReportPage> {
     // if (widget.roomGuestId != null) {
     context.read<RoomGuestTransactionsBloc>().add(
 //         RetrieveRoomTransactionWithOutLaundryEvent( widget.roomGuestId!));
-        FetchRoomGuestTransactionsOrderDescending(163));
+        FetchRoomGuestTransactionsOrderDescending(163, null));
   }
 
   @override

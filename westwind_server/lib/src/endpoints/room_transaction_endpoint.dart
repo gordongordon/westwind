@@ -39,10 +39,10 @@ class RoomTransactionEndpoint extends Endpoint {
     // DateTime endOfDay = startOfDay;
     // DateTime endOfDay = startOfDay.subtract(Duration(days: 1)).toUtc();
 
-  //  final startOfDay = DateTime(2025, 2, 26, 0, 0);
-  //  final endOfDay = DateTime(2025, 2, 27, 0, 0);
+    //  final startOfDay = DateTime(2025, 2, 26, 0, 0);
+    //  final endOfDay = DateTime(2025, 2, 27, 0, 0);
 
-              /*
+    /*
             t.itemType.inSet(
               {
                 ItemType.amex,
@@ -57,14 +57,15 @@ class RoomTransactionEndpoint extends Endpoint {
               } ) )
               */
 
-    DateTime startOfDay = DateTime( day.year, day.month, day.day, 7, 0, 0);
-    DateTime endOfDay = DateTime( day.year, day.month, day.day + 1, 6, 59, 59, 999);
+    DateTime startOfDay = DateTime(day.year, day.month, day.day, 7, 0, 0);
+    DateTime endOfDay =
+        DateTime(day.year, day.month, day.day + 1, 6, 59, 59, 999);
 
     return await RoomTransaction.db.find(session,
         where: (t) =>
-            t.transactionDay.between(startOfDay, endOfDay) & (
-              t.transactionType.equals(TransactionType.pay)
-               & ( t.total <  0.00 )),
+            t.transactionDay.between(startOfDay, endOfDay) &
+            t.transactionType.equals(TransactionType.pay),
+        // & ( t.total <  0.00 )),
         orderByList: (t) => [
               Order(column: t.updateDate, orderDescending: true),
               Order(column: t.transactionDay, orderDescending: true),
@@ -110,7 +111,27 @@ class RoomTransactionEndpoint extends Endpoint {
   }
 
   Future<List<RoomTransaction>> getTransactionsForRoomGuestOrderDescending(
-      Session session, int roomGuestId) async {
+      Session session,
+      int roomGuestId,
+      TransactionType? transactionType) async {
+    if (transactionType != null) {
+      return await RoomTransaction.db.find(session,
+          where: (i) =>
+              i.roomGuestId.equals(roomGuestId) &
+              i.transactionType.equals(transactionType),
+          //  orderBy : (t)  => t.updateDate,
+          orderByList: (t) => [
+                Order(column: t.updateDate, orderDescending: false),
+                Order(column: t.transactionDay, orderDescending: false),
+              ],
+          include: RoomTransaction.include(
+              guest: Guest.include(),
+              room: Room.include(),
+              roomGuest: RoomGuest.include(
+                guest: Guest.include(),
+              )));
+    }
+
     return await RoomTransaction.db.find(session,
         where: (i) => i.roomGuestId.equals(roomGuestId),
         //  orderBy : (t)  => t.updateDate,

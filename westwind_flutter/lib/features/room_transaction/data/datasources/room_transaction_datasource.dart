@@ -1,6 +1,5 @@
 import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/error/exception.dart';
-import 'package:westwind_flutter/core/utils/timeManager.dart';
 
 abstract class RoomTransactionDatasource {
   Future<List<RoomTransaction>> list();
@@ -10,7 +9,7 @@ abstract class RoomTransactionDatasource {
   Future<RoomTransaction> save(RoomTransaction roomTransaction);
   Future<List<RoomTransaction>> getTransactionsForRoomGuest(int roomGuestId);
   Future<List<RoomTransaction>> getTransactionsForRoomGuestOrderDescending(
-      int roomGuestId);
+      int roomGuestId, TransactionType? transactionType);
   Future<List<RoomTransaction>> getTransactionsForRoomGuestWithOutLaundry(
       int roomGuestId);
   Future<List<RoomTransaction>> findRoomTransactionsForWindow(
@@ -107,10 +106,13 @@ class RoomTransactionDatasourceImpl implements RoomTransactionDatasource {
 
   @override
   Future<List<RoomTransaction>> getTransactionsForRoomGuestOrderDescending(
-      int roomGuestId) async {
+    int roomGuestId,
+    TransactionType? transactionType,
+  ) async {
     try {
       return await _client.roomTransaction
-          .getTransactionsForRoomGuestOrderDescending(roomGuestId);
+          .getTransactionsForRoomGuestOrderDescending(
+              roomGuestId, transactionType);
     } catch (e) {
       throw ServerException(e.toString());
     }

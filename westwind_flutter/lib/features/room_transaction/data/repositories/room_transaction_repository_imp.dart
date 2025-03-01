@@ -160,10 +160,16 @@ class RoomTransactionRepositoryImp implements RoomTransactionRepository {
 
   @override
   Future<Either<Failure, List<RoomTransaction>>>
-      getTransactionsForRoomGuestOrderDescending(int roomGuesetId) async {
+      getTransactionsForRoomGuestOrderDescending(
+    int roomGuesetId,
+    TransactionType? transactionType,
+  ) async {
     try {
-      final response = await _datasource
-          .getTransactionsForRoomGuestOrderDescending(roomGuesetId);
+      final response =
+          await _datasource.getTransactionsForRoomGuestOrderDescending(
+        roomGuesetId,
+        transactionType,
+      );
 
       final result = response.map(_fromServer).toList();
 

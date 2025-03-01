@@ -25,8 +25,9 @@ import 'package:westwind_server/src/generated/rateReason.dart' as _i13;
 import 'package:westwind_server/src/generated/reservation.dart' as _i14;
 import 'package:westwind_server/src/generated/roomGuest.dart' as _i15;
 import 'package:westwind_server/src/generated/itemType.dart' as _i16;
-import 'package:westwind_server/src/generated/roomTransaction.dart' as _i17;
-import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i18;
+import 'package:westwind_server/src/generated/transactionType.dart' as _i17;
+import 'package:westwind_server/src/generated/roomTransaction.dart' as _i18;
+import 'package:serverpod_auth_server/serverpod_auth_server.dart' as _i19;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -1596,7 +1597,12 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'roomGuestId',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
+            'transactionType': _i1.ParameterDescription(
+              name: 'transactionType',
+              type: _i1.getType<_i17.TransactionType?>(),
+              nullable: true,
+            ),
           },
           call: (
             _i1.Session session,
@@ -1606,6 +1612,7 @@ class Endpoints extends _i1.EndpointDispatch {
                   .getTransactionsForRoomGuestOrderDescending(
             session,
             params['roomGuestId'],
+            params['transactionType'],
           ),
         ),
         'getTransactionsForRoomGuestWithOutLaundry': _i1.MethodConnector(
@@ -1632,7 +1639,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'rt': _i1.ParameterDescription(
               name: 'rt',
-              type: _i1.getType<_i17.RoomTransaction>(),
+              type: _i1.getType<_i18.RoomTransaction>(),
               nullable: false,
             )
           },
@@ -1755,6 +1762,6 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth'] = _i18.Endpoints()..initializeEndpoints(server);
+    modules['serverpod_auth'] = _i19.Endpoints()..initializeEndpoints(server);
   }
 }
