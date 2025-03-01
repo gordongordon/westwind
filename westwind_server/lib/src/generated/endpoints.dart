@@ -172,6 +172,24 @@ class Endpoints extends _i1.EndpointDispatch {
             phone: params['phone'],
           ),
         ),
+        'retrieveGuestByName': _i1.MethodConnector(
+          name: 'retrieveGuestByName',
+          params: {
+            'name': _i1.ParameterDescription(
+              name: 'name',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['guest'] as _i3.GuestEndpoint).retrieveGuestByName(
+            session,
+            name: params['name'],
+          ),
+        ),
         'retrieveGuestByLastName': _i1.MethodConnector(
           name: 'retrieveGuestByLastName',
           params: {
@@ -188,6 +206,25 @@ class Endpoints extends _i1.EndpointDispatch {
               (endpoints['guest'] as _i3.GuestEndpoint).retrieveGuestByLastName(
             session,
             lastName: params['lastName'],
+          ),
+        ),
+        'retrieveGuestByFirstName': _i1.MethodConnector(
+          name: 'retrieveGuestByFirstName',
+          params: {
+            'firstName': _i1.ParameterDescription(
+              name: 'firstName',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['guest'] as _i3.GuestEndpoint)
+                  .retrieveGuestByFirstName(
+            session,
+            firstName: params['firstName'],
           ),
         ),
         'createGuest': _i1.MethodConnector(

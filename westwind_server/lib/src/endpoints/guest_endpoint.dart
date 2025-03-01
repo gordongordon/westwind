@@ -50,13 +50,37 @@ class GuestEndpoint extends Endpoint {
     );
   }
 
-  Future<List<Guest>> retrieveGuestByLastName(Session session,
-      {required String lastName}) async {
-    final String filter = lastName + '%';
+  Future<List<Guest>> retrieveGuestByName(Session session,
+      {required String name}) async {
+    final String filter = '$name%';
 
     return await Guest.db.find(
       session,
-      where: (guest) => guest.lastName.ilike(filter),
+      where: (guest) => guest.lastName.ilike(filter) | guest.lastName.ilike(filter) ,
+      orderBy: (t) => t.lastName,
+      orderDescending: false,
+    );
+  }
+
+  Future<List<Guest>> retrieveGuestByLastName(Session session,
+      {required String lastName}) async {
+    final String filter = '$lastName%';
+
+    return await Guest.db.find(
+      session,
+      where: (guest) => guest.lastName.ilike(filter) ,
+      orderBy: (t) => t.lastName,
+      orderDescending: false,
+    );
+  }
+
+  Future<List<Guest>> retrieveGuestByFirstName(Session session,
+      {required String firstName}) async {
+    final String filter = '$firstName%';
+
+    return await Guest.db.find(
+      session,
+      where: (guest) => guest.firstName.ilike(filter),
       orderBy: (t) => t.lastName,
       orderDescending: false,
     );

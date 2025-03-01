@@ -5,7 +5,9 @@ guest:
   - retrieve:
   - save:
   - retrieveGuestByPhone:
+  - retrieveGuestByName:
   - retrieveGuestByLastName:
+  - retrieveGuestByFirstName:
   - createGuest:
   - updateGuest:
   - findGuest:

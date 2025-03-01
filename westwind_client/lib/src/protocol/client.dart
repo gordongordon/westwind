@@ -73,12 +73,27 @@ class EndpointGuest extends _i1.EndpointRef {
         {'phone': phone},
       );
 
+  _i2.Future<List<_i3.Guest>> retrieveGuestByName({required String name}) =>
+      caller.callServerEndpoint<List<_i3.Guest>>(
+        'guest',
+        'retrieveGuestByName',
+        {'name': name},
+      );
+
   _i2.Future<List<_i3.Guest>> retrieveGuestByLastName(
           {required String lastName}) =>
       caller.callServerEndpoint<List<_i3.Guest>>(
         'guest',
         'retrieveGuestByLastName',
         {'lastName': lastName},
+      );
+
+  _i2.Future<List<_i3.Guest>> retrieveGuestByFirstName(
+          {required String firstName}) =>
+      caller.callServerEndpoint<List<_i3.Guest>>(
+        'guest',
+        'retrieveGuestByFirstName',
+        {'firstName': firstName},
       );
 
   _i2.Future<_i3.Guest> createGuest({required _i3.Guest guest}) =>

@@ -178,15 +178,46 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     );
   }
 
-  Future<List<Guest>> getData(filter) async {
+  Future<List<Guest>> getDataByName(filter) async {
     try {
       var client = await Client(
         "https://westwind-app-b00b64c234f3.herokuapp.com/api/",
         authenticationKeyManager: FlutterAuthenticationKeyManager(),
       )
         ..connectivityMonitor = FlutterConnectivityMonitor();
-        
+
+      var response = client.guest.retrieveGuestByName(name: filter);
+      return response;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+
+  Future<List<Guest>> getDataByLastName(filter) async {
+    try {
+      var client = await Client(
+        "https://westwind-app-b00b64c234f3.herokuapp.com/api/",
+        authenticationKeyManager: FlutterAuthenticationKeyManager(),
+      )
+        ..connectivityMonitor = FlutterConnectivityMonitor();
+
       var response = client.guest.retrieveGuestByLastName(lastName: filter);
+      return response;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  Future<List<Guest>> getDataByFirstName(filter) async {
+    try {
+      var client = await Client(
+        "https://westwind-app-b00b64c234f3.herokuapp.com/api/",
+        authenticationKeyManager: FlutterAuthenticationKeyManager(),
+      )
+        ..connectivityMonitor = FlutterConnectivityMonitor();
+
+      var response = client.guest.retrieveGuestByFirstName(firstName: filter);
       return response;
     } catch (e) {
       throw ServerException(e.toString());
@@ -198,16 +229,16 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppFormFields.buildSectionHeader(context, 'Guest Information'),
-        
+
         // Guest Search Dropdown
         DropdownSearch<Guest>(
           decoratorProps: DropDownDecoratorProps(
             decoration: InputDecoration(
-              labelText: 'Click to start searching guest',
+              labelText: 'Click to start searching guest by last name',
               border: OutlineInputBorder(),
             ),
           ),
-          items: (f, cs) => getData(f),
+          items: (f, cs) => getDataByLastName(f),
           suffixProps: DropdownSuffixProps(
               clearButtonProps: ClearButtonProps(isVisible: true)),
           compareFn: (item, selectedItem) {
@@ -231,11 +262,12 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
               leading: CircleAvatar(
                   backgroundColor: Colors.blue,
                   child: Text(selectedItem.lastName[0])),
-              title: Text(selectedItem.lastName),
+              title: Text(selectedItem.firstName + selectedItem.lastName ),
               subtitle: Text(
                   ' ${selectedItem.rateType} / Tel : ${selectedItem.phone}'),
             );
           },
+
           popupProps: PopupProps.menu(
             disableFilter: true,
             showSearchBox: true,
@@ -258,8 +290,10 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
             },
           ),
         ),
+
+
         const SizedBox(height: 16),
-        
+
         // Phone Field
         AppFormFields.buildPhoneField(
           name: 'phone',
@@ -267,7 +301,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           controller: phoneController,
           onChanged: _onPhoneChanged,
         ),
-        
+
         // Guest ID Field
         AppFormFields.buildIdField(
           name: 'guestId',
@@ -276,20 +310,20 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           enabled: false,
           required: false,
         ),
-        
+
         // Name Fields
         AppFormFields.buildNameField(
           name: 'firstName',
           label: 'First Name',
           controller: firstNameController,
         ),
-        
+
         AppFormFields.buildNameField(
           name: 'lastName',
           label: 'Last Name',
           controller: lastNameController,
         ),
-        
+
         // Email Field
         AppFormFields.buildEmailField(
           name: 'email',
@@ -297,7 +331,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           controller: emailController,
           required: false,
         ),
-        
+
         // Rig Number Field
         AppFormFields.buildIdField(
           name: 'rigNumber',
@@ -306,7 +340,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           validator: AppValidators.rigNumberValidator,
           required: false,
         ),
-        
+
         // Is In House Switch
         AppFormFields.buildSwitch(
           name: 'isInHouse',
@@ -314,7 +348,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           initialValue: isInHouse,
           onChanged: (val) => setState(() => isInHouse = val ?? false),
         ),
-        
+
         // Notes Field
         AppFormFields.buildNoteField(
           name: 'note',
@@ -331,7 +365,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppFormFields.buildSectionHeader(context, 'Reservation Information'),
-        
+
         // Reservation ID Field
         AppFormFields.buildIdField(
           name: 'reservationId',
@@ -340,7 +374,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           enabled: false,
           required: false,
         ),
-        
+
         // Check-in Date
         AppFormFields.buildCheckInDatePicker(
           name: 'checkInDate',
@@ -353,13 +387,14 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
                 // Update check-out date to be at least one day after check-in
                 if (checkOutDate.isBefore(checkInDate.add(Duration(days: 1)))) {
                   checkOutDate = checkInDate.add(Duration(days: 1));
-                  formKey.currentState?.fields['checkOutDate']?.didChange(checkOutDate);
+                  formKey.currentState?.fields['checkOutDate']
+                      ?.didChange(checkOutDate);
                 }
               });
             }
           },
         ),
-        
+
         // Check-out Date
         AppFormFields.buildCheckOutDatePicker(
           name: 'checkOutDate',
@@ -374,7 +409,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
             }
           },
         ),
-        
+
         // Room ID Field
         AppFormFields.buildIdField(
           name: 'roomId',
@@ -382,7 +417,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           controller: roomIdController,
           validator: AppValidators.roomIdValidator,
         ),
-        
+
         // Status Switches
         AppFormFields.buildSwitch(
           name: 'isCheckedIn',
@@ -390,14 +425,14 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           initialValue: isCheckedIn,
           onChanged: (val) => setState(() => isCheckedIn = val ?? false),
         ),
-        
+
         AppFormFields.buildSwitch(
           name: 'isCanceled',
           label: 'Is Canceled',
           initialValue: isCanceled,
           onChanged: (val) => setState(() => isCanceled = val ?? false),
         ),
-        
+
         AppFormFields.buildSwitch(
           name: 'isNightShift',
           label: 'Is Night Shift',
@@ -413,7 +448,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppFormFields.buildSectionHeader(context, 'Rate Information'),
-        
+
         // Rate Type Dropdown
         AppFormFields.buildRateTypeDropdown(
           name: 'rateType',
@@ -427,7 +462,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
             }
           },
         ),
-        
+
         // Rate Reason Dropdown
         AppFormFields.buildRateReasonDropdown(
           name: 'rateReason',
@@ -441,7 +476,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
             }
           },
         ),
-        
+
         // Rate Amount Field
         AppFormFields.buildMoneyField(
           name: 'rate',
@@ -460,7 +495,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AppFormFields.buildSectionHeader(context, 'Additional Information'),
-        
+
         // Created/Updated Date Fields
         AppFormFields.buildDateTimePicker(
           name: 'dateCreate',
@@ -468,7 +503,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           initialValue: dateCreate,
           enabled: false,
         ),
-        
+
         AppFormFields.buildDateTimePicker(
           name: 'dateUpdate',
           label: 'Date Updated',
@@ -483,7 +518,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
     return Column(
       children: [
         const SizedBox(height: 24),
-        
+
         // Save & Check In button
         AppFormFields.buildActionButton(
           text: 'Save & Check In',
@@ -493,7 +528,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
           },
           icon: Icons.save_outlined,
         ),
-        
+
         // Delete button (if in edit mode)
         if (isReservationEditing)
           AppFormFields.buildActionButton(
