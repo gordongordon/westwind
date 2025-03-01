@@ -39,28 +39,27 @@ class RoomTransactionEndpoint extends Endpoint {
     // DateTime endOfDay = startOfDay;
     // DateTime endOfDay = startOfDay.subtract(Duration(days: 1)).toUtc();
 
-    //  final startOfDay = DateTime(2025, 2, 26, 0, 0);
-    //  final endOfDay = DateTime(2025, 2, 27, 0, 0);
+  //  final startOfDay = DateTime(2025, 2, 26, 0, 0);
+  //  final endOfDay = DateTime(2025, 2, 27, 0, 0);
 
-    DateTime startOfDay = DateTime(day.year, day.month, day.day, 7, 0, 0);
-    DateTime endOfDay =
-        DateTime(day.year, day.month, day.day + 1, 6, 59, 59, 999);
+    DateTime startOfDay = DateTime( day.year, day.month, day.day, 7, 0, 0);
+    DateTime endOfDay = DateTime( day.year, day.month, day.day + 1, 6, 59, 59, 999);
 
     return await RoomTransaction.db.find(session,
         where: (t) =>
-            t.transactionDay.between(startOfDay, endOfDay) &
-            t.itemType.inSet({
-              ItemType.amex,
-              ItemType.cash,
-              ItemType.debit,
-              ItemType.eTransfer,
-              ItemType.master,
-              ItemType.gift_card,
-              ItemType.visa,
-              ItemType.laundry,
-              ItemType.deposite,
-            }) &
-            (t.total < 0),
+            t.transactionDay.between(startOfDay, endOfDay) & (
+            t.itemType.inSet(
+              {
+                ItemType.amex,
+                ItemType.cash,
+                ItemType.debit,
+                ItemType.eTransfer,
+                ItemType.master,
+                ItemType.gift_card,
+                ItemType.visa,
+                ItemType.laundry,
+                ItemType.deposite,
+              } ) ) & ( t.total <  0.00  ),
         orderByList: (t) => [
               Order(column: t.updateDate, orderDescending: true),
               Order(column: t.transactionDay, orderDescending: true),
