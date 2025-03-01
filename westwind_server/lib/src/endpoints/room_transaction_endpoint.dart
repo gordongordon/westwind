@@ -59,7 +59,7 @@ class RoomTransactionEndpoint extends Endpoint {
                 ItemType.visa,
                 ItemType.laundry,
                 ItemType.deposite,
-              } ) ) & ( t.total <  0.00  ),
+              } ) ) & ( t.total <  0.00 ),
         orderByList: (t) => [
               Order(column: t.updateDate, orderDescending: true),
               Order(column: t.transactionDay, orderDescending: true),
