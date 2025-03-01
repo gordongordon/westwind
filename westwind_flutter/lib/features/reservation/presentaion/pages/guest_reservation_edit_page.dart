@@ -128,6 +128,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
             onPressed: _saveGuestReservation,
             icon: Icon(Icons.save),
             tooltip: 'Save Guest & Reservation',
+            color: Colors.green,
           ),
         ],
       ),

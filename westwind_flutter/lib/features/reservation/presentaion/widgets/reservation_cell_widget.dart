@@ -31,10 +31,9 @@ class ReservationCellWidget extends StatefulWidget {
 
 class ReservationCellWidgetState extends State<ReservationCellWidget> {
   // want that to be always expanded the cell, easy to manage while more than one guest in a cell.
-  bool isExpanded = true;  
+  bool isExpanded = true;
   bool isHovering = false;
   static const double _fontSize = 12;
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,19 +59,19 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
           ...widget.roomTransactions,
           ...widget.roomGuests
         ];
-        
-       // widget.
+
+        // widget.
         final roomNumber = widget.roomNumber;
         final date = widget.date;
-       //  cellContent.
+        //  cellContent.
         if (items.isEmpty) {
           cellContent = _buildEmptyCell(context, roomNumber, date);
         } else if (items.length == 1) {
-          
-          cellContent = _buildSingleItemCell(context, items.first, roomNumber, date);
+          cellContent =
+              _buildSingleItemCell(context, items.first, roomNumber, date);
         } else {
           cellContent = _buildMultiItemCell(context, items);
-       //          cellContent = _buildSingleItemCell(context, items.first, roomNumber, date);
+          //          cellContent = _buildSingleItemCell(context, items.first, roomNumber, date);
         }
 
         return Stack(
@@ -178,12 +177,12 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   }
 */
 
-  
-
-  Widget _buildEmptyCell(BuildContext context, [ String? roomNumber, DateTime? date ]) {
+  Widget _buildEmptyCell(BuildContext context,
+      [String? roomNumber, DateTime? date]) {
     return GestureDetector(
-   //   onTap: () => _openNewReservationPage(context),
-        onTap: () => _openNewGuestReservationEditPage(context, roomNumber!, date! ),
+      //   onTap: () => _openNewReservationPage(context),
+      onTap: () =>
+          _openNewGuestReservationEditPage(context, roomNumber!, date!),
       child: Container(
         width: 110,
         height: 30,
@@ -195,25 +194,23 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     );
   }
 
-
-
-  Widget _buildSingleItemCell(BuildContext context, dynamic item, String roomNumber, DateTime date) {
+  Widget _buildSingleItemCell(
+      BuildContext context, dynamic item, String roomNumber, DateTime date) {
     if (item is Reservation) {
-  //    if ( item.isCanceled ) {
-  //      return _buildEmptyCell(context, roomNumber, date);
-  //    }
+      //    if ( item.isCanceled ) {
+      //      return _buildEmptyCell(context, roomNumber, date);
+      //    }
       return _buildSingleReservationCell(context, item);
     } else if (item is RoomTransaction) {
       return _buildSingleRoomTransactionCell(context, item);
-    } else if (item is RoomGuest  ) {
-
-         /**
+    } else if (item is RoomGuest) {
+      /**
           * This logic should be moved into Blog
           */
-     //    if ( item.isCheckOut ) {
-     //      return _buildEmptyCell(context, roomNumber, date);
-     //    } 
-         return _buildSingleRoomGuestCell(context, item);
+      //    if ( item.isCheckOut ) {
+      //      return _buildEmptyCell(context, roomNumber, date);
+      //    }
+      return _buildSingleRoomGuestCell(context, item);
     }
     return _buildEmptyCell(context, roomNumber, date);
   }
@@ -223,7 +220,8 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     return Draggable<Reservation>(
       data: reservation,
       feedback: _buildDragFeedback(context, reservation),
-      childWhenDragging: _buildEmptyCell(context, reservation.roomId.toString(), reservation.stayDay),
+      childWhenDragging: _buildEmptyCell(
+          context, reservation.roomId.toString(), reservation.stayDay),
       child: GestureDetector(
         onTap: () => _showReservationDetails(context, reservation),
         onDoubleTap: () => _openReservationEditPage(context, reservation),
@@ -236,7 +234,8 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
       BuildContext context, RoomTransaction transaction) {
     return GestureDetector(
       onTap: () => _showRoomTransactionDetails(context, transaction),
-      onLongPress: () => _openRoomGuestTransactionManagePageByRoomGuestId(context, transaction.roomGuestId),
+      onLongPress: () => _openRoomGuestTransactionManagePageByRoomGuestId(
+          context, transaction.roomGuestId),
       child: Container(
         width: 110,
         height: 30,
@@ -277,12 +276,10 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     );
   }
 
-
   /**
    * Mixed Multiple Guests 
    */
   Widget _buildMultiItemCell(BuildContext context, List<dynamic> items) {
-
     /** 
      * If RoomTransaction (Paid), field's color is Orange  
      * but second cell can be unpaid, but still Orange!  
@@ -290,18 +287,17 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     //final int itemCount =  items.length;
     dynamic first = items[0];
     dynamic second = items[1];
-    Color fieldColor; 
- 
+    Color fieldColor;
 
-    //! Handle records more 2 items 
+    //! Handle records more 2 items
     if (first is RoomTransaction) {
-       fieldColor = Colors.orange;
-    } else if (first is Reservation && second is Reservation ) { 
-       fieldColor = Colors.green; 
-    } else if ( first is Reservation || second is Reservation ) {
-       fieldColor = Colors.blueGrey;
+      fieldColor = Colors.orange;
+    } else if (first is Reservation && second is Reservation) {
+      fieldColor = Colors.green;
+    } else if (first is Reservation || second is Reservation) {
+      fieldColor = Colors.blueGrey;
     } else {
-       fieldColor = Colors.blue;
+      fieldColor = Colors.blue;
     }
 
     /** End of Orange */
@@ -323,7 +319,6 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
        }
     }
     */
-    
 
     return GestureDetector(
       onTap: () {
@@ -356,7 +351,6 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         } else if (item is RoomTransaction) {
           return _buildRoomTransactionListItem(context, item);
         } else if (item is RoomGuest) {
-          
           return _buildRoomGuestListItem(context, item);
         }
         return const SizedBox.shrink();
@@ -365,10 +359,10 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
   }
 
   Widget _buildCollapsedContent(BuildContext context, List<dynamic> items) {
-   // return _buildExpandedContent(context, items);
+    // return _buildExpandedContent(context, items);
 
-   //! handle add gueset name on cells, if possilbe, not too longe. by item[0] == RoomGuest ..?
-    
+    //! handle add gueset name on cells, if possilbe, not too longe. by item[0] == RoomGuest ..?
+
     return Center(
       child: Text(
         '${items.length} Guests',
@@ -380,8 +374,6 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         textAlign: TextAlign.center,
       ),
     );
-    
-    
   }
 
   Widget _buildReservationContent(
@@ -469,9 +461,9 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
               Expanded(
                 child: Text(
                   '${reservation.guest?.firstName} ${reservation.guest?.lastName}',
-                  style: const TextStyle(fontSize: _fontSize, color: Colors.white),
+                  style:
+                      const TextStyle(fontSize: _fontSize, color: Colors.white),
                   overflow: TextOverflow.ellipsis,
-    
                 ),
               ),
               const Icon(Icons.phone, size: 16, color: Colors.white),
@@ -482,7 +474,6 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     );
   }
 
-
   /**
    * For expended listing on calendar.
    */
@@ -490,7 +481,8 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
       BuildContext context, RoomTransaction transaction) {
     return GestureDetector(
       onTap: () => _showRoomTransactionDetails(context, transaction),
-      onLongPress: () => _openRoomGuestTransactionManagePageByRoomGuestId(context, transaction.roomGuestId),
+      onLongPress: () => _openRoomGuestTransactionManagePageByRoomGuestId(
+          context, transaction.roomGuestId),
       child: Container(
         color: Colors.orange,
         height: 35,
@@ -500,7 +492,8 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
             Expanded(
               child: Text(
                 '${transaction.guest!.firstName} ${transaction.guest!.lastName}',
-                style: const TextStyle(fontSize: _fontSize, color: Colors.white),
+                style:
+                    const TextStyle(fontSize: _fontSize, color: Colors.white),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -524,13 +517,14 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
         child: Container(
           height: 35,
           padding: const EdgeInsets.symmetric(horizontal: 4),
-          color : Colors.blue,
+          color: Colors.blue,
           child: Row(
             children: [
               Expanded(
                 child: Text(
                   '${roomGuest.guest?.firstName} ${roomGuest.guest?.lastName}',
-                  style: const TextStyle(fontSize: _fontSize, color: Colors.white),
+                  style:
+                      const TextStyle(fontSize: _fontSize, color: Colors.white),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -664,10 +658,11 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
     }
   }
 
-  void _openNewGuestReservationEditPage(BuildContext context, String roomNumber, DateTime date ) {
-      final int roomId = int.parse(roomNumber);
+  void _openNewGuestReservationEditPage(
+      BuildContext context, String roomNumber, DateTime date) {
+    final int roomId = int.parse(roomNumber);
 
-      context.push(GuestReservationEditPage.routeCalendar(roomId, date));
+    context.push(GuestReservationEditPage.routeCalendar(roomId, date));
   }
 
   void _openNewReservationPage(BuildContext context) {
@@ -686,10 +681,11 @@ class ReservationCellWidgetState extends State<ReservationCellWidget> {
       context.push(RoomGuestTransactionsManagePage.route(roomGuest.id));
     }
   }
+
   void _openRoomGuestTransactionManagePageByRoomGuestId(
       BuildContext context, int id) {
-  //  if (roomGuest.id != null && roomGuest.id! > 0) {
-      context.push(RoomGuestTransactionsManagePage.route(id));
-   // }
+    //  if (roomGuest.id != null && roomGuest.id! > 0) {
+    context.push(RoomGuestTransactionsManagePage.route(id));
+    // }
   }
 }

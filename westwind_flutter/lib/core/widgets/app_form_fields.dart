@@ -35,7 +35,17 @@ class AppFormFields {
     TextInputType keyboardType = TextInputType.text,
     VoidCallback? onButtonPressed, // Callback for button press
     VoidCallback? onPressed,
+    bool required = false,
+    String? Function(String?)? validator,
   }) {
+    // If field is not required but has a validator, make that validator optional
+    final finalValidator = required
+        ? (validator ??
+            FormBuilderValidators.compose([
+              FormBuilderValidators.required(errorText: '$label is required'),
+            ]))
+        : (validator != null ? makeOptional(validator) : null);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: FormBuilderTextField(
@@ -49,13 +59,15 @@ class AppFormFields {
             icon: Icon(Icons.save), // Add your desired button icon here
             //    onPressed: onButtonPressed ?? () {}, // Handle button action
             onPressed: onPressed,
+            color: Colors.green,
           ),
         ),
         keyboardType: keyboardType,
         maxLines: keyboardType == TextInputType.multiline ? null : 1,
-        validator: FormBuilderValidators.compose([
-          FormBuilderValidators.required(),
-        ]),
+        //   validator: FormBuilderValidators.compose([
+        //     FormBuilderValidators.required(),
+        //   ]),
+        validator: finalValidator,
       ),
     );
   }
@@ -471,7 +483,7 @@ class AppFormFields {
   static Widget buildActionButton({
     required String text,
     required VoidCallback onPressed,
-    Color color = Colors.blue,
+    Color color = Colors.green,
     bool fullWidth = true,
     IconData? icon,
   }) {

@@ -78,7 +78,9 @@ class _RoomGuestTransactionsManagePage
                   enabled: true,
                    keyboardType: TextInputType.multiline,
                   controller: noteController,
-                  onPressed: _onUpdateNoteButton),
+                  onPressed: _onUpdateNoteButton,
+                  required: false,
+                  ),
 
               //  _buildTextFieldMultiline(
               //      'note', 'Note to Room Guest State only', noteController,
