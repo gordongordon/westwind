@@ -21,6 +21,44 @@ class AppFormFields {
     };
   }
 
+  static Widget buildTextFieldMultiline(
+    {
+     required String name,
+     required  String label,
+     required  TextEditingController controller, 
+
+
+    bool enabled = true,
+    TextInputType keyboardType = TextInputType.text,
+    VoidCallback? onButtonPressed, // Callback for button press
+    VoidCallback? onPressed, 
+    }
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: FormBuilderTextField(
+        name: name,
+        controller: controller,
+        enabled: enabled,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+          suffixIcon: IconButton(
+            icon: Icon(Icons.save), // Add your desired button icon here
+        //    onPressed: onButtonPressed ?? () {}, // Handle button action
+           onPressed: onPressed,
+          ),
+        ),
+        keyboardType: keyboardType,
+        maxLines: keyboardType == TextInputType.multiline ? null : 1,
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(),
+        ]),
+      ),
+    );
+  }
+
+
   // Text Input Fields
   // Modified buildTextField method with optional 'required' parameter
   static Widget buildTextField({

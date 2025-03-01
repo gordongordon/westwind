@@ -72,25 +72,27 @@ class _RoomGuestTransactionsManagePage
             children: [
               const SizedBox(height: 24),
               // Left side: Transaction List
-              AppFormFields.buildNoteField(   name: 'note', label: 'Note to Room Guest State only', controller: noteController, required: false ),
+              AppFormFields.buildTextFieldMultiline(
+                  name: 'note',
+                  label: 'Note to Room Guest State only',
+                  enabled: true,
+                   keyboardType: TextInputType.multiline,
+                  controller: noteController,
+                  onPressed: _onUpdateNoteButton),
 
-              /*
-              _buildTextFieldMultiline(
-                  'note', 'Note to Room Guest State only', noteController,
-                  keyboardType: TextInputType.multiline),
-              //  _buildActionButtons(),
-           */
+              //  _buildTextFieldMultiline(
+              //      'note', 'Note to Room Guest State only', noteController,
+              //      keyboardType: TextInputType.multiline),
+              // _buildActionButtons(),
+
               // Right side: Transaction Form
               Expanded(
                 flex: 1,
                 child: RoomGuestTransactionsManageWidget(
-                    roomGuestId: widget.roomGuestId ?? 0
-                ),
+                    roomGuestId: widget.roomGuestId ?? 0),
               ),
-              
 
-
-              // Invoice Button 
+              // Invoice Button
               _buildActionButtons(),
             ],
           );
@@ -104,15 +106,17 @@ class _RoomGuestTransactionsManagePage
   }
 
   void _onUpdateNoteButton() {
-       context.read<RoomGuestManageBloc>().add(UpdateRoomGuestNote(widget.roomGuestId!, noteController.text ));
+    context
+        .read<RoomGuestManageBloc>()
+        .add(UpdateRoomGuestNote(widget.roomGuestId!, noteController.text));
   }
-
 
   Widget _buildActionButtons() {
     return Column(
       children: [
         const SizedBox(height: 24),
-        _buildButton('Invoice PDF', () =>     context.push(PdfEditPage.route(widget.roomGuestId!)))
+        _buildButton('Invoice PDF',
+            () => context.push(PdfEditPage.route(widget.roomGuestId!)))
       ],
     );
   }
@@ -126,9 +130,6 @@ class _RoomGuestTransactionsManagePage
       child: Text(text),
     );
   }
-  
-
-
 
   Widget _buildTextFieldMultiline(
     String name,
@@ -149,8 +150,8 @@ class _RoomGuestTransactionsManagePage
           border: OutlineInputBorder(),
           suffixIcon: IconButton(
             icon: Icon(Icons.save), // Add your desired button icon here
-        //    onPressed: onButtonPressed ?? () {}, // Handle button action
-           onPressed: _onUpdateNoteButton,
+            //    onPressed: onButtonPressed ?? () {}, // Handle button action
+            onPressed: _onUpdateNoteButton,
           ),
         ),
         keyboardType: keyboardType,
@@ -205,4 +206,3 @@ Widget _buildTextFieldMultiline(
     }
   }
 }
-
