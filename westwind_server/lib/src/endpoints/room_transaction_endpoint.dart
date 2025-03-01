@@ -57,6 +57,7 @@ class RoomTransactionEndpoint extends Endpoint {
                 ItemType.master,
                 ItemType.gift_card,
                 ItemType.visa,
+                ItemType.laundry,
               },
             )),
         orderByList: (t) => [
