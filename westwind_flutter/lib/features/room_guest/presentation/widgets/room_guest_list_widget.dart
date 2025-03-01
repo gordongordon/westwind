@@ -73,8 +73,7 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
     );
   }
 
-
-    PlutoColumn _buildBooleanColumn(String title, String field,
+  PlutoColumn _buildBooleanColumn(String title, String field,
       {IconData? icon}) {
     return PlutoColumn(
       title: title,
@@ -106,20 +105,18 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
         stateManager = event.stateManager;
       },
       onSelected: _handleRowSelected,
-      //! Testing 
+      //! Testing
       onRowDoubleTap: _handleRowDoubleTap,
-      onRowChecked:  _handleRowDoubleTapRoomGuestTransactioin,
-    //  onRowSecondaryTap:  _handleRowDoubleTap,
+      onRowChecked: _handleRowDoubleTapRoomGuestTransactioin,
+      //  onRowSecondaryTap:  _handleRowDoubleTap,
 
-     // onRowSecondaryTap: _handleRowDoubleTapRoomGuestTransactioin,
+      // onRowSecondaryTap: _handleRowDoubleTapRoomGuestTransactioin,
 
       configuration: PlutoGridConfiguration(
         columnFilter: _buildColumnFilterConfig(),
       ),
     );
   }
-
-
 
   PlutoRow _createRow(RoomGuest roomGuest) {
     // Compute Balance
@@ -164,22 +161,20 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
     }
   }
 */
-   
-  void _handleRowDoubleTapRoomGuestTransactioin(PlutoGridOnRowCheckedEvent event) {
- 
-    if ( event.isRow ) {
-          final field = event.row?.cells['id'];
-    
 
-    // final field = event.row.cells['id'];
-    if (field == null) {
-      showSnackbar(context, 'Cell id cannot be found!');
-    } else {
-      context.push(RoomGuestTransactionsManagePage.route(field.value));
-    }
+  void _handleRowDoubleTapRoomGuestTransactioin(
+      PlutoGridOnRowCheckedEvent event) {
+    if (event.isRow) {
+      final field = event.row?.cells['id'];
+
+      // final field = event.row.cells['id'];
+      if (field == null) {
+        showSnackbar(context, 'Cell id cannot be found!');
+      } else {
+        context.push(RoomGuestTransactionsManagePage.route(field.value));
+      }
     }
   }
-  
 
   void _handleRowSelected(PlutoGridOnSelectedEvent event) {
     context.push(RoomTransactionCreatePage.route(1));
@@ -201,7 +196,8 @@ class _RoomGuestListWidgetState extends State<RoomGuestListWidget> {
         if (column.field == 'id') {
           return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
         } else if (column.field == 'firstName') {
-          return resolver<PlutoFilterTypeGreaterThan>() as PlutoFilterType;
+          return resolver<PlutoFilterTypeContains>()
+              as PlutoFilterType; // ✅ FIXED
         } else if (column.field == 'createAt') {
           return resolver<PlutoFilterTypeLessThan>() as PlutoFilterType;
         } else if (column.field == 'rateType') {

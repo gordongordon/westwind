@@ -168,6 +168,7 @@ class _GuestListWidgetState extends State<GuestListWidget> {
       columns: columns,
       rows: rows,
       onLoaded: (PlutoGridOnLoadedEvent event) {
+        event.stateManager.setShowColumnFilter(true);
         stateManager = event.stateManager;
       },
       onRowDoubleTap: (event) => _handleRowDoubleTap(context, event),
@@ -218,7 +219,8 @@ class _GuestListWidgetState extends State<GuestListWidget> {
           if (column.field == 'id') {
             return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
           } else if (column.field == 'firstName') {
-            return resolver<PlutoFilterTypeGreaterThan>() as PlutoFilterType;
+            return resolver<PlutoFilterTypeContains>()
+                as PlutoFilterType; // ✅ FIXED
           } else if (column.field == 'createAt') {
             return resolver<PlutoFilterTypeLessThan>() as PlutoFilterType;
           } else if (column.field == 'rateType') {
