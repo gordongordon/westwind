@@ -58,8 +58,9 @@ class RoomTransactionEndpoint extends Endpoint {
                 ItemType.gift_card,
                 ItemType.visa,
                 ItemType.laundry,
+                ItemType.deposite,
               },
-            )),
+            ) & ( t.total < 0 )),
         orderByList: (t) => [
               Order(column: t.updateDate, orderDescending: true),
               Order(column: t.transactionDay, orderDescending: true),
