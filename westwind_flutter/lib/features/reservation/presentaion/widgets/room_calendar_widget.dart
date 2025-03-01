@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:westwind_client/westwind_client.dart';
 import 'package:westwind_flutter/core/utils/MyDateExtension.dart';
 import 'package:westwind_flutter/core/utils/timeManager.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/bloc/room_Calendar/room_calendar_bloc.dart';
-import 'package:westwind_flutter/features/reservation/presentaion/widgets/reservation_cell_widget.dart';
 import 'package:westwind_flutter/features/reservation/presentaion/widgets/room_row_widget.dart';
 
 class RoomCalendarWidget extends StatefulWidget {
@@ -59,7 +57,8 @@ class _RoomCalendarWidgetState extends State<RoomCalendarWidget> {
           icon: const Icon(Icons.refresh),
           onPressed: () => context
               .read<RoomCalendarBloc>()
-              .add(FetchReservationsAndTransactions(DateTime.now().toUtc())),
+              // .add(FetchReservationsAndTransactions(DateTime.now().toUtc())),
+              .add(FetchReservationsAndTransactions(TimeManager.instance.today())),
           tooltip: 'Fetch latest data',
         ),
       ],
@@ -149,7 +148,7 @@ class _TopBarWidget extends StatelessWidget {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: state.startDate,
-      firstDate: DateTime(2024),
+      firstDate: DateTime(2025),
       lastDate: DateTime(2100),
     );
     if (picked != null && picked != state.startDate) {
@@ -249,7 +248,7 @@ class DateHeaderWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(4),
               child: Text(
-                '${date.getMMDDWeekday()}',
+                date.getMMDDWeekday(),
                 //'${date.day}/${date.getDDMonthName()}',
                 style: const TextStyle(fontSize: 12),
                 textAlign: TextAlign.center,

@@ -202,7 +202,8 @@ class _RoomGuestListButCIWidgetState extends State<RoomGuestListButCIWidget> {
         if (column.field == 'id') {
           return resolver<PlutoFilterTypeContains>() as PlutoFilterType;
         } else if (column.field == 'firstName') {
-          return resolver<PlutoFilterTypeGreaterThan>() as PlutoFilterType;
+          return resolver<PlutoFilterTypeContains>()
+              as PlutoFilterType; // ✅ FIXED
         } else if (column.field == 'createAt') {
           return resolver<PlutoFilterTypeLessThan>() as PlutoFilterType;
         } else if (column.field == 'rateType') {

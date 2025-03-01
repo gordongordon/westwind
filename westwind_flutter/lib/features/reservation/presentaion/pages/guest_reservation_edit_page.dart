@@ -274,7 +274,7 @@ class _GuestReservationEditPageState extends State<GuestReservationEditPage> {
             showSelectedItems: true,
             searchFieldProps: TextFieldProps(
               decoration: InputDecoration(
-                labelText: 'Type to search by guest\'s last name',
+                labelText: 'Type to  search guest by last or first name',
                 border: OutlineInputBorder(),
               ),
             ),
