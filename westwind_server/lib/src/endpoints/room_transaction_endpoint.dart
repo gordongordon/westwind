@@ -47,7 +47,7 @@ class RoomTransactionEndpoint extends Endpoint {
 
     return await RoomTransaction.db.find(session,
         where: (t) =>
-            t.transactionDay.between(startOfDay, endOfDay) &
+            t.transactionDay.between(startOfDay, endOfDay) & (
             t.itemType.inSet(
               {
                 ItemType.amex,
@@ -59,7 +59,7 @@ class RoomTransactionEndpoint extends Endpoint {
                 ItemType.visa,
                 ItemType.laundry,
                 ItemType.deposite,
-              } ) & (t.total < 0) ,
+              } ) & (t.amount < 0) ) ,
         orderByList: (t) => [
               Order(column: t.updateDate, orderDescending: true),
               Order(column: t.transactionDay, orderDescending: true),
