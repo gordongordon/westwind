@@ -64,7 +64,11 @@ class RoomTransactionEndpoint extends Endpoint {
     return await RoomTransaction.db.find(session,
         where: (t) =>
             t.transactionDay.between(startOfDay, endOfDay) &
-            t.transactionType.equals(TransactionType.pay),
+            t.transactionType.inSet({
+              TransactionType.pay,
+              TransactionType.refund,
+            }),
+        // t.transactionType.equals(TransactionType.pay),
         // & ( t.total <  0.00 )),
         orderByList: (t) => [
               Order(column: t.updateDate, orderDescending: true),
@@ -118,7 +122,8 @@ class RoomTransactionEndpoint extends Endpoint {
       return await RoomTransaction.db.find(session,
           where: (i) =>
               i.roomGuestId.equals(roomGuestId) &
-              ( i.transactionType.equals(transactionType) | i.transactionType.equals(TransactionType.refund) ),
+              (i.transactionType.equals(transactionType) |
+                  i.transactionType.equals(TransactionType.refund)),
           //  orderBy : (t)  => t.updateDate,
           orderByList: (t) => [
                 Order(column: t.updateDate, orderDescending: false),
