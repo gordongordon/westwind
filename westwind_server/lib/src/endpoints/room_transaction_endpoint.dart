@@ -118,7 +118,7 @@ class RoomTransactionEndpoint extends Endpoint {
       return await RoomTransaction.db.find(session,
           where: (i) =>
               i.roomGuestId.equals(roomGuestId) &
-              i.transactionType.equals(transactionType),
+              ( i.transactionType.equals(transactionType) | i.transactionType.equals(TransactionType.refund) ),
           //  orderBy : (t)  => t.updateDate,
           orderByList: (t) => [
                 Order(column: t.updateDate, orderDescending: false),

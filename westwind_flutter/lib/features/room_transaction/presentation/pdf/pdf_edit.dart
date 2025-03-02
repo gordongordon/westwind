@@ -74,7 +74,7 @@ class PdfEditPageState extends State<PdfEditPage>
     if (widget.roomGuestId != null) {
       context.read<RoomGuestTransactionsBloc>().add(
 //         RetrieveRoomTransactionWithOutLaundryEvent( widget.roomGuestId!));
-           FetchRoomGuestTransactionsOrderDescending(widget.roomGuestId!, TransactionType.pay));
+           FetchRoomGuestTransactionsOrderDescending(widget.roomGuestId!, null ));
 
 
    //   context
@@ -114,11 +114,11 @@ class PdfEditPageState extends State<PdfEditPage>
       if (state is RoomGuestTransactionsLoaded) {
         // Initialize PdfGenerators once we have the data
 
-        final result = state.transactions;
-        /*
+       // final result = state.transactions;
+        
         final result = state.transactions
             .where((item) => item.itemType != ItemType.laundry)
-            .toList();*/
+            .toList();
 
         pdfGenerators = <PdfGenerator>[
           PdfGenerator(
