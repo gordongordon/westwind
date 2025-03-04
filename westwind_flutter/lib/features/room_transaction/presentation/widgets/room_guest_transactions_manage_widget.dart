@@ -159,7 +159,7 @@ class _RoomGuestTransactionsManageWidgetState
               : null, // Light red background for the last item
           child: ExpansionTile(
             title: Text(
-              '${transaction.transactionType} - ${transaction.itemType}    /    # ${transaction.roomId} - StayDay at ${transaction.stayDay.getMonthNameDD()}  /          Create At - ${transaction.transactionDay.getMonthDayHour()}',
+              '${transaction.transactionType} - ${transaction.itemType}    /    # ${transaction.roomId} - StayDay at ${transaction.stayDay.getMonthNameDD()}  /    Create At - ${transaction.transactionDay.getMonthDayHour()} / Appr # - ${transaction.approvedCode}' ,
               style: TextStyle(color: isFirstItem ? Colors.red : null),
             ),
             subtitle: Text(
