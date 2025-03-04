@@ -78,8 +78,8 @@ class _RoomGuestTransactionsManageWidgetState
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-           // 'Add New Transaction - total of {$_total}      / GST of $_gst      / Levy of $_levy',
-             '${ _total > 0 ? 'Owning' : 'Credit'} of \$${_amount.toStringAsFixed(2)} + GST of \$${_gst.toStringAsFixed(2)} + Levy of \$${_levy.toStringAsFixed(2)} = total of \$${_total.toStringAsFixed(2)}',
+            // 'Add New Transaction - total of {$_total}      / GST of $_gst      / Levy of $_levy',
+            '${_total > 0 ? 'Owning' : 'Credit'} of \$${_amount.toStringAsFixed(2)} + GST of \$${_gst.toStringAsFixed(2)} + Levy of \$${_levy.toStringAsFixed(2)} = total of \$${_total.toStringAsFixed(2)}',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
         ),
@@ -114,14 +114,15 @@ class _RoomGuestTransactionsManageWidgetState
   void _blocListener(BuildContext context, RoomTransactionState state) {
     if (state is RoomTransactionStateFailure) {
       showSnackbar(context, state.message);
-    } else if (state is RoomTransactionStateCreatedSuccess || state is RoomTransactionStateDeletedSuccess ) {
+    } else if (state is RoomTransactionStateCreatedSuccess ||
+        state is RoomTransactionStateDeletedSuccess) {
       context
           .read<RoomGuestTransactionsBloc>()
           .add(FetchRoomGuestTransactions(widget.roomGuestId));
       context
           .read<RoomTransactionBloc>()
           .add(RetrieveRoomGuestEvent(roomGuestId: widget.roomGuestId));
-    } 
+    }
   }
 
   double _computeTotal(List<RoomTransaction> transactions) {
@@ -133,7 +134,6 @@ class _RoomGuestTransactionsManageWidgetState
     return transactions.fold(
         0.0, (sum, transaction) => sum + transaction.amount);
   }
-
 
   double _computeGST(List<RoomTransaction> transactions) {
     return transactions.fold(0.0, (sum, transaction) => sum + transaction.tax1);
@@ -150,7 +150,7 @@ class _RoomGuestTransactionsManageWidgetState
       itemBuilder: (context, index) {
         final transaction = transactions[index];
         final isLastItem = index == transactions.length - 1;
-        final isFirstItem = index  ==  0;
+        final isFirstItem = index == 0;
 
         return Card(
           margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -159,7 +159,7 @@ class _RoomGuestTransactionsManageWidgetState
               : null, // Light red background for the last item
           child: ExpansionTile(
             title: Text(
-              '${transaction.transactionType} - ${transaction.itemType}    /    # ${transaction.roomId} - StayDay at ${transaction.stayDay.getMonthNameDD()}  /    Create At - ${transaction.transactionDay.getMonthDayHour()} / Appr # - ${transaction.approvedCode}' ,
+              '${transaction.transactionType} - ${transaction.itemType}    /    # ${transaction.roomId} - StayDay at ${transaction.stayDay.getMonthNameDD()}  /    Create At - ${transaction.transactionDay.getMonthDayHour()} / Appr # - ${transaction.approvedCode}',
               style: TextStyle(color: isFirstItem ? Colors.red : null),
             ),
             subtitle: Text(
@@ -187,6 +187,10 @@ class _RoomGuestTransactionsManageWidgetState
                     _buildInfoRow('Transaction Day',
                         transaction.transactionDay.getMonthDayHourMinute(),
                         isLastItem: isFirstItem),
+                    transaction.approvedCode != null
+                        ? _buildInfoRow('Appr #', '${transaction.approvedCode}',
+                            isLastItem: isFirstItem)
+                        : Container(),
                     _buildInfoRow(
                         'Amount', '\$${transaction.amount.toStringAsFixed(2)}',
                         isLastItem: isFirstItem),
@@ -222,15 +226,12 @@ class _RoomGuestTransactionsManageWidgetState
               () => context
                   .read<RoomTransactionBloc>()
                   .add(DeleteRoomTransactionEvent(id: transactionId)),
-             color: Colors.red
-             ),
+              color: Colors.red),
         ],
       );
     }
     return SizedBox();
   }
-
-
 
   Widget _buildButton(String text, VoidCallback onPressed,
       {Color color = Colors.blue}) {
@@ -243,8 +244,6 @@ class _RoomGuestTransactionsManageWidgetState
       child: Text(text),
     );
   }
-
-
 
 /* 
 Widget _buildButton(String text, VoidCallback onPressed) {
@@ -271,7 +270,6 @@ Widget _buildButton(String text, VoidCallback onPressed) {
   );
 }
 */
-
 
   Widget _buildInfoRow(String label, String value, {required bool isLastItem}) {
     return Padding(
